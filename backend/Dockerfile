@@ -78,7 +78,7 @@ RUN pecl channel-update pecl.php.net \
 
 
 COPY --chown=www-data:www-data . /var/www/html/
-COPY package.json composer.json docker_prod_cleanup.sh /var/www/html/
+COPY composer.json docker_prod_cleanup.sh /var/www/html/
 COPY nginx/nginx_config.conf /etc/nginx/nginx.conf
 COPY supervisord-app.conf /etc/supervisord.conf
 COPY docker_startup.sh /root/docker_startup.sh
