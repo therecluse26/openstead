@@ -1,4 +1,4 @@
-FROM php:8.1.10-fpm-alpine3.16
+FROM php:8.0.10-fpm-alpine3.14
 
 ENV PHPIZE_DEPS \
     autoconf \
@@ -65,7 +65,7 @@ RUN set -xe && ln -s /usr/lib /usr/local/lib64 \
         xsl \
         zip
 
-RUN docker-php-ext-install mysqli pdo pdo_mysql tokenizer xml dom opcache pcntl bcmath intl sockets
+RUN docker-php-ext-install mysqli pdo pdo_mysql xml dom opcache pcntl tokenizer bcmath intl sockets
 
 RUN pecl channel-update pecl.php.net \
     && pecl install imagick \
@@ -97,7 +97,7 @@ RUN mkdir -p /run/nginx
 ENV COMPOSER_MEMORY_LIMIT=-1
 
 # Points docker-compose at different file based on environment
-RUN  cd /var/www/html && composer install --no-ansi --no-dev --no-interaction --no-plugins --no-progress --no-scripts --no-suggest --optimize-autoloader
+RUN  cd /var/www/html && composer install --no-ansi --no-dev --no-interaction --no-plugins --no-progress --no-scripts --optimize-autoloader
 
 RUN ./docker_prod_cleanup.sh
 
