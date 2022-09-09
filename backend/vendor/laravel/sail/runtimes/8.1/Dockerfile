@@ -1,0 +1,108 @@
+FROM php:8.1.10-fpm-alpine3.16
+
+ENV PHPIZE_DEPS \
+    autoconf \
+    cmake \
+    file \
+    g++ \
+    gcc \
+    libc-dev \
+    pcre-dev \
+    make \
+    git \
+    pkgconf \
+    re2c \
+    freetype-dev \
+    libpng-dev  \
+    libjpeg-turbo-dev \
+    libxslt-dev \
+    icu-dev \
+    openssl-dev
+
+RUN apk --no-cache add wget \
+  coreutils \
+  curl \
+  openssh-client \
+  libssh2-dev \
+  git \
+  icu-libs \
+  grep \
+  build-base \
+  libmcrypt-dev \
+  libxml2-dev \
+  imagemagick-dev \
+  pcre-dev \
+  libtool \
+  make \
+  autoconf \
+  g++ \
+  cyrus-sasl-dev \
+  libgsasl-dev \
+  composer \
+  supervisor \
+  npm \
+  zip \
+  libzip-dev \
+  php8-zip \
+  nginx \
+  nfs-utils
+
+RUN set -xe && ln -s /usr/lib /usr/local/lib64 \
+    && apk add --virtual .build-deps \
+        $PHPIZE_DEPS \
+    && docker-php-ext-configure gd \
+      --with-freetype=/usr/include/ \
+      --with-jpeg=/usr/include/ \
+    && docker-php-ext-configure bcmath --enable-bcmath \
+    && docker-php-ext-configure intl --enable-intl \
+    && docker-php-ext-configure pcntl --enable-pcntl \
+    && docker-php-ext-configure pdo_mysql --with-pdo-mysql \
+    && docker-php-ext-install -j$(nproc) \
+        gd \
+        bcmath \
+        intl \
+        pcntl \
+        pdo_mysql \
+        xsl \
+        zip
+
+RUN docker-php-ext-install mysqli pdo pdo_mysql tokenizer xml dom opcache pcntl bcmath intl sockets
+
+RUN pecl channel-update pecl.php.net \
+    && pecl install imagick \
+    && pecl install mcrypt-1.0.4 \
+    && pecl install ssh2-1.3.1 \
+    && pecl install redis \
+    && docker-php-ext-enable imagick \
+    && docker-php-ext-enable mcrypt \
+    && docker-php-ext-enable redis
+
+
+
+COPY --chown=www-data:www-data . /var/www/html/
+COPY package.json composer.json docker_prod_cleanup.sh /var/www/html/
+COPY nginx/nginx_config.conf /etc/nginx/nginx.conf
+COPY supervisord-app.conf /etc/supervisord.conf
+COPY docker_startup.sh /root/docker_startup.sh
+COPY docker_php_startup_scripts.sh /root/docker_php_startup_scripts.sh
+COPY docker/php.ini-production /usr/local/etc/php/php.ini
+
+RUN echo '*  *  *  *  *    cd /var/www/html && php artisan schedule:run >> /dev/null 2>&1' > /etc/crontabs/root
+
+RUN chmod +x /root/docker_startup.sh && chmod +x /var/www/html/docker_startup.sh && chmod +x docker_prod_cleanup.sh && chmod +x /root/docker_php_startup_scripts.sh
+
+ARG ENV
+
+RUN mkdir -p /run/nginx
+
+# Prevents certain composer packages from exceeding memory limit and failing to build
+ENV COMPOSER_MEMORY_LIMIT=-1
+
+# Points docker-compose at different file based on environment
+RUN  cd /var/www/html && composer install --no-ansi --no-dev --no-interaction --no-plugins --no-progress --no-scripts --no-suggest --optimize-autoloader
+
+RUN npm ci && npm run production
+
+RUN ./docker_prod_cleanup.sh
+
+ENTRYPOINT ["/var/www/html/docker_startup.sh"]
