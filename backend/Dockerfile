@@ -1,63 +1,104 @@
-FROM ubuntu:22.04
+FROM php:8.1.10-fpm-alpine3.16
 
-LABEL maintainer="Taylor Otwell"
+ENV PHPIZE_DEPS \
+    autoconf \
+    cmake \
+    file \
+    g++ \
+    gcc \
+    libc-dev \
+    pcre-dev \
+    make \
+    git \
+    pkgconf \
+    re2c \
+    freetype-dev \
+    libpng-dev  \
+    libjpeg-turbo-dev \
+    libxslt-dev \
+    icu-dev \
+    openssl-dev
 
-ARG WWWGROUP
-ARG NODE_VERSION=16
-ARG POSTGRES_VERSION=14
+RUN apk --no-cache add wget \
+  coreutils \
+  curl \
+  openssh-client \
+  libssh2-dev \
+  git \
+  icu-libs \
+  grep \
+  build-base \
+  libmcrypt-dev \
+  libxml2-dev \
+  imagemagick-dev \
+  pcre-dev \
+  libtool \
+  make \
+  autoconf \
+  g++ \
+  cyrus-sasl-dev \
+  libgsasl-dev \
+  composer \
+  supervisor \
+  zip \
+  libzip-dev \
+  php8-zip \
+  nginx \
+  nfs-utils
 
-WORKDIR /var/www/html
+RUN set -xe && ln -s /usr/lib /usr/local/lib64 \
+    && apk add --virtual .build-deps \
+        $PHPIZE_DEPS \
+    && docker-php-ext-configure gd \
+      --with-freetype=/usr/include/ \
+      --with-jpeg=/usr/include/ \
+    && docker-php-ext-configure bcmath --enable-bcmath \
+    && docker-php-ext-configure intl --enable-intl \
+    && docker-php-ext-configure pcntl --enable-pcntl \
+    && docker-php-ext-configure pdo_mysql --with-pdo-mysql \
+    && docker-php-ext-install -j$(nproc) \
+        gd \
+        bcmath \
+        intl \
+        pcntl \
+        pdo_mysql \
+        xsl \
+        zip
 
-ENV DEBIAN_FRONTEND noninteractive
-ENV TZ=UTC
+RUN docker-php-ext-install mysqli pdo pdo_mysql tokenizer xml dom opcache pcntl bcmath intl sockets
 
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN pecl channel-update pecl.php.net \
+    && pecl install imagick \
+    && pecl install mcrypt-1.0.4 \
+    && pecl install ssh2-1.3.1 \
+    && pecl install redis \
+    && docker-php-ext-enable imagick \
+    && docker-php-ext-enable mcrypt \
+    && docker-php-ext-enable redis
 
-RUN apt-get update \
-    && apt-get install -y gnupg gosu curl ca-certificates zip unzip git supervisor sqlite3 libcap2-bin libpng-dev python2 \
-    && mkdir -p ~/.gnupg \
-    && chmod 600 ~/.gnupg \
-    && echo "disable-ipv6" >> ~/.gnupg/dirmngr.conf \
-    && echo "keyserver hkp://keyserver.ubuntu.com:80" >> ~/.gnupg/dirmngr.conf \
-    && gpg --recv-key 0x14aa40ec0831756756d7f66c4f4ea0aae5267a6c \
-    && gpg --export 0x14aa40ec0831756756d7f66c4f4ea0aae5267a6c > /usr/share/keyrings/ppa_ondrej_php.gpg \
-    && echo "deb [signed-by=/usr/share/keyrings/ppa_ondrej_php.gpg] https://ppa.launchpadcontent.net/ondrej/php/ubuntu jammy main" > /etc/apt/sources.list.d/ppa_ondrej_php.list \
-    && apt-get update \
-    && apt-get install -y php8.1-cli php8.1-dev \
-       php8.1-pgsql php8.1-sqlite3 php8.1-gd \
-       php8.1-curl \
-       php8.1-imap php8.1-mysql php8.1-mbstring \
-       php8.1-xml php8.1-zip php8.1-bcmath php8.1-soap \
-       php8.1-intl php8.1-readline \
-       php8.1-ldap \
-       php8.1-msgpack php8.1-igbinary php8.1-redis php8.1-swoole \
-       php8.1-memcached php8.1-pcov php8.1-xdebug \
-    && php -r "readfile('https://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer \
-    && curl -sLS https://deb.nodesource.com/setup_$NODE_VERSION.x | bash - \
-    && apt-get install -y nodejs \
-    && npm install -g npm \
-    && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarn.gpg >/dev/null \
-    && echo "deb [signed-by=/usr/share/keyrings/yarn.gpg] https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list \
-    && curl -sS https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | tee /usr/share/keyrings/pgdg.gpg >/dev/null \
-    && echo "deb [signed-by=/usr/share/keyrings/pgdg.gpg] http://apt.postgresql.org/pub/repos/apt jammy-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
-    && apt-get update \
-    && apt-get install -y yarn \
-    && apt-get install -y mysql-client \
-    && apt-get install -y postgresql-client-$POSTGRES_VERSION \
-    && apt-get -y autoremove \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.1
+COPY --chown=www-data:www-data . /var/www/html/
+COPY package.json composer.json docker_prod_cleanup.sh /var/www/html/
+COPY nginx/nginx_config.conf /etc/nginx/nginx.conf
+COPY supervisord-app.conf /etc/supervisord.conf
+COPY docker_startup.sh /root/docker_startup.sh
+COPY docker_php_startup_scripts.sh /root/docker_php_startup_scripts.sh
+COPY docker/php.ini-production /usr/local/etc/php/php.ini
 
-RUN groupadd --force -g $WWWGROUP sail
-RUN useradd -ms /bin/bash --no-user-group -g $WWWGROUP -u 1337 sail
+RUN echo '*  *  *  *  *    cd /var/www/html && php artisan schedule:run >> /dev/null 2>&1' > /etc/crontabs/root
 
-COPY start-container /usr/local/bin/start-container
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY php.ini /etc/php/8.1/cli/conf.d/99-sail.ini
-RUN chmod +x /usr/local/bin/start-container
+RUN chmod +x /root/docker_startup.sh && chmod +x /var/www/html/docker_startup.sh && chmod +x docker_prod_cleanup.sh && chmod +x /root/docker_php_startup_scripts.sh
 
-EXPOSE 8000
+ARG ENV
 
-ENTRYPOINT ["start-container"]
+RUN mkdir -p /run/nginx
+
+# Prevents certain composer packages from exceeding memory limit and failing to build
+ENV COMPOSER_MEMORY_LIMIT=-1
+
+# Points docker-compose at different file based on environment
+RUN  cd /var/www/html && composer install --no-ansi --no-dev --no-interaction --no-plugins --no-progress --no-scripts --no-suggest --optimize-autoloader
+
+RUN ./docker_prod_cleanup.sh
+
+ENTRYPOINT ["/var/www/html/docker_startup.sh"]
