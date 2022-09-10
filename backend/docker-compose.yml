@@ -21,8 +21,7 @@ services:
         container_name: openstead-api
         image: openstead-api
         ports:
-            - "8888:80"
-            - "1234:1234"
+            - "9000:80"
         depends_on:
             - mysql
     mysql:
