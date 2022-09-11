@@ -2,8 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Tightenco\Ziggy\Ziggy;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -15,8 +13,6 @@ use Tightenco\Ziggy\Ziggy;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::get('/ziggy', fn () => response()->json(new Ziggy));
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
