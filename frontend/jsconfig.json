@@ -4,5 +4,8 @@
         "paths": {
             "@/*": ["./*"]
         }
+    },
+    "experiments": {
+        "topLevelAwait": true
     }
-  }
+}

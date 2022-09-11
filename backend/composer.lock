@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f565d246c73d40d15ffebddb435f8e43",
+    "content-hash": "422d88d23f4a2c64c3a0c50726f1e59c",
     "packages": [
         {
             "name": "brick/math",
@@ -306,16 +306,16 @@
         },
         {
             "name": "dragonmantank/cron-expression",
-            "version": "v3.3.1",
+            "version": "v3.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dragonmantank/cron-expression.git",
-                "reference": "be85b3f05b46c39bbc0d95f6c071ddff669510fa"
+                "reference": "782ca5968ab8b954773518e9e49a6f892a34b2a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dragonmantank/cron-expression/zipball/be85b3f05b46c39bbc0d95f6c071ddff669510fa",
-                "reference": "be85b3f05b46c39bbc0d95f6c071ddff669510fa",
+                "url": "https://api.github.com/repos/dragonmantank/cron-expression/zipball/782ca5968ab8b954773518e9e49a6f892a34b2a8",
+                "reference": "782ca5968ab8b954773518e9e49a6f892a34b2a8",
                 "shasum": ""
             },
             "require": {
@@ -355,7 +355,7 @@
             ],
             "support": {
                 "issues": "https://github.com/dragonmantank/cron-expression/issues",
-                "source": "https://github.com/dragonmantank/cron-expression/tree/v3.3.1"
+                "source": "https://github.com/dragonmantank/cron-expression/tree/v3.3.2"
             },
             "funding": [
                 {
@@ -363,7 +363,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-01-18T15:43:28+00:00"
+            "time": "2022-09-10T18:51:20+00:00"
         },
         {
             "name": "egulias/email-validator",
@@ -5181,73 +5181,6 @@
                 }
             ],
             "time": "2022-07-20T13:45:53+00:00"
-        },
-        {
-            "name": "tightenco/ziggy",
-            "version": "v1.4.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/tighten/ziggy.git",
-                "reference": "a9e0e078ae6f0768836bc640a80f4cf99fa3d08f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/tighten/ziggy/zipball/a9e0e078ae6f0768836bc640a80f4cf99fa3d08f",
-                "reference": "a9e0e078ae6f0768836bc640a80f4cf99fa3d08f",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "laravel/framework": ">=5.4@dev"
-            },
-            "require-dev": {
-                "orchestra/testbench": "^3.0 || ^4.0 || ^5.0 || ^6.0 || ^7.0",
-                "phpunit/phpunit": "^6.0 || ^7.0 || ^8.0 || ^9.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Tightenco\\Ziggy\\ZiggyServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Tightenco\\Ziggy\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Daniel Coulbourne",
-                    "email": "daniel@tighten.co"
-                },
-                {
-                    "name": "Jake Bathman",
-                    "email": "jake@tighten.co"
-                },
-                {
-                    "name": "Jacob Baker-Kretzmar",
-                    "email": "jacob@tighten.co"
-                }
-            ],
-            "description": "Generates a Blade directive exporting all of your named Laravel routes. Also provides a nice route() helper function in JavaScript.",
-            "homepage": "https://github.com/tighten/ziggy",
-            "keywords": [
-                "Ziggy",
-                "javascript",
-                "laravel",
-                "routes"
-            ],
-            "support": {
-                "issues": "https://github.com/tighten/ziggy/issues",
-                "source": "https://github.com/tighten/ziggy/tree/v1.4.6"
-            },
-            "time": "2022-04-08T15:12:23+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",

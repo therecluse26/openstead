@@ -43,7 +43,7 @@ const Login = () => {
         <GuestLayout>
             <AuthCard
                 logo={
-                    <Link href="/">
+                    <Link href="/frontend/src/pages">
                         <a>
                             <ApplicationLogo className="w-20 h-20 fill-current text-gray-500" />
                         </a>
