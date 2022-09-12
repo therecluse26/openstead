@@ -82,9 +82,16 @@ RUN pecl channel-update pecl.php.net && pecl install imagick mcrypt-1.0.4 ssh2-1
 
 RUN docker-php-ext-enable imagick mcrypt redis dom xml xmlwriter tokenizer
 
+ARG APP_ENV
+
+RUN if [ "$APP_ENV" = "local" ] ; then apk add npm ; fi
+RUN if [ "$APP_ENV" = "local" ] ; then npm install -g chokidar ; fi
+
 COPY --chown=www-data:www-data . /var/www/html/
 COPY nginx/nginx_config.conf /etc/nginx/nginx.conf
-COPY supervisord-app.conf /etc/supervisord.conf
+RUN rm /etc/supervisord.conf
+COPY supervisord-$APP_ENV.conf* /etc/supervisord.conf
+
 COPY docker_startup.sh /root/docker_startup.sh
 COPY docker_php_startup_scripts.sh /root/docker_php_startup_scripts.sh
 COPY docker/php.ini-production /usr/local/etc/php/php.ini
@@ -104,6 +111,6 @@ ENV COMPOSER_MEMORY_LIMIT=-1
 # Points docker-compose at different file based on environment
 RUN  cd /var/www/html && /usr/local/bin/php /usr/bin/composer.phar install --no-ansi --no-dev --no-interaction --no-plugins --no-progress --no-scripts --optimize-autoloader
 
-RUN /var/www/html/docker_prod_cleanup.sh
+RUN if [ "$APP_ENV" != "local" ] ; then /var/www/html/docker_prod_cleanup.sh ; fi
 
 ENTRYPOINT ["/var/www/html/docker_startup.sh"]
