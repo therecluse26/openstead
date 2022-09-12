@@ -85,7 +85,7 @@ RUN docker-php-ext-enable imagick mcrypt redis dom xml xmlwriter tokenizer
 ARG APP_ENV
 
 RUN if [ "$APP_ENV" = "local" ] ; then apk add npm ; fi
-RUN if [ "$APP_ENV" = "local" ] ; then npm install -g chokidar ; fi
+RUN if [ "$APP_ENV" = "local" ] ; then npm install chokidar ; fi
 
 COPY --chown=www-data:www-data . /var/www/html/
 COPY nginx/nginx_config.conf /etc/nginx/nginx.conf
