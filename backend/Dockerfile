@@ -1,4 +1,4 @@
-FROM phpswoole/swoole:php8.0-alpine
+FROM phpswoole/swoole:php8.1-alpine
 
 ENV PHPIZE_DEPS \
     autoconf \
@@ -19,7 +19,7 @@ ENV PHPIZE_DEPS \
     icu-dev \
     openssl-dev
 
-RUN apk --no-cache add wget \
+RUN apk add wget \
   coreutils \
   curl \
   openssh-client \
@@ -65,7 +65,6 @@ RUN docker-php-ext-install  -j$(nproc) \
     dom \
     opcache \
     pcntl \
-    tokenizer \
     bcmath \
     intl \
     sockets \
@@ -80,7 +79,7 @@ RUN docker-php-ext-install  -j$(nproc) \
 
 RUN pecl channel-update pecl.php.net && pecl install imagick mcrypt-1.0.4 ssh2-1.3.1
 
-RUN docker-php-ext-enable imagick mcrypt redis dom xml xmlwriter tokenizer
+RUN docker-php-ext-enable imagick redis dom xml xmlwriter
 
 ARG APP_ENV
 
