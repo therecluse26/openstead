@@ -2,18 +2,23 @@
 
 namespace App\Models;
 
+use App\Enums\LivestockType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Inventory extends Model
+class LivestockGroup extends Model
 {
     use HasFactory;
 
-	protected $table = 'inventories';
+	protected $table = 'livestock_groups';
 
 	protected $fillable = [
 		'name',
-		'quantity',
-		'acquired_at'
+		'type',
+		'description'
+	];
+
+	protected $casts = [
+		'type' => LivestockType::class
 	];
 }

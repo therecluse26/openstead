@@ -20,6 +20,7 @@ class LivestockFactory extends Factory
     public function definition()
     {
         return [
+			'name' => fake()->name(),
 			'type' => fake()->randomElement(LivestockType::cases()),
 			'breed' => fake()->text(20),
 			'date_of_birth' => fake()->dateTimeThisDecade()

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use PHPUnit\Util\Test;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,11 +15,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+	    $this->call([
+		    BaseDataSeeder::class,
+	    ]);
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+		if(app()->environment('test', 'testing') || env('SEED_TEST_DATA')){
+			$this->call([
+				TestDataSeeder::class,
+			]);
+		}
     }
 }

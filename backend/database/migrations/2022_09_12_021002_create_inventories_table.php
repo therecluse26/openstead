@@ -13,38 +13,54 @@ return new class extends Migration
      */
     public function up()
     {
-	    Schema::create('inventories', function (Blueprint $table) {
+	    Schema::create('locations', function (Blueprint $table) {
+		    $table->id();
+		    $table->string('name', 100);
+		    $table->string('description', 255)->nullable();
+		    $table->string('address1', 100);
+		    $table->string('address2', 100)->nullable();
+		    $table->string('city', 50);
+		    $table->string('state', 2);
+		    $table->string('zip', 10);
+		    $table->string('country', 3);
+		    $table->timestamps();
+	    });
+
+	    Schema::create('location_inventory', function (Blueprint $table) {
             $table->id();
+		    $table->unsignedBigInteger('location_id');
 		    $table->morphs('inventoriable');
-		    $table->string('name', 255);
-		    $table->integer('quantity')->default(1);
+		    $table->integer('quantity')->default(0);
 		    $table->dateTime('acquired_at')->nullable();
 		    $table->timestamps();
         });
 
-	    Schema::create('inventory_groups', function (Blueprint $table) {
-		    $table->id();
-			$table->string('name', 100);
-		    $table->string('description', 255);
-		    $table->timestamps();
-	    });
-
-	    Schema::create('inventory_group_items', function (Blueprint $table) {
-		    $table->id();
-		    $table->unsignedBigInteger('inventory_group_id');
-		    $table->unsignedBigInteger('inventory_id');
-	    });
-
 	    Schema::create('livestock', function (Blueprint $table) {
 		    $table->id();
+		    $table->string('name', 255);
 		    $table->string('type', 100);
 		    $table->string('breed', 100)->nullable();
 			$table->dateTime('date_of_birth')->nullable();
 		    $table->timestamps();
 	    });
 
+	    Schema::create('livestock_groups', function (Blueprint $table) {
+		    $table->id();
+		    $table->string('type', 100);
+		    $table->string('name', 100);
+		    $table->string('description', 255);
+		    $table->timestamps();
+	    });
+
+	    Schema::create('livestock_group_members', function (Blueprint $table) {
+		    $table->id();
+		    $table->unsignedBigInteger('livestock_group_id');
+		    $table->unsignedBigInteger('livestock_id');
+	    });
+
 	    Schema::create('equipment', function (Blueprint $table) {
 		    $table->id();
+		    $table->string('name', 255);
 		    $table->string('type', 100);
 		    $table->integer('condition');
 		    $table->string('description')->nullable();
@@ -55,10 +71,10 @@ return new class extends Migration
 		    $table->id();
 		    $table->morphs('imageable');
 			$table->string('url');
-		    $table->string('slug', 255);
-		    $table->string('title', 100);
+		    $table->string('slug', 255)->nullable();
+		    $table->string('title', 100)->nullable();
 			$table->string('description', 255)->nullable();
-			$table->string('filesize')->nullable();
+			$table->unsignedInteger('filesize')->nullable();
 		    $table->timestamps();
 	    });
 

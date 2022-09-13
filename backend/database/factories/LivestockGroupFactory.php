@@ -4,12 +4,13 @@ namespace Database\Factories;
 
 use App\Enums\EquipmentCondition;
 use App\Enums\EquipmentType;
+use App\Enums\LivestockType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Equipment>
  */
-class EquipmentFactory extends Factory
+class LivestockGroupFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -19,9 +20,8 @@ class EquipmentFactory extends Factory
     public function definition()
     {
         return [
-			'name' => fake()->words(3, true),
-			'type' => fake()->randomElement(EquipmentType::cases()),
-			'condition' => fake()->randomElement(EquipmentCondition::cases()),
+			'name' => fake()->text(20),
+			'type' => fake()->randomElement(LivestockType::cases()),
 			'description' => fake()->paragraph(3)
         ];
     }
