@@ -1,4 +1,4 @@
-import 'primereact/resources/themes/lara-dark-blue/theme.css' //theme
+import 'primereact/resources/themes/md-dark-indigo/theme.css' //theme
 import 'primereact/resources/primereact.min.css' //core css
 import 'primeicons/primeicons.css'
 import '@/style/layout.scss'

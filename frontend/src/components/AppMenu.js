@@ -67,7 +67,7 @@ const AppSubmenu = props => {
                     className="p-ripple"
                     activeClassName="router-link-active router-link-exact-active"
                     href={item.to}
-                    onClick={e => onMenuItemClick(e, item, i)}
+                    // onClick={e => onMenuItemClick(e, item, i)}
                     exact
                     target={item.target}>
                     {content}

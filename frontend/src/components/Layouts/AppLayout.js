@@ -9,10 +9,9 @@ import { CSSTransition } from 'react-transition-group'
 import menu from '@/components/_menu'
 
 const AppLayout = ({ children }) => {
-    console.log(children)
     const { user } = useAuth({ middleware: 'auth' })
     const [layoutMode, setLayoutMode] = useState('static')
-    const [layoutColorMode, setLayoutColorMode] = useState('light')
+    const [layoutColorMode, setLayoutColorMode] = useState('dark')
 
     const [mobileMenuActive, setMobileMenuActive] = useState(false)
     const [overlayMenuActive, setOverlayMenuActive] = useState(false)
@@ -146,6 +145,7 @@ const AppLayout = ({ children }) => {
                 unmountOnExit>
                 <div className="layout-mask p-component-overlay" />
             </CSSTransition>
+
             {/*<AppConfig*/}
             {/*    layoutMode={layoutMode}*/}
             {/*    onLayoutModeChange={onLayoutModeChange}*/}
