@@ -1,4 +1,9 @@
-import 'tailwindcss/tailwind.css'
+import 'primereact/resources/themes/lara-dark-blue/theme.css' //theme
+import 'primereact/resources/primereact.min.css' //core css
+import 'primeicons/primeicons.css'
+import '@/style/layout.scss'
+
+import React from 'react'
 
 const App = ({ Component, pageProps }) => <Component {...pageProps} />
 

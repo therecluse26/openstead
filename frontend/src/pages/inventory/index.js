@@ -1,18 +1,18 @@
 import { useAuth } from '@/hooks/auth'
 import AppLayout from '@/components/Layouts/AppLayout'
+import { Card } from 'primereact/card'
+import React from 'react'
 
-export default function Home() {
+const Inventory = () => {
     const { user } = useAuth({ middleware: 'guest' })
 
     return (
-        <AppLayout
-            header={
-                <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    Inventory
-                </h2>
-            }
-            title={'Inventory'}>
-            <p>You're logged in!</p>
+        <AppLayout title={'Inventory'}>
+            <Card>
+                <p>Inventory</p>
+            </Card>
         </AppLayout>
     )
 }
+
+export default React.memo(Inventory)
