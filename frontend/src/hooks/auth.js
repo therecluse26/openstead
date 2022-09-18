@@ -22,8 +22,6 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     const register = async ({ setErrors, ...props }) => {
         await csrf()
 
-        setErrors([])
-
         axios
             .post('/register', props)
             .then(() => mutate())
@@ -33,10 +31,8 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
             })
     }
 
-    const login = async ({ setError, setStatus, ...props }) => {
+    const login = async ({ setError, ...props }) => {
         await csrf()
-
-        // setStatus(null)
 
         axios
             .post('/login', props)

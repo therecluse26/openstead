@@ -12,9 +12,11 @@ const GuestLayout = ({ children }) => {
     })
 
     return (
-        // <div className="surface-card p-4 shadow-2 border-round h-screen w-full lg:w-6">
-        <div>{children}</div>
-        // </div>
+        <div className="login-form">
+            <div className="flex justify-content-center">
+                <div className="card login-form-card">{children}</div>
+            </div>
+        </div>
     )
 }
 
