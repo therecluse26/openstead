@@ -1,16 +1,20 @@
-import Head from 'next/head'
+import classNames from 'classnames'
+import { useState } from 'react'
 
 const GuestLayout = ({ children }) => {
-    return (
-        <div>
-            <Head>
-                <title>Laravel</title>
-            </Head>
+    const [layoutMode] = useState('static')
+    const [layoutColorMode] = useState('dark')
 
-            <div className="font-sans text-gray-900 antialiased">
-                {children}
-            </div>
-        </div>
+    const wrapperClass = classNames('layout-wrapper', {
+        'layout-overlay': layoutMode === 'overlay',
+        'layout-static': layoutMode === 'static',
+        'layout-theme-light': layoutColorMode === 'light',
+    })
+
+    return (
+        // <div className="surface-card p-4 shadow-2 border-round h-screen w-full lg:w-6">
+        <div>{children}</div>
+        // </div>
     )
 }
 

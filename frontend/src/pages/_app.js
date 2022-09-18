@@ -1,6 +1,5 @@
 import 'primereact/resources/themes/md-dark-indigo/theme.css' //theme
 import 'primereact/resources/primereact.min.css' //core css
-import 'primeicons/primeicons.css'
 import '@/style/layout.scss'
 
 import React from 'react'

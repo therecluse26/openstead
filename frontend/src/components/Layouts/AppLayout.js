@@ -1,4 +1,3 @@
-import { Navigation } from '@/components/Layouts/Navigation'
 import { useAuth } from '@/hooks/auth'
 import React, { useRef, useState } from 'react'
 import classNames from 'classnames'
@@ -6,16 +5,18 @@ import { AppMenu } from '@/components/AppMenu'
 import { Tooltip } from 'primereact/tooltip'
 import { AppFooter } from '@/components/AppFooter'
 import { CSSTransition } from 'react-transition-group'
+import { TopBar } from '@/components/Layouts/TopBar'
 import menu from '@/components/_menu'
 
 const AppLayout = ({ children }) => {
     const { user } = useAuth({ middleware: 'auth' })
-    const [layoutMode, setLayoutMode] = useState('static')
-    const [layoutColorMode, setLayoutColorMode] = useState('dark')
+    const [layoutMode] = useState('static')
+    const [layoutColorMode] = useState('dark')
 
-    const [mobileMenuActive, setMobileMenuActive] = useState(false)
     const [overlayMenuActive, setOverlayMenuActive] = useState(false)
     const [staticMenuInactive, setStaticMenuInactive] = useState(false)
+    const [mobileMenuActive, setMobileMenuActive] = useState(false)
+
     const [mobileTopbarMenuActive, setMobileTopbarMenuActive] = useState(false)
     const copyTooltipRef = useRef()
 
@@ -58,14 +59,6 @@ const AppLayout = ({ children }) => {
         }
 
         event.preventDefault()
-    }
-
-    const onColorModeChange = mode => {
-        setLayoutColorMode(mode)
-    }
-
-    const onLayoutModeChange = mode => {
-        setLayoutMode(mode)
     }
 
     const onWrapperClick = event => {
@@ -116,7 +109,7 @@ const AppLayout = ({ children }) => {
                 event="focus"
             />
 
-            <Navigation
+            <TopBar
                 onToggleMenuClick={onToggleMenuClick}
                 mobileTopbarMenuActive={mobileTopbarMenuActive}
                 onMobileTopbarMenuClick={onMobileTopbarMenuClick}
@@ -145,13 +138,6 @@ const AppLayout = ({ children }) => {
                 unmountOnExit>
                 <div className="layout-mask p-component-overlay" />
             </CSSTransition>
-
-            {/*<AppConfig*/}
-            {/*    layoutMode={layoutMode}*/}
-            {/*    onLayoutModeChange={onLayoutModeChange}*/}
-            {/*    layoutColorMode={layoutColorMode}*/}
-            {/*    onColorModeChange={onColorModeChange}*/}
-            {/*/>*/}
         </div>
     )
 }

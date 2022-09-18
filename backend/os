@@ -1,0 +1,305 @@
+#!/usr/bin/env /bin/bash
+
+# Modified fork of Laravel sail for Alpine-based projects
+# Replaces app bash commands with Ash - Alpine Linux Shell
+
+if ! [ -x "$(command -v docker-compose)" ]; then
+    shopt -s expand_aliases
+    alias docker-compose='docker compose'
+fi
+
+UNAMEOUT="$(uname -s)"
+
+WHITE='\033[1;37m'
+NC='\033[0m'
+EXEC="yes"
+
+# Verify operating system is supported...
+case "${UNAMEOUT}" in
+    Linux*)             MACHINE=linux;;
+    Darwin*)            MACHINE=mac;;
+    *)                  MACHINE="UNKNOWN"
+esac
+
+if [ "$MACHINE" == "UNKNOWN" ]; then
+    echo "Unsupported operating system [$(uname -s)]. Laravel Sail supports macOS, Linux, and Windows (WSL2)." >&2
+
+    exit 1
+fi
+
+# Source the ".env" file so Laravel's environment variables are available...
+if [ -f ./.env ]; then
+    source ./.env
+fi
+
+# Define environment variables...
+export APP_PORT=${APP_PORT:-80}
+export APP_SERVICE=${APP_SERVICE:-"app.test"}
+export DB_PORT=${DB_PORT:-3306}
+export WWWUSER=${WWWUSER:-$UID}
+export WWWGROUP=${WWWGROUP:-$(id -g)}
+
+export SAIL_SHARE_DASHBOARD=${SAIL_SHARE_DASHBOARD:-4040}
+export SAIL_SHARE_SERVER_HOST=${SAIL_SHARE_SERVER_HOST:-"app.site"}
+export SAIL_SHARE_SERVER_PORT=${SAIL_SHARE_SERVER_PORT:-8080}
+export SAIL_SHARE_SUBDOMAIN=${SAIL_SHARE_SUBDOMAIN:-""}
+
+if [ $# -gt 0 ]; then
+
+    # Proxy PHP commands to the "php" binary on the application container...
+    if [ "$1" == "php" ]; then
+        shift 1
+
+        docker-compose exec \
+            "$APP_SERVICE" \
+            php "$@"
+
+    elif [ "$1" == "up" ]; then
+        ./os docker-login
+        docker-compose up -d
+
+    elif [ "$1" == "build" ]; then
+        ./os docker-login
+        docker-compose build
+
+    elif [ "$1" == "conf" ]; then
+        ./os artisan config:cache
+
+    elif [ "$1" == "config:cache" ]; then
+        ./os artisan config:cache
+
+    elif [ "$1" == "config:clear" ]; then
+        ./os artisan config:clear
+
+    elif [ "$1" == "cache:clear" ]; then
+        ./os artisan cache:clear
+
+    elif [ "$1" == "aws:login" ]; then
+
+    	aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 710021134758.dkr.ecr.us-east-1.amazonaws.com
+
+    elif [ "$1" == "aws:conf" ]; then
+
+        aws configure
+
+    elif [ "$1" == "telescope:install" ]; then
+        shift 1
+        docker exec $(docker ps -aqf "name=$APP_SERVICE") \
+            /bin/ash -c "php artisan telescope:install" && ./os telescope:migrate
+
+    elif [ "$1" == "telescope:migrate" ]; then
+        shift 1
+        docker exec $(docker ps -aqf "name=$APP_SERVICE") \
+            /bin/ash -c "php artisan migrate --path=vendor/laravel/telescope/database/migrations/2018_08_08_100000_create_telescope_entries_table.php"
+
+
+    elif [ "$1" == "db:migrate" ]; then
+        shift 1
+
+        docker exec $(docker ps -aqf "name=$APP_SERVICE") \
+            /bin/ash -c "php artisan migrate"
+
+elif [ "$1" == "docker-nuke" ]; then
+
+        while true; do
+                echo "
+ __        ___    ____  _   _ ___ _   _  ____
+ \ \      / / \  |  _ \| \ | |_ _| \ | |/ ___|
+  \ \ /\ / / _ \ | |_) |  \| || ||  \| | |  _
+   \ V  V / ___ \|  _ <| |\  || || |\  | |_| |
+    \_/\_/_/   \_\_| \_\_| \_|___|_| \_|\____|
+                                              "
+                echo ""
+                echo "This command will destroy all existing local docker assets (containers, images, volumes, networks, etc)"
+                echo ""
+                read -p "Are you sure? [y/n]: " yn
+            case $yn in
+                [Yy]* ) docker system prune --all -f --volumes; break;;
+                [Nn]* ) exit;;
+                * ) echo "Please answer yes or no.";;
+            esac
+        done
+
+
+    # Proxy vendor binary commands on the application container...
+    elif [ "$1" == "document" ]; then
+        shift 1
+
+        docker-compose exec \
+            "$APP_SERVICE" \
+            php artisan scribe:generate
+
+
+    # Proxy vendor binary commands on the application container...
+    elif [ "$1" == "bin" ]; then
+        shift 1
+
+        docker-compose exec \
+            "$APP_SERVICE" \
+            ./vendor/bin/"$@"
+
+
+    # Proxy Composer commands to the "composer" binary on the application container...
+    elif [ "$1" == "composer" ]; then
+        shift 1
+
+        docker-compose exec \
+            "$APP_SERVICE" \
+            composer "$@"
+
+    # Proxy Artisan commands to the "artisan" binary on the application container...
+    elif [ "$1" == "artisan" ] || [ "$1" == "art" ]; then
+        shift 1
+
+        docker-compose exec \
+            "$APP_SERVICE" \
+            php artisan "$@"
+
+    # Proxy the "debug" command to the "php artisan" binary on the application container with xdebug enabled...
+    elif [ "$1" == "debug" ]; then
+        shift 1
+
+        docker-compose exec \
+            -e XDEBUG_SESSION=1 \
+            "$APP_SERVICE" \
+            php artisan "$@"
+
+    # Proxy the "test" command to the "php artisan test" Artisan command...
+    elif [ "$1" == "test" ]; then
+        shift 1
+
+        docker-compose exec \
+            "$APP_SERVICE" \
+            php artisan test "$@"
+
+    # Proxy the "phpunit" command to "php vendor/bin/phpunit"...
+    elif [ "$1" == "phpunit" ]; then
+        shift 1
+
+        docker-compose exec \
+            "$APP_SERVICE" \
+            php vendor/bin/phpunit "$@"
+
+    # Proxy the "dusk" command to the "php artisan dusk" Artisan command...
+    elif [ "$1" == "dusk" ]; then
+        shift 1
+
+        docker-compose exec \
+            -e "APP_URL=http://${APP_SERVICE}" \
+            -e "DUSK_DRIVER_URL=http://selenium:4444/wd/hub" \
+            "$APP_SERVICE" \
+            php artisan dusk "$@"
+
+    # Proxy the "dusk:fails" command to the "php artisan dusk:fails" Artisan command...
+    elif [ "$1" == "dusk:fails" ]; then
+        shift 1
+
+        docker-compose exec \
+            -e "APP_URL=http://${APP_SERVICE}" \
+            -e "DUSK_DRIVER_URL=http://selenium:4444/wd/hub" \
+            "$APP_SERVICE" \
+            php artisan dusk:fails "$@"
+
+    # Initiate a Laravel Tinker session within the application container...
+    elif [ "$1" == "tinker" ] ; then
+        shift 1
+
+        docker-compose exec \
+            "$APP_SERVICE" \
+            php artisan tinker
+
+    # Proxy Node commands to the "node" binary on the application container...
+    elif [ "$1" == "node" ]; then
+        shift 1
+        docker-compose exec \
+            "$APP_SERVICE" \
+            node "$@"
+
+    # Proxy NPM commands to the "npm" binary on the application container...
+    elif [ "$1" == "npm" ]; then
+        shift 1
+        docker-compose exec \
+            "$APP_SERVICE" \
+            npm "$@"
+
+    # Proxy NPX commands to the "npx" binary on the application container...
+    elif [ "$1" == "npx" ]; then
+        shift 1
+
+        docker-compose exec \
+            "$APP_SERVICE" \
+            npx "$@"
+
+    # Proxy YARN commands to the "yarn" binary on the application container...
+    elif [ "$1" == "yarn" ]; then
+        shift 1
+
+        docker-compose exec \
+            "$APP_SERVICE" \
+            yarn "$@"
+
+    # Initiate a MySQL CLI terminal session within the "mysql" container...
+    elif [ "$1" == "mysql" ]; then
+        shift 1
+
+        docker-compose exec \
+            mysql \
+            bash -c 'MYSQL_PWD=${MYSQL_PASSWORD} mysql -u ${MYSQL_USER} ${MYSQL_DATABASE}'
+
+    # Initiate a MySQL CLI terminal session within the "mariadb" container...
+    elif [ "$1" == "mariadb" ]; then
+        shift 1
+
+        docker-compose exec \
+            mariadb \
+            bash -c 'MYSQL_PWD=${MYSQL_PASSWORD} mysql -u ${MYSQL_USER} ${MYSQL_DATABASE}'
+
+    # Initiate a PostgreSQL CLI terminal session within the "pgsql" container...
+    elif [ "$1" == "psql" ]; then
+        shift 1
+
+        docker-compose exec \
+            pgsql \
+            bash -c 'PGPASSWORD=${PGPASSWORD} psql -U ${POSTGRES_USER} ${POSTGRES_DB}'
+
+    # Initiate a Ash shell within the application container...
+    elif [ "$1" == "shell" ] || [ "$1" == "ash" ]; then
+        shift 1
+
+        docker exec -it --user www-data $(docker ps -aqf "name=$APP_SERVICE") /bin/ash
+
+    # Initiate a root user Ash shell within the application container...
+    elif [ "$1" == "root" ] ; then
+        shift 1
+
+        docker-compose exec \
+            "$APP_SERVICE" \
+            /bin/ash "$@"
+
+    # Initiate a Redis CLI terminal session within the "redis" container...
+    elif [ "$1" == "redis" ] ; then
+        shift 1
+
+        docker-compose exec \
+            redis \
+            redis-cli
+
+    # Share the site...
+    elif [ "$1" == "share" ]; then
+        shift 1
+
+        docker run --init --rm -p $SAIL_SHARE_DASHBOARD:4040 -t beyondcodegmbh/expose-server:latest share http://host.docker.internal:"$APP_PORT" \
+        --server-host="$SAIL_SHARE_SERVER_HOST" \
+        --server-port="$SAIL_SHARE_SERVER_PORT" \
+        --auth="$SAIL_SHARE_TOKEN" \
+        --subdomain="$SAIL_SHARE_SUBDOMAIN" \
+        "$@"
+
+    # Pass unknown commands to the "docker-compose" binary...
+    else
+        docker-compose "$@"
+    fi
+
+else
+    docker-compose ps
+fi
