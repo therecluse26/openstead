@@ -8,12 +8,17 @@
   align-items: center;
 
   .login-form-card {
-    padding: 1rem;
+    padding: 3rem;
     min-width: 25vw;
     max-width: 90vw;
 
     .login-form-card-content {
       padding: 2rem 4rem;
     }
+
+  }
+
+  .field {
+    margin-bottom: 1rem !important;
   }
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { InputText } from 'primereact/inputtext'
 import { Checkbox } from 'primereact/checkbox'
 import { Button } from 'primereact/button'
@@ -8,9 +8,6 @@ import { Password } from 'primereact/password'
 import { useAuth } from '@/hooks/auth'
 
 const Login = () => {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [status, setStatus] = useState(null)
     const defaultValues = {
         email: '',
         password: '',
@@ -21,7 +18,6 @@ const Login = () => {
         formState: { errors },
         handleSubmit,
         setError,
-        setValue,
     } = useForm({ defaultValues })
 
     const { login } = useAuth({
@@ -35,7 +31,6 @@ const Login = () => {
             password: data.password,
             remember: data.remember_me,
             setError,
-            setStatus,
         })
     }
 
@@ -50,12 +45,12 @@ const Login = () => {
     return (
         <div className="login-form">
             <div className="flex justify-content-center">
-                <div className="card">
+                <div className="card login-form-card">
                     <h5 className="text-center">Openstead</h5>
                     <form onSubmit={handleSubmit(onSubmit)} className="p-fluid">
                         <div className="field">
                             <span className="p-float-label p-input-icon-right">
-                                <i className="pi pi-envelope" />
+                                <i className="ti ti-mail" />
                                 <Controller
                                     name="email"
                                     control={control}
@@ -65,9 +60,6 @@ const Login = () => {
                                             value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
                                             message: 'Invalid email address',
                                         },
-                                    }}
-                                    onChange={([selectedValue]) => {
-                                        setValue(email, selectedValue)
                                     }}
                                     render={({
                                         field: { onChange, value, name },
@@ -98,7 +90,6 @@ const Login = () => {
                                 <Controller
                                     name="password"
                                     control={control}
-                                    value={password}
                                     rules={{
                                         required: 'Password is required.',
                                     }}
@@ -110,6 +101,7 @@ const Login = () => {
                                             id={name}
                                             value={value}
                                             toggleMask
+                                            icon={<i className="ti ti-key" />}
                                             className={classNames({
                                                 'p-invalid': fieldState.invalid,
                                             })}
@@ -129,38 +121,34 @@ const Login = () => {
                             {getFormErrorMessage('password')}
                         </div>
 
-                        <div className="field-checkbox">
-                            <Controller
-                                name="remember_me"
-                                control={control}
-                                onChange={([selectedValue]) => {
-                                    setValue('remember_me', selectedValue)
-                                }}
-                                render={({
-                                    field: { name, value, onChange },
-                                    fieldState,
-                                }) => (
-                                    <Checkbox
-                                        inputId={name}
-                                        // onChange={e =>
-                                        //     field.onChange(e.checked)
-                                        // }
-                                        value={value}
-                                        onChange={onChange}
-                                        checked={value}
-                                        className={classNames({
-                                            'p-invalid': fieldState.invalid,
-                                        })}
-                                    />
-                                )}
-                            />
-                            <label
-                                htmlFor="remember_me"
-                                className={classNames({
-                                    'p-error': errors.accept,
-                                })}>
-                                Remember me
-                            </label>
+                        <div className="field">
+                            <div className="field-checkbox">
+                                <Controller
+                                    name="remember_me"
+                                    control={control}
+                                    render={({
+                                        field: { name, value, onChange },
+                                        fieldState,
+                                    }) => (
+                                        <Checkbox
+                                            inputId={name}
+                                            value={value}
+                                            onChange={onChange}
+                                            checked={value}
+                                            className={classNames({
+                                                'p-invalid': fieldState.invalid,
+                                            })}
+                                        />
+                                    )}
+                                />
+                                <label
+                                    htmlFor="remember_me"
+                                    className={classNames({
+                                        'p-error': errors.accept,
+                                    })}>
+                                    &nbsp;Remember me
+                                </label>
+                            </div>
                         </div>
 
                         <Button type="submit" label="Login" className="mt-2" />

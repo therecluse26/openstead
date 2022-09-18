@@ -36,7 +36,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     const login = async ({ setError, setStatus, ...props }) => {
         await csrf()
 
-        setStatus(null)
+        // setStatus(null)
 
         axios
             .post('/login', props)
