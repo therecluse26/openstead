@@ -10,7 +10,23 @@ const menu = [
             {
                 label: 'Inventory',
                 icon: 'ti ti-building-warehouse',
-                to: '/inventory',
+                items: [
+                    {
+                        label: 'Equipment',
+                        icon: 'ti ti-tractor',
+                        to: '/inventory/equipment',
+                    },
+                    {
+                        label: 'Livestock',
+                        icon: 'ti ti-pig',
+                        to: '/inventory/livestock',
+                    },
+                    {
+                        label: 'All Inventory',
+                        icon: 'ti ti-building-warehouse',
+                        to: '/inventory',
+                    },
+                ],
             },
         ],
     },
