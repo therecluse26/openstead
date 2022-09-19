@@ -3,7 +3,6 @@ import { useRouter } from 'next/router'
 import ResponsiveNavLink from '@/components/ResponsiveNavLink'
 import classNames from 'classnames'
 import { useAuth } from '@/hooks/auth'
-import { Button } from 'primereact/button'
 import { Menu } from 'primereact/menu'
 
 export const TopBar = (props, { user }) => {
@@ -23,13 +22,11 @@ export const TopBar = (props, { user }) => {
     ]
     return (
         <div className="layout-topbar">
-            <ResponsiveNavLink href="/" active={router.pathname === '/'}>
-                Dashboard
-            </ResponsiveNavLink>
+            <ResponsiveNavLink href="/">Openstead</ResponsiveNavLink>
 
             <button
                 type="button"
-                className="p-link  layout-menu-button layout-topbar-button"
+                className="p-link layout-menu-button layout-topbar-button"
                 onClick={props.onToggleMenuClick}>
                 <i className="ti ti-menu-2" />
             </button>
@@ -40,7 +37,6 @@ export const TopBar = (props, { user }) => {
                 onClick={props.onMobileTopbarMenuClick}>
                 <i className="ti ti-dots-vertical" />
             </button>
-
             <ul
                 className={classNames('layout-topbar-menu lg:flex origin-top', {
                     'layout-topbar-menu-mobile-active':
@@ -65,14 +61,14 @@ export const TopBar = (props, { user }) => {
                 <li>
                     <Menu model={items} popup ref={menu} id="popup_menu" />
 
-                    <Button
+                    <button
                         className="p-link layout-topbar-button"
-                        icon="ti ti-user"
                         onClick={event => menu.current.toggle(event)}
                         aria-controls="popup_menu"
                         aria-haspopup>
                         <i className="ti ti-user" />
-                    </Button>
+                        <span>Account</span>
+                    </button>
                 </li>
             </ul>
         </div>

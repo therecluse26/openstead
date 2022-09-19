@@ -6,7 +6,7 @@ const Index = () => {
 
     return (
         <AppLayout title={'Dashboard'}>
-            <p>You're logged in, {user?.name}!</p>
+            <p>Welcome, {user?.name}!</p>
         </AppLayout>
     )
 }

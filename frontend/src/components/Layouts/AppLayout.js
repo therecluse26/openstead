@@ -1,22 +1,19 @@
 import { useAuth } from '@/hooks/auth'
 import React, { useRef, useState } from 'react'
 import classNames from 'classnames'
-import { AppMenu } from '@/components/AppMenu'
 import { Tooltip } from 'primereact/tooltip'
 import { AppFooter } from '@/components/AppFooter'
 import { CSSTransition } from 'react-transition-group'
 import { TopBar } from '@/components/Layouts/TopBar'
-import menu from '@/components/_menu'
+import SidebarMenu from '@/SidebarMenu'
 
 const AppLayout = ({ children }) => {
     const { user } = useAuth({ middleware: 'auth' })
     const [layoutMode] = useState('static')
     const [layoutColorMode] = useState('dark')
-
     const [overlayMenuActive, setOverlayMenuActive] = useState(false)
     const [staticMenuInactive, setStaticMenuInactive] = useState(false)
     const [mobileMenuActive, setMobileMenuActive] = useState(false)
-
     const [mobileTopbarMenuActive, setMobileTopbarMenuActive] = useState(false)
     const copyTooltipRef = useRef()
 
@@ -44,16 +41,7 @@ const AppLayout = ({ children }) => {
         menuClick = true
 
         if (isDesktop()) {
-            if (layoutMode === 'overlay') {
-                if (mobileMenuActive === true) {
-                    setOverlayMenuActive(true)
-                }
-
-                setOverlayMenuActive(prevState => !prevState)
-                setMobileMenuActive(false)
-            } else if (layoutMode === 'static') {
-                setStaticMenuInactive(prevState => !prevState)
-            }
+            setStaticMenuInactive(prevState => !prevState)
         } else {
             setMobileMenuActive(prevState => !prevState)
         }
@@ -84,7 +72,6 @@ const AppLayout = ({ children }) => {
 
     const onMobileSubTopbarMenuClick = event => {
         mobileTopbarMenuClick = true
-
         event.preventDefault()
     }
 
@@ -117,13 +104,14 @@ const AppLayout = ({ children }) => {
                 user={user}
             />
 
-            <div className="layout-sidebar" onClick={onSidebarClick}>
-                <AppMenu
-                    model={menu}
-                    onMenuItemClick={onMenuItemClick}
-                    layoutColorMode={layoutColorMode}
-                />
-            </div>
+            <SidebarMenu
+                mobileMenuActive={mobileMenuActive}
+                staticMenuInactive={staticMenuInactive}
+                onToggleMenuClick={onToggleMenuClick}
+                onSidebarClick={onSidebarClick}
+                onMenuItemClick={onMenuItemClick}
+                layoutColorMode={layoutColorMode}
+            />
 
             {/* Page Content */}
             <div className="layout-main-container">
