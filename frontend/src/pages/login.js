@@ -46,7 +46,7 @@ const Login = () => {
 
     return (
         <GuestLayout>
-            <h5 className="text-center">Openstead</h5>
+            <h3 className="text-center">Openstead</h3>
             <form onSubmit={handleSubmit(onSubmit)} className="p-fluid">
                 <div className="field">
                     <span className="p-float-label p-input-icon-right">
@@ -152,9 +152,7 @@ const Login = () => {
                 </div>
 
                 <div className="field">
-                    <Link href="/register">
-                        <a>Or Register a New Account</a>
-                    </Link>
+                    <Link href="/register">Or Register a New Account</Link>
                 </div>
 
                 <Button type="submit" label="Login" className="mt-2" />

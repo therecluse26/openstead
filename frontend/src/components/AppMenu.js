@@ -5,7 +5,7 @@ import classNames from 'classnames'
 import { Ripple } from 'primereact/ripple'
 import { Badge } from 'primereact/badge'
 
-const AppSubmenu = props => {
+const AppSubmenu = React.memo(props => {
     const [activeIndex, setActiveIndex] = useState(null)
 
     const onMenuItemClick = (event, item, index) => {
@@ -67,8 +67,10 @@ const AppSubmenu = props => {
                     className="p-ripple"
                     activeClassName="router-link-active router-link-exact-active"
                     href={item.to}
+                    as={item.to}
                     exact
-                    target={item.target}>
+                    target={item.target}
+                    shallow>
                     {content}
                 </NavLink>
             )
@@ -140,9 +142,9 @@ const AppSubmenu = props => {
             {items}
         </ul>
     ) : null
-}
+})
 
-export const AppMenu = props => {
+const AppMenu = React.memo(function (props) {
     return (
         <div className="layout-menu-container">
             <AppSubmenu
@@ -154,4 +156,9 @@ export const AppMenu = props => {
             />
         </div>
     )
-}
+})
+
+AppMenu.displayName = 'AppMenu'
+AppSubmenu.displayName = 'AppSubmenu'
+
+export { AppMenu, AppSubmenu }

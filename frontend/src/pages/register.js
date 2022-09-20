@@ -199,7 +199,7 @@ const Register = () => {
 
                 <div className="field">
                     <Link href="/login">
-                        <a>Have an Account? Click here to login</a>
+                        Have an Account? Click here to login
                     </Link>
                 </div>
 

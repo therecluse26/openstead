@@ -1,12 +1,12 @@
 import React from 'react'
 import InventoryList from '@/components/Layouts/Inventory/InventoryList'
 
-const Inventory = () => {
+const Livestock = () => {
     return (
-        <InventoryList title={'Inventory'}>
-            <p>Inventory</p>
+        <InventoryList title={'Livestock'}>
+            <p>Livestock</p>
         </InventoryList>
     )
 }
 
-export default React.memo(Inventory)
+export default React.memo(Livestock)

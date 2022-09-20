@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Enums\EquipmentCondition;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Equipment extends Model
 {
-    use HasFactory;
+	use HasFactory;
 
 	protected $table = 'equipment';
 
@@ -19,6 +20,14 @@ class Equipment extends Model
 		'description'
 	];
 
+	protected $casts = [
+		'condition' => EquipmentCondition::class
+	];
+
+	protected $appends = [
+		'condition_description'
+	];
+
 	public function inventory(): MorphMany
 	{
 		return $this->morphMany(LocationInventory::class, 'inventoriable');
@@ -27,5 +36,10 @@ class Equipment extends Model
 	public function images(): MorphMany
 	{
 		return $this->morphMany(Image::class, 'imageable');
+	}
+
+	public function getConditionDescriptionAttribute()
+	{
+		return $this->condition->toString();
 	}
 }
