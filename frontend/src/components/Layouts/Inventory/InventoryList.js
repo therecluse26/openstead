@@ -178,7 +178,7 @@ const InventoryList = ({ title }) => {
         }
     }
 
-    const conditionTemplate = rowData => {
+    const conditionTemplate = (rowData, elem) => {
         return (
             <Tag
                 className="mr-2"
@@ -186,6 +186,11 @@ const InventoryList = ({ title }) => {
                 value={rowData.condition_description}
             />
         )
+    }
+
+    // Body Templates
+    const bodyTemplate = (rowData, elem) => {
+        return rowData[elem.field]
     }
 
     return (
@@ -210,21 +215,42 @@ const InventoryList = ({ title }) => {
                     // onFilter={onFilter}
                     filters={lazyParams.filters}
                     loading={loading}
+                    loadingIcon={'loading-spinner'}
                     // selection={selectedCustomers}
                     // onSelectionChange={onSelectionChange}
                     // selectAll={selectAll}
                     // onSelectAllChange={onSelectAllChange}
                 >
-                    <Column field="id" header="ID" sortable />
-                    <Column field="name" header="Name" sortable />
-                    <Column field="type" header="Type" sortable />
+                    <Column
+                        field="id"
+                        header="ID"
+                        sortable
+                        body={bodyTemplate}
+                    />
+                    <Column
+                        field="name"
+                        header="Name"
+                        sortable
+                        body={bodyTemplate}
+                    />
+                    <Column
+                        field="type"
+                        header="Type"
+                        sortable
+                        body={bodyTemplate}
+                    />
                     <Column
                         field="condition"
                         header="Condition"
                         body={conditionTemplate}
                         sortable
                     />
-                    <Column field="description" header="Description" sortable />
+                    <Column
+                        field="description"
+                        header="Description"
+                        sortable
+                        body={bodyTemplate}
+                    />
                 </DataTable>
             </Card>
         </AppLayout>
