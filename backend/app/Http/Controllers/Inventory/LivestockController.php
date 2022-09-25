@@ -6,17 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Inventory\StoreEquipmentRequest;
 use App\Http\Requests\Inventory\UpdateEquipmentRequest;
 use App\Models\Equipment;
-use App\Services\Inventory\EquipmentService;
+use App\Models\Livestock;
 use App\Services\Inventory\InventoryService;
+use App\Services\Inventory\LivestockService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use JsonException;
 
-class EquipmentController extends Controller
+class LivestockController extends Controller
 {
 	public function getTypes()
 	{
-		return EquipmentService::getEquipmentTypes();
+		return LivestockService::getEquipmentTypes();
 	}
 
 	/**
@@ -27,7 +28,7 @@ class EquipmentController extends Controller
 	 */
 	public function index(Request $request, InventoryService $inventoryService)
 	{
-		return response($inventoryService::buildInventoryTableData(Equipment::class, $request));
+		return response($inventoryService::buildInventoryTableData(Livestock::class, $request));
 	}
 
 	/**

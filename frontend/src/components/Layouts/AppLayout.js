@@ -1,5 +1,5 @@
 import { useAuth } from '@/hooks/auth'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
 import { Tooltip } from 'primereact/tooltip'
 import { AppFooter } from '@/components/AppFooter'
@@ -12,26 +12,33 @@ const AppLayout = ({ children }) => {
     const [layoutMode] = useState('static')
     const [layoutColorMode] = useState('dark')
     const [overlayMenuActive, setOverlayMenuActive] = useState(false)
-    const [staticMenuInactive, setStaticMenuInactive] = useState(false)
+    const [sidebarMenuActive, setSidebarMenuActive] = useState(true)
     const [mobileMenuActive, setMobileMenuActive] = useState(false)
     const [mobileTopbarMenuActive, setMobileTopbarMenuActive] = useState(false)
     const copyTooltipRef = useRef()
-
     const wrapperClass = classNames('layout-wrapper', {
         'layout-overlay': layoutMode === 'overlay',
         'layout-static': layoutMode === 'static',
         'layout-static-sidebar-inactive':
-            staticMenuInactive && layoutMode === 'static',
+            !sidebarMenuActive && layoutMode === 'static',
         'layout-overlay-sidebar-active':
             overlayMenuActive && layoutMode === 'overlay',
         'layout-mobile-sidebar-active': mobileMenuActive,
 
         'layout-theme-light': layoutColorMode === 'light',
     })
-
-    // eslint-disable-next-line no-unused-vars
     let menuClick = false
     let mobileTopbarMenuClick = false
+
+    useEffect(() => {
+        setSidebarMenuActive(
+            JSON.parse(localStorage.getItem('sidebarMenuActive')),
+        )
+    }, [])
+    useEffect(() => {
+        // storing input name
+        localStorage.setItem('sidebarMenuActive', String(sidebarMenuActive))
+    }, [sidebarMenuActive])
 
     const isDesktop = () => {
         return window.innerWidth >= 992
@@ -41,7 +48,7 @@ const AppLayout = ({ children }) => {
         menuClick = true
 
         if (isDesktop()) {
-            setStaticMenuInactive(prevState => !prevState)
+            setSidebarMenuActive(prevState => !prevState)
         } else {
             setMobileMenuActive(prevState => !prevState)
         }
@@ -106,7 +113,7 @@ const AppLayout = ({ children }) => {
 
             <SidebarMenu
                 mobileMenuActive={mobileMenuActive}
-                staticMenuInactive={staticMenuInactive}
+                sidebarMenuActive={sidebarMenuActive}
                 onToggleMenuClick={onToggleMenuClick}
                 onSidebarClick={onSidebarClick}
                 onMenuItemClick={onMenuItemClick}

@@ -1,34 +1,35 @@
 import AppLayout from '@/components/Layouts/AppLayout'
 import React, { useEffect, useRef, useState } from 'react'
 import { DataTable } from 'primereact/datatable'
-import { Column } from 'primereact/column'
-import { EquipmentService } from '@/services/inventory/EquipmentService'
-import { Tag } from 'primereact/tag'
 import { Card } from 'primereact/card'
 import { Ripple } from 'primereact/ripple'
 import { classNames } from 'primereact/utils'
 import { Dropdown } from 'primereact/dropdown'
 
-const InventoryList = ({ title }) => {
-    const [inventory, setInventory] = useState([])
-    const [loading, setLoading] = useState(false)
-    const [perPage, setPerPage] = useState(10)
-    const [totalRecords, setTotalRecords] = useState(0)
+const InventoryList = ({
+    children,
+    service,
+    title,
+    filters,
+    setLazyParamsCallack,
+}) => {
     const isMounted = useRef(false)
-    const inventoryService = new EquipmentService()
+
+    const [selected, setSelected] = useState([])
+    const [perPage, setPerPage] = useState(10)
+    const [loading, setLoading] = useState(false)
+    const [inventory, setInventory] = useState([])
+    const [totalRecords, setTotalRecords] = useState(0)
     const [lazyParams, setLazyParams] = useState({
         first: 0,
         rows: perPage,
         page: 0,
         sortField: null,
         sortOrder: null,
-        filters: {
-            name: { value: '', matchMode: 'contains' },
-            condition: { value: '', matchMode: 'equals' },
-            description: { value: '', matchMode: 'contains' },
-            type: { value: '', matchMode: 'equals' },
-        },
+        filters: filters,
     })
+
+    const inventoryService = new service()
 
     const onPage = event => {
         setLazyParams(event)
@@ -38,27 +39,30 @@ const InventoryList = ({ title }) => {
         setLazyParams(event)
     }
 
-    let loadLazyTimeout = null
+    const onFilter = event => {
+        setLazyParams(event)
+    }
 
     useEffect(() => {
         isMounted.current = true
         loadLazyData()
     }, [lazyParams])
 
+    useEffect(() => {
+        setLazyParams(setLazyParamsCallack(lazyParams))
+    }, [filters])
+
     const loadLazyData = () => {
         setLoading(true)
 
-        if (loadLazyTimeout) {
-            clearTimeout(loadLazyTimeout)
-        }
-
-        //imitate delay of a backend call
         inventoryService
-            .getEquipmentList({ lazyEvent: JSON.stringify(lazyParams) })
+            .getList({ lazyEvent: JSON.stringify(lazyParams) })
             .then(data => {
                 setInventory(data.data)
                 setTotalRecords(data.total)
                 setPerPage(data.per_page)
+            })
+            .finally(() => {
                 setLoading(false)
             })
     }
@@ -140,63 +144,12 @@ const InventoryList = ({ title }) => {
         },
     }
 
-    // useEffect(() => {
-    //     isMounted.current = true
-    //     inventoryService.getEquipmentList().then(data => setInventory(data))
-    // }, []) // eslint-disable-line react-hooks/exhaustive-deps
-    //
-    // const onRowExpand = event => {
-    //     toast.current.show({
-    //         severity: 'info',
-    //         summary: 'Product Expanded',
-    //         detail: event.data.name,
-    //         life: 3000,
-    //     })
-    // }
-    //
-    // const onRowCollapse = event => {
-    //     toast.current.show({
-    //         severity: 'success',per_page
-    //         summary: 'Product Collapsed',
-    //         detail: event.data.name,
-    //         life: 3000,
-    //     })
-    // }
-
-    const getConditionBadge = condition => {
-        switch (condition) {
-            case 1:
-                return 'danger'
-            case 2:
-                return 'warning'
-            case 3:
-                return 'info'
-            case 4:
-                return 'primary'
-            case 5:
-                return 'success'
-        }
-    }
-
-    const conditionTemplate = (rowData, elem) => {
-        return (
-            <Tag
-                className="mr-2"
-                severity={getConditionBadge(rowData.condition)}
-                value={rowData.condition_description}
-            />
-        )
-    }
-
-    // Body Templates
-    const bodyTemplate = (rowData, elem) => {
-        return rowData[elem.field]
-    }
+    const onSelectionChange = e => setSelected(e.value)
 
     return (
         <AppLayout title={title}>
             <Card>
-                <h3 className="text-center">Equipment</h3>
+                <h3 className="text-center">{title}</h3>
                 <DataTable
                     value={inventory}
                     lazy
@@ -212,45 +165,13 @@ const InventoryList = ({ title }) => {
                     onSort={onSort}
                     sortField={lazyParams.sortField}
                     sortOrder={lazyParams.sortOrder}
-                    // onFilter={onFilter}
+                    onFilter={onFilter}
                     filters={lazyParams.filters}
                     loading={loading}
                     loadingIcon={'loading-spinner'}
-                    // selection={selectedCustomers}
-                    // onSelectionChange={onSelectionChange}
-                    // selectAll={selectAll}
-                    // onSelectAllChange={onSelectAllChange}
-                >
-                    <Column
-                        field="id"
-                        header="ID"
-                        sortable
-                        body={bodyTemplate}
-                    />
-                    <Column
-                        field="name"
-                        header="Name"
-                        sortable
-                        body={bodyTemplate}
-                    />
-                    <Column
-                        field="type"
-                        header="Type"
-                        sortable
-                        body={bodyTemplate}
-                    />
-                    <Column
-                        field="condition"
-                        header="Condition"
-                        body={conditionTemplate}
-                        sortable
-                    />
-                    <Column
-                        field="description"
-                        header="Description"
-                        sortable
-                        body={bodyTemplate}
-                    />
+                    selection={selected}
+                    onSelectionChange={onSelectionChange}>
+                    {children}
                 </DataTable>
             </Card>
         </AppLayout>

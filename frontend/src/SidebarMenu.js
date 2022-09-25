@@ -4,18 +4,16 @@ import React from 'react'
 
 const SidebarMenu = ({
     mobileMenuActive,
-    staticMenuInactive,
+    sidebarMenuActive,
     onToggleMenuClick,
     onSidebarClick,
     onMenuItemClick,
     layoutColorMode,
 }) => {
     if (!mobileMenuActive) {
-        if (staticMenuInactive) {
+        if (!sidebarMenuActive) {
             return (
-                <div
-                    className="layout-sidebar-closed"
-                    onClick={onToggleMenuClick}>
+                <div className="layout-sidebar-closed">
                     <div className="sidebar-toggle-button-container">
                         <button
                             className="p-link layout-topbar-button text-white"

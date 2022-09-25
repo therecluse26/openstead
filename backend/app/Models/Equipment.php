@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Contracts\Inventoriable;
 use App\Enums\EquipmentCondition;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-class Equipment extends Model
+class Equipment extends Model implements Inventoriable
 {
 	use HasFactory;
 

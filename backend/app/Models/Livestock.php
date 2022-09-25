@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
+use App\Contracts\Inventoriable;
 use App\Enums\LivestockType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-class Livestock extends Model
+class Livestock extends Model implements Inventoriable
 {
-    use HasFactory;
+	use HasFactory;
 
 	protected $table = 'livestock';
 

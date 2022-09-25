@@ -145,7 +145,7 @@ elif [ "$1" == "docker-nuke" ]; then
 
         docker-compose exec \
             "$APP_SERVICE" \
-            composer "$@"
+            /usr/local/bin/php /usr/bin/composer.phar "$@"
 
     # Proxy Artisan commands to the "artisan" binary on the application container...
     elif [ "$1" == "artisan" ] || [ "$1" == "art" ]; then

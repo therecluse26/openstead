@@ -7,15 +7,31 @@
   user-select: none;
   top: 7rem;
   left: 2rem;
-  transition: transform $transitionDuration, left $transitionDuration;
+  transition: transform $transitionDuration, right $transitionDuration;
   background-color: var(--surface-overlay);
   border-radius: 12px;
-  padding: 1.5rem;
+  padding-left: 1.5rem;
+
+  .layout-menu-container {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
 
   .sidebar-toggle-button-container {
     @include styleclass('flex align-items-center');
     height: 100%;
     float: right;
+
+    > button {
+      padding-right: 0.5rem;
+      padding-left: 0.5rem;
+      height: 100%;
+      width: 100%;
+
+      &:hover {
+        background-color: var(--surface-hover)
+      }
+    }
   }
 }
 
@@ -134,8 +150,7 @@
   left: 0;
   transition: transform $transitionDuration, left $transitionDuration;
   background-color: var(--surface-overlay);
-  padding-left: 1rem;
-  padding-right: 0.5rem;
+
   margin-right: 2rem;
   cursor: pointer;
 
@@ -146,5 +161,16 @@
     @include styleclass('flex align-items-center');
     height: 100%;
     float: right;
+
+    > button {
+      padding-right: 0.5rem;
+      padding-left: 0.5rem;
+      height: 100%;
+      width: 100%;
+
+      &:hover {
+        background-color: var(--surface-hover)
+      }
+    }
   }
 }

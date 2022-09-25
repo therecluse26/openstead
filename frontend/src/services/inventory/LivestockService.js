@@ -1,6 +1,6 @@
 import axios from '@/lib/axios'
 
-export class EquipmentService {
+export class LivestockService {
     getList(params) {
         const queryParams = params
             ? Object.keys(params)
@@ -13,15 +13,15 @@ export class EquipmentService {
                   .join('&')
             : ''
         return axios
-            .get('/api/inventory/equipment?' + queryParams)
+            .get('/api/inventory/livestock?' + queryParams)
             .then(res => res.data)
     }
 
     getItem() {
-        return axios.get('/api/inventory/equipment').then(res => res.data)
+        return axios.get('/api/inventory/livestock').then(res => res.data)
     }
 
     getTypes() {
-        return axios.get('/api/inventory/equipment-types').then(res => res.data)
+        return axios.get('/api/inventory/livestock-types').then(res => res.data)
     }
 }
