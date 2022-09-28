@@ -25,6 +25,10 @@ class Livestock extends Model implements Inventoriable
 		'type' => LivestockType::class
 	];
 
+	protected $appends = [
+		'type_description'
+	];
+
 	public function inventory(): MorphMany
 	{
 		return $this->morphMany(LocationInventory::class, 'inventoriable');
@@ -33,5 +37,10 @@ class Livestock extends Model implements Inventoriable
 	public function images(): MorphMany
 	{
 		return $this->morphMany(Image::class, 'imageable');
+	}
+
+	public function getTypeDescriptionAttribute()
+	{
+		return $this->type->formatted();
 	}
 }

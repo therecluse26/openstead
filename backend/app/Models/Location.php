@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use App\Enums\LivestockType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Location extends Model
 {
-    use HasFactory;
+	use HasFactory;
 
 	protected $table = 'locations';
 
@@ -23,4 +23,8 @@ class Location extends Model
 		'country'
 	];
 
+	public function inventory(): HasMany
+	{
+		return $this->hasMany(LocationInventory::class, 'location_id');
+	}
 }

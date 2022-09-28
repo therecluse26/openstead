@@ -17,8 +17,8 @@ export class EquipmentService {
             .then(res => res.data)
     }
 
-    getItem() {
-        return axios.get('/api/inventory/equipment').then(res => res.data)
+    getItem(id) {
+        return axios.get('/api/inventory/equipment/' + id).then(res => res.data)
     }
 
     getTypes() {

@@ -5,7 +5,7 @@ import classNames from 'classnames'
 import { useAuth } from '@/hooks/auth'
 import { Menu } from 'primereact/menu'
 
-export const TopBar = (props, { user }) => {
+export const TopBar = props => {
     const router = useRouter()
     const { logout } = useAuth()
     const menu = useRef(null)

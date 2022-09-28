@@ -14,7 +14,6 @@ const InventoryList = ({
     setLazyParamsCallack,
 }) => {
     const isMounted = useRef(false)
-
     const [selected, setSelected] = useState([])
     const [perPage, setPerPage] = useState(10)
     const [loading, setLoading] = useState(false)
@@ -43,14 +42,7 @@ const InventoryList = ({
         setLazyParams(event)
     }
 
-    useEffect(() => {
-        isMounted.current = true
-        loadLazyData()
-    }, [lazyParams])
-
-    useEffect(() => {
-        setLazyParams(setLazyParamsCallack(lazyParams))
-    }, [filters])
+    const onSelectionChange = e => setSelected(e.value)
 
     const loadLazyData = () => {
         setLoading(true)
@@ -66,6 +58,15 @@ const InventoryList = ({
                 setLoading(false)
             })
     }
+
+    useEffect(() => {
+        isMounted.current = true
+        loadLazyData()
+    }, [lazyParams])
+
+    useEffect(() => {
+        setLazyParams(setLazyParamsCallack(lazyParams))
+    }, [filters])
 
     const paginatorTemplate = {
         layout:
@@ -144,8 +145,6 @@ const InventoryList = ({
         },
     }
 
-    const onSelectionChange = e => setSelected(e.value)
-
     return (
         <AppLayout title={title}>
             <Card>
@@ -170,6 +169,7 @@ const InventoryList = ({
                     loading={loading}
                     loadingIcon={'loading-spinner'}
                     selection={selected}
+                    selectionMode={'checkbox'}
                     onSelectionChange={onSelectionChange}>
                     {children}
                 </DataTable>

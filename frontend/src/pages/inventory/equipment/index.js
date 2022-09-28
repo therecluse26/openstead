@@ -4,6 +4,7 @@ import { Column } from 'primereact/column'
 import { Tag } from 'primereact/tag'
 import { EquipmentService } from '@/services/inventory/EquipmentService'
 import { Dropdown } from 'primereact/dropdown'
+import Link from 'next/link'
 
 const Equipment = () => {
     const [equipmentTypes, setEquipmentTypes] = useState([])
@@ -125,6 +126,14 @@ const Equipment = () => {
         return rowData[elem.field]
     }
 
+    const bodyLinkTemplate = (rowData, elem) => {
+        return (
+            <Link href={`/inventory/equipment/${rowData.id}`}>
+                {rowData[elem.field]}
+            </Link>
+        )
+    }
+
     return (
         <InventoryList
             title={'Equipment'}
@@ -137,7 +146,7 @@ const Equipment = () => {
                 field="name"
                 header="Name"
                 sortable
-                body={bodyTemplate}
+                body={bodyLinkTemplate}
                 filter
                 filterPlaceholder="Search"
             />

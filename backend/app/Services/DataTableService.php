@@ -4,8 +4,18 @@ namespace App\Services;
 
 use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * Service for general Datatable functionality
+ */
 class DataTableService
 {
+	/**
+	 * Builds filters for datatable
+	 *
+	 * @param Builder $query
+	 * @param object $filters
+	 * @return Builder
+	 */
 	public static function buildFilters(Builder $query, object $filters)
 	{
 		foreach ($filters as $key => $filter) {
@@ -20,6 +30,12 @@ class DataTableService
 
 	}
 
+	/**
+	 * Gets appropriate operator for datatable filter match mode
+	 *
+	 * @param $filter
+	 * @return array|string[]
+	 */
 	public static function getFilter($filter)
 	{
 		return match ($filter->matchMode) {

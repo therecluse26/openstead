@@ -5,13 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class LocationInventory extends Model
 {
-    use HasFactory;
+	use HasFactory;
 
 	protected $table = 'location_inventory';
 
@@ -20,7 +18,7 @@ class LocationInventory extends Model
 		'quantity',
 		'acquired_at'
 	];
-
+	
 	public function inventoriable(): MorphTo
 	{
 		return $this->morphTo();

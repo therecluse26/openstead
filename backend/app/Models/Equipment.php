@@ -41,6 +41,6 @@ class Equipment extends Model implements Inventoriable
 
 	public function getConditionDescriptionAttribute()
 	{
-		return $this->condition->toString();
+		return $this->condition ? $this->condition->toString() : "Unknown";
 	}
 }
