@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Contracts\Inventoriable;
 use App\Enums\EquipmentCondition;
+use App\Enums\EquipmentType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -21,13 +22,23 @@ class Equipment extends Model implements Inventoriable
 		'description'
 	];
 
+//	protected $fillableFormTypes = [
+//		'type' => ['type' => 'select', 'options' => EquipmentType::class],
+//		'condition' => ['type' => 'select', 'options' => EquipmentCondition::class],
+//	];
+
 	protected $casts = [
+		'type' => EquipmentType::class,
 		'condition' => EquipmentCondition::class
 	];
 
 	protected $appends = [
-		'condition_description'
+		'condition_description',
 	];
+
+	public function getFillableFormTypesAttribute()
+	{
+	}
 
 	public function inventory(): MorphMany
 	{

@@ -137,6 +137,7 @@ const Equipment = () => {
     return (
         <InventoryList
             title={'Equipment'}
+            inventoryType={'equipment'}
             service={EquipmentService}
             filters={filters}
             setLazyParamsCallack={lazyParamsCallback}>

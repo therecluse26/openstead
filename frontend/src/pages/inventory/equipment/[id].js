@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react'
-import AppLayout from '@/components/Layouts/AppLayout'
 import { Card } from 'primereact/card'
 import { useRouter } from 'next/router'
 import { EquipmentService } from '@/services/inventory/EquipmentService'
@@ -32,12 +31,10 @@ const EquipmentDetail = () => {
     }, [id])
 
     return (
-        <AppLayout title={'Equipment Detail'}>
-            <Card>
-                {JSON.stringify(equipmentData)}
-                <h2 className="text-center">{equipmentData?.name}</h2>
-            </Card>
-        </AppLayout>
+        <Card>
+            {JSON.stringify(equipmentData)}
+            <h2 className="text-center">{equipmentData?.name}</h2>
+        </Card>
     )
 }
 

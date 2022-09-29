@@ -86,6 +86,7 @@ const Livestock = () => {
     return (
         <InventoryList
             title={'Livestock'}
+            inventoryType={'livestock'}
             service={LivestockService}
             filters={filters}
             setLazyParamsCallack={lazyParamsCallback}>

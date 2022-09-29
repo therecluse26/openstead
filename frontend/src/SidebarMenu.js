@@ -47,4 +47,4 @@ const SidebarMenu = ({
     return ''
 }
 
-export default SidebarMenu
+export default React.memo(SidebarMenu)

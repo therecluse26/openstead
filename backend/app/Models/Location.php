@@ -13,6 +13,7 @@ class Location extends Model
 	protected $table = 'locations';
 
 	protected $fillable = [
+		'primary',
 		'name',
 		'description',
 		'address1',
@@ -21,6 +22,10 @@ class Location extends Model
 		'state',
 		'zip',
 		'country'
+	];
+
+	protected $casts = [
+		'primary' => 'boolean'
 	];
 
 	public function inventory(): HasMany

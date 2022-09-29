@@ -46,7 +46,6 @@ const AppLayout = ({ children }) => {
 
     const onToggleMenuClick = event => {
         menuClick = true
-
         if (isDesktop()) {
             setSidebarMenuActive(prevState => !prevState)
         } else {
@@ -137,4 +136,4 @@ const AppLayout = ({ children }) => {
     )
 }
 
-export default AppLayout
+export default React.memo(AppLayout)
