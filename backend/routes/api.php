@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Inventory\EquipmentController;
 use App\Http\Controllers\Inventory\LivestockController;
+use App\Http\Controllers\LocationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,20 +16,24 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 	return $request->user();
 });
 
-Route::get('/dashboard/reports', [DashboardController::class, 'getReports']);
+//Route::get('/dashboard/reports', [DashboardController::class, 'getReports']);
 
-Route::middleware(['auth:sanctum'])
-	->prefix('/inventory')
-	->group(function () {
-		Route::resource('/equipment', EquipmentController::class);
-		Route::get('/equipment-types', [EquipmentController::class, 'getTypes']);
+Route::middleware(['auth:sanctum'])->group(function () {
+	Route::get('/locations/dropdown', [LocationController::class, 'getLocationsDropdown']);
 
-		Route::resource('/livestock', LivestockController::class);
-		Route::get('/livestock-types', [LivestockController::class, 'getTypes']);
-	});
+	Route::prefix('/inventory')
+		->group(function () {
+			Route::get('/equipment/types', [EquipmentController::class, 'getTypes']);
+			Route::resource('/equipment', EquipmentController::class);
+
+			Route::get('/livestock/types', [LivestockController::class, 'getTypes']);
+			Route::resource('/livestock', LivestockController::class);
+		});
+});
+
+
 

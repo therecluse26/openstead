@@ -22,6 +22,6 @@ export class EquipmentService {
     }
 
     getTypes() {
-        return axios.get('/api/inventory/equipment-types').then(res => res.data)
+        return axios.get('/api/inventory/equipment/types').then(res => res.data)
     }
 }

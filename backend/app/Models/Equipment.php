@@ -22,11 +22,6 @@ class Equipment extends Model implements Inventoriable
 		'description'
 	];
 
-//	protected $fillableFormTypes = [
-//		'type' => ['type' => 'select', 'options' => EquipmentType::class],
-//		'condition' => ['type' => 'select', 'options' => EquipmentCondition::class],
-//	];
-
 	protected $casts = [
 		'type' => EquipmentType::class,
 		'condition' => EquipmentCondition::class
@@ -35,10 +30,6 @@ class Equipment extends Model implements Inventoriable
 	protected $appends = [
 		'condition_description',
 	];
-
-	public function getFillableFormTypesAttribute()
-	{
-	}
 
 	public function inventory(): MorphMany
 	{

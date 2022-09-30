@@ -22,6 +22,6 @@ export class LivestockService {
     }
 
     getTypes() {
-        return axios.get('/api/inventory/livestock-types').then(res => res.data)
+        return axios.get('/api/inventory/livestock/types').then(res => res.data)
     }
 }

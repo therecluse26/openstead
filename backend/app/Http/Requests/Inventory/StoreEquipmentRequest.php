@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests\Inventory;
 
+use App\Enums\EquipmentCondition;
+use App\Enums\EquipmentType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class StoreEquipmentRequest extends FormRequest
 {
@@ -13,7 +16,7 @@ class StoreEquipmentRequest extends FormRequest
 	 */
 	public function authorize()
 	{
-		return false;
+		return true;
 	}
 
 	/**
@@ -24,7 +27,9 @@ class StoreEquipmentRequest extends FormRequest
 	public function rules()
 	{
 		return [
-			//
+			'name' => 'required',
+			'type' => ['required', new Enum(EquipmentType::class)],
+			'condition' => ['required', new Enum(EquipmentCondition::class)],
 		];
 	}
 }

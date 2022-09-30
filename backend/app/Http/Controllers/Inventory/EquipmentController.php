@@ -31,16 +31,6 @@ class EquipmentController extends Controller
 	}
 
 	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
-
-	/**
 	 * Store a newly created resource in storage.
 	 *
 	 * @param StoreEquipmentRequest $request
@@ -48,7 +38,12 @@ class EquipmentController extends Controller
 	 */
 	public function store(StoreEquipmentRequest $request)
 	{
-		//
+		return Equipment::create($request->only([
+			'name',
+			'type',
+			'condition',
+			'description'
+		]));
 	}
 
 	/**
