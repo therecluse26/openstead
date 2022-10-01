@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Inventory;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Inventory\StoreEquipmentRequest;
 use App\Http\Requests\Inventory\UpdateEquipmentRequest;
-use App\Models\Equipment;
+use App\Models\Inventory\Equipment;
+use App\Repositories\Inventory\EquipmentRepository;
 use App\Services\Inventory\EquipmentService;
 use App\Services\Inventory\InventoryService;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class EquipmentController extends Controller
 {
 	public function getTypes()
 	{
-		return EquipmentService::getEquipmentTypes();
+		return EquipmentService::getTypes();
 	}
 
 	/**
@@ -36,14 +37,9 @@ class EquipmentController extends Controller
 	 * @param StoreEquipmentRequest $request
 	 * @return Response
 	 */
-	public function store(StoreEquipmentRequest $request)
+	public function store(StoreEquipmentRequest $request, EquipmentRepository $equipmentRepository)
 	{
-		return Equipment::create($request->only([
-			'name',
-			'type',
-			'condition',
-			'description'
-		]));
+		return response($equipmentRepository->create($request), 200);
 	}
 
 	/**

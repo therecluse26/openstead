@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Equipment;
-use App\Models\Livestock;
+use App\Models\Inventory\Equipment;
+use App\Models\Inventory\Livestock;
 use App\Models\Location;
 use App\Models\User;
 use Illuminate\Database\Seeder;

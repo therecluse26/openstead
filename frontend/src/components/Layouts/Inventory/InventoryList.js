@@ -5,9 +5,9 @@ import { Ripple } from 'primereact/ripple'
 import { classNames } from 'primereact/utils'
 import { Dropdown } from 'primereact/dropdown'
 import Link from 'next/link'
-import { Button } from 'primereact/button'
 
 const InventoryList = ({
+    title,
     children,
     service,
     filters,
@@ -149,14 +149,10 @@ const InventoryList = ({
     const renderHeader = () => {
         return (
             <div className="flex justify-content-between align-items-center">
-                <h5 className="m-0">Customers</h5>
+                <h5 className="m-0">{title}</h5>
                 <span className="p-input-icon-left">
-                    <Link
-                        href={{
-                            pathname: '[inventoryType]/create',
-                            query: { inventoryType: inventoryType },
-                        }}>
-                        <Button>+ Create</Button>
+                    <Link href={`${inventoryType}/add`}>
+                        <a>+ Add</a>
                     </Link>
                 </span>
             </div>

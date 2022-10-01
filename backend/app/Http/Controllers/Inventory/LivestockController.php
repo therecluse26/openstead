@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Inventory;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Inventory\StoreEquipmentRequest;
-use App\Http\Requests\Inventory\UpdateEquipmentRequest;
-use App\Models\Equipment;
-use App\Models\Livestock;
+use App\Http\Requests\Inventory\StoreLivestockRequest;
+use App\Http\Requests\Inventory\UpdateLivestockRequest;
+use App\Models\Inventory\Livestock;
+use App\Repositories\Inventory\LivestockRepository;
 use App\Services\Inventory\InventoryService;
 use App\Services\Inventory\LivestockService;
 use Illuminate\Http\Request;
@@ -17,7 +17,7 @@ class LivestockController extends Controller
 {
 	public function getTypes()
 	{
-		return LivestockService::getEquipmentTypes();
+		return LivestockService::getTypes();
 	}
 
 	/**
@@ -44,32 +44,32 @@ class LivestockController extends Controller
 	/**
 	 * Store a newly created resource in storage.
 	 *
-	 * @param StoreEquipmentRequest $request
+	 * @param StoreLivestockRequest $request
 	 * @return Response
 	 */
-	public function store(StoreEquipmentRequest $request)
+	public function store(StoreLivestockRequest $request, LivestockRepository $livestockRepository)
 	{
-		//
+		return response($livestockRepository->create($request), 200);
 	}
 
 	/**
 	 * Display the specified resource.
 	 *
-	 * @param Equipment $equipment
+	 * @param Livestock $livestock
 	 * @return Response
 	 */
-	public function show(Equipment $equipment)
+	public function show(Livestock $livestock)
 	{
-		return response($equipment);
+		return response($livestock);
 	}
 
 	/**
 	 * Show the form for editing the specified resource.
 	 *
-	 * @param Equipment $equipment
+	 * @param Livestock $livestock
 	 * @return Response
 	 */
-	public function edit(Equipment $equipment)
+	public function edit(Livestock $livestock)
 	{
 		//
 	}
@@ -77,11 +77,11 @@ class LivestockController extends Controller
 	/**
 	 * Update the specified resource in storage.
 	 *
-	 * @param UpdateEquipmentRequest $request
-	 * @param Equipment $equipment
+	 * @param UpdateLivestockRequest $request
+	 * @param Livestock $livestock
 	 * @return Response
 	 */
-	public function update(UpdateEquipmentRequest $request, Equipment $equipment)
+	public function update(UpdateLivestockRequest $request, Livestock $livestock)
 	{
 		//
 	}
@@ -89,11 +89,11 @@ class LivestockController extends Controller
 	/**
 	 * Remove the specified resource from storage.
 	 *
-	 * @param Equipment $equipment
+	 * @param Livestock $livestock
 	 * @return Response
 	 */
-	public function destroy(Equipment $equipment)
+	public function destroy(Livestock $livestock)
 	{
-		$equipment->delete();
+		$livestock->delete();
 	}
 }

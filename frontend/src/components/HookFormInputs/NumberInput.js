@@ -1,9 +1,19 @@
 import { Controller } from 'react-hook-form'
-import { InputText } from 'primereact/inputtext'
 import { classNames } from 'primereact/utils'
 import React from 'react'
+import { InputNumber } from 'primereact/inputnumber'
 
-const TextInput = ({ control, name, rules, label }) => {
+const NumberInput = ({
+    control,
+    name,
+    rules,
+    label,
+    mode,
+    step,
+    showButtons,
+    min,
+    max,
+}) => {
     return (
         <span className="p-float-label">
             <Controller
@@ -11,13 +21,21 @@ const TextInput = ({ control, name, rules, label }) => {
                 control={control}
                 rules={rules}
                 render={({ field: { onChange, value, name }, fieldState }) => (
-                    <InputText
+                    <InputNumber
                         id={name}
                         value={value}
+                        mode={mode}
                         className={classNames({
                             'p-invalid': fieldState.error,
                         })}
-                        onChange={onChange}
+                        onValueChange={onChange}
+                        showButtons={showButtons}
+                        step={step}
+                        min={min ?? 0}
+                        max={max ?? null}
+                        buttonLayout="horizontal"
+                        incrementButtonIcon="ti ti-plus"
+                        decrementButtonIcon="ti ti-minus"
                     />
                 )}
             />
@@ -26,4 +44,4 @@ const TextInput = ({ control, name, rules, label }) => {
     )
 }
 
-export default TextInput
+export default NumberInput

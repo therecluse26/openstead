@@ -3,7 +3,8 @@
 namespace App\Repositories\Inventory;
 
 use App\Enums\EquipmentCondition;
-use App\Models\Equipment;
+use App\Http\Requests\Inventory\StoreEquipmentRequest;
+use App\Models\Inventory\Equipment;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -45,6 +46,20 @@ class EquipmentRepository extends InventoryRepository
 			->get()
 			->map
 			->only('type', 'count');
+	}
+
+	public function create(StoreEquipmentRequest $request): Equipment
+	{
+		$equipment = $this->model->create($request->only([
+			'name',
+			'type',
+			'condition',
+			'description'
+		]));
+
+		$this->createInventoryRelation($equipment, $request);
+
+		return $equipment;
 	}
 
 }

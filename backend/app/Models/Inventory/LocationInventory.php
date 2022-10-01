@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Inventory;
 
+use App\Models\Location;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,7 +19,7 @@ class LocationInventory extends Model
 		'quantity',
 		'acquired_at'
 	];
-	
+
 	public function inventoriable(): MorphTo
 	{
 		return $this->morphTo();

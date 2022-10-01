@@ -4,9 +4,12 @@ namespace App\Repositories\Inventory;
 
 use App\Contracts\Inventoriable;
 use App\Contracts\Repositories\InventoryContract;
-use App\Models\LocationInventory;
+use App\Models\Inventory\LocationInventory;
+use App\Models\Location;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class InventoryRepository implements InventoryContract
 {
@@ -112,5 +115,13 @@ class InventoryRepository implements InventoryContract
 			->sum('quantity');
 	}
 
+	public function createInventoryRelation(Inventoriable $model, Request $request)
+	{
+		$model->inventory()->create([
+			'location_id' => $request->get('location') ?? Location::first()?->id,
+			'quantity' => $request->get('quantity') ?? 1,
+			'acquired_at' => Carbon::parse($request->get('acquired_at')) ?? Carbon::now()
+		]);
+	}
 
 }

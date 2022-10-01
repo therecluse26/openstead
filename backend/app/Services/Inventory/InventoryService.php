@@ -25,9 +25,7 @@ class InventoryService
 		}
 
 		$modelRepo = new InventoryRepository(new $model());
-
-//		dd($modelRepo);
-
+		
 		$params = json_decode($request->get('lazyEvent'), false, 512, JSON_THROW_ON_ERROR);
 		$rows = $params->rows ?? 15;
 		$page = $params->page ?? 0;

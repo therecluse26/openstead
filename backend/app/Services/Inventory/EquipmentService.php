@@ -6,7 +6,7 @@ use App\Enums\EquipmentType;
 
 class EquipmentService
 {
-	public static function getEquipmentTypes()
+	public static function getTypes()
 	{
 		return EquipmentType::getTypes();
 	}

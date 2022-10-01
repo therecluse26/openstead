@@ -1,7 +1,7 @@
 import { Controller } from 'react-hook-form'
-import { InputText } from 'primereact/inputtext'
 import { classNames } from 'primereact/utils'
 import React from 'react'
+import { Calendar } from 'primereact/calendar'
 
 const TextInput = ({ control, name, rules, label }) => {
     return (
@@ -11,7 +11,7 @@ const TextInput = ({ control, name, rules, label }) => {
                 control={control}
                 rules={rules}
                 render={({ field: { onChange, value, name }, fieldState }) => (
-                    <InputText
+                    <Calendar
                         id={name}
                         value={value}
                         className={classNames({

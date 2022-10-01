@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Inventory;
 
 use App\Contracts\Inventoriable;
 use App\Enums\EquipmentCondition;
 use App\Enums\EquipmentType;
+use App\Models\Image;
+use App\Traits\HasInventory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -12,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 class Equipment extends Model implements Inventoriable
 {
 	use HasFactory;
+	use HasInventory;
 
 	protected $table = 'equipment';
 
@@ -30,11 +33,6 @@ class Equipment extends Model implements Inventoriable
 	protected $appends = [
 		'condition_description',
 	];
-
-	public function inventory(): MorphMany
-	{
-		return $this->morphMany(LocationInventory::class, 'inventoriable');
-	}
 
 	public function images(): MorphMany
 	{

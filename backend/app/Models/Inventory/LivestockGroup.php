@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Inventory;
 
 use App\Enums\LivestockType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class LivestockGroup extends Model
 {
-    use HasFactory;
+	use HasFactory;
 
 	protected $table = 'livestock_groups';
 

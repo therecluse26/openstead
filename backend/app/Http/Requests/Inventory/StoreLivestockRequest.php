@@ -2,12 +2,11 @@
 
 namespace App\Http\Requests\Inventory;
 
-use App\Enums\EquipmentCondition;
-use App\Enums\EquipmentType;
+use App\Enums\LivestockType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
 
-class StoreEquipmentRequest extends FormRequest
+class StoreLivestockRequest extends FormRequest
 {
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -28,10 +27,7 @@ class StoreEquipmentRequest extends FormRequest
 	{
 		return [
 			'name' => 'required',
-			'type' => ['required', new Enum(EquipmentType::class)],
-			'condition' => ['required', new Enum(EquipmentCondition::class)],
-			'location' => 'required',
-			'quantity' => ['required', 'integer', "min:0"]
+			'type' => ['required', new Enum(LivestockType::class)],
 		];
 	}
 }
