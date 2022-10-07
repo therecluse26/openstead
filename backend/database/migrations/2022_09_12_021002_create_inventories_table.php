@@ -26,21 +26,23 @@ return new class extends Migration {
 			$table->timestamps();
 		});
 
-		Schema::create('location_inventory', function (Blueprint $table) {
-			$table->id();
-			$table->unsignedBigInteger('location_id');
-			$table->morphs('inventoriable');
-			$table->integer('quantity')->default(0);
-			$table->dateTime('acquired_at')->nullable();
-			$table->timestamps();
-		});
-
 		Schema::create('livestock', function (Blueprint $table) {
 			$table->id();
 			$table->string('name', 255);
 			$table->string('type', 100);
 			$table->string('breed', 100)->nullable();
 			$table->dateTime('date_of_birth')->nullable();
+			$table->unsignedBigInteger('location_id')->nullable();
+			$table->integer('quantity')->default(1);
+			$table->dateTime('acquired_at')->nullable();
+			$table->timestamps();
+		});
+
+		Schema::create('livestock_breeds', function (Blueprint $table) {
+			$table->id();
+			$table->string('type', 100);
+			$table->string('name', 100);
+			$table->string('description', 255);
 			$table->timestamps();
 		});
 
@@ -64,6 +66,10 @@ return new class extends Migration {
 			$table->string('type', 100);
 			$table->integer('condition');
 			$table->string('description')->nullable();
+			$table->string('url', 2000)->nullable();
+			$table->unsignedBigInteger('location_id')->nullable();
+			$table->integer('quantity')->default(1);
+			$table->dateTime('acquired_at')->nullable();
 			$table->timestamps();
 		});
 
@@ -87,9 +93,8 @@ return new class extends Migration {
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('inventories');
-		Schema::dropIfExists('inventory_groups');
-		Schema::dropIfExists('inventory_group_items');
+		Schema::dropIfExists('livestock_groups');
+		Schema::dropIfExists('livestock_group_members');
 		Schema::dropIfExists('livestock');
 		Schema::dropIfExists('equipment');
 		Schema::dropIfExists('images');

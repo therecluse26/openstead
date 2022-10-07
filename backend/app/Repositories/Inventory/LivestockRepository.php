@@ -35,7 +35,7 @@ class LivestockRepository extends InventoryRepository
 			->groupBy('type')
 			->get()
 			->map(function ($e) {
-				$e->type_description = $e->type->formatted();
+				$e->type_formatted = $e->type->formatted();
 				return $e;
 			});
 	}

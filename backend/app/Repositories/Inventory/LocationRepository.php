@@ -2,11 +2,12 @@
 
 namespace App\Repositories\Inventory;
 
+use App\Contracts\Repository;
 use App\Models\Location;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
-class LocationRepository
+class LocationRepository implements Repository
 {
 	/**
 	 * Location model

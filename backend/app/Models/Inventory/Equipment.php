@@ -22,7 +22,10 @@ class Equipment extends Model implements Inventoriable
 		'name',
 		'type',
 		'condition',
-		'description'
+		'description',
+		'location_id',
+		'quantity',
+		'acquired_at'
 	];
 
 	protected $casts = [

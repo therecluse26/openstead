@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Inventory\EquipmentController;
+use App\Http\Controllers\Inventory\InventoryController;
 use App\Http\Controllers\Inventory\LivestockController;
 use App\Http\Controllers\LocationController;
 use Illuminate\Http\Request;
@@ -27,6 +28,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 	Route::prefix('/inventory')
 		->group(function () {
+			Route::get('/base/types', [InventoryController::class, 'getTypes']);
+			Route::resource('/base', InventoryController::class);
+
 			Route::get('/equipment/types', [EquipmentController::class, 'getTypes']);
 			Route::resource('/equipment', EquipmentController::class);
 

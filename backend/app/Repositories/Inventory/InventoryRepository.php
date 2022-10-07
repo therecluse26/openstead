@@ -4,14 +4,11 @@ namespace App\Repositories\Inventory;
 
 use App\Contracts\Inventoriable;
 use App\Contracts\Repositories\InventoryContract;
-use App\Models\Inventory\LocationInventory;
-use App\Models\Location;
+use App\Contracts\Repository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 
-class InventoryRepository implements InventoryContract
+class InventoryRepository implements InventoryContract, Repository
 {
 	/**
 	 * Model that implements Inventoriable contract
@@ -28,6 +25,11 @@ class InventoryRepository implements InventoryContract
 	public function __construct(Inventoriable $model)
 	{
 		$this->model = $model;
+	}
+
+	public function getModel()
+	{
+		return $this->model;
 	}
 
 	/**
@@ -86,42 +88,34 @@ class InventoryRepository implements InventoryContract
 	 */
 	public function getTotalInventoryTypeQuantity(): int
 	{
-		return LocationInventory::where('inventoriable_type', $this->model::class)
-			->sum('quantity');
+		return $this->model->sum('quantity');
 	}
 
 	/**
 	 * Retrieves total inventory quantity of given model
 	 *
+	 * @param $item_id
 	 * @return int
 	 */
 	public function getTotalItemQuantity($item_id): int
 	{
-		return LocationInventory::where('inventoriable_type', $this->model::class)
-			->where('inventoriable_id', $item_id)
+		return $this->model
+			->where('id', $item_id)
 			->sum('quantity');
 	}
 
 	/**
 	 * Retrieves total inventory quantity of given model
 	 *
+	 * @param $item_id
+	 * @param $location_id
 	 * @return int
 	 */
 	public function getItemQuantityAtLocation($item_id, $location_id): int
 	{
-		return LocationInventory::where('location_id', $location_id)
-			->where('inventoriable_type', $this->model::class)
-			->where('inventoriable_id', $item_id)
+		return $this->model
+			->where('id', $item_id)
 			->sum('quantity');
-	}
-
-	public function createInventoryRelation(Inventoriable $model, Request $request)
-	{
-		$model->inventory()->create([
-			'location_id' => $request->get('location') ?? Location::first()?->id,
-			'quantity' => $request->get('quantity') ?? 1,
-			'acquired_at' => Carbon::parse($request->get('acquired_at')) ?? Carbon::now()
-		]);
 	}
 
 }

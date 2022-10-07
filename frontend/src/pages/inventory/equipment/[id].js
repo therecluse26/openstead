@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Card } from 'primereact/card'
 import { useRouter } from 'next/router'
-import { EquipmentService } from '@/services/inventory/EquipmentService'
+import EquipmentService from '@/services/inventory/EquipmentService'
 
 const EquipmentDetail = () => {
     const isMounted = useRef(false)
@@ -9,14 +9,11 @@ const EquipmentDetail = () => {
     const { query, isReady } = useRouter()
     const { id } = query
 
-    const service = new EquipmentService()
-
     const loadData = () => {
         if (!isReady) {
             return
         }
-        service
-            .getItem(id)
+        EquipmentService.getItem(id)
             .then(data => {
                 setEquipmentData(data)
             })

@@ -6,6 +6,7 @@ import { AppFooter } from '@/components/AppFooter'
 import { CSSTransition } from 'react-transition-group'
 import { TopBar } from '@/components/Layouts/TopBar'
 import SidebarMenu from '@/SidebarMenu'
+import { Toast } from 'primereact/toast'
 
 const AppLayout = ({ children }) => {
     const { user } = useAuth({ middleware: 'auth' })
@@ -29,6 +30,16 @@ const AppLayout = ({ children }) => {
     })
     let menuClick = false
     let mobileTopbarMenuClick = false
+    const toast = useRef()
+
+    const showError = () => {
+        toast.current.show({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'Message Detail',
+            life: 3000,
+        })
+    }
 
     useEffect(() => {
         setSidebarMenuActive(
@@ -121,6 +132,8 @@ const AppLayout = ({ children }) => {
 
             {/* Page Content */}
             <div className="layout-main-container">
+                <Toast ref={toast} />
+
                 <div className="layout-main">{children}</div>
                 <AppFooter layoutColorMode={layoutColorMode} />
             </div>

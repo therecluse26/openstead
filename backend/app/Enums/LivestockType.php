@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Enums;
 
 enum LivestockType: string
@@ -11,10 +12,9 @@ enum LivestockType: string
 	case Horse = 'horse';
 	case Other = 'other';
 
-	public function formatted(): string
+	public function label(): string
 	{
-		return match($this)
-		{
+		return match ($this) {
 			self::Bird => 'Bird/Poultry',
 			self::Cattle => 'Cattle',
 			self::Swine => 'Pig/Swine',
@@ -23,6 +23,24 @@ enum LivestockType: string
 			self::Horse => 'Horse/Equine',
 			self::Other => 'Other'
 		};
+	}
+
+	public function icon(): string
+	{
+		return match ($this) {
+			self::Bird => '🐔',
+			self::Cattle => '🐮',
+			self::Swine => '🐷',
+			self::Sheep => '🐑',
+			self::Goat => '🐐',
+			self::Horse => '🐴',
+			self::Other => '🐸',
+		};
+	}
+
+	public function formatted(): array
+	{
+		return ['key' => $this, 'icon' => $this->icon(), 'label' => $this->label()];
 	}
 
 	public static function getTypes(): array

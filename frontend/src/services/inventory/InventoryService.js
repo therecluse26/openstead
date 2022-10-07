@@ -1,5 +1,13 @@
 import axios from '@/lib/axios'
 
+const getItem = id => {
+    return axios.get('/api/inventory/base/' + id).then(res => res.data)
+}
+
+const getTypes = () => {
+    return axios.get('/api/inventory/base/types').then(res => res.data)
+}
+
 const getList = params => {
     const queryParams = params
         ? Object.keys(params)
@@ -11,17 +19,7 @@ const getList = params => {
               )
               .join('&')
         : ''
-    return axios
-        .get('/api/inventory/equipment?' + queryParams)
-        .then(res => res.data)
-}
-
-const getItem = id => {
-    return axios.get('/api/inventory/equipment/' + id).then(res => res.data)
-}
-
-const getTypes = () => {
-    return axios.get('/api/inventory/equipment/types').then(res => res.data)
+    return axios.get('/api/inventory/base?' + queryParams).then(res => res.data)
 }
 
 export default { getItem, getTypes, getList }

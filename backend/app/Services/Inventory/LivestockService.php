@@ -10,4 +10,11 @@ class LivestockService
 	{
 		return LivestockType::getTypes();
 	}
+
+	public static function getFormattedTypes()
+	{
+		return collect(LivestockType::getTypes())->map(function ($type) {
+			return $type->formatted();
+		});
+	}
 }

@@ -17,7 +17,7 @@ class LivestockController extends Controller
 {
 	public function getTypes()
 	{
-		return LivestockService::getTypes();
+		return LivestockService::getFormattedTypes();
 	}
 
 	/**

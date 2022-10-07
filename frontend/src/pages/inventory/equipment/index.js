@@ -2,18 +2,19 @@ import React, { useEffect, useRef, useState } from 'react'
 import InventoryList from '@/components/Layouts/Inventory/InventoryList'
 import { Column } from 'primereact/column'
 import { Tag } from 'primereact/tag'
-import { EquipmentService } from '@/services/inventory/EquipmentService'
+import EquipmentService from '@/services/inventory/EquipmentService'
 import { Dropdown } from 'primereact/dropdown'
 import Link from 'next/link'
+import QuantityFilterTemplate from '@/pages/inventory/templates/QuantityFilterTemplate'
 
 const Equipment = () => {
     const [equipmentTypes, setEquipmentTypes] = useState([])
     const isMounted = useRef(false)
-    const service = new EquipmentService()
     const [filters, setFilters] = useState({
         name: { value: '', matchMode: 'contains' },
         condition: { value: '', matchMode: 'equals' },
         description: { value: '', matchMode: 'contains' },
+        quantity: { value: null, matchMode: 'equals' },
         type: { value: '', matchMode: 'equals' },
     })
     const equipmentConditions = [
@@ -87,7 +88,7 @@ const Equipment = () => {
     }
 
     const loadEquipmentTypes = () => {
-        service.getTypes().then(data => {
+        EquipmentService.getTypes().then(data => {
             setEquipmentTypes(
                 data.map(t => {
                     return { label: t, value: t }
@@ -171,6 +172,27 @@ const Equipment = () => {
                 filterPlaceholder="Search"
                 showFilterMenu={false}
                 showClear
+                style={{ width: '150px' }}
+            />
+            <Column
+                field="quantity"
+                header="Quantity"
+                sortable
+                filter
+                filterPlaceholder="Search"
+                filterElement={o => {
+                    return (
+                        <QuantityFilterTemplate
+                            options={o}
+                            setFilters={setFilters}
+                            filters={filters}
+                        />
+                    )
+                }}
+                dataType="numeric"
+                showFilterMenu={false}
+                showClear
+                style={{ width: '160px' }}
             />
             <Column
                 field="description"
@@ -179,6 +201,7 @@ const Equipment = () => {
                 body={bodyTemplate}
                 filter
                 filterPlaceholder="Search"
+                style={{ width: '40%' }}
             />
         </InventoryList>
     )

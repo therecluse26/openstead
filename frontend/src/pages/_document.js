@@ -1,4 +1,4 @@
-import Document, { Html, Head, Main, NextScript } from 'next/document'
+import Document, { Head, Html, Main, NextScript } from 'next/document'
 
 class MyDocument extends Document {
     static async getInitialProps(ctx) {
@@ -14,6 +14,7 @@ class MyDocument extends Document {
                         href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap"
                         rel="stylesheet"
                     />
+                    <meta charSet={'utf-8'} />
                 </Head>
                 <body className="antialiased">
                     <Main />

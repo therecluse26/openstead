@@ -2,9 +2,12 @@
 
 namespace App\Contracts;
 
-use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 interface Inventoriable
 {
-	public function inventory(): MorphMany;
+	public function location(): HasOne;
+
+	public function quantity(): Attribute;
 }

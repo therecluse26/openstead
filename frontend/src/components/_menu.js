@@ -1,6 +1,5 @@
 const menu = [
     {
-        label: 'Home',
         items: [
             {
                 label: 'Dashboard',
@@ -20,11 +19,6 @@ const menu = [
                         label: 'Livestock',
                         icon: 'ti ti-pig',
                         to: '/inventory/livestock',
-                    },
-                    {
-                        label: 'All Inventory',
-                        icon: 'ti ti-building-warehouse',
-                        to: '/inventory',
                     },
                 ],
             },

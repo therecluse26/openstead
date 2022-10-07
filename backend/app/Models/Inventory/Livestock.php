@@ -22,6 +22,9 @@ class Livestock extends Model implements Inventoriable
 		'type',
 		'breed',
 		'date_of_birth',
+		'location_id',
+		'quantity',
+		'acquired_at'
 	];
 
 	protected $casts = [
@@ -30,7 +33,7 @@ class Livestock extends Model implements Inventoriable
 	];
 
 	protected $appends = [
-		'type_description'
+		'type_description',
 	];
 
 	public function images(): MorphMany
@@ -42,4 +45,5 @@ class Livestock extends Model implements Inventoriable
 	{
 		return $this->type->formatted();
 	}
+	
 }

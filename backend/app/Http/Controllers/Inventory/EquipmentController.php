@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Inventory;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Inventory\ListInventoryRequest;
 use App\Http\Requests\Inventory\StoreEquipmentRequest;
 use App\Http\Requests\Inventory\UpdateEquipmentRequest;
 use App\Models\Inventory\Equipment;
 use App\Repositories\Inventory\EquipmentRepository;
 use App\Services\Inventory\EquipmentService;
 use App\Services\Inventory\InventoryService;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use JsonException;
 
@@ -26,7 +26,7 @@ class EquipmentController extends Controller
 	 * @return Response
 	 * @throws JsonException
 	 */
-	public function index(Request $request, InventoryService $inventoryService)
+	public function index(ListInventoryRequest $request, InventoryService $inventoryService)
 	{
 		return response($inventoryService::buildInventoryTableData(Equipment::class, $request));
 	}

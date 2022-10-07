@@ -2,16 +2,18 @@ import React, { useEffect, useRef, useState } from 'react'
 import InventoryList from '@/components/Layouts/Inventory/InventoryList'
 import { Column } from 'primereact/column'
 import { Dropdown } from 'primereact/dropdown'
-import { LivestockService } from '@/services/inventory/LivestockService'
+import LivestockService from '@/services/inventory/LivestockService'
+import Link from 'next/link'
+import QuantityFilterTemplate from '@/pages/inventory/templates/QuantityFilterTemplate'
 
 const Livestock = () => {
     const [types, setTypes] = useState([])
     const isMounted = useRef(false)
-    const service = new LivestockService()
     const [filters, setFilters] = useState({
         name: { value: '', matchMode: 'contains' },
         date_of_birth: { value: '', matchMode: 'equals' },
         breed: { value: '', matchMode: 'contains' },
+        quantity: { value: null, matchMode: 'equals' },
         type: { value: '', matchMode: 'equals' },
     })
 
@@ -69,10 +71,10 @@ const Livestock = () => {
     }
 
     const loadTypes = () => {
-        service.getTypes().then(data => {
+        LivestockService.getTypes().then(data => {
             setTypes(
                 data.map(t => {
-                    return { label: t, value: t }
+                    return { label: t.label, value: t.key, icon: t.icon }
                 }),
             )
         })
@@ -81,6 +83,31 @@ const Livestock = () => {
     // Body Templates
     const bodyTemplate = (rowData, elem) => {
         return rowData[elem.field]
+    }
+
+    const bodyLinkTemplate = (rowData, elem) => {
+        return (
+            <Link href={`/inventory/livestock/${rowData.id}`}>
+                {rowData[elem.field]}
+            </Link>
+        )
+    }
+
+    const bodyTypeTemplate = (rowData, elem) => {
+        const type = types.find(e => {
+            return e.value === rowData[elem.field]
+        })
+        const icon = type?.icon ? (
+            <span className={'type-icon'} aria-label={type?.label}>
+                {type?.icon} &nbsp;
+            </span>
+        ) : null
+        return (
+            <div>
+                {icon}
+                {type?.label}
+            </div>
+        )
     }
 
     return (
@@ -96,7 +123,7 @@ const Livestock = () => {
                 field="name"
                 header="Name"
                 sortable
-                body={bodyTemplate}
+                body={bodyLinkTemplate}
                 filter
                 filterPlaceholder="Search"
             />
@@ -104,11 +131,39 @@ const Livestock = () => {
                 field="type"
                 header="Type"
                 sortable
-                body={bodyTemplate}
+                body={bodyTypeTemplate}
                 filter
                 filterElement={typeFilterElement}
                 filterPlaceholder="Search"
                 showFilterMenu={false}
+            />
+            <Column
+                field="breed"
+                header="Breed"
+                sortable
+                body={bodyTemplate}
+                filter
+                filterPlaceholder="Search"
+            />
+            <Column
+                field="quantity"
+                header="Quantity"
+                sortable
+                filter
+                filterPlaceholder="Search"
+                dataType={'numeric'}
+                filterElement={o => {
+                    return (
+                        <QuantityFilterTemplate
+                            options={o}
+                            setFilters={setFilters}
+                            filters={filters}
+                        />
+                    )
+                }}
+                showFilterMenu={false}
+                showClear
+                style={{ width: '160px' }}
             />
             <Column
                 field="date_of_birth"
@@ -119,14 +174,6 @@ const Livestock = () => {
                 body={dateBodyTemplate}
                 showFilterMenu={false}
                 showClear
-            />
-            <Column
-                field="breed"
-                header="Breed"
-                sortable
-                body={bodyTemplate}
-                filter
-                filterPlaceholder="Search"
             />
         </InventoryList>
     )

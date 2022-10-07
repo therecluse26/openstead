@@ -26,13 +26,11 @@ class TestDataSeeder extends Seeder
 			->create();
 
 		Equipment::factory()
-			->hasInventory(random_int(1, 2))
 			->hasImages(random_int(1, 3))
 			->count(100)
 			->create();
 
 		Livestock::factory()
-			->hasInventory(random_int(1, 2))
 			->hasImages(random_int(1, 3))
 			->count(200)
 			->create();

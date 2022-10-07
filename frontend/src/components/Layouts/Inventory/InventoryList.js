@@ -5,6 +5,7 @@ import { Ripple } from 'primereact/ripple'
 import { classNames } from 'primereact/utils'
 import { Dropdown } from 'primereact/dropdown'
 import Link from 'next/link'
+import { Toast } from 'primereact/toast'
 
 const InventoryList = ({
     title,
@@ -15,6 +16,7 @@ const InventoryList = ({
     setLazyParamsCallack,
 }) => {
     const isMounted = useRef(false)
+    const toast = useRef(null)
     const [selected, setSelected] = useState([])
     const [perPage, setPerPage] = useState(10)
     const [loading, setLoading] = useState(false)
@@ -28,8 +30,6 @@ const InventoryList = ({
         sortOrder: null,
         filters: filters,
     })
-
-    const inventoryService = new service()
 
     const onPage = event => {
         setLazyParams(event)
@@ -48,13 +48,20 @@ const InventoryList = ({
     const loadLazyData = () => {
         setLoading(true)
 
-        inventoryService
+        service
             .getList({ lazyEvent: JSON.stringify(lazyParams) })
             .then(data => {
                 setInventory(data.data)
                 setTotalRecords(data.total)
                 setPerPage(data.per_page)
             })
+            .catch(e =>
+                toast.current.show({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: e.response?.data?.message ?? 'Unknown error',
+                }),
+            )
             .finally(() => {
                 setLoading(false)
             })
@@ -163,11 +170,12 @@ const InventoryList = ({
 
     return (
         <Card>
+            <Toast ref={toast} />
+
             <DataTable
                 value={inventory}
                 lazy
                 filterDisplay="row"
-                responsiveLayout="scroll"
                 dataKey="id"
                 header={header}
                 paginator
@@ -185,6 +193,7 @@ const InventoryList = ({
                 loadingIcon={'loading-spinner'}
                 selection={selected}
                 selectionMode={'checkbox'}
+                responsiveLayout="stack"
                 onSelectionChange={onSelectionChange}>
                 {children}
             </DataTable>
@@ -192,4 +201,4 @@ const InventoryList = ({
     )
 }
 
-export default InventoryList
+export default React.memo(InventoryList)

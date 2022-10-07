@@ -2,13 +2,21 @@
 
 namespace App\Services;
 
+use App\Contracts\Repository;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Service for general Datatable functionality
  */
 class DataTableService
 {
+
+	public static function buildOrderBy(Model|Repository|Builder $model, string $sortField, int $sortOrder)
+	{
+		return $sortOrder === 1 ? $model->orderBy($sortField) : $model->orderByDesc($sortField);
+	}
+
 	/**
 	 * Builds filters for datatable
 	 *
@@ -16,14 +24,20 @@ class DataTableService
 	 * @param object $filters
 	 * @return Builder
 	 */
-	public static function buildFilters(Builder $query, object $filters)
+	public static function buildFilters(Builder|Model|Repository $query, object $filters)
 	{
 		foreach ($filters as $key => $filter) {
 			if (empty($filter->value)) {
 				continue;
 			}
 			$formattedFilter = self::getFilter($filter);
-			$query->where($key, $formattedFilter['method'], $formattedFilter['value']);
+
+			if (str_contains($key, '.')) {
+				[$relation, $key] = explode('.', $key);
+				$query->whereRelation($relation, $key, $formattedFilter['method'], $formattedFilter['value']);
+			} else {
+				$query->where($key, $formattedFilter['method'], $formattedFilter['value']);
+			}
 		}
 
 		return $query;
@@ -38,7 +52,7 @@ class DataTableService
 	 */
 	public static function getFilter($filter)
 	{
-		return match ($filter->matchMode) {
+		return match ($filter->matchMode ?? null) {
 			'equals' => ['method' => '=', 'value' => $filter->value],
 			'notEquals' => ['method' => '<>', 'value' => $filter->value],
 			'gt' => ['method' => '>', 'value' => $filter->value],
@@ -49,6 +63,7 @@ class DataTableService
 			'notContains' => ['method' => 'not like', 'value' => "%$filter->value%"],
 			'startsWith' => ['method' => 'like', 'value' => "$filter->value%"],
 			'endsWith' => ['method' => 'like', 'value' => "%$filter->value"],
+			null => ['method' => '=', 'value' => $filter->value]
 		};
 	}
 }
