@@ -26,44 +26,41 @@ return new class extends Migration {
 			$table->timestamps();
 		});
 
+		Schema::create('varieties', function (Blueprint $table) {
+			$table->id();
+			$table->enum('kingdom', ['plant', 'animal', 'fungi', 'protist', 'monera']);
+			$table->string('type', 50);
+			$table->string('name', 50);
+			$table->string('description', 1000);
+			$table->timestamps();
+		});
+
 		Schema::create('livestock', function (Blueprint $table) {
 			$table->id();
 			$table->string('name', 255);
-			$table->string('type', 100);
-			$table->string('breed', 100)->nullable();
+			$table->string('type', 50);
 			$table->dateTime('date_of_birth')->nullable();
+			$table->unsignedBigInteger('variety_id')->nullable();
 			$table->unsignedBigInteger('location_id')->nullable();
 			$table->integer('quantity')->default(1);
 			$table->dateTime('acquired_at')->nullable();
 			$table->timestamps();
 		});
 
-		Schema::create('livestock_breeds', function (Blueprint $table) {
+		Schema::create('seeds', function (Blueprint $table) {
 			$table->id();
-			$table->string('type', 100);
-			$table->string('name', 100);
-			$table->string('description', 255);
+			$table->string('type', 50);
+			$table->unsignedBigInteger('variety_id')->nullable();
+			$table->unsignedBigInteger('location_id')->nullable();
+			$table->integer('quantity')->default(1);
+			$table->dateTime('acquired_at')->nullable();
 			$table->timestamps();
-		});
-
-		Schema::create('livestock_groups', function (Blueprint $table) {
-			$table->id();
-			$table->string('type', 100);
-			$table->string('name', 100);
-			$table->string('description', 255);
-			$table->timestamps();
-		});
-
-		Schema::create('livestock_group_members', function (Blueprint $table) {
-			$table->id();
-			$table->unsignedBigInteger('livestock_group_id');
-			$table->unsignedBigInteger('livestock_id');
 		});
 
 		Schema::create('equipment', function (Blueprint $table) {
 			$table->id();
 			$table->string('name', 255);
-			$table->string('type', 100);
+			$table->string('type', 50);
 			$table->integer('condition');
 			$table->string('description')->nullable();
 			$table->string('url', 2000)->nullable();
@@ -83,7 +80,6 @@ return new class extends Migration {
 			$table->unsignedInteger('filesize')->nullable();
 			$table->timestamps();
 		});
-
 	}
 
 	/**
@@ -93,10 +89,11 @@ return new class extends Migration {
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('livestock_groups');
-		Schema::dropIfExists('livestock_group_members');
 		Schema::dropIfExists('livestock');
 		Schema::dropIfExists('equipment');
+		Schema::dropIfExists('seeds');
 		Schema::dropIfExists('images');
+		Schema::dropIfExists('locations');
+		Schema::dropIfExists('varieties');
 	}
 };

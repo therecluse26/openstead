@@ -27,7 +27,7 @@ class InventoryRepository implements InventoryContract, Repository
 		$this->model = $model;
 	}
 
-	public function getModel()
+	public function getModel(): Model|Inventoriable
 	{
 		return $this->model;
 	}

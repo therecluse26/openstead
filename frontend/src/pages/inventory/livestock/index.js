@@ -12,7 +12,7 @@ const Livestock = () => {
     const [filters, setFilters] = useState({
         name: { value: '', matchMode: 'contains' },
         date_of_birth: { value: '', matchMode: 'equals' },
-        breed: { value: '', matchMode: 'contains' },
+        variety: { value: '', matchMode: 'contains', relatedSortField: 'name' },
         quantity: { value: null, matchMode: 'equals' },
         type: { value: '', matchMode: 'equals' },
     })
@@ -62,9 +62,9 @@ const Livestock = () => {
                     ...filters.type,
                     value: filters.type.value,
                 },
-                breed: {
-                    ...filters.breed,
-                    value: filters.breed.value,
+                variety: {
+                    ...filters.variety,
+                    value: filters.variety.value,
                 },
             },
         }
@@ -81,8 +81,8 @@ const Livestock = () => {
     }
 
     // Body Templates
-    const bodyTemplate = (rowData, elem) => {
-        return rowData[elem.field]
+    const bodyVarietyTemplate = (rowData, elem) => {
+        return rowData[elem.field].name
     }
 
     const bodyLinkTemplate = (rowData, elem) => {
@@ -138,10 +138,11 @@ const Livestock = () => {
                 showFilterMenu={false}
             />
             <Column
-                field="breed"
+                field="variety"
+                sortField={'variety.name'}
                 header="Breed"
                 sortable
-                body={bodyTemplate}
+                body={bodyVarietyTemplate}
                 filter
                 filterPlaceholder="Search"
             />

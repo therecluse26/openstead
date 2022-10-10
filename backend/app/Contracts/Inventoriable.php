@@ -10,4 +10,5 @@ interface Inventoriable
 	public function location(): HasOne;
 
 	public function quantity(): Attribute;
+
 }

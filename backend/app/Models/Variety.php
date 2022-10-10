@@ -8,36 +8,26 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Location extends Model
+class Variety extends Model
 {
 	use HasFactory;
 
-	protected $table = 'locations';
+	protected $table = 'varieties';
 
 	protected $fillable = [
-		'primary',
+		'kingdom',
+		'type',
 		'name',
 		'description',
-		'address1',
-		'address2',
-		'city',
-		'state',
-		'zip',
-		'country'
-	];
-
-	protected $casts = [
-		'primary' => 'boolean'
 	];
 
 	public function livestock(): BelongsTo
 	{
-		return $this->belongsTo(Livestock::class, 'id', 'location_id');
+		return $this->belongsTo(Livestock::class, 'id', 'variety_id');
 	}
 
 	public function seeds(): BelongsTo
 	{
-		return $this->belongsTo(Seed::class, 'id', 'location_id');
+		return $this->belongsTo(Seed::class, 'id', 'variety_id');
 	}
-
 }

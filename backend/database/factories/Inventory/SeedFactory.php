@@ -2,16 +2,16 @@
 
 namespace Database\Factories\Inventory;
 
-use App\Enums\EquipmentCondition;
-use App\Enums\EquipmentType;
+use App\Enums\PlantType;
 use App\Models\Inventory\Equipment;
 use App\Models\Location;
+use App\Models\Variety;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends Factory<Equipment>
  */
-class EquipmentFactory extends Factory
+class SeedFactory extends Factory
 {
 	/**
 	 * Define the model's default state.
@@ -21,12 +21,9 @@ class EquipmentFactory extends Factory
 	public function definition()
 	{
 		return [
-			'name' => fake()->words(3, true),
-			'type' => fake()->randomElement(EquipmentType::cases()),
-			'condition' => fake()->randomElement(EquipmentCondition::cases()),
-			'description' => fake()->paragraph(2),
+			'type' => fake()->randomElement(PlantType::cases()),
+			'variety_id' => Variety::where('kingdom', 'plant')->inRandomOrder()->first(),
 			'location_id' => Location::inRandomOrder()->first(),
-			'url' => fake()->url(),
 			'quantity' => fake()->numberBetween(0, 10),
 			'acquired_at' => fake()->dateTimeThisYear(),
 		];
