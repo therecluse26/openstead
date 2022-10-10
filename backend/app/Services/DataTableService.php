@@ -66,10 +66,13 @@ class DataTableService
 
 		if ($relation && self::isRelation($modelInstance, $relation)) {
 			$relationRecord = self::getModelField($modelInstance, $relation);
+
+			$relatedSortField = $relationRecord->getTable() . "." . $field;
+
 			$localKey = strtolower((new ReflectionClass($relationRecord))->getShortName()) . "_id";
 			$modelQuery = $modelQuery->join($relationRecord->getTable(), $relationRecord->getTable() . '.' . $relationRecord->getKeyName(), '=', $localKey);
-			$relatedSortField = $relationRecord->getTable() . "." . $field;
-			return $sortOrder === 1 ? $modelQuery->orderBy($relatedSortField) : $modelQuery->orderByDesc($relatedSortField);
+			$sortOrder === 1 ? $modelQuery->orderBy($relatedSortField) : $modelQuery->orderByDesc($relatedSortField);
+			return $modelQuery;
 		}
 
 		return $sortOrder === 1 ? $modelQuery->orderBy($field) : $modelQuery->orderByDesc($field);

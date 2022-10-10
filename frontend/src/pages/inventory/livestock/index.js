@@ -82,7 +82,7 @@ const Livestock = () => {
 
     // Body Templates
     const bodyVarietyTemplate = (rowData, elem) => {
-        return rowData[elem.field].name
+        return rowData[elem.field].variety_name
     }
 
     const bodyLinkTemplate = (rowData, elem) => {
@@ -139,7 +139,7 @@ const Livestock = () => {
             />
             <Column
                 field="variety"
-                sortField={'variety.name'}
+                sortField="variety.variety_name"
                 header="Breed"
                 sortable
                 body={bodyVarietyTemplate}

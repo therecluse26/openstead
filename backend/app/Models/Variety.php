@@ -16,8 +16,8 @@ class Variety extends Model
 
 	protected $fillable = [
 		'kingdom',
-		'type',
-		'name',
+		'group_type',
+		'variety_name',
 		'description',
 	];
 

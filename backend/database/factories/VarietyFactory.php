@@ -22,8 +22,8 @@ class VarietyFactory extends Factory
 		$kingdom = fake()->randomElement(['plant', 'animal']);
 		return [
 			'kingdom' => $kingdom,
-			'type' => $kingdom === 'plant' ? fake()->randomElement(PlantType::cases()) : fake()->randomElement(LivestockType::cases()),
-			'name' => fake()->words(3, true),
+			'group_type' => $kingdom === 'plant' ? fake()->randomElement(PlantType::cases()) : fake()->randomElement(LivestockType::cases()),
+			'variety_name' => fake()->words(3, true),
 			'description' => fake()->sentence(10, true),
 		];
 	}
