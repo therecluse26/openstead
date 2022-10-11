@@ -2,7 +2,6 @@
 
 namespace App\Repositories\Inventory;
 
-use App\Enums\EquipmentCondition;
 use App\Http\Requests\Inventory\StoreLivestockRequest;
 use App\Models\Inventory\Livestock;
 use Illuminate\Support\Collection;
@@ -16,16 +15,6 @@ class LivestockRepository extends InventoryRepository
 	{
 		$this->model = new Livestock();
 		parent::__construct($this->model);
-	}
-
-	public function getLivestockByType(EquipmentCondition $condition): Collection
-	{
-		return $this->model->where('type', $condition)->get();
-	}
-
-	public function countLivestockByType(EquipmentCondition $condition): int
-	{
-		return $this->model->where('type', $condition)->count();
 	}
 
 	public function countAllLivestockTypes(): Collection

@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
 use JsonException;
+use ReflectionException;
 
 class InventoryService
 {
@@ -38,25 +39,27 @@ class InventoryService
 		return self::buildAndExecuteQuery($modelRepo, $request);
 	}
 
+	/**
+	 * @throws ReflectionException
+	 * @throws JsonException
+	 */
 	public static function buildAndExecuteQuery(Builder|Model|InventoryRepository $model, Request $request): LengthAwarePaginator
 	{
 		$params = json_decode($request->get('lazyEvent'), false, 512, JSON_THROW_ON_ERROR);
 		$rows = $params->rows ?? 15;
 		$page = $params->page ?? 0;
-		$sortField = DataTableService::getSortField($params->sortField);
+
 		$sortOrder = $params->sortOrder ?? 1;
-		$filters = (array)$params->filters;
-
-		foreach ($filters as $filterName => $filterValue) {
-			unset($filters[$filterName]);
-			$matchedName = DataTableService::getFieldInModelOrRelation($model, $filterName);
-			if ($matchedName) {
-				$filters[$matchedName] = $filterValue;
-			}
-		}
-
+		$sortField = DataTableService::getFieldName($params->sortField);
 		$query = DataTableService::buildOrderBy($model, $sortField, $sortOrder);
 
+		$filters = (array)$params->filters;
+		foreach ($filters as $filterName => $filterValue) {
+			unset($filters[$filterName]);
+			$filterName = $filterValue->filterFieldName ?? $filterName;
+			$filters[$filterName] = $filterValue;
+		}
+		
 		$query = DataTableService::buildFilters($query, (object)$filters);
 
 		return $query->paginate($rows, ['*'], 'page', $page + 1);

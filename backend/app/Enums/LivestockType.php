@@ -10,6 +10,7 @@ enum LivestockType: string
 	case Sheep = 'sheep';
 	case Goat = 'goat';
 	case Horse = 'horse';
+	case Fish = 'fish';
 	case Other = 'other';
 
 	public function label(): string
@@ -21,6 +22,7 @@ enum LivestockType: string
 			self::Sheep => 'Sheep',
 			self::Goat => 'Goat',
 			self::Horse => 'Horse/Equine',
+			self::Fish => 'Fish',
 			self::Other => 'Other'
 		};
 	}
@@ -34,6 +36,7 @@ enum LivestockType: string
 			self::Sheep => '🐑',
 			self::Goat => '🐐',
 			self::Horse => '🐴',
+			self::Fish => '🐟',
 			self::Other => '🐸',
 		};
 	}

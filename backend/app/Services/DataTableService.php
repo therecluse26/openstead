@@ -2,9 +2,7 @@
 
 namespace App\Services;
 
-use App\Contracts\Inventoriable;
 use App\Contracts\Repository;
-use App\Repositories\Inventory\InventoryRepository;
 use Illuminate\Contracts\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -36,7 +34,7 @@ class DataTableService
 		return ($model::factory()->make())->getAttribute($field);
 	}
 
-	public static function getSortField(?string $fieldName): array
+	public static function getFieldName(?string $fieldName): array
 	{
 		if (!$fieldName) {
 			return ['relation' => null, 'field' => null];
@@ -45,14 +43,14 @@ class DataTableService
 		return count($fieldParts) > 1 ? ['relation' => $fieldParts[0], 'field' => $fieldParts[1]] : ['relation' => null, 'field' => $fieldName];
 	}
 
-	public static function getFieldInModelOrRelation(Builder|Inventoriable|InventoryRepository $model, string $fieldName): string
-	{
-		$columns = $model->getConnection()->getSchemaBuilder()->getColumnListing($model->getTable());
-		if (!in_array($fieldName, $columns, true)) {
-			return $fieldName;
-		}
-		return $fieldName;
-	}
+//	public static function getFieldInModelOrRelation(Builder|Inventoriable|InventoryRepository $model, string $fieldName): string
+//	{
+//		$columns = $model->getConnection()->getSchemaBuilder()->getColumnListing($model->getTable());
+//		if (!in_array($fieldName, $columns, true)) {
+//			return $fieldName;
+//		}
+//		return $fieldName;
+//	}
 
 	/**
 	 * @throws ReflectionException
@@ -66,9 +64,7 @@ class DataTableService
 
 		if ($relation && self::isRelation($modelInstance, $relation)) {
 			$relationRecord = self::getModelField($modelInstance, $relation);
-
 			$relatedSortField = $relationRecord->getTable() . "." . $field;
-
 			$localKey = strtolower((new ReflectionClass($relationRecord))->getShortName()) . "_id";
 			$modelQuery = $modelQuery->join($relationRecord->getTable(), $relationRecord->getTable() . '.' . $relationRecord->getKeyName(), '=', $localKey);
 			$sortOrder === 1 ? $modelQuery->orderBy($relatedSortField) : $modelQuery->orderByDesc($relatedSortField);

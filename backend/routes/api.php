@@ -36,6 +36,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 			Route::get('/livestock/types', [LivestockController::class, 'getTypes']);
 			Route::resource('/livestock', LivestockController::class);
+
+			Route::get('/seeds/types', [LivestockController::class, 'getTypes']);
+			Route::resource('/seeds', LivestockController::class);
 		});
 });
 
