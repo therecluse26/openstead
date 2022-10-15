@@ -4,9 +4,11 @@ namespace App\Models\Inventory;
 
 use App\Contracts\Inventoriable;
 use App\Contracts\VarietyContract;
+use App\Enums\PlantType;
 use App\Models\Image;
 use App\Traits\HasInventory;
 use App\Traits\HasVariety;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -28,11 +30,13 @@ class Seed extends Model implements Inventoriable, VarietyContract
 	];
 
 	protected $casts = [
+		'type' => PlantType::class,
 		'acquired_at' => 'datetime'
 	];
 
 	protected $appends = [
 		'type_description',
+		'variety_name'
 	];
 
 	public function images(): MorphMany
@@ -40,6 +44,12 @@ class Seed extends Model implements Inventoriable, VarietyContract
 		return $this->morphMany(Image::class, 'imageable');
 	}
 
+	public function breed(): Attribute
+	{
+		return Attribute::make(
+			get: fn() => $this->variety?->name ?? null
+		);
+	}
 
 	public function getTypeDescriptionAttribute()
 	{

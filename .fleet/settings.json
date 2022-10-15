@@ -1,0 +1,5 @@
+{
+    "toolchains": [],
+    "editor.guides": [],
+    "excluded": ["frontend/.github", "frontend/.next", "frontend/node_modules", "frontend/public", "backend/vendor", "backend/node_modules"]
+}

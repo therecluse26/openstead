@@ -2,11 +2,11 @@ import React, { useEffect, useRef, useState } from 'react'
 import InventoryList from '@/components/Layouts/Inventory/InventoryList'
 import { Column } from 'primereact/column'
 import { Dropdown } from 'primereact/dropdown'
-import LivestockService from '@/services/inventory/LivestockService'
 import Link from 'next/link'
 import QuantityFilterTemplate from '@/pages/inventory/templates/QuantityFilterTemplate'
+import SeedService from '@/services/inventory/SeedService'
 
-const Livestock = () => {
+const Seeds = () => {
     const [types, setTypes] = useState([])
     const isMounted = useRef(false)
     const [filters, setFilters] = useState({
@@ -35,7 +35,7 @@ const Livestock = () => {
         })
     }
     const dateBodyTemplate = rowData => {
-        return formatDate(rowData.date_of_birth)
+        return formatDate(rowData.acquired_at)
     }
 
     const typeFilterElement = options => {
@@ -76,7 +76,7 @@ const Livestock = () => {
     }
 
     const loadTypes = () => {
-        LivestockService.getTypes().then(data => {
+        SeedService.getTypes().then(data => {
             setTypes(
                 data.map(t => {
                     return { label: t.label, value: t.key, icon: t.icon }
@@ -92,7 +92,7 @@ const Livestock = () => {
 
     const bodyLinkTemplate = (rowData, elem) => {
         return (
-            <Link href={`/inventory/livestock/${rowData.id}`}>
+            <Link href={`/inventory/seeds/${rowData.id}`}>
                 {rowData[elem.field]}
             </Link>
         )
@@ -117,21 +117,13 @@ const Livestock = () => {
 
     return (
         <InventoryList
-            title={'Livestock'}
-            inventoryType={'livestock'}
-            service={LivestockService}
+            title={'Seeds'}
+            inventoryType={'seeds'}
+            service={SeedService}
             filters={filters}
             setLazyParamsCallack={lazyParamsCallback}>
             <Column selectionMode="multiple" headerStyle={{ width: '3em' }} />
 
-            <Column
-                field="name"
-                header="Name"
-                sortable
-                body={bodyLinkTemplate}
-                filter
-                filterPlaceholder="Search"
-            />
             <Column
                 field="type"
                 header="Type"
@@ -145,7 +137,7 @@ const Livestock = () => {
             <Column
                 field="variety"
                 sortField="variety.variety_name"
-                header="Breed"
+                header="Variety"
                 sortable
                 body={bodyVarietyTemplate}
                 filter
@@ -172,8 +164,8 @@ const Livestock = () => {
                 style={{ width: '160px' }}
             />
             <Column
-                field="date_of_birth"
-                header="Date of Birth"
+                field="acquired_at"
+                header="Date Acquired"
                 sortable
                 filter
                 filterPlaceholder="Search"
@@ -185,4 +177,4 @@ const Livestock = () => {
     )
 }
 
-export default React.memo(Livestock)
+export default React.memo(Seeds)

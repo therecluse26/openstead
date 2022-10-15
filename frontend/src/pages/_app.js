@@ -3,6 +3,7 @@ import '@/style/style.scss'
 import React from 'react'
 import { useRouter } from 'next/router'
 import AppLayout from '@/components/Layouts/AppLayout'
+import Head from 'next/head'
 
 const App = ({ Component, pageProps }) => {
     const router = useRouter()
@@ -15,6 +16,9 @@ const App = ({ Component, pageProps }) => {
 
     return (
         <AppLayout>
+            <Head>
+                <title>Openstead</title>
+            </Head>
             <Component {...pageProps} />
         </AppLayout>
     )

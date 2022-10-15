@@ -29,7 +29,7 @@ enum PlantType: string
 			self::Bush => 'Bush/Shrub',
 			self::Tree => 'Tree',
 			self::Nightshade => 'Nightshade',
-			self::Legume => 'Legume',
+			self::Legume => 'Bean/Legume',
 			self::Cucurbit => 'Cucurbit',
 			self::Brassica => 'Brassica',
 			self::Allium => 'Allium',
@@ -37,6 +37,29 @@ enum PlantType: string
 			self::Grass => 'Grass',
 			self::Umbel => 'Umbel',
 			self::Labiatae => 'Labiatae',
+			self::Malvaceae => 'Malvaceae',
+			self::Amaranthaceae => 'Amaranthaceae',
+			self::Polygonaceae => 'Polygonaceae',
+			self::Convolvulaceae => 'Convolvulaceae',
+			self::Other => 'Other'
+		};
+	}
+
+	public function icon(): string
+	{
+		return match ($this) {
+			self::Flower => '🌷',
+			self::Bush => '🪴',
+			self::Tree => '🌲',
+			self::Nightshade => '🍅',
+			self::Legume => '🥜',
+			self::Cucurbit => '🥒',
+			self::Brassica => '🥦',
+			self::Allium => '🧄',
+			self::Aster => '🥬',
+			self::Grass => 'Grass',
+			self::Umbel => '🥕',
+			self::Labiatae => '🌿',
 			self::Malvaceae => 'Malvaceae',
 			self::Amaranthaceae => 'Amaranthaceae',
 			self::Polygonaceae => 'Polygonaceae',

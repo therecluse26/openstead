@@ -4,9 +4,11 @@ namespace App\Services;
 
 use App\Contracts\Repository;
 use Illuminate\Contracts\Database\Query\Builder as QueryBuilder;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use JsonException;
 use ReflectionClass;
 use ReflectionException;
 
@@ -19,38 +21,29 @@ class DataTableService
 
 	/**
 	 * @throws ReflectionException
+	 * @throws JsonException
 	 */
-	public static function isRelation(Model $model, string $relation): bool
+	public static function buildAndExecuteQuery(Builder|Model|Repository $model, object $params): LengthAwarePaginator
 	{
-		if (in_array($relation, get_class_methods($model::class))) {
-			$returnType = (new ReflectionClass($model))->getMethod($relation)->getReturnType()?->getName();
-			return (new ReflectionClass($returnType))->isSubclassOf(Relation::class);
+		$rows = $params->rows ?? 15;
+		$page = $params->page ?? 0;
+
+		$sortOrder = $params->sortOrder ?? 1;
+		$sortField = self::getFieldName($params->sortField);
+		$query = self::buildOrderBy($model, $sortField, $sortOrder);
+
+		$filters = (array)$params->filters;
+		foreach ($filters as $filterName => $filterValue) {
+			unset($filters[$filterName]);
+			$filterName = $filterValue->filterFieldName ?? $filterName;
+			$filters[$filterName] = $filterValue;
 		}
-		return false;
+
+		$query = self::buildFilters($query, (object)$filters);
+
+		return $query->paginate($rows, ['*'], 'page', $page + 1);
 	}
 
-	public static function getModelField($model, $field)
-	{
-		return ($model::factory()->make())->getAttribute($field);
-	}
-
-	public static function getFieldName(?string $fieldName): array
-	{
-		if (!$fieldName) {
-			return ['relation' => null, 'field' => null];
-		}
-		$fieldParts = explode('.', $fieldName);
-		return count($fieldParts) > 1 ? ['relation' => $fieldParts[0], 'field' => $fieldParts[1]] : ['relation' => null, 'field' => $fieldName];
-	}
-
-//	public static function getFieldInModelOrRelation(Builder|Inventoriable|InventoryRepository $model, string $fieldName): string
-//	{
-//		$columns = $model->getConnection()->getSchemaBuilder()->getColumnListing($model->getTable());
-//		if (!in_array($fieldName, $columns, true)) {
-//			return $fieldName;
-//		}
-//		return $fieldName;
-//	}
 
 	/**
 	 * @throws ReflectionException
@@ -72,7 +65,6 @@ class DataTableService
 		}
 
 		return $sortOrder === 1 ? $modelQuery->orderBy($field) : $modelQuery->orderByDesc($field);
-
 	}
 
 	/**
@@ -99,7 +91,32 @@ class DataTableService
 		}
 
 		return $query;
+	}
 
+	/**
+	 * @throws ReflectionException
+	 */
+	public static function isRelation(Model $model, string $relation): bool
+	{
+		if (in_array($relation, get_class_methods($model::class))) {
+			$returnType = (new ReflectionClass($model))->getMethod($relation)->getReturnType()?->getName();
+			return (new ReflectionClass($returnType))->isSubclassOf(Relation::class);
+		}
+		return false;
+	}
+
+	public static function getModelField($model, $field)
+	{
+		return ($model::factory()->make())->getAttribute($field);
+	}
+
+	public static function getFieldName(?string $fieldName): array
+	{
+		if (!$fieldName) {
+			return ['relation' => null, 'field' => null];
+		}
+		$fieldParts = explode('.', $fieldName);
+		return count($fieldParts) > 1 ? ['relation' => $fieldParts[0], 'field' => $fieldParts[1]] : ['relation' => null, 'field' => $fieldName];
 	}
 
 	/**

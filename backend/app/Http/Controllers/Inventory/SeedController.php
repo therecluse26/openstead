@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Inventory;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Inventory\StoreLivestockRequest;
-use App\Http\Requests\Inventory\UpdateLivestockRequest;
-use App\Models\Inventory\Livestock;
+use App\Http\Requests\Inventory\StoreSeedRequest;
+use App\Http\Requests\Inventory\UpdateSeedRequest;
 use App\Models\Inventory\Seed;
-use App\Repositories\Inventory\LivestockRepository;
+use App\Repositories\Inventory\SeedRepository;
 use App\Services\Inventory\InventoryService;
 use App\Services\Inventory\PlantService;
 use Illuminate\Http\Request;
@@ -45,32 +44,33 @@ class SeedController extends Controller
 	/**
 	 * Store a newly created resource in storage.
 	 *
-	 * @param StoreLivestockRequest $request
+	 * @param StoreSeedRequest $request
+	 * @param SeedRepository $repository
 	 * @return Response
 	 */
-	public function store(StoreLivestockRequest $request, LivestockRepository $livestockRepository)
+	public function store(StoreSeedRequest $request, SeedRepository $repository)
 	{
-		return response($livestockRepository->create($request), 200);
+		return response($repository->create($request), 200);
 	}
 
 	/**
 	 * Display the specified resource.
 	 *
-	 * @param Livestock $livestock
+	 * @param Seed $model
 	 * @return Response
 	 */
-	public function show(Livestock $livestock)
+	public function show(Seed $model): Response
 	{
-		return response($livestock);
+		return response($model);
 	}
 
 	/**
 	 * Show the form for editing the specified resource.
 	 *
-	 * @param Livestock $livestock
+	 * @param Seed $model
 	 * @return Response
 	 */
-	public function edit(Livestock $livestock)
+	public function edit(Seed $model): Response
 	{
 		//
 	}
@@ -78,11 +78,11 @@ class SeedController extends Controller
 	/**
 	 * Update the specified resource in storage.
 	 *
-	 * @param UpdateLivestockRequest $request
-	 * @param Livestock $livestock
+	 * @param UpdateSeedRequest $request
+	 * @param Seed $model
 	 * @return Response
 	 */
-	public function update(UpdateLivestockRequest $request, Livestock $livestock)
+	public function update(UpdateSeedRequest $request, Seed $model): Response
 	{
 		//
 	}
@@ -90,11 +90,11 @@ class SeedController extends Controller
 	/**
 	 * Remove the specified resource from storage.
 	 *
-	 * @param Livestock $livestock
+	 * @param Seed $model
 	 * @return Response
 	 */
-	public function destroy(Livestock $livestock)
+	public function destroy(Seed $model)
 	{
-		$livestock->delete();
+		$model->delete();
 	}
 }

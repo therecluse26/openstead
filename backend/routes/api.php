@@ -3,6 +3,7 @@
 use App\Http\Controllers\Inventory\EquipmentController;
 use App\Http\Controllers\Inventory\InventoryController;
 use App\Http\Controllers\Inventory\LivestockController;
+use App\Http\Controllers\Inventory\SeedController;
 use App\Http\Controllers\LocationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -37,8 +38,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 			Route::get('/livestock/types', [LivestockController::class, 'getTypes']);
 			Route::resource('/livestock', LivestockController::class);
 
-			Route::get('/seeds/types', [LivestockController::class, 'getTypes']);
-			Route::resource('/seeds', LivestockController::class);
+			Route::get('/seeds/types', [SeedController::class, 'getTypes']);
+			Route::resource('/seeds', SeedController::class);
 		});
 });
 

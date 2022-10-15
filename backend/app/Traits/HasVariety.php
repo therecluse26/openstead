@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\Variety;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 trait HasVariety
@@ -11,4 +12,13 @@ trait HasVariety
 	{
 		return $this->hasOne(Variety::class, 'id', 'variety_id');
 	}
+
+	public function varietyName(): Attribute
+	{
+		return Attribute::make(
+			get: fn() => $this->variety?->name ?? null
+		);
+	}
+
+
 }

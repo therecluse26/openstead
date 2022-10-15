@@ -20,6 +20,11 @@ const menu = [
                         icon: 'ti ti-pig',
                         to: '/inventory/livestock',
                     },
+                    {
+                        label: 'Seeds',
+                        icon: 'ti ti-seeding',
+                        to: '/inventory/seeds',
+                    },
                 ],
             },
         ],
