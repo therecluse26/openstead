@@ -3,27 +3,39 @@
 namespace App\Enums;
 
 use App\Traits\FilterableEnum;
+use Exception;
 
 enum PlantType: string
 {
 	use FilterableEnum;
 
-	case Flower = 'flower';
+	// Generic
 	case Bush = 'bush';
 	case Tree = 'tree';
-	case Nightshade = 'nightshade';
-	case Legume = 'legume';
-	case Cucurbit = 'cucurbit';
-	case Brassica = 'brassica';
-	case Allium = 'allium';
-	case Aster = 'aster';
-	case Grass = 'grass';
-	case Umbel = 'umbel';
-	case Labiatae = 'labiatae';
-	case Malvaceae = 'malvaceae';
-	case Amaranthaceae = 'amaranthaceae';
-	case Polygonaceae = 'polygonaceae';
-	case Convolvulaceae = 'convolvulaceae';
+	case Flower = 'flower';
+
+	// Vegetables
+	case VegBulb = 'veg.bulb';
+	case VegFlower = 'veg.flower';
+	case VegFruit = 'veg.fruit';
+	case VegFungus = 'veg.fungus';
+	case VegLeaf = 'veg.leaf';
+	case VegRoot = 'veg.root';
+	case VegSeed = 'veg.seed';
+	case VegStem = 'veg.stem';
+	case VegTuber = 'veg.tuber';
+	case VegGrass = 'veg.grass';
+
+	// Fruits
+	case FruitStone = 'fruit.stone';
+	case FruitPome = 'fruit.pome';
+	case FruitBerry = 'fruit.berry';
+	case FruitCitrus = 'fruit.citrus';
+	case FruitMelon = 'fruit.melon';
+	case FruitTropical = 'fruit.tropical';
+
+	// Other
+	case Nut = 'nut';
 	case Other = 'other';
 
 	public function label(): string
@@ -32,19 +44,23 @@ enum PlantType: string
 			self::Flower => 'Flower',
 			self::Bush => 'Bush/Shrub',
 			self::Tree => 'Tree',
-			self::Nightshade => 'Nightshade',
-			self::Legume => 'Bean/Legume',
-			self::Cucurbit => 'Cucurbit',
-			self::Brassica => 'Brassica',
-			self::Allium => 'Allium',
-			self::Aster => 'Aster',
-			self::Grass => 'Grass',
-			self::Umbel => 'Umbel',
-			self::Labiatae => 'Labiatae',
-			self::Malvaceae => 'Malvaceae',
-			self::Amaranthaceae => 'Amaranthaceae',
-			self::Polygonaceae => 'Polygonaceae',
-			self::Convolvulaceae => 'Convolvulaceae',
+			self::VegBulb => 'Bulb Vegetable',
+			self::VegFlower => 'Flower Vegetable',
+			self::VegFruit => 'Fruit Vegetable',
+			self::VegFungus => 'Fungus',
+			self::VegLeaf => 'Leafy Vegetable',
+			self::VegRoot => 'Root Vegetable',
+			self::VegSeed => 'Seed Vegetable',
+			self::VegStem => 'Stem Vegetable',
+			self::VegTuber => 'Tuber',
+			self::VegGrass => 'Grass',
+			self::FruitStone => 'Stone/Pit Fruit',
+			self::FruitPome => 'Pome/Core Fruit',
+			self::FruitBerry => 'Berry',
+			self::FruitCitrus => 'Citrus',
+			self::FruitMelon => 'Melon',
+			self::FruitTropical => 'Tropical/Exotic Fruit',
+			self::Nut => 'Nut',
 			self::Other => 'Other'
 		};
 	}
@@ -55,20 +71,24 @@ enum PlantType: string
 			self::Flower => '🌷',
 			self::Bush => '🪴',
 			self::Tree => '🌲',
-			self::Nightshade => '🍅',
-			self::Legume => '🥜',
-			self::Cucurbit => '🥒',
-			self::Brassica => '🥦',
-			self::Allium => '🧄',
-			self::Aster => '🥬',
-			self::Grass => 'Grass',
-			self::Umbel => '🥕',
-			self::Labiatae => '🌿',
-			self::Malvaceae => 'Malvaceae',
-			self::Amaranthaceae => 'Amaranthaceae',
-			self::Polygonaceae => 'Polygonaceae',
-			self::Convolvulaceae => 'Convolvulaceae',
-			self::Other => 'Other'
+			self::VegBulb => '🧄',
+			self::VegFlower => '🥦',
+			self::VegFruit => '🍅',
+			self::VegFungus => '🍄',
+			self::VegLeaf => '🥬',
+			self::VegRoot => '🥕',
+			self::VegSeed => '🌽',
+			self::VegStem => '🌾',
+			self::VegTuber => '🥔',
+			self::VegGrass => '🌱',
+			self::FruitStone => '🍑',
+			self::FruitPome => '🍎',
+			self::FruitBerry => '🍓',
+			self::FruitCitrus => '🍊',
+			self::FruitMelon => '🍉',
+			self::FruitTropical => '🍌',
+			self::Nut => '🥜',
+			self::Other => '🦠'
 		};
 	}
 
@@ -76,20 +96,56 @@ enum PlantType: string
 	{
 		return match ($this) {
 			self::Flower, self::Tree, self::Bush => $this->label(),
-			self::Nightshade => 'Nightshades include varieties of tomatoes, peppers, eggplants, potatoes, ground cherries and tobacco',
-			self::Legume => 'Legumes include varieties of beans, peas, southern peas, peanuts, clover and vetch',
-			self::Cucurbit => 'Cucurbits plants include varieties of squash (including pumpkins and zucchini), melons, gourds and cucumbers',
-			self::Brassica => 'Brassica plants include varieties of cabbage, broccoli, cauliflower, kale, collards, mustard, kohlrabi, turnips, radishes, canola, arugula and cress',
-			self::Allium => 'Alliums include varieties of onions, garlic, shallots, leeks and chives',
-			self::Aster => 'Asters include varieties of lettuce, salsify, artichokes, radicchio, endive, sunflowers, Echinacea, cosmos, marigolds, chamomile',
-			self::Grass => 'Grasses include varieties of corn, rye, oats, wheat, sorghum, rice and millet',
-			self::Umbel => 'Umbels include varieties of carrots, parsnips, celery, parsley, dill, fennel and cilantro',
-			self::Labiatae => 'Labiatae include mint, basil, rosemary, sage, catnip, lemon balm, bergamot and other herbs',
-			self::Malvaceae => 'Malvaceae include varieties of okra, roselle and cotton',
-			self::Amaranthaceae => 'Amaranthaceae include varieties of chard, beets, spinach and amaranth',
-			self::Polygonaceae => 'Polygonaceae include varieties of buckwheat, rhubarb and sorrel',
-			self::Convolvulaceae => 'Convolvulaceae include varieties of sweet potatoes and morning glories',
+
+			self::VegBulb => "Bulb vegetables usually develop close below the ground's surface and send up a fleshy, leafy stem above it. Typically, bulbs are made up of layers or segments.",
+			self::VegFlower => "Flower vegetables are classified as such because the main edible part of the vegetable is the flowering portion.",
+			self::VegFruit => 'Fruit vegetables have seeds and fleshy pulp.',
+			self::VegFungus => 'Fungi vegetables are typically called mushrooms.',
+			self::VegLeaf => 'Leaf vegetables refer to plants whose leaves are their primary food product.',
+			self::VegRoot => 'Root vegetables typically have a long or round taproot.',
+			self::VegSeed => 'Seed vegetables have edible seeds that grow either in pods (beans) or on the outside of the vegetable (corn/maize)',
+			self::VegStem => 'Stem vegetables have edible stalks as the main part of the vegetable.',
+			self::VegTuber => "Tubers are vegetables which grow underground attached to the plant's root.",
+			self::VegGrass => "Grasses are edible plants whose product is either the grassy greens that sprout from the ground, or whose grains are used as food.",
+
+			self::FruitStone => 'Stone/Pit Fruit',
+			self::FruitPome => 'Pome/Core Fruit',
+			self::FruitBerry => 'Berry',
+			self::FruitCitrus => 'Citrus',
+			self::FruitMelon => 'Melon',
+			self::FruitTropical => 'Tropical/Exotic Fruit',
+			self::Nut => 'Nut',
+
 			self::Other => 'Other or unknown variety'
+		};
+	}
+
+	public function examples(): string
+	{
+		return match ($this) {
+			self::VegFlower => 'Artichoke, cauliflower, broccoli',
+			self::VegBulb => 'Onion, garlic, leek, fennel, shallot, spring onion',
+			self::VegFruit => "Cucumber, eggplant, peppers, plantain, pumpkin, squash, tomato",
+			self::VegFungus => "Button white, swiss brown, enoki, oyster, portabello, shiitake, truffle",
+			self::VegLeaf => "Bok choy, brussels sprouts, cabbage, kale, lettuce, sorrel, spinach, watercress",
+			self::VegRoot => "Beetroot, carrot, celeriac, parsnip, radish, turnip",
+			self::VegSeed => "Beans, peas, corn",
+			self::VegStem => "Asparagus, celery, kohlrabi, rhubarb",
+			self::VegTuber => "Earth gem, potato, yam",
+			self::VegGrass => "Alfalfa, barley, millet, oats, rice, sorghum, wheat",
+
+
+			self::Bush => throw new Exception('To be implemented'),
+			self::Tree => throw new Exception('To be implemented'),
+			self::Flower => throw new Exception('To be implemented'),
+			self::FruitStone => throw new Exception('To be implemented'),
+			self::FruitPome => throw new Exception('To be implemented'),
+			self::FruitBerry => throw new Exception('To be implemented'),
+			self::FruitCitrus => throw new Exception('To be implemented'),
+			self::FruitMelon => throw new Exception('To be implemented'),
+			self::FruitTropical => throw new Exception('To be implemented'),
+			self::Nut => throw new Exception('To be implemented'),
+			self::Other => throw new Exception('To be implemented'),
 		};
 	}
 
