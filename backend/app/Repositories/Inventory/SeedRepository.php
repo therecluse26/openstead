@@ -25,7 +25,7 @@ class SeedRepository extends InventoryRepository
 			->groupBy('type')
 			->get()
 			->map(function ($e) {
-				$e->type_formatted = $e->type->formatted();
+				$e->type_formatted = $e->type->toFilter();
 				return $e;
 			});
 	}

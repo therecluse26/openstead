@@ -2,8 +2,12 @@
 
 namespace App\Enums;
 
+use App\Traits\FilterableEnum;
+
 enum LivestockType: string
 {
+	use FilterableEnum;
+
 	case Bird = 'bird';
 	case Cattle = 'cattle';
 	case Swine = 'swine';
@@ -41,7 +45,7 @@ enum LivestockType: string
 		};
 	}
 
-	public function formatted(): array
+	public function toFilter(): array
 	{
 		return ['key' => $this, 'icon' => $this->icon(), 'label' => $this->label()];
 	}

@@ -17,6 +17,11 @@ class InventoryController extends Controller
 		return InventoryService::getTypes();
 	}
 
+	public function getFilters()
+	{
+		return InventoryService::getFilters();
+	}
+	
 	/**
 	 * Display a listing of the resource.
 	 *

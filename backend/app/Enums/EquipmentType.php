@@ -1,8 +1,13 @@
 <?php
+
 namespace App\Enums;
+
+use App\Traits\FilterableEnum;
 
 enum EquipmentType: string
 {
+	use FilterableEnum;
+
 	case Hand = 'Hand Tool';
 	case Power = 'Power Tool';
 	case Heavy = 'Heavy Equipment';
@@ -15,4 +20,5 @@ enum EquipmentType: string
 	{
 		return self::cases();
 	}
+	
 }

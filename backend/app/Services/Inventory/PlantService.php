@@ -15,7 +15,7 @@ class PlantService
 	public static function getFormattedTypes(): Collection
 	{
 		return collect(PlantType::getTypes())->map(function ($type) {
-			return $type->formatted();
+			return $type->toFilter();
 		});
 	}
 }

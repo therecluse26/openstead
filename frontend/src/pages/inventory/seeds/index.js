@@ -87,13 +87,9 @@ const Seeds = () => {
 
     // Body Templates
     const bodyVarietyTemplate = (rowData, elem) => {
-        return rowData[elem.field].variety_name
-    }
-
-    const bodyLinkTemplate = (rowData, elem) => {
         return (
             <Link href={`/inventory/seeds/${rowData.id}`}>
-                {rowData[elem.field]}
+                {rowData[elem.field].variety_name}
             </Link>
         )
     }
@@ -125,6 +121,16 @@ const Seeds = () => {
             <Column selectionMode="multiple" headerStyle={{ width: '3em' }} />
 
             <Column
+                field="variety"
+                sortField="variety.variety_name"
+                header="Variety"
+                sortable
+                body={bodyVarietyTemplate}
+                filter
+                filterPlaceholder="Search"
+            />
+
+            <Column
                 field="type"
                 header="Type"
                 sortable
@@ -134,15 +140,7 @@ const Seeds = () => {
                 filterPlaceholder="Search"
                 showFilterMenu={false}
             />
-            <Column
-                field="variety"
-                sortField="variety.variety_name"
-                header="Variety"
-                sortable
-                body={bodyVarietyTemplate}
-                filter
-                filterPlaceholder="Search"
-            />
+
             <Column
                 field="quantity"
                 header="Quantity"

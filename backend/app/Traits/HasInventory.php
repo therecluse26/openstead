@@ -5,6 +5,7 @@ namespace App\Traits;
 use App\Models\Location;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Collection;
 
 trait HasInventory
 {
@@ -20,4 +21,10 @@ trait HasInventory
 			set: static fn($value) => (int)$value
 		);
 	}
+
+	public static function getFilters(): Collection
+	{
+		return collect();
+	}
+
 }

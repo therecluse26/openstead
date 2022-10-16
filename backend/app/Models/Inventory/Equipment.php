@@ -2,16 +2,19 @@
 
 namespace App\Models\Inventory;
 
+use App\Contracts\FrontendFilterable;
 use App\Contracts\Inventoriable;
 use App\Enums\EquipmentCondition;
 use App\Enums\EquipmentType;
 use App\Models\Image;
+use App\Resources\FormattedFilter;
 use App\Traits\HasInventory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Collection;
 
-class Equipment extends Model implements Inventoriable
+class Equipment extends Model implements Inventoriable, FrontendFilterable
 {
 	use HasFactory;
 	use HasInventory;
@@ -36,6 +39,11 @@ class Equipment extends Model implements Inventoriable
 	protected $appends = [
 		'condition_description',
 	];
+
+	public static function getFilters(): Collection
+	{
+		return collect(['types' => FormattedFilter::collection(EquipmentType::cases()), 'conditions' => FormattedFilter::collection(EquipmentCondition::cases())]);
+	}
 
 	public function images(): MorphMany
 	{

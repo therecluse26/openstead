@@ -9,6 +9,7 @@ use App\Repositories\Inventory\InventoryRepository;
 use App\Services\DataTableService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use InvalidArgumentException;
 use JsonException;
 use ReflectionException;
@@ -18,6 +19,18 @@ class InventoryService
 	public static function getTypes()
 	{
 		return InventoryType::getTypes();
+	}
+
+	public static function getFilters(): Collection
+	{
+		$filters = collect();
+		foreach (InventoryType::getTypes() as $type) {
+			$typeFilters = $type->value::getFilters();
+			if (!$typeFilters->isEmpty()) {
+				$filters->push([$type->name => $type->value::getFilters()]);
+			}
+		}
+		return $filters;
 	}
 
 	/**

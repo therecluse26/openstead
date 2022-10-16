@@ -22,13 +22,14 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 	return $request->user();
 });
 
-//Route::get('/dashboard/reports', [DashboardController::class, 'getReports']);
-
 Route::middleware(['auth:sanctum'])->group(function () {
+	
 	Route::get('/locations/dropdown', [LocationController::class, 'getLocationsDropdown']);
 
 	Route::prefix('/inventory')
 		->group(function () {
+			Route::get('/filters', [InventoryController::class, 'getFilters']);
+
 			Route::get('/base/types', [InventoryController::class, 'getTypes']);
 			Route::resource('/base', InventoryController::class);
 

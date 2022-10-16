@@ -15,7 +15,7 @@ class LivestockService
 	public static function getFormattedTypes(): Collection
 	{
 		return collect(LivestockType::getTypes())->map(function ($type) {
-			return $type->formatted();
+			return $type->toFilter();
 		});
 	}
 }

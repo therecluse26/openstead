@@ -2,8 +2,12 @@
 
 namespace App\Enums;
 
+use App\Traits\FilterableEnum;
+
 enum PlantType: string
 {
+	use FilterableEnum;
+
 	case Flower = 'flower';
 	case Bush = 'bush';
 	case Tree = 'tree';
@@ -89,7 +93,7 @@ enum PlantType: string
 		};
 	}
 
-	public function formatted(): array
+	public function toFilter(): array
 	{
 		return ['key' => $this, 'label' => $this->label(), 'description' => $this->description()];
 	}

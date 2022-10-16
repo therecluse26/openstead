@@ -2,8 +2,12 @@
 
 namespace App\Enums;
 
+use App\Traits\FilterableEnum;
+
 enum Species: string
 {
+	use FilterableEnum;
+
 	case Plant = 'plant';
 	case Animal = 'animal';
 
