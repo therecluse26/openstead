@@ -12,6 +12,8 @@ class FormattedFilter extends JsonResource
 			'key' => $this->value,
 			'icon' => $this->when($this->icon(), $this->icon()),
 			'label' => $this->when($this->label(), $this->label()),
+			'description' => $this->when($this->description(), $this->description()),
+			'examples' => $this->when($this->examples(), $this->examples()),
 		];
 	}
 }

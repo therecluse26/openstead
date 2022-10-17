@@ -13,7 +13,7 @@ enum LivestockType: string
 	case Swine = 'swine';
 	case Sheep = 'sheep';
 	case Goat = 'goat';
-	case Horse = 'horse';
+	case Equine = 'equine';
 	case Fish = 'fish';
 	case Other = 'other';
 
@@ -25,7 +25,7 @@ enum LivestockType: string
 			self::Swine => 'Pig/Swine',
 			self::Sheep => 'Sheep',
 			self::Goat => 'Goat',
-			self::Horse => 'Horse/Equine',
+			self::Equine => 'Horse/Equine',
 			self::Fish => 'Fish',
 			self::Other => 'Other'
 		};
@@ -39,9 +39,23 @@ enum LivestockType: string
 			self::Swine => '🐷',
 			self::Sheep => '🐑',
 			self::Goat => '🐐',
-			self::Horse => '🐴',
+			self::Equine => '🐴',
 			self::Fish => '🐟',
 			self::Other => '🐸',
+		};
+	}
+
+	public function examples(): ?string
+	{
+		return match ($this) {
+			self::Bird => 'Chicken, duck, goose, turkey, guinea fowl, emu, rhea, owl',
+			self::Cattle => 'Angus, brahman, jersey, longhorn, ox, zebu',
+			self::Swine => 'Berkshire, duroc, kunekune, hamphire, landrace',
+			self::Sheep => 'Lincoln, hampshire, suffolk, turcana',
+			self::Goat => 'Nubian, kiko, nigerian dwarf, pygmy, angora',
+			self::Equine => 'American quarter, arabian, thoroughbred, morgan, warmblood',
+			self::Fish => 'Carp, salmon, catfish, tilapia',
+			self::Other => 'Frog, elephant, martian',
 		};
 	}
 

@@ -4,12 +4,22 @@ namespace App\Traits;
 
 trait FilterableEnum
 {
-	public function icon()
+	public function icon(): ?string
 	{
 		return null;
 	}
 
-	public function label()
+	public function label(): ?string
+	{
+		return null;
+	}
+
+	public function description(): ?string
+	{
+		return null;
+	}
+
+	public function examples(): ?string
 	{
 		return null;
 	}
