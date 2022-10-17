@@ -22,8 +22,11 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 	return $request->user();
 });
 
+Route::get('/filters', [InventoryController::class, 'getFilters']);
+
+
 Route::middleware(['auth:sanctum'])->group(function () {
-	
+
 	Route::get('/locations/dropdown', [LocationController::class, 'getLocationsDropdown']);
 
 	Route::prefix('/inventory')
