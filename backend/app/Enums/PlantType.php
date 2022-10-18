@@ -142,11 +142,7 @@ enum PlantType: string
 
 	public function toFilter(): array
 	{
-		return ['key' => $this, 'label' => $this->label(), 'description' => $this->description()];
+		return ['key' => $this, 'label' => $this->label(), 'icon' => $this->icon(), 'description' => $this->description()];
 	}
 
-	public static function getTypes(): array
-	{
-		return self::cases();
-	}
 }

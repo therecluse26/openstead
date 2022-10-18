@@ -9,12 +9,12 @@ class LivestockService
 {
 	public static function getTypes(): array
 	{
-		return LivestockType::getTypes();
+		return LivestockType::cases();
 	}
 
 	public static function getFormattedTypes(): Collection
 	{
-		return collect(LivestockType::getTypes())->map(function ($type) {
+		return collect(LivestockType::cases())->map(function ($type) {
 			return $type->toFilter();
 		});
 	}

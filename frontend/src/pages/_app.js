@@ -1,11 +1,15 @@
 import '@/style/style.scss'
 
-import React from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import AppLayout from '@/components/Layouts/AppLayout'
 import Head from 'next/head'
 
+import Filters from '@/state/filters'
+
 const App = ({ Component, pageProps }) => {
+    const [filters] = useState(Filters.inventoryFilters)
+
     const router = useRouter()
     if (
         [`/register`].includes(router.pathname) ||

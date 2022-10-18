@@ -46,6 +46,7 @@ const AppLayout = ({ children }) => {
             JSON.parse(localStorage.getItem('sidebarMenuActive')),
         )
     }, [])
+
     useEffect(() => {
         // storing input name
         localStorage.setItem('sidebarMenuActive', String(sidebarMenuActive))

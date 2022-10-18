@@ -24,7 +24,7 @@ class TestDataSeeder extends Seeder
 			->create();
 
 		Location::factory()
-			->count(3)
+			->count(1)
 			->create();
 
 		Variety::factory()->count(40)->create();

@@ -33,28 +33,34 @@ return new class extends Migration {
 			$table->string('variety_name', 50);
 			$table->string('description', 1000);
 			$table->timestamps();
+
+			$table->index('variety_name');
 		});
 
 		Schema::create('livestock', function (Blueprint $table) {
 			$table->id();
 			$table->string('name', 255);
-			$table->string('type', 50);
 			$table->dateTime('date_of_birth')->nullable();
 			$table->unsignedBigInteger('variety_id')->nullable();
 			$table->unsignedBigInteger('location_id')->nullable();
 			$table->integer('quantity')->default(1);
 			$table->dateTime('acquired_at')->nullable();
 			$table->timestamps();
+
+			$table->index('name');
+			$table->index('variety_id');
+
 		});
 
 		Schema::create('seeds', function (Blueprint $table) {
 			$table->id();
-			$table->string('type', 50);
 			$table->unsignedBigInteger('variety_id')->nullable();
 			$table->unsignedBigInteger('location_id')->nullable();
 			$table->integer('quantity')->default(1);
 			$table->dateTime('acquired_at')->nullable();
 			$table->timestamps();
+
+			$table->index('variety_id');
 		});
 
 		Schema::create('equipment', function (Blueprint $table) {
@@ -68,6 +74,9 @@ return new class extends Migration {
 			$table->integer('quantity')->default(1);
 			$table->dateTime('acquired_at')->nullable();
 			$table->timestamps();
+
+			$table->index(['name', 'type']);
+
 		});
 
 		Schema::create('images', function (Blueprint $table) {

@@ -22,7 +22,7 @@ enum EquipmentType: string
 			self::Hand => 'Hand Tool',
 			self::Power => 'Power Tool',
 			self::Heavy => 'Heavy Equipment',
-			self::Air => 'Pneumatic Tool',
+			self::Air => 'Air Tool',
 			self::SmallEngine => 'Small Engine',
 			self::Machining => 'Machining Tool',
 			self::Other => 'Other'
@@ -68,9 +68,9 @@ enum EquipmentType: string
 		};
 	}
 
-	public static function getTypes(): array
+	public function toFilter(): array
 	{
-		return self::cases();
+		return ['key' => $this, 'label' => $this->label(), 'icon' => $this->icon(), 'description' => $this->description()];
 	}
 
 }

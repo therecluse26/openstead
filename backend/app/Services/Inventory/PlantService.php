@@ -9,12 +9,12 @@ class PlantService
 {
 	public static function getTypes(): array
 	{
-		return PlantType::getTypes();
+		return PlantType::cases();
 	}
 
 	public static function getFormattedTypes(): Collection
 	{
-		return collect(PlantType::getTypes())->map(function ($type) {
+		return collect(PlantType::cases())->map(function ($type) {
 			return $type->toFilter();
 		});
 	}

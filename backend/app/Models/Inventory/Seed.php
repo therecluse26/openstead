@@ -25,7 +25,6 @@ class Seed extends Model implements Inventoriable, VarietyContract, FrontendFilt
 	protected $table = 'seeds';
 
 	protected $fillable = [
-		'type',
 		'variety_id',
 		'location_id',
 		'quantity',
@@ -33,13 +32,11 @@ class Seed extends Model implements Inventoriable, VarietyContract, FrontendFilt
 	];
 
 	protected $casts = [
-		'type' => PlantType::class,
 		'acquired_at' => 'datetime'
 	];
 
-	protected $appends = [
-		'type_description',
-		'variety_name'
+	protected $with = [
+		'variety'
 	];
 
 	public function images(): MorphMany
@@ -52,11 +49,6 @@ class Seed extends Model implements Inventoriable, VarietyContract, FrontendFilt
 		return Attribute::make(
 			get: fn() => $this->variety?->name ?? null
 		);
-	}
-
-	public function getTypeDescriptionAttribute()
-	{
-		return $this->type->toFilter();
 	}
 
 	public static function getFilters(): Collection

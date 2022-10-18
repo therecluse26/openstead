@@ -16,9 +16,14 @@ trait HasVariety
 	public function varietyName(): Attribute
 	{
 		return Attribute::make(
-			get: fn() => $this->variety?->name ?? null
+			get: fn() => $this->variety?->variety_name ?? null
 		);
 	}
 
-
+	public function varietyType(): Attribute
+	{
+		return Attribute::make(
+			get: fn() => $this->variety?->group_type ?? null
+		);
+	}
 }

@@ -26,7 +26,6 @@ class Livestock extends Model implements Inventoriable, VarietyContract, Fronten
 
 	protected $fillable = [
 		'name',
-		'type',
 		'variety_id',
 		'date_of_birth',
 		'location_id',
@@ -35,14 +34,12 @@ class Livestock extends Model implements Inventoriable, VarietyContract, Fronten
 	];
 
 	protected $casts = [
-		'type' => LivestockType::class,
 		'date_of_birth' => 'datetime',
 		'acquired_at' => 'datetime'
 	];
 
-	protected $appends = [
-		'type_description',
-		'breed'
+	protected $with = [
+		'variety'
 	];
 
 	public function images(): MorphMany
@@ -55,11 +52,6 @@ class Livestock extends Model implements Inventoriable, VarietyContract, Fronten
 		return Attribute::make(
 			get: fn() => $this->variety?->name ?? null
 		);
-	}
-
-	public function getTypeDescriptionAttribute()
-	{
-		return $this->type?->toFilter();
 	}
 
 	public static function getFilters(): Collection

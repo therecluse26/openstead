@@ -18,10 +18,17 @@ class DatabaseSeeder extends Seeder
 			BaseDataSeeder::class,
 		]);
 
-		if (app()->environment('test', 'testing', 'local') || env('SEED_TEST_DATA')) {
-			$this->call([
-				TestDataSeeder::class,
-			]);
+		if (app()->environment('test', 'testing', 'local')) {
+			if (config('seeding.test-data.scaled')) {
+				$this->call([
+					ScaledTestDataSeeder::class,
+				]);
+			} else if (config('seeding.test-data.normal')) {
+				$this->call([
+					TestDataSeeder::class,
+				]);
+			}
+
 		}
 	}
 }

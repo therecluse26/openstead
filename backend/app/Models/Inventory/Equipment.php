@@ -42,7 +42,7 @@ class Equipment extends Model implements Inventoriable, FrontendFilterable
 
 	public static function getFilters(): Collection
 	{
-		return collect(['types' => FormattedFilter::collection(EquipmentType::cases()), 'conditions' => FormattedFilter::collection(EquipmentCondition::cases())]);
+		return collect(['types' => FormattedFilter::collection(EquipmentType::cases())]);
 	}
 
 	public function images(): MorphMany
@@ -54,4 +54,6 @@ class Equipment extends Model implements Inventoriable, FrontendFilterable
 	{
 		return $this->condition ? $this->condition->toString() : "Unknown";
 	}
+
+
 }

@@ -17,7 +17,7 @@ class EquipmentController extends Controller
 {
 	public function getTypes()
 	{
-		return EquipmentService::getTypes();
+		return EquipmentService::getFormattedTypes();
 	}
 
 	/**

@@ -8,7 +8,7 @@ import Link from 'next/link'
 import QuantityFilterTemplate from '@/pages/inventory/templates/QuantityFilterTemplate'
 
 const Equipment = () => {
-    const [equipmentTypes, setEquipmentTypes] = useState([])
+    const [types, setTypes] = useState([])
     const isMounted = useRef(false)
     const [filters, setFilters] = useState({
         name: { value: '', matchMode: 'contains' },
@@ -44,14 +44,14 @@ const Equipment = () => {
 
     useEffect(() => {
         isMounted.current = true
-        loadEquipmentTypes()
+        loadTypes()
     }, [])
 
     const typeFilterElement = options => {
         return (
             <Dropdown
                 value={options.value}
-                options={equipmentTypes}
+                options={types}
                 onChange={e => {
                     options.filterCallback(e.value, options.index)
                     setFilters({
@@ -87,11 +87,11 @@ const Equipment = () => {
         )
     }
 
-    const loadEquipmentTypes = () => {
+    const loadTypes = () => {
         EquipmentService.getTypes().then(data => {
-            setEquipmentTypes(
+            setTypes(
                 data.map(t => {
-                    return { label: t, value: t }
+                    return { label: t.label, value: t.key, icon: t.icon }
                 }),
             )
         })
@@ -127,6 +127,23 @@ const Equipment = () => {
         return rowData[elem.field]
     }
 
+    const bodyTypeTemplate = (rowData, elem) => {
+        const type = types.find(e => {
+            return e.value === rowData[elem.field]
+        })
+        const icon = type?.icon ? (
+            <span className={'type-icon'} aria-label={type?.label}>
+                {type?.icon} &nbsp;
+            </span>
+        ) : null
+        return (
+            <div>
+                {icon}
+                {type?.label}
+            </div>
+        )
+    }
+
     const bodyLinkTemplate = (rowData, elem) => {
         return (
             <Link href={`/inventory/equipment/${rowData.id}`}>
@@ -156,7 +173,7 @@ const Equipment = () => {
                 field="type"
                 header="Type"
                 sortable
-                body={bodyTemplate}
+                body={bodyTypeTemplate}
                 filter
                 filterElement={typeFilterElement}
                 filterPlaceholder="Search"

@@ -14,11 +14,5 @@ enum InventoryType: string
 	case Equipment = Equipment::class;
 	case Livestock = Livestock::class;
 	case Seed = Seed::class;
-
-	public static function getTypes(): array
-	{
-		return self::cases();
-	}
-
-
+	
 }

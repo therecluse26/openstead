@@ -12,14 +12,19 @@ const Seeds = () => {
     const [filters, setFilters] = useState({
         name: { value: '', matchMode: 'contains' },
         date_of_birth: { value: '', matchMode: 'equals' },
+        quantity: { value: null, matchMode: 'equals' },
         variety: {
             value: '',
             matchMode: 'contains',
             relatedSortField: 'variety_name',
             filterFieldName: 'variety.variety_name',
         },
-        quantity: { value: null, matchMode: 'equals' },
-        type: { value: '', matchMode: 'equals' },
+        type: {
+            value: '',
+            matchMode: 'equals',
+            relatedSortField: 'group_type',
+            filterFieldName: 'variety.group_type',
+        },
     })
 
     useEffect(() => {
@@ -89,14 +94,14 @@ const Seeds = () => {
     const bodyVarietyTemplate = (rowData, elem) => {
         return (
             <Link href={`/inventory/seeds/${rowData.id}`}>
-                {rowData[elem.field].variety_name}
+                {rowData['variety']['variety_name']}
             </Link>
         )
     }
 
-    const bodyTypeTemplate = (rowData, elem) => {
+    const bodyTypeTemplate = rowData => {
         const type = types.find(e => {
-            return e.value === rowData[elem.field]
+            return e.value === rowData['variety']['group_type']
         })
         const icon = type?.icon ? (
             <span className={'type-icon'} aria-label={type?.label}>
@@ -131,7 +136,8 @@ const Seeds = () => {
             />
 
             <Column
-                field="type"
+                field="variety"
+                sortField="variety.group_type"
                 header="Type"
                 sortable
                 body={bodyTypeTemplate}

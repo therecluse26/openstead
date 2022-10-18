@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-use App\Models\Inventory\Livestock;
-use App\Models\Inventory\Seed;
+use App\Casts\VarietyType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Variety extends Model
 {
@@ -21,13 +19,16 @@ class Variety extends Model
 		'description',
 	];
 
-	public function livestock(): BelongsTo
-	{
-		return $this->belongsTo(Livestock::class, 'id', 'variety_id');
-	}
+	protected $casts = [
+		'group_type' => VarietyType::class
+	];
 
-	public function seeds(): BelongsTo
+	protected $appends = [
+//		'type_description'
+	];
+
+	public function getTypeDescriptionAttribute()
 	{
-		return $this->belongsTo(Seed::class, 'id', 'variety_id');
+		return $this->group_type->toFilter();
 	}
 }

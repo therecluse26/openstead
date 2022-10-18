@@ -138,9 +138,15 @@ const InventoryList = ({
         RowsPerPageDropdown: options => {
             const dropdownOptions = [
                 { label: 10, value: 10 },
-                { label: 20, value: 20 },
                 { label: 50, value: 50 },
-                { label: 'All', value: options.totalRecords },
+                { label: 100, value: 100 },
+                {
+                    label: options.totalRecords <= 1000 ? 'All' : 1000,
+                    value:
+                        options.totalRecords <= 1000
+                            ? options.totalRecords
+                            : 1000,
+                },
             ]
 
             return (

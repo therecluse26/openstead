@@ -63,9 +63,5 @@ enum LivestockType: string
 	{
 		return ['key' => $this, 'icon' => $this->icon(), 'label' => $this->label()];
 	}
-
-	public static function getTypes(): array
-	{
-		return self::cases();
-	}
+	
 }
