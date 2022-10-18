@@ -8,6 +8,8 @@ use App\Http\Requests\Inventory\StoreEquipmentRequest;
 use App\Http\Requests\Inventory\UpdateEquipmentRequest;
 use App\Models\Inventory\Equipment;
 use App\Repositories\Inventory\EquipmentRepository;
+use App\Resources\Inventory\EquipmentResource;
+use App\Resources\Inventory\PaginatedInventoryResource;
 use App\Services\Inventory\EquipmentService;
 use App\Services\Inventory\InventoryService;
 use Illuminate\Http\Response;
@@ -28,7 +30,12 @@ class EquipmentController extends Controller
 	 */
 	public function index(ListInventoryRequest $request, InventoryService $inventoryService)
 	{
-		return response($inventoryService::buildInventoryTableData(Equipment::class, $request));
+		return response(
+			PaginatedInventoryResource::make(
+				$inventoryService::buildInventoryTableData(Equipment::class, $request),
+				EquipmentResource::class
+			)
+		);
 	}
 
 	/**

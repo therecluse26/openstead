@@ -35,10 +35,6 @@ class Seed extends Model implements Inventoriable, VarietyContract, FrontendFilt
 		'acquired_at' => 'datetime'
 	];
 
-	protected $with = [
-		'variety'
-	];
-
 	public function images(): MorphMany
 	{
 		return $this->morphMany(Image::class, 'imageable');

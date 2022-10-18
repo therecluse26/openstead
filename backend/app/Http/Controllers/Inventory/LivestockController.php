@@ -7,6 +7,8 @@ use App\Http\Requests\Inventory\StoreLivestockRequest;
 use App\Http\Requests\Inventory\UpdateLivestockRequest;
 use App\Models\Inventory\Livestock;
 use App\Repositories\Inventory\LivestockRepository;
+use App\Resources\Inventory\LivestockResource;
+use App\Resources\Inventory\PaginatedInventoryResource;
 use App\Services\Inventory\InventoryService;
 use App\Services\Inventory\LivestockService;
 use Illuminate\Http\Request;
@@ -28,7 +30,12 @@ class LivestockController extends Controller
 	 */
 	public function index(Request $request, InventoryService $inventoryService)
 	{
-		return response($inventoryService::buildInventoryTableData(Livestock::class, $request));
+		return response(
+			PaginatedInventoryResource::make(
+				$inventoryService::buildInventoryTableData(Livestock::class, $request),
+				LivestockResource::class
+			)
+		);
 	}
 
 	/**

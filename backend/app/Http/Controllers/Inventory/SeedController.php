@@ -7,6 +7,8 @@ use App\Http\Requests\Inventory\StoreSeedRequest;
 use App\Http\Requests\Inventory\UpdateSeedRequest;
 use App\Models\Inventory\Seed;
 use App\Repositories\Inventory\SeedRepository;
+use App\Resources\Inventory\PaginatedInventoryResource;
+use App\Resources\Inventory\SeedResource;
 use App\Services\Inventory\InventoryService;
 use App\Services\Inventory\PlantService;
 use Illuminate\Http\Request;
@@ -28,7 +30,12 @@ class SeedController extends Controller
 	 */
 	public function index(Request $request, InventoryService $inventoryService)
 	{
-		return response($inventoryService::buildInventoryTableData(Seed::class, $request));
+		return response(
+			PaginatedInventoryResource::make(
+				$inventoryService::buildInventoryTableData(Seed::class, $request),
+				SeedResource::class
+			)
+		);
 	}
 
 	/**
