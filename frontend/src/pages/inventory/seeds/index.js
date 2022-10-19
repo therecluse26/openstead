@@ -91,7 +91,7 @@ const Seeds = () => {
     }
 
     // Body Templates
-    const bodyVarietyTemplate = (rowData, elem) => {
+    const bodyVarietyTemplate = rowData => {
         return (
             <Link href={`/inventory/seeds/${rowData.id}`}>
                 {rowData['variety']['variety_name']}

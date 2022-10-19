@@ -3,7 +3,8 @@ import AuthCard from '@/components/AuthCard'
 import AuthSessionStatus from '@/components/AuthSessionStatus'
 import Button from '@/components/Button'
 import GuestLayout from '@/components/Layouts/GuestLayout'
-import Input from '@/components/Input'
+
+import { InputText } from 'primereact/inputtext'
 import InputError from '@/components/InputError'
 import Label from '@/components/Label'
 import Link from 'next/link'
@@ -56,7 +57,7 @@ const PasswordReset = () => {
                     <div>
                         <Label htmlFor="email">Email</Label>
 
-                        <Input
+                        <InputText
                             id="email"
                             type="email"
                             value={email}
@@ -72,7 +73,7 @@ const PasswordReset = () => {
                     {/* Password */}
                     <div className="mt-4">
                         <Label htmlFor="password">Password</Label>
-                        <Input
+                        <InputText
                             id="password"
                             type="password"
                             value={password}
@@ -81,7 +82,10 @@ const PasswordReset = () => {
                             required
                         />
 
-                        <InputError messages={errors.password} className="mt-2" />
+                        <InputError
+                            messages={errors.password}
+                            className="mt-2"
+                        />
                     </div>
 
                     {/* Confirm Password */}
@@ -90,7 +94,7 @@ const PasswordReset = () => {
                             Confirm Password
                         </Label>
 
-                        <Input
+                        <InputText
                             id="passwordConfirmation"
                             type="password"
                             value={passwordConfirmation}
@@ -101,7 +105,10 @@ const PasswordReset = () => {
                             required
                         />
 
-                        <InputError messages={errors.password_confirmation} className="mt-2" />
+                        <InputError
+                            messages={errors.password_confirmation}
+                            className="mt-2"
+                        />
                     </div>
 
                     <div className="flex items-center justify-end mt-4">

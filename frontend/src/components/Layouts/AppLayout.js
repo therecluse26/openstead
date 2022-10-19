@@ -32,15 +32,6 @@ const AppLayout = ({ children }) => {
     let mobileTopbarMenuClick = false
     const toast = useRef()
 
-    const showError = () => {
-        toast.current.show({
-            severity: 'error',
-            summary: 'Error Message',
-            detail: 'Message Detail',
-            life: 3000,
-        })
-    }
-
     useEffect(() => {
         setSidebarMenuActive(
             JSON.parse(localStorage.getItem('sidebarMenuActive')),
@@ -67,7 +58,7 @@ const AppLayout = ({ children }) => {
         event.preventDefault()
     }
 
-    const onWrapperClick = event => {
+    const onWrapperClick = () => {
         if (!menuClick) {
             setOverlayMenuActive(false)
             setMobileMenuActive(false)

@@ -1,15 +1,12 @@
 import React, { useRef } from 'react'
-import { useRouter } from 'next/router'
 import ResponsiveNavLink from '@/components/ResponsiveNavLink'
 import classNames from 'classnames'
 import { useAuth } from '@/hooks/auth'
 import { Menu } from 'primereact/menu'
 
 export const TopBar = props => {
-    const router = useRouter()
     const { logout } = useAuth()
     const menu = useRef(null)
-    const toast = useRef(null)
 
     const items = [
         {
