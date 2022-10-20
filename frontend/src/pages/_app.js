@@ -16,23 +16,15 @@ const App = ({ Component, pageProps }) => {
         return <Component {...pageProps} />
     }
 
-    function SafeHydrate({ children }) {
-        return (
-            <div suppressHydrationWarning>
-                {typeof window === 'undefined' ? null : children}
-            </div>
-        )
-    }
-
     return (
-        <SafeHydrate>
+        <div suppressHydrationWarning>
             <AppLayout>
                 <Head>
                     <title>Openstead</title>
                 </Head>
                 <Component {...pageProps} />
             </AppLayout>
-        </SafeHydrate>
+        </div>
     )
 }
 

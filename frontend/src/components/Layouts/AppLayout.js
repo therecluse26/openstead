@@ -127,6 +127,7 @@ const AppLayout = ({ children }) => {
                 <Toast ref={toast} />
 
                 <div className="layout-main">{children}</div>
+
                 <AppFooter layoutColorMode={layoutColorMode} />
             </div>
 

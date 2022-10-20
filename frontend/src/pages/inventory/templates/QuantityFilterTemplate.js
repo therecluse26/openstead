@@ -5,14 +5,14 @@ const QuantityFilterTemplate = ({ options, setFilters, filters }) => {
     return (
         <InputNumber
             placeholder={'Search'}
-            value={options.value}
+            value={options?.value}
             onChange={e => {
-                options.filterCallback(e.value, options.value)
+                options.filterCallback(e?.value, options?.value)
                 setFilters({
                     ...filters,
                     quantity: {
                         ...filters.quantity,
-                        value: e.value,
+                        value: e?.value,
                     },
                 })
             }}
