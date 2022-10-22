@@ -40,8 +40,9 @@ return new class extends Migration {
 		Schema::create('livestock', function (Blueprint $table) {
 			$table->id();
 			$table->string('name', 255);
+			$table->enum('sex', ['male', 'female'])->nullable();
 			$table->dateTime('date_of_birth')->nullable();
-			$table->unsignedBigInteger('variety_id')->nullable();
+			$table->unsignedBigInteger('variety_id');
 			$table->unsignedBigInteger('location_id')->nullable();
 			$table->integer('quantity')->default(1);
 			$table->dateTime('acquired_at')->nullable();
@@ -49,12 +50,18 @@ return new class extends Migration {
 
 			$table->index('name');
 			$table->index('variety_id');
+		});
 
+		Schema::create('livestock_parents', function (Blueprint $table) {
+			$table->id();
+			$table->unsignedBigInteger('livestock_id');
+			$table->unsignedBigInteger('parent_id');
+			$table->enum('relationship', ['mother', 'father']);
 		});
 
 		Schema::create('seeds', function (Blueprint $table) {
 			$table->id();
-			$table->unsignedBigInteger('variety_id')->nullable();
+			$table->unsignedBigInteger('variety_id');
 			$table->unsignedBigInteger('location_id')->nullable();
 			$table->integer('quantity')->default(1);
 			$table->dateTime('acquired_at')->nullable();
@@ -89,6 +96,25 @@ return new class extends Migration {
 			$table->unsignedInteger('filesize')->nullable();
 			$table->timestamps();
 		});
+
+		Schema::create('services', function (Blueprint $table) {
+			$table->id();
+			$table->string('type', 20);
+			$table->string('title', 100);
+			$table->string('description', 1000);
+			$table->timestamps();
+
+			$table->index('type');
+			$table->index('title');
+		});
+
+		Schema::create('service_logs', function (Blueprint $table) {
+			$table->id();
+			$table->morphs('serviceable');
+			$table->unsignedBigInteger('service_id')->nullable();
+			$table->string('notes', 2000);
+			$table->timestamps();
+		});
 	}
 
 	/**
@@ -103,6 +129,8 @@ return new class extends Migration {
 		Schema::dropIfExists('seeds');
 		Schema::dropIfExists('images');
 		Schema::dropIfExists('locations');
+		Schema::dropIfExists('service_logs');
+		Schema::dropIfExists('services');
 		Schema::dropIfExists('varieties');
 	}
 };

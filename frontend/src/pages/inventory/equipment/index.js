@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 import InventoryList from '@/components/Layouts/Inventory/InventoryList'
 import { Column } from 'primereact/column'
-import { Tag } from 'primereact/tag'
 import EquipmentService from '@/services/inventory/EquipmentService'
 import { Dropdown } from 'primereact/dropdown'
 import Link from 'next/link'
 import QuantityFilterTemplate from '@/pages/inventory/templates/QuantityFilterTemplate'
+import ScalableTag from '@/components/ScalableTag'
 
 const Equipment = () => {
     const [types, setTypes] = useState([])
@@ -97,31 +97,6 @@ const Equipment = () => {
         })
     }
 
-    const getConditionBadge = condition => {
-        switch (condition) {
-            case 1:
-                return 'danger'
-            case 2:
-                return 'warning'
-            case 3:
-                return 'info'
-            case 4:
-                return 'primary'
-            case 5:
-                return 'success'
-        }
-    }
-
-    const conditionTemplate = rowData => {
-        return (
-            <Tag
-                className="mr-2"
-                severity={getConditionBadge(rowData.condition)}
-                value={rowData.condition_description}
-            />
-        )
-    }
-
     // Body Templates
     const bodyTemplate = (rowData, elem) => {
         return rowData[elem.field]
@@ -141,6 +116,15 @@ const Equipment = () => {
                 {icon}
                 {type?.label}
             </div>
+        )
+    }
+
+    const conditionTemplate = rowData => {
+        return (
+            <ScalableTag
+                condition={rowData?.condition}
+                text={rowData?.condition_description}
+            />
         )
     }
 

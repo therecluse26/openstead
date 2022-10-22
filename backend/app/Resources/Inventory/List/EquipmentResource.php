@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Resources\Inventory;
+namespace App\Resources\Inventory\List;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 

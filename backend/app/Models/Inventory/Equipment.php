@@ -7,6 +7,7 @@ use App\Contracts\Inventoriable;
 use App\Enums\EquipmentCondition;
 use App\Enums\EquipmentType;
 use App\Models\Image;
+use App\Models\ServiceLog;
 use App\Resources\FormattedFilter;
 use App\Traits\HasInventory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -48,6 +49,11 @@ class Equipment extends Model implements Inventoriable, FrontendFilterable
 	public function images(): MorphMany
 	{
 		return $this->morphMany(Image::class, 'imageable');
+	}
+
+	public function serviceLogs(): MorphMany
+	{
+		return $this->morphMany(ServiceLog::class, 'serviceable');
 	}
 
 	public function getConditionDescriptionAttribute()

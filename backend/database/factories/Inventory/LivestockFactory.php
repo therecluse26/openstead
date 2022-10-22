@@ -23,6 +23,7 @@ class LivestockFactory extends Factory
 		return [
 			'name' => fake()->name(),
 			'variety_id' => Variety::where('kingdom', 'animal')->whereIn('group_type', LivestockType::cases())->inRandomOrder()->first(),
+			'sex' => fake()->randomElement(['male', 'female']),
 			'date_of_birth' => fake()->dateTimeThisDecade(),
 			'location_id' => Location::inRandomOrder()->first(),
 			'quantity' => fake()->numberBetween(0, 10),

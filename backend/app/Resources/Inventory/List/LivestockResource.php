@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Resources\Inventory;
+namespace App\Resources\Inventory\List;
 
 use App\Resources\VarietyResource;
 use Illuminate\Http\Resources\Json\JsonResource;

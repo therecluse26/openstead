@@ -7,7 +7,7 @@ import InputError from '@/components/InputError'
 import Label from '@/components/Label'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/auth'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { InputText } from 'primereact/inputtext'
 
 const ForgotPassword = () => {
