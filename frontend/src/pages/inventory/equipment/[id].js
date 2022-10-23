@@ -9,6 +9,7 @@ import { Rating } from 'primereact/rating'
 import ScalableTag from '@/components/ScalableTag'
 import InventoryCard from '@/components/Inventory/InventoryCard'
 import Link from 'next/link'
+import { Timeline } from 'primereact/timeline'
 
 const EquipmentDetail = () => {
     const isMounted = useRef(false)
@@ -98,16 +99,47 @@ const EquipmentDetail = () => {
             : null
     }
 
-    const ServiceLogsTemplate = () => {
-        return equipmentData?.service_logs?.length > 0
-            ? equipmentData?.service_logs?.map(item => {
-                  return (
-                      <div key={`service_log_${item.id}`} className={'mb-4'}>
-                          {JSON.stringify(item)}
-                      </div>
-                  )
-              })
-            : null
+    const customizedTimelineMarker = item => {
+        return (
+            <span
+                className="surface-ground shadow-1  p-3"
+                style={{
+                    borderRadius: '50%',
+                }}>
+                {item?.icon}
+            </span>
+        )
+    }
+
+    const customizedTimelineContent = item => {
+        return (
+            <>
+                <Card
+                    title={item?.log?.service?.title}
+                    subTitle={item?.log?.service_date}
+                    className={'shadow-4 surface-overlay'}>
+                    <p>{item?.log?.notes}</p>
+                </Card>
+            </>
+        )
+    }
+
+    const ServiceLogsTemplate = ({ logs }) => {
+        return (
+            <div className={'my-4'}>
+                <h5 className={'text-center'}>Service Logs</h5>
+                <Card>
+                    <Timeline
+                        value={logs?.map(log => {
+                            return { log: log, icon: log?.service?.type?.icon }
+                        })}
+                        align="alternate"
+                        marker={customizedTimelineMarker}
+                        content={customizedTimelineContent}
+                    />
+                </Card>
+            </div>
+        )
     }
 
     const PageSkeleton = (
@@ -115,6 +147,7 @@ const EquipmentDetail = () => {
             <div className="grid">
                 <div className="col-12 sm:col-fixed" style={{ width: '100px' }}>
                     <Skeleton width="100%" height="30px" />
+                    {}{' '}
                 </div>
                 <div className={'col-12 sm:col'}>
                     <h2 className={'text-center'}>
@@ -220,11 +253,12 @@ const EquipmentDetail = () => {
                                 {equipmentData?.description}
                             </span>
                         </div>
-
-                        <ServiceLogsTemplate />
                     </div>
                 </div>
             </Card>
+
+            <ServiceLogsTemplate logs={equipmentData?.service_logs} />
+
             <div className={'mt-4 align-content-end'}>
                 <h5 className={'text-center'}>Similar Items</h5>
 

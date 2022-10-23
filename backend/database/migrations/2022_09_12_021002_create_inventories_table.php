@@ -99,7 +99,7 @@ return new class extends Migration {
 
 		Schema::create('services', function (Blueprint $table) {
 			$table->id();
-			$table->string('type', 20);
+			$table->string('type', 20)->default('other');
 			$table->string('title', 100);
 			$table->string('description', 1000);
 			$table->timestamps();
@@ -111,8 +111,9 @@ return new class extends Migration {
 		Schema::create('service_logs', function (Blueprint $table) {
 			$table->id();
 			$table->morphs('serviceable');
-			$table->unsignedBigInteger('service_id')->nullable();
+			$table->unsignedBigInteger('service_id');
 			$table->string('notes', 2000);
+			$table->dateTime('service_date');
 			$table->timestamps();
 		});
 	}

@@ -20,7 +20,8 @@ class ServiceLogFactory extends Factory
 	{
 		return [
 			'notes' => fake()->paragraphs(4, true),
-			'service_id' => Service::inRandomOrder()->first()
+			'service_id' => Service::inRandomOrder()->first(),
+			'service_date' => fake()->dateTimeThisDecade()
 		];
 	}
 }

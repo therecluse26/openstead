@@ -20,7 +20,7 @@ class EquipmentResource extends JsonResource
 			'description' => $this->description,
 			'quantity' => $this->quantity,
 			'acquired_at' => $this->acquired_at,
-			'service_logs' => ServiceLogResource::collection($this->serviceLogs)
+			'service_logs' => ServiceLogResource::collection($this->serviceLogs->sortByDesc('service_date'))
 		];
 	}
 }

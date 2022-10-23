@@ -12,6 +12,7 @@ class ServiceLogResource extends JsonResource
 			'id' => $this->id,
 			'service' => ServiceResource::make($this->service),
 			'notes' => $this->notes,
+			'service_date' => $this->service_date,
 		];
 	}
 }

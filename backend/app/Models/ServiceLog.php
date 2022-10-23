@@ -16,10 +16,12 @@ class ServiceLog extends Model
 
 	protected $fillable = [
 		'notes',
+		'service_date'
 	];
 
 	protected $casts = [
-		'type' => ServiceType::class
+		'type' => ServiceType::class,
+		'service_date' => 'datetime',
 	];
 
 	public function service(): BelongsTo

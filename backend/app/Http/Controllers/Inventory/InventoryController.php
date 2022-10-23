@@ -21,7 +21,7 @@ class InventoryController extends Controller
 	{
 		return InventoryService::getFilters();
 	}
-	
+
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -43,49 +43,4 @@ class InventoryController extends Controller
 	{
 		return response($repository->create($request), 200);
 	}
-
-//	/**
-//	 * Display the specified resource.
-//	 *
-//	 * @param InventoryRepository $inventory
-//	 * @return Response
-//	 */
-//	public function show( InventoryRepository $repository)
-//	{
-//		return response($repository->getById());
-//	}
-//
-//	/**
-//	 * Show the form for editing the specified resource.
-//	 *
-//	 * @param Inventory $inventory
-//	 * @return Response
-//	 */
-//	public function edit(Inventory $inventory)
-//	{
-//		//
-//	}
-//
-//	/**
-//	 * Update the specified resource in storage.
-//	 *
-//	 * @param UpdateInventoryRequest $request
-//	 * @param Inventory $inventory
-//	 * @return Response
-//	 */
-//	public function update(UpdateInventoryRequest $request, Inventory $inventory)
-//	{
-//		//
-//	}
-//
-//	/**
-//	 * Remove the specified resource from storage.
-//	 *
-//	 * @param Inventory $inventory
-//	 * @return Response
-//	 */
-//	public function destroy(Inventory $inventory)
-//	{
-//		$inventory->delete();
-//	}
 }
