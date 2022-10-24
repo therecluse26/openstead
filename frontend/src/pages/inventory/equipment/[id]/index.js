@@ -4,15 +4,15 @@ import { useRouter } from 'next/router'
 import EquipmentService from '@/services/inventory/EquipmentService'
 import { Galleria } from 'primereact/galleria'
 import LinkButton from '@/components/LinkButton'
-import { Skeleton } from 'primereact/skeleton'
 import { Rating } from 'primereact/rating'
 import ScalableTag from '@/components/ScalableTag'
-import InventoryCard from '@/components/Inventory/InventoryCard'
-import Link from 'next/link'
-import { Timeline } from 'primereact/timeline'
+import InventorySkeleton from '@/components/Inventory/InventorySkeleton'
+import ServiceLogsTimeline from '@/components/Custom/Services/ServiceLogsTimeline'
+import SimilarItemsTemplate from '@/components/Inventory/SimilarItems'
 
 const EquipmentDetail = () => {
     const isMounted = useRef(false)
+    const [editing, setEditing] = useState(false)
     const [equipmentData, setEquipmentData] = useState()
     const [similarItems, setSimilarItems] = useState()
     const { query, isReady } = useRouter()
@@ -74,105 +74,15 @@ const EquipmentDetail = () => {
             })
     }
 
+    // Load initial data
     useEffect(() => {
         isMounted.current = true
         loadData()
         loadSimilarItems()
     }, [id])
 
-    const SimilarItemsTemplate = () => {
-        return similarItems?.length > 0
-            ? similarItems?.map(item => {
-                  return (
-                      <InventoryCard key={'item_' + item.id} gap={2}>
-                          <Link
-                              href={`/inventory/equipment/${item.id}`}
-                              title={item.name}>
-                              <span className={'text-2xl cursor-pointer'}>
-                                  {item.name}
-                              </span>
-                          </Link>
-                          <div className={'mt-4'}>{item.description}</div>
-                      </InventoryCard>
-                  )
-              })
-            : null
-    }
-
-    const customizedTimelineMarker = item => {
-        return (
-            <span
-                className="surface-ground shadow-1  p-3"
-                style={{
-                    borderRadius: '50%',
-                }}>
-                {item?.icon}
-            </span>
-        )
-    }
-
-    const customizedTimelineContent = item => {
-        return (
-            <>
-                <Card
-                    title={item?.log?.service?.title}
-                    subTitle={item?.log?.service_date}
-                    className={'shadow-4 surface-overlay'}>
-                    <p>{item?.log?.notes}</p>
-                </Card>
-            </>
-        )
-    }
-
-    const ServiceLogsTemplate = ({ logs }) => {
-        return (
-            <div className={'my-4'}>
-                <h5 className={'text-center'}>Service Logs</h5>
-                <Card>
-                    <Timeline
-                        value={logs?.map(log => {
-                            return { log: log, icon: log?.service?.type?.icon }
-                        })}
-                        align="alternate"
-                        marker={customizedTimelineMarker}
-                        content={customizedTimelineContent}
-                    />
-                </Card>
-            </div>
-        )
-    }
-
-    const PageSkeleton = (
-        <Card>
-            <div className="grid">
-                <div className="col-12 sm:col-fixed" style={{ width: '100px' }}>
-                    <Skeleton width="100%" height="30px" />
-                    {}{' '}
-                </div>
-                <div className={'col-12 sm:col'}>
-                    <h2 className={'text-center'}>
-                        <Skeleton width="100%" height="30px" />
-                    </h2>
-                </div>
-            </div>
-            <div className="grid custom-skeleton p-4">
-                <div className={'col-12 md:col-6'}>
-                    <Skeleton width="100%" height="400px" />
-                </div>
-
-                <div className={'col-12 md:col-6'}>
-                    <Skeleton width="100%" height="2rem" className={'mb-4'} />
-                    <Skeleton width="100%" height="2rem" className={'my-4'} />
-                    <Skeleton width="100%" height="2rem" className={'my-4'} />
-                    <Skeleton width="100%" height="2rem" className={'my-4'} />
-                    <Skeleton width="100%" height="2rem" className={'my-4'} />
-                </div>
-            </div>
-        </Card>
-    )
-
     return (
-        <Suspense fallback={PageSkeleton}>
+        <Suspense fallback={InventorySkeleton}>
             <Card>
                 <div className="grid">
                     <div
@@ -188,11 +98,17 @@ const EquipmentDetail = () => {
                     </div>
                     <div
                         className="col-12 sm:col-fixed"
-                        style={{ width: '100px' }}>
+                        style={{ width: '200px' }}>
                         <LinkButton
                             href={`/inventory/equipment/${equipmentData?.id}/edit`}
                             leftIcon={'ti ti-edit'}
                             text={' Edit'}
+                        />
+
+                        <LinkButton
+                            href={`/inventory/equipment/add`}
+                            leftIcon={'ti ti-plus'}
+                            text={' New'}
                         />
                     </div>
                 </div>
@@ -203,7 +119,7 @@ const EquipmentDetail = () => {
                             value={equipmentData?.images}
                             responsiveOptions={responsiveOptions}
                             numVisible={5}
-                            style={{ maxWidth: '600px' }}
+                            style={{ maxWidth: '400px' }}
                             item={galleryTemplate}
                             showThumbnails={false}
                             showIndicators
@@ -257,18 +173,20 @@ const EquipmentDetail = () => {
                 </div>
             </Card>
 
-            <ServiceLogsTemplate logs={equipmentData?.service_logs} />
+            <ServiceLogsTimeline logs={equipmentData?.service_logs} />
 
-            <div className={'mt-4 align-content-end'}>
-                <h5 className={'text-center'}>Similar Items</h5>
+            {similarItems?.length > 0 ? (
+                <div className={'mt-4 align-content-end'}>
+                    <h5 className={'text-center'}>Similar Items</h5>
 
-                <div
-                    className={
-                        'flex flex-nowrap overflow-x-scroll styled-scroll pb-3'
-                    }>
-                    <SimilarItemsTemplate />
+                    <div
+                        className={
+                            'flex flex-nowrap overflow-x-scroll styled-scroll pb-3'
+                        }>
+                        <SimilarItemsTemplate similarItems={similarItems} />
+                    </div>
                 </div>
-            </div>
+            ) : null}
         </Suspense>
     )
 }

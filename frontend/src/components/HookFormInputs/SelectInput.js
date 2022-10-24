@@ -21,10 +21,7 @@ const SelectInput = ({
             .then(data => {
                 setSelectOptions(
                     data.map(t => {
-                        if (typeof t === 'object') {
-                            return t
-                        }
-                        return { label: t, value: t }
+                        return { label: t.label, value: t.key }
                     }),
                 )
             })

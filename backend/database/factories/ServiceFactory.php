@@ -21,7 +21,7 @@ class ServiceFactory extends Factory
 		return [
 			'type' => fake()->randomElement(ServiceType::cases()),
 			'title' => fake()->words(3, true),
-			'description' => fake()->sentence(10, true),
+			'description' => fake()->sentence(random_int(5, 15), true),
 		];
 	}
 }

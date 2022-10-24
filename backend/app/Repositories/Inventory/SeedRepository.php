@@ -36,10 +36,9 @@ class SeedRepository extends InventoryRepository
 			'name',
 			'type',
 			'variety',
+			'quantity',
 			'acquired_at'
 		]));
-
-		$this->createInventoryRelation($model, $request);
 
 		return $model;
 	}

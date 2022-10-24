@@ -65,6 +65,7 @@ RUN docker-php-ext-install  -j$(nproc) \
     dom \
     opcache \
     pcntl \
+    exif \
     bcmath \
     intl \
     sockets \
@@ -79,7 +80,7 @@ RUN docker-php-ext-install  -j$(nproc) \
 
 RUN pecl channel-update pecl.php.net && pecl install imagick mcrypt-1.0.4 ssh2-1.3.1
 
-RUN docker-php-ext-enable imagick redis dom xml xmlwriter
+RUN docker-php-ext-enable imagick redis dom xml xmlwriter exif
 
 ARG APP_ENV
 

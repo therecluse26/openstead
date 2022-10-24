@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useForm } from 'react-hook-form'
 import { Card } from 'primereact/card'
 import axios from '@/lib/axios'
@@ -8,11 +8,9 @@ import SelectInput from '@/components/HookFormInputs/SelectInput'
 import { useRouter } from 'next/router'
 import NumberInput from '@/components/HookFormInputs/NumberInput'
 import CalendarInput from '@/components/HookFormInputs/CalendarInput'
-import { FileUpload } from 'primereact/fileupload'
 
-const CreateEquipment = () => {
+const EditEquipment = () => {
     const router = useRouter()
-    const [images, setImages] = useState([])
     const defaultValues = {
         name: '',
         type: '',
@@ -59,13 +57,8 @@ const CreateEquipment = () => {
             condition: data.condition,
             description: data.description,
             location: data.location,
-            images: images,
             setError,
         })
-    }
-
-    const onUpload = data => {
-        setImages(data?.files)
     }
 
     return (
@@ -163,23 +156,6 @@ const CreateEquipment = () => {
                         {getFormErrorMessage('acquired_at')}
                     </div>
 
-                    <div className="field">
-                        <FileUpload
-                            name="images[]"
-                            customUpload
-                            auto
-                            uploadHandler={onUpload}
-                            multiple
-                            accept="image/*"
-                            maxFileSize={2000000}
-                            emptyTemplate={
-                                <p className="m-0">
-                                    Drag and drop images to here to upload.
-                                </p>
-                            }
-                        />
-                    </div>
-
                     <Button type="submit" label="Submit" className="mt-2" />
                 </form>
             </Card>
@@ -187,4 +163,4 @@ const CreateEquipment = () => {
     )
 }
 
-export default React.memo(CreateEquipment)
+export default React.memo(EditEquipment)

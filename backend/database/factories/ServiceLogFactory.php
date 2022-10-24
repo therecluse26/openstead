@@ -19,7 +19,7 @@ class ServiceLogFactory extends Factory
 	public function definition()
 	{
 		return [
-			'notes' => fake()->paragraphs(4, true),
+			'notes' => fake()->paragraphs(random_int(1, 4), true),
 			'service_id' => Service::inRandomOrder()->first(),
 			'service_date' => fake()->dateTimeThisDecade()
 		];

@@ -2,6 +2,7 @@
 
 namespace App\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ServiceLogResource extends JsonResource
@@ -12,7 +13,7 @@ class ServiceLogResource extends JsonResource
 			'id' => $this->id,
 			'service' => ServiceResource::make($this->service),
 			'notes' => $this->notes,
-			'service_date' => $this->service_date,
+			'service_date' => Carbon::parse($this->service_date)->toDateTimeString(),
 		];
 	}
 }

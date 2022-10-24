@@ -34,10 +34,11 @@ class LivestockRepository extends InventoryRepository
 		$equipment = $this->model->create($request->only([
 			'name',
 			'type',
-			'date_of_birth'
+			'date_of_birth',
+			'quantity',
+
 		]));
 
-		$this->createInventoryRelation($equipment, $request);
 
 		return $equipment;
 	}
