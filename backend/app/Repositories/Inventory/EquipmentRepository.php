@@ -3,19 +3,23 @@
 namespace App\Repositories\Inventory;
 
 use App\Enums\EquipmentCondition;
-use App\Http\Requests\Inventory\StoreEquipmentRequest;
 use App\Models\Inventory\Equipment;
+use App\Repositories\ImageRepository;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class EquipmentRepository extends InventoryRepository
 {
 	private Equipment $model;
+	private ImageRepository $images;
 
 	public function __construct()
 	{
 		$this->model = new Equipment();
+		$this->images = new ImageRepository();
 		parent::__construct($this->model);
 	}
 
@@ -49,30 +53,37 @@ class EquipmentRepository extends InventoryRepository
 			->only('type', 'count');
 	}
 
-	public function create(StoreEquipmentRequest $request): Equipment
+	public function create(Request $request): Equipment
 	{
-		$equipment = $this->model->create($request->only([
-			'name',
-			'type',
-			'condition',
-			'description',
-			'quantity'
-		]));
+		$equipment = $this->model->create(
+			$request->only([
+				'name',
+				'type',
+				'condition',
+				'description',
+				'quantity'
+			])
+		);
 
 		// Upload images
-		$uploadedImages = collect();
 		$images = collect($request->input('images'));
-//		dd($images);
-		if ($images->count() > 0) {
-			foreach ($images as $image) {
-				$uploadedImages->push(
-					Storage::disk('images')->put("/inventory/equipment/$equipment->id", $image['objectURL'])
-				);
-			}
+		if ($images->count() == 0) {
+			return $equipment;
 		}
 
-		dd($uploadedImages);
-
+		foreach ($images as $image) {
+			$extension = explode('/', mime_content_type($image))[1];
+			$imageId = Str::uuid() . $extension;
+			if (preg_match('/^data:image\/(\w+);base64,/', $image)) {
+				$data = substr($image, strpos($image, ',') + 1);
+				$data = base64_decode($data);
+				if (Storage::disk('media')->put($imageId, $data)) {
+					$equipment
+						->addMediaFromDisk($imageId, 'media')
+						->toMediaCollection();
+				}
+			}
+		}
 
 		return $equipment;
 	}

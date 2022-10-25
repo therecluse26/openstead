@@ -55,8 +55,8 @@ services:
     entrypoint: >
       /bin/sh -c "
       /usr/bin/mc alias set osminio http://minio:9000 ${MINIO_USER:-minio} ${MINIO_PASSWORD:-Password123};
-      /usr/bin/mc mb osminio/images;
-      /usr/bin/mc policy set public osminio/images;
+      /usr/bin/mc mb osminio/media;
+      /usr/bin/mc policy set public osminio/media;
       exit 0;
       "
 

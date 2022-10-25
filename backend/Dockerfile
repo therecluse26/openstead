@@ -44,6 +44,7 @@ RUN apk add wget \
   libzip-dev \
   php8-zip \
   nfs-utils \
+  less \
   nginx
 
 RUN set -xe && ln -s /usr/lib /usr/local/lib64 \

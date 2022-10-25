@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Card } from 'primereact/card'
 import axios from '@/lib/axios'
@@ -9,10 +9,12 @@ import { useRouter } from 'next/router'
 import NumberInput from '@/components/HookFormInputs/NumberInput'
 import CalendarInput from '@/components/HookFormInputs/CalendarInput'
 import { FileUpload } from 'primereact/fileupload'
+import { convertUploadedFilesToBase64 } from '@/utils/file-utils'
 
 const CreateEquipment = () => {
     const router = useRouter()
     const [images, setImages] = useState([])
+    const fileUploaderRef = useRef(null)
     const defaultValues = {
         name: '',
         type: '',
@@ -20,6 +22,7 @@ const CreateEquipment = () => {
         quantity: 1,
         description: '',
         location: null,
+        images: [],
     }
     const {
         control,
@@ -64,15 +67,19 @@ const CreateEquipment = () => {
         })
     }
 
-    const onUpload = data => {
-        setImages(data?.files)
+    const onUploadImage = async data => {
+        setImages([])
+        setImages(await convertUploadedFilesToBase64(data))
+    }
+
+    const onRemoveImage = () => {
+        setImages([])
     }
 
     return (
         <div className={'justify-content-center align-content-center grid'}>
             <Card className={'col-4'}>
                 <h3 className={'text-center'}>Add New Equipment</h3>
-
                 <form onSubmit={handleSubmit(onSubmit)} className="p-fluid">
                     <div className="field">
                         <TextInput
@@ -166,12 +173,15 @@ const CreateEquipment = () => {
                     <div className="field">
                         <FileUpload
                             name="images[]"
-                            customUpload
-                            auto
-                            uploadHandler={onUpload}
-                            multiple
-                            accept="image/*"
-                            maxFileSize={2000000}
+                            customUpload={true}
+                            // ref={fileUploaderRef}
+                            auto={true}
+                            uploadHandler={onUploadImage}
+                            accept={'image/*'}
+                            multiple={false}
+                            maxFileSize={1000000}
+                            chooseLabel={'Add Image'}
+                            onRemove={onRemoveImage}
                             emptyTemplate={
                                 <p className="m-0">
                                     Drag and drop images to here to upload.

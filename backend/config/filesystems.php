@@ -55,18 +55,17 @@ return [
 			'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
 			'throw' => false,
 		],
-		'images' => [
+		'media' => [
 			'driver' => 's3',
-			'key' => env('IMAGES_ACCESS_KEY_ID'),
-			'secret' => env('IMAGES_SECRET_ACCESS_KEY'),
-			'region' => env('IMAGES_DEFAULT_REGION', 'us-east-1'),
-			'bucket' => env('IMAGES_BUCKET'),
-			'url' => env('IMAGES_URL'),
-			'endpoint' => env('IMAGES_ENDPOINT', 'https://minio:9000'),
-			'use_path_style_endpoint' => env('IMAGES_USE_PATH_STYLE_ENDPOINT', false),
+			'key' => env('MEDIA_ACCESS_KEY_ID'),
+			'secret' => env('MEDIA_SECRET_ACCESS_KEY'),
+			'region' => env('MEDIA_DEFAULT_REGION', 'us-east-1'),
+			'bucket' => env('MEDIA_BUCKET', 'media'),
+			'url' => env('MEDIA_URL'),
+			'endpoint' => env('MEDIA_ENDPOINT', 'https://minio:9000'),
+			'use_path_style_endpoint' => env('MEDIA_USE_PATH_STYLE_ENDPOINT', true),
 			'throw' => false,
 		]
-
 	],
 
 	/*
