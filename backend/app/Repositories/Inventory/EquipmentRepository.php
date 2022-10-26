@@ -80,7 +80,7 @@ class EquipmentRepository extends InventoryRepository
 				if (Storage::disk('media')->put($imageId, $data)) {
 					$equipment
 						->addMediaFromDisk($imageId, 'media')
-						->toMediaCollection();
+						->toMediaCollection('images');
 				}
 			}
 		}

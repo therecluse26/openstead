@@ -49,13 +49,9 @@ const EquipmentDetail = () => {
     const galleryTemplate = item => {
         return (
             <img
-                className={'border-round'}
-                src={item?.url}
-                onError={e =>
-                    (e.target.src =
-                        'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png')
-                }
-                alt={item?.alt}
+                className={'border-round inventory-primary-image'}
+                src={item}
+                alt={'Equipment image'}
                 style={{ width: '100%' }}
             />
         )
@@ -116,14 +112,12 @@ const EquipmentDetail = () => {
                 <div className="grid">
                     <div className={'col-12 md:col-4'}>
                         <Galleria
-                            value={equipmentData?.images}
+                            value={[equipmentData?.primary_image]}
                             responsiveOptions={responsiveOptions}
-                            numVisible={5}
+                            numVisible={1}
                             style={{ maxWidth: '400px' }}
                             item={galleryTemplate}
                             showThumbnails={false}
-                            showIndicators
-                            showItemNavigators
                         />
                     </div>
                     <div className={'col-12 md:col-8'}>

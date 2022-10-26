@@ -6,10 +6,11 @@ use App\Contracts\FrontendFilterable;
 use App\Contracts\Inventoriable;
 use App\Enums\EquipmentCondition;
 use App\Enums\EquipmentType;
-use App\Models\Image;
 use App\Models\ServiceLog;
 use App\Resources\FormattedFilter;
 use App\Traits\HasInventory;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -44,6 +45,7 @@ class Equipment extends Model implements Inventoriable, FrontendFilterable, HasM
 
 	protected $appends = [
 		'condition_description',
+		'primary_image'
 	];
 
 	public function registerMediaConversions(Media $media = null): void
@@ -54,15 +56,16 @@ class Equipment extends Model implements Inventoriable, FrontendFilterable, HasM
 			->nonQueued();
 	}
 
-
 	public static function getFilters(): Collection
 	{
 		return collect(['types' => FormattedFilter::collection(EquipmentType::cases())]);
 	}
 
-	public function images(): MorphMany
+	public function primaryImage(): Attribute
 	{
-		return $this->morphMany(Image::class, 'imageable');
+		return Attribute::make(
+			get: fn() => $this->getMedia('images')->first()?->getTemporaryUrl(Carbon::now()->addMinutes(5)) ?? config('icons.fallback.types.equipment')
+		);
 	}
 
 	public function serviceLogs(): MorphMany

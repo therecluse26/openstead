@@ -6,14 +6,14 @@ use App\Contracts\FrontendFilterable;
 use App\Contracts\Inventoriable;
 use App\Contracts\VarietyContract;
 use App\Enums\LivestockType;
-use App\Models\Image;
 use App\Resources\FormattedFilter;
 use App\Traits\HasInventory;
 use App\Traits\HasVariety;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Collection;
 
 class Livestock extends Model implements Inventoriable, VarietyContract, FrontendFilterable
@@ -54,9 +54,11 @@ class Livestock extends Model implements Inventoriable, VarietyContract, Fronten
 		return $this->BelongsToMany(self::class)->using(LivestockParent::class)->wherePivot('parent_id');
 	}
 
-	public function images(): MorphMany
+	public function primaryImage(): Attribute
 	{
-		return $this->morphMany(Image::class, 'imageable');
+		return Attribute::make(
+			get: fn() => $this->getMedia('images')->first()?->getTemporaryUrl(Carbon::now()->addMinutes(5)) ?? config('icons.fallback.types.livestock')
+		);
 	}
 
 	public static function getFilters(): Collection

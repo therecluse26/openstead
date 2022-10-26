@@ -2,7 +2,6 @@
 
 namespace App\Resources\Inventory\Detail;
 
-use App\Resources\ImageResource;
 use App\Resources\ServiceLogResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,7 +15,7 @@ class EquipmentResource extends JsonResource
 			'type' => $this->type->toFilter(),
 			'condition' => $this->condition,
 			'condition_description' => $this->condition_description,
-			'images' => ImageResource::collection($this->images),
+			'primary_image' => $this->primary_image,
 			'description' => $this->description,
 			'quantity' => $this->quantity,
 			'acquired_at' => $this->acquired_at,
