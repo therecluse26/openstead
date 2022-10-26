@@ -7,6 +7,7 @@ import { CSSTransition } from 'react-transition-group'
 import { TopBar } from '@/components/Layouts/TopBar'
 import SidebarMenu from '@/SidebarMenu'
 import { Toast } from 'primereact/toast'
+import { ScrollTop } from 'primereact/scrolltop'
 
 const AppLayout = ({ children }) => {
     const { user } = useAuth({ middleware: 'auth' })
@@ -138,6 +139,8 @@ const AppLayout = ({ children }) => {
                 unmountOnExit>
                 <div className="layout-mask p-component-overlay" />
             </CSSTransition>
+
+            <ScrollTop threshold={200} />
         </div>
     )
 }
