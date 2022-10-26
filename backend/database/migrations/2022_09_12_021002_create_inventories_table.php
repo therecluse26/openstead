@@ -86,17 +86,6 @@ return new class extends Migration {
 
 		});
 
-		Schema::create('images', function (Blueprint $table) {
-			$table->id();
-			$table->morphs('imageable');
-			$table->string('url');
-			$table->string('slug', 255)->nullable();
-			$table->string('title', 100)->nullable();
-			$table->string('description', 255)->nullable();
-			$table->unsignedInteger('filesize')->nullable();
-			$table->timestamps();
-		});
-
 		Schema::create('services', function (Blueprint $table) {
 			$table->id();
 			$table->string('type', 20)->default('other');
@@ -128,7 +117,6 @@ return new class extends Migration {
 		Schema::dropIfExists('livestock');
 		Schema::dropIfExists('equipment');
 		Schema::dropIfExists('seeds');
-		Schema::dropIfExists('images');
 		Schema::dropIfExists('locations');
 		Schema::dropIfExists('service_logs');
 		Schema::dropIfExists('services');

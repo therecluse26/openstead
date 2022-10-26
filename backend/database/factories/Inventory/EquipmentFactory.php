@@ -6,6 +6,7 @@ use App\Enums\EquipmentCondition;
 use App\Enums\EquipmentType;
 use App\Models\Inventory\Equipment;
 use App\Models\Location;
+use App\Providers\FakerImageProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -30,5 +31,16 @@ class EquipmentFactory extends Factory
 			'quantity' => fake()->numberBetween(0, 10),
 			'acquired_at' => fake()->dateTimeThisYear(),
 		];
+	}
+
+	public function configure()
+	{
+		return $this->afterCreating(function (Equipment $model) {
+			$faker = \Faker\Factory::create();
+			$faker->addProvider(new FakerImageProvider($faker));
+			$image = $faker->image('/tmp', 1280, 720);
+			$model->addMedia($image)
+				->toMediaCollection('images');
+		});
 	}
 }

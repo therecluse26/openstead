@@ -14,12 +14,17 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Spatie\Image\Manipulations;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Seed extends Model implements Inventoriable, VarietyContract, FrontendFilterable
+class Seed extends Model implements Inventoriable, VarietyContract, FrontendFilterable, HasMedia
 {
 	use HasFactory;
 	use HasInventory;
 	use HasVariety;
+	use InteractsWithMedia;
 
 	protected $table = 'seeds';
 
@@ -44,6 +49,14 @@ class Seed extends Model implements Inventoriable, VarietyContract, FrontendFilt
 	public static function getFilters(): Collection
 	{
 		return collect(['types' => FormattedFilter::collection(PlantType::cases())]);
+	}
+
+	public function registerMediaConversions(Media $media = null): void
+	{
+		$this
+			->addMediaConversion('preview')
+			->fit(Manipulations::FIT_CROP, 300, 300)
+			->nonQueued();
 	}
 
 }

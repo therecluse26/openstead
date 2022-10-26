@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Inventory;
 
+use App\Contracts\Inventoriable;
 use App\Contracts\Repository;
 use App\Models\Location;
 use Illuminate\Database\Eloquent\Model;
@@ -75,5 +76,10 @@ class LocationRepository implements Repository
 	public function find(string|int $id): Model
 	{
 		return $this->model->findOrFail($id);
+	}
+
+	public function getModel(): Model|Inventoriable
+	{
+		// TODO: Implement getModel() method.
 	}
 }

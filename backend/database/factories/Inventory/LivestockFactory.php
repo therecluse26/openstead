@@ -4,8 +4,10 @@ namespace Database\Factories\Inventory;
 
 use App\Enums\LivestockType;
 use App\Models\Inventory\Equipment;
+use App\Models\Inventory\Livestock;
 use App\Models\Location;
 use App\Models\Variety;
+use App\Providers\FakerImageProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -30,4 +32,16 @@ class LivestockFactory extends Factory
 			'acquired_at' => fake()->dateTimeThisYear(),
 		];
 	}
+
+	public function configure()
+	{
+		return $this->afterCreating(function (Livestock $model) {
+			$faker = \Faker\Factory::create();
+			$faker->addProvider(new FakerImageProvider($faker));
+			$image = $faker->image('/tmp', 1280, 720);
+			$model->addMedia($image)
+				->toMediaCollection('images');
+		});
+	}
+
 }

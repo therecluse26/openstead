@@ -15,12 +15,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
+use Spatie\Image\Manipulations;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Livestock extends Model implements Inventoriable, VarietyContract, FrontendFilterable
+class Livestock extends Model implements Inventoriable, VarietyContract, FrontendFilterable, HasMedia
 {
 	use HasFactory;
 	use HasInventory;
 	use HasVariety;
+	use InteractsWithMedia;
 
 	protected $table = 'livestock';
 
@@ -64,6 +69,14 @@ class Livestock extends Model implements Inventoriable, VarietyContract, Fronten
 	public static function getFilters(): Collection
 	{
 		return collect(['types' => FormattedFilter::collection(LivestockType::cases())]);
+	}
+
+	public function registerMediaConversions(Media $media = null): void
+	{
+		$this
+			->addMediaConversion('preview')
+			->fit(Manipulations::FIT_CROP, 300, 300)
+			->nonQueued();
 	}
 
 }

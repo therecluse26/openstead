@@ -28,4 +28,5 @@ class LivestockParentFactory extends Factory
 			'relationship' => $sex->getParentValue()
 		];
 	}
+	
 }

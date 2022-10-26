@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\Variety;
 use Exception;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Artisan;
 
 class TestDataSeeder extends Seeder
 {
@@ -23,12 +24,14 @@ class TestDataSeeder extends Seeder
 	 */
 	public function run()
 	{
+		Artisan::call('media-library:clear --force');
+
 		Location::factory()
 			->count(1)
 			->create();
 
 		Variety::factory()->count(100)->create();
-		Service::factory()->count(200)->create();
+		Service::factory()->count(100)->create();
 
 		for ($i = 0; $i < 50; $i++) {
 
@@ -38,18 +41,15 @@ class TestDataSeeder extends Seeder
 
 
 			Seed::factory()
-				->hasImages(random_int(1, 5))
 				->count(4)
 				->create();
 
 			Equipment::factory()
-				->hasImages(random_int(0, 4))
-				->hasServiceLogs(random_int(0, 3))
+				->hasServiceLogs(random_int(0, 4))
 				->count(2)
 				->create();
 
 			Livestock::factory()
-				->hasImages(random_int(1, 5))
 				->count(4)
 				->create();
 		}

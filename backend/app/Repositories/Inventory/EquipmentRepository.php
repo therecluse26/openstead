@@ -4,22 +4,17 @@ namespace App\Repositories\Inventory;
 
 use App\Enums\EquipmentCondition;
 use App\Models\Inventory\Equipment;
-use App\Repositories\ImageRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class EquipmentRepository extends InventoryRepository
 {
 	private Equipment $model;
-	private ImageRepository $images;
 
 	public function __construct()
 	{
 		$this->model = new Equipment();
-		$this->images = new ImageRepository();
 		parent::__construct($this->model);
 	}
 
@@ -72,17 +67,9 @@ class EquipmentRepository extends InventoryRepository
 		}
 
 		foreach ($images as $image) {
-			$extension = explode('/', mime_content_type($image))[1];
-			$imageId = Str::uuid() . $extension;
-			if (preg_match('/^data:image\/(\w+);base64,/', $image)) {
-				$data = substr($image, strpos($image, ',') + 1);
-				$data = base64_decode($data);
-				if (Storage::disk('media')->put($imageId, $data)) {
-					$equipment
-						->addMediaFromDisk($imageId, 'media')
-						->toMediaCollection('images');
-				}
-			}
+			$equipment
+				->addMediaFromBase64($image, ['image/*'])
+				->toMediaCollection('images');
 		}
 
 		return $equipment;
