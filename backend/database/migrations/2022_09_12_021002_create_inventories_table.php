@@ -43,7 +43,6 @@ return new class extends Migration {
 			$table->enum('sex', ['male', 'female'])->nullable();
 			$table->dateTime('date_of_birth')->nullable();
 			$table->unsignedBigInteger('variety_id');
-			$table->unsignedBigInteger('location_id')->nullable();
 			$table->integer('quantity')->default(1);
 			$table->dateTime('acquired_at')->nullable();
 			$table->timestamps();
@@ -62,7 +61,6 @@ return new class extends Migration {
 		Schema::create('seeds', function (Blueprint $table) {
 			$table->id();
 			$table->unsignedBigInteger('variety_id');
-			$table->unsignedBigInteger('location_id')->nullable();
 			$table->integer('quantity')->default(1);
 			$table->dateTime('acquired_at')->nullable();
 			$table->timestamps();
@@ -77,7 +75,6 @@ return new class extends Migration {
 			$table->integer('condition');
 			$table->string('description')->nullable();
 			$table->string('url', 2000)->nullable();
-			$table->unsignedBigInteger('location_id')->nullable();
 			$table->integer('quantity')->default(1);
 			$table->dateTime('acquired_at')->nullable();
 			$table->timestamps();

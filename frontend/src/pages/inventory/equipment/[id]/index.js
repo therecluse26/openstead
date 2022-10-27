@@ -9,6 +9,7 @@ import ScalableTag from '@/components/ScalableTag'
 import InventorySkeleton from '@/components/Inventory/InventorySkeleton'
 import ServiceLogsTimeline from '@/components/Custom/Services/ServiceLogsTimeline'
 import SimilarItemsTemplate from '@/components/Inventory/SimilarItems'
+import { formatDate } from '@/utils/FormatDate'
 
 const EquipmentDetail = () => {
     const isMounted = useRef(false)
@@ -140,6 +141,13 @@ const EquipmentDetail = () => {
                                     equipmentData?.condition_description
                                 }
                             />
+                        </div>
+
+                        <div className={'flex align-content-center mb-4'}>
+                            <span className={'align-self-center text-2xl mr-2'}>
+                                Date Acquired:{' '}
+                                {formatDate(equipmentData?.acquired_at)}
+                            </span>
                         </div>
 
                         {equipmentData?.quantity === 0 ? (

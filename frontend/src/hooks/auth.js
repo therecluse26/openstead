@@ -3,6 +3,8 @@ import axios from '@/lib/axios'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 
+export const csrf = () => axios.get('/sanctum/csrf-cookie')
+
 export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     const router = useRouter()
 
@@ -12,16 +14,12 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
             .then(res => res.data)
             .catch(error => {
                 if (error.response.status !== 409) throw error
-
                 router.push('/verify-email')
             }),
     )
 
-    const csrf = () => axios.get('/sanctum/csrf-cookie')
-
     const register = async ({ setError, ...props }) => {
         await csrf()
-
         axios
             .post('/register', props)
             .then(() => mutate())
@@ -35,7 +33,6 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
 
     const login = async ({ setError, ...props }) => {
         await csrf()
-
         axios
             .post('/login', props)
             .then(() => mutate())
@@ -50,7 +47,6 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
 
     const forgotPassword = async ({ setErrors, setStatus, email }) => {
         await csrf()
-
         setErrors([])
         setStatus(null)
 
@@ -66,7 +62,6 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
 
     const resetPassword = async ({ setErrors, setStatus, ...props }) => {
         await csrf()
-
         setErrors([])
         setStatus(null)
 

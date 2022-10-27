@@ -92,9 +92,9 @@ class EquipmentController extends Controller
 	 * @param Equipment $equipment
 	 * @return Response
 	 */
-	public function update(UpdateEquipmentRequest $request, Equipment $equipment)
+	public function update(UpdateEquipmentRequest $request, Equipment $equipment, EquipmentRepository $equipmentRepository)
 	{
-		//
+		return response($equipmentRepository->update($equipment, $request), 200);
 	}
 
 	/**

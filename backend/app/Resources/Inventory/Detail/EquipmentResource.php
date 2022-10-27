@@ -18,6 +18,7 @@ class EquipmentResource extends JsonResource
 			'primary_image' => $this->primary_image,
 			'description' => $this->description,
 			'quantity' => $this->quantity,
+			'url' => $this->url,
 			'acquired_at' => $this->acquired_at,
 			'service_logs' => ServiceLogResource::collection($this->serviceLogs->sortByDesc('service_date'))
 		];

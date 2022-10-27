@@ -31,17 +31,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
 			Route::get('/filters', [InventoryController::class, 'getFilters']);
 
 			Route::get('/base/types', [InventoryController::class, 'getTypes']);
-			Route::resource('/base', InventoryController::class);
 
 			Route::get('/equipment/types', [EquipmentController::class, 'getTypes']);
 			Route::get('/equipment/{equipment}/similar', [EquipmentController::class, 'getSimilar']);
-			Route::resource('/equipment', EquipmentController::class);
+			Route::apiResource('/equipment', EquipmentController::class);
 
 			Route::get('/livestock/types', [LivestockController::class, 'getTypes']);
-			Route::resource('/livestock', LivestockController::class);
+			Route::apiResource('/livestock', LivestockController::class);
 
 			Route::get('/seeds/types', [SeedController::class, 'getTypes']);
-			Route::resource('/seeds', SeedController::class);
+			Route::apiResource('/seeds', SeedController::class);
 		});
 });
 

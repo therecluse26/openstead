@@ -5,7 +5,6 @@ namespace Database\Factories\Inventory;
 use App\Enums\EquipmentCondition;
 use App\Enums\EquipmentType;
 use App\Models\Inventory\Equipment;
-use App\Models\Location;
 use App\Providers\FakerImageProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -26,7 +25,6 @@ class EquipmentFactory extends Factory
 			'type' => fake()->randomElement(EquipmentType::cases()),
 			'condition' => fake()->randomElement(EquipmentCondition::cases()),
 			'description' => fake()->paragraph(2),
-			'location_id' => Location::inRandomOrder()->first(),
 			'url' => fake()->url(),
 			'quantity' => fake()->numberBetween(0, 10),
 			'acquired_at' => fake()->dateTimeThisYear(),

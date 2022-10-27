@@ -40,7 +40,8 @@ class Equipment extends Model implements Inventoriable, FrontendFilterable, HasM
 
 	protected $casts = [
 		'type' => EquipmentType::class,
-		'condition' => EquipmentCondition::class
+		'condition' => EquipmentCondition::class,
+		'acquired_at' => 'datetime'
 	];
 
 	protected $appends = [

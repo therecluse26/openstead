@@ -12,6 +12,16 @@ class EquipmentRepository extends InventoryRepository
 {
 	private Equipment $model;
 
+	private array $fields = [
+		'name',
+		'type',
+		'condition',
+		'description',
+		'location_id',
+		'quantity',
+		'acquired_at'
+	];
+
 	public function __construct()
 	{
 		$this->model = new Equipment();
@@ -51,28 +61,41 @@ class EquipmentRepository extends InventoryRepository
 	public function create(Request $request): Equipment
 	{
 		$equipment = $this->model->create(
-			$request->only([
-				'name',
-				'type',
-				'condition',
-				'description',
-				'quantity'
-			])
+			$request->only($this->fields)
 		);
 
-		// Upload images
-		$images = collect($request->input('images'));
-		if ($images->count() == 0) {
-			return $equipment;
+		$this->addOrReplaceImagesBase64($equipment, $request->input('images'));
+
+		return $equipment;
+	}
+
+	public function update(Equipment $equipment, Request $request): Equipment
+	{
+		$equipment->update(
+			$request->only($this->fields)
+		);
+
+		$this->addOrReplaceImagesBase64($equipment, $request->input('images'));
+
+		return $equipment;
+	}
+
+	public function addOrReplaceImagesBase64(Equipment $equipment, iterable $images = null): void
+	{
+		if (is_array($images)) {
+			$images = collect($images);
 		}
+		if ($images->count() === 0) {
+			return;
+		}
+
+		$equipment->clearMediaCollection('images');
 
 		foreach ($images as $image) {
 			$equipment
 				->addMediaFromBase64($image, ['image/*'])
 				->toMediaCollection('images');
 		}
-
-		return $equipment;
 	}
 
 }
