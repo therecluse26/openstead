@@ -4,6 +4,7 @@ namespace App\Casts;
 
 use App\Enums\LivestockType;
 use App\Enums\PlantType;
+use App\Models\Variety;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,7 +13,7 @@ class VarietyType implements CastsAttributes
 	/**
 	 * Cast the given value.
 	 *
-	 * @param Model $model
+	 * @param Variety $model
 	 * @param string $key
 	 * @param mixed $value
 	 * @param array $attributes
@@ -22,7 +23,7 @@ class VarietyType implements CastsAttributes
 	{
 		return match ($model->kingdom) {
 			'plant' => PlantType::from($value),
-			'animal' => LivestockType::from($value)
+			'animal' => LivestockType::from($value),
 		};
 	}
 

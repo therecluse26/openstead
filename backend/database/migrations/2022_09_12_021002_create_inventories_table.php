@@ -28,7 +28,7 @@ return new class extends Migration {
 
 		Schema::create('varieties', function (Blueprint $table) {
 			$table->id();
-			$table->enum('kingdom', ['plant', 'animal', 'fungi', 'protist', 'monera']);
+			$table->enum('kingdom', ['plant', 'animal']);
 			$table->string('group_type', 50);
 			$table->string('variety_name', 50);
 			$table->string('description', 1000);

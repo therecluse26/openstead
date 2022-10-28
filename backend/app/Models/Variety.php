@@ -23,10 +23,6 @@ class Variety extends Model
 		'group_type' => VarietyType::class
 	];
 
-	protected $appends = [
-//		'type_description'
-	];
-
 	public function getTypeDescriptionAttribute()
 	{
 		return $this->group_type->toFilter();

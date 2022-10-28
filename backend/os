@@ -105,7 +105,19 @@ if [ $# -gt 0 ]; then
         docker exec $(docker ps -aqf "name=$APP_SERVICE") \
             /bin/ash -c "php artisan migrate:fresh --seed"
 
-elif [ "$1" == "docker-nuke" ]; then
+    elif [ "$1" == "analyze" ]; then
+            shift 1
+
+            docker exec $(docker ps -aqf "name=$APP_SERVICE") \
+                /bin/ash -c "vendor/bin/phpstan analyze"
+
+    elif [ "$1" == "insights" ]; then
+        shift 1
+
+        docker exec $(docker ps -aqf "name=$APP_SERVICE") \
+            /bin/ash -c "php artisan insights"
+
+    elif [ "$1" == "docker-nuke" ]; then
 
         while true; do
                 echo "
