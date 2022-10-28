@@ -63,7 +63,7 @@ const EquipmentForm = ({ mode = 'create' }) => {
                 setValue('condition', data?.condition)
                 setValue('description', data?.description)
                 setValue('quantity', data?.quantity)
-                setValue('acquired_at', data?.acquired_at)
+                setValue('acquired_at', new Date(data?.acquired_at))
                 setValue('url', data?.url)
             })
             .catch(e => {
@@ -113,129 +113,146 @@ const EquipmentForm = ({ mode = 'create' }) => {
     }
 
     return (
-        <div className={'justify-content-center align-content-center grid'}>
-            <Card className={'col-4'}>
-                <h3 className={'text-center'}>Add New Equipment</h3>
-                <form onSubmit={handleSubmit(onSubmit)} className="p-fluid">
-                    <div className="field">
-                        <TextInput
-                            control={control}
-                            name={'name'}
-                            label={'Name'}
-                            rules={{
-                                required: 'Name is required.',
-                            }}
-                        />
-                        {getFormErrorMessage('name')}
-                    </div>
+        <>
+            <div className={'justify-content-center align-content-center grid'}>
+                <div className={'col-10'}>
+                    <h3 className={'text-center'}>Add New Equipment</h3>
+                </div>
+            </div>
+            <form onSubmit={handleSubmit(onSubmit)} className="p-fluid">
+                <div
+                    className={
+                        'justify-content-center align-content-center grid'
+                    }>
+                    <div className={'col-10 md:col-5'}>
+                        <Card className={'min-h-full'}>
+                            <div className="field">
+                                <TextInput
+                                    control={control}
+                                    name={'name'}
+                                    label={'Name'}
+                                    rules={{
+                                        required: 'Name is required.',
+                                    }}
+                                />
+                                {getFormErrorMessage('name')}
+                            </div>
 
-                    <div className="field">
-                        <SelectInput
-                            optionsEndpoint={'/api/inventory/equipment/types'}
-                            control={control}
-                            name={'type'}
-                            label={'Type'}
-                            rules={{
-                                required: 'Type is required.',
-                            }}
-                        />
-                        {getFormErrorMessage('type')}
-                    </div>
+                            <div className="field">
+                                <SelectInput
+                                    optionsEndpoint={
+                                        '/api/inventory/equipment/types'
+                                    }
+                                    control={control}
+                                    name={'type'}
+                                    label={'Type'}
+                                    rules={{
+                                        required: 'Type is required.',
+                                    }}
+                                />
+                                {getFormErrorMessage('type')}
+                            </div>
 
-                    <div className="field">
-                        <SelectInput
-                            options={[
-                                { label: 'Excellent', value: 5 },
-                                { label: 'Good', value: 4 },
-                                { label: 'Fair', value: 3 },
-                                { label: 'Poor', value: 2 },
-                                { label: 'Broken', value: 1 },
-                            ]}
-                            control={control}
-                            name={'condition'}
-                            label={'Condition'}
-                            rules={{
-                                required: 'Condition is required.',
-                            }}
-                        />
-                        {getFormErrorMessage('condition')}
-                    </div>
+                            <div className="field">
+                                <SelectInput
+                                    options={[
+                                        { label: 'Excellent', value: 5 },
+                                        { label: 'Good', value: 4 },
+                                        { label: 'Fair', value: 3 },
+                                        { label: 'Poor', value: 2 },
+                                        { label: 'Broken', value: 1 },
+                                    ]}
+                                    control={control}
+                                    name={'condition'}
+                                    label={'Condition'}
+                                    rules={{
+                                        required: 'Condition is required.',
+                                    }}
+                                />
+                                {getFormErrorMessage('condition')}
+                            </div>
 
-                    <div className="field">
-                        <TextInput
-                            control={control}
-                            name={'description'}
-                            label={'Description'}
-                            rules={{
-                                required: 'Description is required.',
-                            }}
-                        />
-                        {getFormErrorMessage('description')}
-                    </div>
+                            <div className="field">
+                                <TextInput
+                                    control={control}
+                                    name={'description'}
+                                    label={'Description'}
+                                    rules={{
+                                        required: 'Description is required.',
+                                    }}
+                                />
+                                {getFormErrorMessage('description')}
+                            </div>
 
-                    <div className="field">
-                        <TextInput
-                            control={control}
-                            name={'url'}
-                            label={'Purchase URL'}
-                            rules={{
-                                pattern: {
-                                    value: /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/,
-                                    message: 'Invalid URL',
-                                },
-                            }}
-                        />
-                        {getFormErrorMessage('url')}
+                            <div className="field">
+                                <TextInput
+                                    control={control}
+                                    name={'url'}
+                                    label={'Purchase URL'}
+                                    rules={{
+                                        pattern: {
+                                            value: /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/,
+                                            message: 'Invalid URL',
+                                        },
+                                    }}
+                                />
+                                {getFormErrorMessage('url')}
+                            </div>
+                        </Card>
                     </div>
+                    <div className={'col-10 md:col-5'}>
+                        <Card className={'min-h-full'}>
+                            <div className="field">
+                                <NumberInput
+                                    control={control}
+                                    name={'quantity'}
+                                    label={'Quantity'}
+                                    showButtons={true}
+                                    max={10000}
+                                    rules={{
+                                        required: 'Quantity is required.',
+                                    }}
+                                />
+                                {getFormErrorMessage('quantity')}
+                            </div>
 
-                    <div className="field">
-                        <NumberInput
-                            control={control}
-                            name={'quantity'}
-                            label={'Quantity'}
-                            showButtons={true}
-                            max={10000}
-                            rules={{
-                                required: 'Quantity is required.',
-                            }}
-                        />
-                        {getFormErrorMessage('quantity')}
+                            <div className="field">
+                                <CalendarInput
+                                    control={control}
+                                    name={'acquired_at'}
+                                    label={'Date Acquired'}
+                                />
+                                {getFormErrorMessage('acquired_at')}
+                            </div>
+
+                            <div className="field">
+                                <FileUpload
+                                    name="images[]"
+                                    customUpload={true}
+                                    auto={true}
+                                    uploadHandler={onUploadImage}
+                                    accept={'image/*'}
+                                    multiple={false}
+                                    maxFileSize={1000000}
+                                    chooseLabel={'Add Image'}
+                                    onRemove={onRemoveImage}
+                                    emptyTemplate={
+                                        <p className="m-0">
+                                            {mode === 'edit'
+                                                ? 'Drag and drop image here to replace existing image.'
+                                                : 'Drag and drop image to here to upload.'}
+                                        </p>
+                                    }
+                                />
+                            </div>
+                        </Card>
                     </div>
-
-                    <div className="field">
-                        <CalendarInput
-                            control={control}
-                            name={'acquired_at'}
-                            label={'Date Acquired'}
-                        />
-                        {getFormErrorMessage('acquired_at')}
+                    <div className={'col-10'}>
+                        <Button type="submit" label="Save" className="mt-2" />
                     </div>
-
-                    <div className="field">
-                        <FileUpload
-                            name="images[]"
-                            customUpload={true}
-                            auto={true}
-                            uploadHandler={onUploadImage}
-                            accept={'image/*'}
-                            multiple={false}
-                            maxFileSize={1000000}
-                            chooseLabel={'Add Image'}
-                            onRemove={onRemoveImage}
-                            emptyTemplate={
-                                <p className="m-0">
-                                    {mode === 'edit'
-                                        ? 'Drag and drop image here to replace existing image.'
-                                        : 'Drag and drop image to here to upload.'}
-                                </p>
-                            }
-                        />
-                    </div>
-
-                    <Button type="submit" label="Submit" className="mt-2" />
-                </form>
-            </Card>
-        </div>
+                </div>
+            </form>
+        </>
     )
 }
 
