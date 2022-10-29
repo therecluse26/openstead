@@ -13,7 +13,6 @@ import { formatDate } from '@/utils/FormatDate'
 
 const EquipmentDetail = () => {
     const isMounted = useRef(false)
-    const [editing, setEditing] = useState(false)
     const [equipmentData, setEquipmentData] = useState()
     const [similarItems, setSimilarItems] = useState()
     const { query, isReady } = useRouter()
@@ -143,12 +142,17 @@ const EquipmentDetail = () => {
                             />
                         </div>
 
-                        <div className={'flex align-content-center mb-4'}>
-                            <span className={'align-self-center text-2xl mr-2'}>
-                                Date Acquired:{' '}
-                                {formatDate(equipmentData?.acquired_at)}
-                            </span>
-                        </div>
+                        {equipmentData?.acquired_at ? (
+                            <div className={'flex align-content-center mb-4'}>
+                                <span
+                                    className={
+                                        'align-self-center text-2xl mr-2'
+                                    }>
+                                    Date Acquired:{' '}
+                                    {formatDate(equipmentData?.acquired_at)}
+                                </span>
+                            </div>
+                        ) : null}
 
                         {equipmentData?.quantity === 0 ? (
                             <ScalableTag

@@ -1,3 +1,3 @@
-export const formatDate = datestring => {
-    return new Date(datestring).toDateString()
+export const formatDate = (datestring = null) => {
+    return datestring ? new Date(datestring).toDateString() : null
 }
