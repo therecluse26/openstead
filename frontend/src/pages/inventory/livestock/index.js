@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
-import InventoryList from '@/components/Layouts/Inventory/InventoryList'
+import InventoryList from '@/components/Custom/Inventory/InventoryList'
 import { Column } from 'primereact/column'
-import { Dropdown } from 'primereact/dropdown'
 import LivestockService from '@/services/inventory/LivestockService'
 import Link from 'next/link'
 import QuantityFilterTemplate from '@/pages/inventory/templates/QuantityFilterTemplate'
+import TypeFilterElement from '@/components/Custom/Inventory/TypeFilterElement'
+import TypeBodyTemplateElement from '@/components/Custom/Inventory/TypeBodyTemplateElement'
 
 const Livestock = () => {
     const [types, setTypes] = useState([])
@@ -39,29 +40,6 @@ const Livestock = () => {
             year: 'numeric',
         })
     }
-    const dateBodyTemplate = rowData => {
-        return formatDate(rowData.date_of_birth)
-    }
-
-    const typeFilterElement = options => {
-        return (
-            <Dropdown
-                value={options.value}
-                options={types}
-                onChange={e => {
-                    options.filterCallback(e.value, options.index)
-                    setFilters({
-                        ...filters,
-                        type: {
-                            ...filters.type,
-                            value: e.value,
-                        },
-                    })
-                }}
-                placeholder={'Search'}
-            />
-        )
-    }
 
     const lazyParamsCallback = lazyParams => {
         return {
@@ -90,36 +68,6 @@ const Livestock = () => {
         })
     }
 
-    // Body Templates
-    const bodyVarietyTemplate = (rowData, elem) => {
-        return rowData[elem.field].variety_name
-    }
-
-    const bodyLinkTemplate = (rowData, elem) => {
-        return (
-            <Link href={`/inventory/livestock/${rowData.id}`}>
-                {rowData[elem.field]}
-            </Link>
-        )
-    }
-
-    const bodyTypeTemplate = rowData => {
-        const type = types.find(e => {
-            return e.value === rowData['variety']['group_type']
-        })
-        const icon = type?.icon ? (
-            <span className={'type-icon'} aria-label={type?.label}>
-                {type?.icon} &nbsp;
-            </span>
-        ) : null
-        return (
-            <div>
-                {icon}
-                {type?.label}
-            </div>
-        )
-    }
-
     return (
         <InventoryList
             title={'Livestock'}
@@ -133,29 +81,57 @@ const Livestock = () => {
                 field="name"
                 header="Name"
                 sortable
-                body={bodyLinkTemplate}
+                body={(rowData, elem) => {
+                    return (
+                        <Link href={`/inventory/livestock/${rowData.id}`}>
+                            {rowData[elem.field]}
+                        </Link>
+                    )
+                }}
                 filter
                 filterPlaceholder="Search"
+                style={{ minWidth: '200px' }}
             />
             <Column
                 field="type"
                 sortField="variety.group_type"
                 header="Type"
                 sortable
-                body={bodyTypeTemplate}
+                body={rowData => {
+                    return (
+                        <TypeBodyTemplateElement
+                            rowData={rowData}
+                            types={types}
+                            matchField={'variety'}
+                            subMatchField={'group_type'}
+                        />
+                    )
+                }}
                 filter
-                filterElement={typeFilterElement}
+                filterElement={opts => {
+                    return (
+                        <TypeFilterElement
+                            options={opts}
+                            types={types}
+                            setFilters={setFilters}
+                            filters={filters}
+                        />
+                    )
+                }}
                 filterPlaceholder="Search"
+                showClear
                 showFilterMenu={false}
+                style={{ minWidth: '200px' }}
             />
             <Column
                 field="variety"
                 sortField="variety.variety_name"
                 header="Breed"
                 sortable
-                body={bodyVarietyTemplate}
+                body={(rowData, elem) => rowData[elem.field].variety_name}
                 filter
                 filterPlaceholder="Search"
+                style={{ minWidth: '200px' }}
             />
             <Column
                 field="quantity"
@@ -175,7 +151,7 @@ const Livestock = () => {
                 }}
                 showFilterMenu={false}
                 showClear
-                style={{ width: '160px' }}
+                style={{ minWidth: '160px' }}
             />
             <Column
                 field="date_of_birth"
@@ -183,9 +159,10 @@ const Livestock = () => {
                 sortable
                 filter
                 filterPlaceholder="Search"
-                body={dateBodyTemplate}
+                body={rowData => formatDate(rowData.date_of_birth)}
                 showFilterMenu={false}
                 showClear
+                style={{ minWidth: '160px' }}
             />
         </InventoryList>
     )

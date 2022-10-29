@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
-import InventoryList from '@/components/Layouts/Inventory/InventoryList'
+import InventoryList from '@/components/Custom/Inventory/InventoryList'
 import { Column } from 'primereact/column'
 import EquipmentService from '@/services/inventory/EquipmentService'
 import { Dropdown } from 'primereact/dropdown'
 import Link from 'next/link'
 import QuantityFilterTemplate from '@/pages/inventory/templates/QuantityFilterTemplate'
 import ScalableTag from '@/components/ScalableTag'
+import TypeFilterElement from '@/components/Custom/Inventory/TypeFilterElement'
 
 const Equipment = () => {
     const [types, setTypes] = useState([])
@@ -47,26 +48,6 @@ const Equipment = () => {
         loadTypes()
     }, [])
 
-    const typeFilterElement = options => {
-        return (
-            <Dropdown
-                value={options.value}
-                options={types}
-                onChange={e => {
-                    options.filterCallback(e.value, options.index)
-                    setFilters({
-                        ...filters,
-                        type: {
-                            ...filters.type,
-                            value: e.value,
-                        },
-                    })
-                }}
-                placeholder={'Search'}
-            />
-        )
-    }
-
     const conditionFilterElement = options => {
         return (
             <Dropdown
@@ -97,11 +78,6 @@ const Equipment = () => {
         })
     }
 
-    // Body Templates
-    const bodyTemplate = (rowData, elem) => {
-        return rowData[elem.field]
-    }
-
     const bodyTypeTemplate = (rowData, elem) => {
         const type = types.find(e => {
             return e.value === rowData[elem.field]
@@ -119,23 +95,6 @@ const Equipment = () => {
         )
     }
 
-    const conditionTemplate = rowData => {
-        return (
-            <ScalableTag
-                condition={rowData?.condition}
-                text={rowData?.condition_description}
-            />
-        )
-    }
-
-    const bodyLinkTemplate = (rowData, elem) => {
-        return (
-            <Link href={`/inventory/equipment/${rowData.id}`}>
-                {rowData[elem.field]}
-            </Link>
-        )
-    }
-
     return (
         <InventoryList
             title={'Equipment'}
@@ -149,9 +108,16 @@ const Equipment = () => {
                 field="name"
                 header="Name"
                 sortable
-                body={bodyLinkTemplate}
+                body={(rowData, elem) => {
+                    return (
+                        <Link href={`/inventory/equipment/${rowData.id}`}>
+                            {rowData[elem.field]}
+                        </Link>
+                    )
+                }}
                 filter
                 filterPlaceholder="Search"
+                style={{ minWidth: '200px' }}
             />
             <Column
                 field="type"
@@ -159,21 +125,37 @@ const Equipment = () => {
                 sortable
                 body={bodyTypeTemplate}
                 filter
-                filterElement={typeFilterElement}
+                filterElement={opts => {
+                    return (
+                        <TypeFilterElement
+                            options={opts}
+                            types={types}
+                            setFilters={setFilters}
+                            filters={filters}
+                        />
+                    )
+                }}
                 filterPlaceholder="Search"
                 showFilterMenu={false}
             />
             <Column
                 field="condition"
                 header="Condition"
-                body={conditionTemplate}
+                body={rowData => {
+                    return (
+                        <ScalableTag
+                            condition={rowData?.condition}
+                            text={rowData?.condition_description}
+                        />
+                    )
+                }}
                 sortable
                 filter
                 filterElement={conditionFilterElement}
                 filterPlaceholder="Search"
                 showFilterMenu={false}
                 showClear
-                style={{ width: '150px' }}
+                style={{ minWidth: '150px' }}
             />
             <Column
                 field="quantity"
@@ -193,16 +175,16 @@ const Equipment = () => {
                 dataType="numeric"
                 showFilterMenu={false}
                 showClear
-                style={{ width: '160px' }}
+                style={{ minWidth: '160px' }}
             />
             <Column
                 field="description"
                 header="Description"
                 sortable
-                body={bodyTemplate}
+                body={(rowData, elem) => rowData[elem.field]}
                 filter
                 filterPlaceholder="Search"
-                style={{ width: '40%' }}
+                style={{ minWidth: '300px' }}
             />
         </InventoryList>
     )

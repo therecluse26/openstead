@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
-import InventoryList from '@/components/Layouts/Inventory/InventoryList'
+import InventoryList from '@/components/Custom/Inventory/InventoryList'
 import { Column } from 'primereact/column'
-import { Dropdown } from 'primereact/dropdown'
 import Link from 'next/link'
 import QuantityFilterTemplate from '@/pages/inventory/templates/QuantityFilterTemplate'
 import SeedService from '@/services/inventory/SeedService'
+import TypeFilterElement from '@/components/Custom/Inventory/TypeFilterElement'
+import TypeBodyTemplateElement from '@/components/Custom/Inventory/TypeBodyTemplateElement'
 
 const Seeds = () => {
     const [types, setTypes] = useState([])
@@ -39,29 +40,6 @@ const Seeds = () => {
             year: 'numeric',
         })
     }
-    const dateBodyTemplate = rowData => {
-        return formatDate(rowData.acquired_at)
-    }
-
-    const typeFilterElement = options => {
-        return (
-            <Dropdown
-                value={options.value}
-                options={types}
-                onChange={e => {
-                    options.filterCallback(e.value, options.index)
-                    setFilters({
-                        ...filters,
-                        type: {
-                            ...filters.type,
-                            value: e.value,
-                        },
-                    })
-                }}
-                placeholder={'Search'}
-            />
-        )
-    }
 
     const lazyParamsCallback = lazyParams => {
         return {
@@ -90,32 +68,6 @@ const Seeds = () => {
         })
     }
 
-    // Body Templates
-    const bodyVarietyTemplate = rowData => {
-        return (
-            <Link href={`/inventory/seeds/${rowData.id}`}>
-                {rowData['variety']['variety_name']}
-            </Link>
-        )
-    }
-
-    const bodyTypeTemplate = rowData => {
-        const type = types.find(e => {
-            return e.value === rowData['variety']['group_type']
-        })
-        const icon = type?.icon ? (
-            <span className={'type-icon'} aria-label={type?.label}>
-                {type?.icon} &nbsp;
-            </span>
-        ) : null
-        return (
-            <div>
-                {icon}
-                {type?.label}
-            </div>
-        )
-    }
-
     return (
         <InventoryList
             title={'Seeds'}
@@ -130,21 +82,48 @@ const Seeds = () => {
                 sortField="variety.variety_name"
                 header="Variety"
                 sortable
-                body={bodyVarietyTemplate}
+                body={rowData => {
+                    return (
+                        <Link href={`/inventory/seeds/${rowData.id}`}>
+                            {rowData['variety']['variety_name']}
+                        </Link>
+                    )
+                }}
                 filter
                 filterPlaceholder="Search"
+                style={{ minWidth: '200px' }}
             />
 
             <Column
-                field="variety"
+                field="type"
                 sortField="variety.group_type"
                 header="Type"
                 sortable
-                body={bodyTypeTemplate}
+                body={rowData => {
+                    return (
+                        <TypeBodyTemplateElement
+                            rowData={rowData}
+                            types={types}
+                            matchField={'variety'}
+                            subMatchField={'group_type'}
+                        />
+                    )
+                }}
                 filter
-                filterElement={typeFilterElement}
+                filterElement={opts => {
+                    return (
+                        <TypeFilterElement
+                            options={opts}
+                            types={types}
+                            setFilters={setFilters}
+                            filters={filters}
+                        />
+                    )
+                }}
                 filterPlaceholder="Search"
+                showClear
                 showFilterMenu={false}
+                style={{ minWidth: '200px' }}
             />
 
             <Column
@@ -165,7 +144,7 @@ const Seeds = () => {
                 }}
                 showFilterMenu={false}
                 showClear
-                style={{ width: '160px' }}
+                style={{ width: '160px', minWidth: '160px' }}
             />
             <Column
                 field="acquired_at"
@@ -173,9 +152,10 @@ const Seeds = () => {
                 sortable
                 filter
                 filterPlaceholder="Search"
-                body={dateBodyTemplate}
+                body={rowData => formatDate(rowData.acquired_at)}
                 showFilterMenu={false}
                 showClear
+                style={{ minWidth: '160px', width: '200px' }}
             />
         </InventoryList>
     )
