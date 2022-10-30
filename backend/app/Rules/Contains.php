@@ -6,23 +6,19 @@ use Illuminate\Contracts\Validation\Rule;
 
 class Contains implements Rule
 {
+	public string $contains;
 
-	public $contains;
-
-	public function __construct($contains = null)
+	public function __construct(?string $contains = null)
 	{
 		$this->contains = $contains;
 	}
 
-	public function passes($attribute, $value)
+	public function passes($attribute, $value): bool
 	{
 		if (!$this->contains) {
 			return true;
 		}
-		if (str_contains($value, $this->contains)) {
-			return false;
-		}
-		return true;
+		return str_contains($value, $this->contains);
 	}
 
 	/**
@@ -30,7 +26,7 @@ class Contains implements Rule
 	 *
 	 * @return string
 	 */
-	public function message()
+	public function message(): string
 	{
 		return 'Value does not contain given string "' . $this->contains . '"';
 	}

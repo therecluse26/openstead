@@ -13,12 +13,14 @@ import { convertUploadedFilesToBase64 } from '@/utils/file-utils'
 import { csrf } from '@/hooks/auth'
 import EquipmentService from '@/services/inventory/EquipmentService'
 import { ErrorMessage } from '@hookform/error-message'
+import AddErrorToasts from '@/utils/AddErrorToasts'
 import ToastContext, { useToastContext } from '@/context/ToastContext'
 
 const EquipmentForm = ({ mode = 'create' }) => {
     const isMounted = useRef(false)
     const router = useRouter()
     const [images, setImages] = useState([])
+    const toast = useToastContext(ToastContext)
     const { query, isReady } = useRouter()
     const { id } = query
     const defaultValues = {
@@ -31,8 +33,6 @@ const EquipmentForm = ({ mode = 'create' }) => {
         acquired_at: null,
         url: null,
     }
-
-    const toast = useToastContext(ToastContext)
 
     const {
         control,
@@ -85,17 +85,7 @@ const EquipmentForm = ({ mode = 'create' }) => {
                 router.push('/inventory/equipment/' + r.data?.id)
             })
             .catch(error => {
-                let errors = []
-                for (let errField in error.response.data.errors) {
-                    for (let err of error.response.data.errors[errField]) {
-                        errors.push({
-                            severity: 'error',
-                            summary: 'Error',
-                            detail: err,
-                        })
-                    }
-                }
-                toast.current?.show(errors)
+                AddErrorToasts(toast, error)
             })
     }
 

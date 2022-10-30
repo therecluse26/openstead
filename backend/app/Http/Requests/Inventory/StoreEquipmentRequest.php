@@ -33,7 +33,7 @@ class StoreEquipmentRequest extends FormRequest
 			'condition' => ['required', new Enum(EquipmentCondition::class)],
 			'quantity' => ['required', 'integer', "min:0"],
 			'images' => ['array'],
-			'images.*' => ['string', 'max:3', new Contains('image')],
+			'images.*' => ['string', 'max:1361920', new Contains('data:image/')],
 		];
 	}
 
