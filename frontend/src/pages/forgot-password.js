@@ -28,9 +28,7 @@ const ForgotPassword = () => {
             <AuthCard
                 logo={
                     <Link href="/frontend/src/pages">
-                        <a>
-                            <ApplicationLogo className="w-20 h-20 fill-current text-gray-500" />
-                        </a>
+                        <ApplicationLogo className="w-20 h-20 fill-current text-gray-500" />
                     </Link>
                 }>
                 <div className="mb-4 text-sm text-gray-600">

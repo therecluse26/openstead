@@ -164,9 +164,7 @@ const InventoryList = ({
             <div className="flex justify-content-between align-items-center">
                 <h5 className="m-0">{title}</h5>
                 <span className="p-input-icon-left">
-                    <Link href={`${inventoryType}/add`}>
-                        <a>+ Add</a>
-                    </Link>
+                    <Link href={`${inventoryType}/add`}>+ Add</Link>
                 </span>
             </div>
         )

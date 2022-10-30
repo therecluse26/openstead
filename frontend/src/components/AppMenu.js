@@ -65,10 +65,8 @@ const AppSubmenu = React.memo(props => {
                     onKeyDown={onKeyDown}
                     role="menuitem"
                     className="p-ripple"
-                    activeClassName="router-link-active router-link-exact-active"
                     href={item.to}
                     as={item.to}
-                    exact
                     target={item.target}
                     shallow>
                     {content}

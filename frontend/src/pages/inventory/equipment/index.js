@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
-import InventoryList from '@/components/Custom/Inventory/InventoryList'
+import React, { Suspense, useEffect, useRef, useState } from 'react'
 import { Column } from 'primereact/column'
 import EquipmentService from '@/services/inventory/EquipmentService'
 import { Dropdown } from 'primereact/dropdown'
@@ -7,6 +6,11 @@ import Link from 'next/link'
 import QuantityFilterTemplate from '@/pages/inventory/templates/QuantityFilterTemplate'
 import ScalableTag from '@/components/ScalableTag'
 import TypeFilterElement from '@/components/Custom/Inventory/TypeFilterElement'
+import dynamic from 'next/dynamic'
+
+const InventoryList = dynamic(() =>
+    import('@/components/Custom/Inventory/InventoryList'),
+)
 
 const Equipment = () => {
     const [types, setTypes] = useState([])
@@ -96,97 +100,102 @@ const Equipment = () => {
     }
 
     return (
-        <InventoryList
-            title={'Equipment'}
-            inventoryType={'equipment'}
-            service={EquipmentService}
-            filters={filters}
-            setLazyParamsCallack={lazyParamsCallback}>
-            <Column selectionMode="multiple" headerStyle={{ width: '3em' }} />
+        <Suspense fallback={`Loading...`}>
+            <InventoryList
+                title={'Equipment'}
+                inventoryType={'equipment'}
+                service={EquipmentService}
+                filters={filters}
+                setLazyParamsCallack={lazyParamsCallback}>
+                <Column
+                    selectionMode="multiple"
+                    headerStyle={{ width: '3em' }}
+                />
 
-            <Column
-                field="name"
-                header="Name"
-                sortable
-                body={(rowData, elem) => {
-                    return (
-                        <Link href={`/inventory/equipment/${rowData.id}`}>
-                            {rowData[elem.field]}
-                        </Link>
-                    )
-                }}
-                filter
-                filterPlaceholder="Search"
-                style={{ minWidth: '200px' }}
-            />
-            <Column
-                field="type"
-                header="Type"
-                sortable
-                body={bodyTypeTemplate}
-                filter
-                filterElement={opts => {
-                    return (
-                        <TypeFilterElement
-                            options={opts}
-                            types={types}
-                            setFilters={setFilters}
-                            filters={filters}
-                        />
-                    )
-                }}
-                filterPlaceholder="Search"
-                showFilterMenu={false}
-            />
-            <Column
-                field="condition"
-                header="Condition"
-                body={rowData => {
-                    return (
-                        <ScalableTag
-                            condition={rowData?.condition}
-                            text={rowData?.condition_description}
-                        />
-                    )
-                }}
-                sortable
-                filter
-                filterElement={conditionFilterElement}
-                filterPlaceholder="Search"
-                showFilterMenu={false}
-                showClear
-                style={{ minWidth: '150px' }}
-            />
-            <Column
-                field="quantity"
-                header="Quantity"
-                sortable
-                filter
-                filterPlaceholder="Search"
-                filterElement={o => {
-                    return (
-                        <QuantityFilterTemplate
-                            options={o}
-                            setFilters={setFilters}
-                            filters={filters}
-                        />
-                    )
-                }}
-                dataType="numeric"
-                showFilterMenu={false}
-                showClear
-                style={{ minWidth: '160px' }}
-            />
-            <Column
-                field="description"
-                header="Description"
-                sortable
-                body={(rowData, elem) => rowData[elem.field]}
-                filter
-                filterPlaceholder="Search"
-                style={{ minWidth: '300px' }}
-            />
-        </InventoryList>
+                <Column
+                    field="name"
+                    header="Name"
+                    sortable
+                    body={(rowData, elem) => {
+                        return (
+                            <Link href={`/inventory/equipment/${rowData.id}`}>
+                                {rowData[elem.field]}
+                            </Link>
+                        )
+                    }}
+                    filter
+                    filterPlaceholder="Search"
+                    style={{ minWidth: '200px' }}
+                />
+                <Column
+                    field="type"
+                    header="Type"
+                    sortable
+                    body={bodyTypeTemplate}
+                    filter
+                    filterElement={opts => {
+                        return (
+                            <TypeFilterElement
+                                options={opts}
+                                types={types}
+                                setFilters={setFilters}
+                                filters={filters}
+                            />
+                        )
+                    }}
+                    filterPlaceholder="Search"
+                    showFilterMenu={false}
+                />
+                <Column
+                    field="condition"
+                    header="Condition"
+                    body={rowData => {
+                        return (
+                            <ScalableTag
+                                condition={rowData?.condition}
+                                text={rowData?.condition_description}
+                            />
+                        )
+                    }}
+                    sortable
+                    filter
+                    filterElement={conditionFilterElement}
+                    filterPlaceholder="Search"
+                    showFilterMenu={false}
+                    showClear
+                    style={{ minWidth: '150px' }}
+                />
+                <Column
+                    field="quantity"
+                    header="Quantity"
+                    sortable
+                    filter
+                    filterPlaceholder="Search"
+                    filterElement={o => {
+                        return (
+                            <QuantityFilterTemplate
+                                options={o}
+                                setFilters={setFilters}
+                                filters={filters}
+                            />
+                        )
+                    }}
+                    dataType="numeric"
+                    showFilterMenu={false}
+                    showClear
+                    style={{ minWidth: '160px' }}
+                />
+                <Column
+                    field="description"
+                    header="Description"
+                    sortable
+                    body={(rowData, elem) => rowData[elem.field]}
+                    filter
+                    filterPlaceholder="Search"
+                    style={{ minWidth: '300px' }}
+                />
+            </InventoryList>
+        </Suspense>
     )
 }
 

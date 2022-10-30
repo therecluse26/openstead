@@ -2,7 +2,6 @@ import React, { Suspense, useEffect, useRef, useState } from 'react'
 import { Card } from 'primereact/card'
 import { useRouter } from 'next/router'
 import EquipmentService from '@/services/inventory/EquipmentService'
-import { Galleria } from 'primereact/galleria'
 import LinkButton from '@/components/LinkButton'
 import { Rating } from 'primereact/rating'
 import ScalableTag from '@/components/ScalableTag'
@@ -10,6 +9,7 @@ import InventorySkeleton from '@/components/Inventory/InventorySkeleton'
 import ServiceLogsTimeline from '@/components/Custom/Services/ServiceLogsTimeline'
 import SimilarItemsTemplate from '@/components/Inventory/SimilarItems'
 import { formatDate } from '@/utils/FormatDate'
+import { Galleria } from 'primereact/galleria'
 
 const EquipmentDetail = () => {
     const isMounted = useRef(false)

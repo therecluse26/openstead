@@ -13,7 +13,7 @@ const TextInput = ({ control, name, rules, label }) => {
                 render={({ field: { onChange, value, name }, fieldState }) => (
                     <InputText
                         id={name}
-                        value={value}
+                        value={value ?? ''}
                         className={classNames({
                             'p-invalid': fieldState.error,
                         })}

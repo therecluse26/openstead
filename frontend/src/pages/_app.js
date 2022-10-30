@@ -3,6 +3,7 @@ import '@/style/style.scss'
 import { useRouter } from 'next/router'
 import AppLayout from '@/components/Layouts/AppLayout'
 import Head from 'next/head'
+import ErrorBoundary from '@/utils/ErrorBoundary'
 
 const App = ({ Component, pageProps }) => {
     const router = useRouter()
@@ -14,14 +15,16 @@ const App = ({ Component, pageProps }) => {
     }
 
     return (
-        <div suppressHydrationWarning>
-            <AppLayout>
-                <Head>
-                    <title>Openstead</title>
-                </Head>
-                <Component {...pageProps} />
-            </AppLayout>
-        </div>
+        <ErrorBoundary>
+            <div suppressHydrationWarning>
+                <AppLayout>
+                    <Head>
+                        <title>Openstead</title>
+                    </Head>
+                    <Component {...pageProps} />
+                </AppLayout>
+            </div>
+        </ErrorBoundary>
     )
 }
 

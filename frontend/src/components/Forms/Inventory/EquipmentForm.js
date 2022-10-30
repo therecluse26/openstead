@@ -12,6 +12,7 @@ import { FileUpload } from 'primereact/fileupload'
 import { convertUploadedFilesToBase64 } from '@/utils/file-utils'
 import { csrf } from '@/hooks/auth'
 import EquipmentService from '@/services/inventory/EquipmentService'
+import { ErrorMessage } from '@hookform/error-message'
 
 const EquipmentForm = ({ mode = 'create' }) => {
     const isMounted = useRef(false)
@@ -71,7 +72,7 @@ const EquipmentForm = ({ mode = 'create' }) => {
             })
     }
 
-    const submitForm = async ({ setErrors, ...props }) => {
+    const submitForm = async ({ ...props }) => {
         await csrf()
         const url =
             typeof id === 'undefined'
@@ -83,8 +84,17 @@ const EquipmentForm = ({ mode = 'create' }) => {
                 router.push('/inventory/equipment/' + r.data?.id)
             })
             .catch(error => {
-                if (error.response.status !== 422) throw error
-                setErrors(error.response.data.errors)
+                // if (error.response.status !== 422) throw error
+                setError('notRegisteredInput', {
+                    type: 'custom',
+                    name: 'name',
+                    message: error.response.data.message,
+                    ref: 'backendErrors',
+                })
+
+                // for (let err in error.response.data.errors) {
+                //     setError('asdf', err)
+                // }
             })
     }
 
@@ -99,7 +109,6 @@ const EquipmentForm = ({ mode = 'create' }) => {
             url: data.url,
             _method: mode === 'edit' ? 'PUT' : 'POST',
             images: images,
-            setError,
         })
     }
 
@@ -191,7 +200,8 @@ const EquipmentForm = ({ mode = 'create' }) => {
                                     label={'Purchase URL'}
                                     rules={{
                                         pattern: {
-                                            value: /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/,
+                                            value:
+                                                '/((([A-Za-z]{3,9}:(?://)?)(?:[-;:&=+$,w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=+$,w]+@)[A-Za-z0-9.-]+)((?:/[+~%/.w-_]*)???(?:[-+=&;%@.w_]*)#?(?:[w]*))?)/',
                                             message: 'Invalid URL',
                                         },
                                     }}
@@ -247,6 +257,8 @@ const EquipmentForm = ({ mode = 'create' }) => {
                             </div>
                         </Card>
                     </div>
+                    <ErrorMessage name={'backendErrors'} errors={errors} />
+
                     <div className={'col-10'}>
                         <Button type="submit" label="Save" className="mt-2" />
                     </div>
