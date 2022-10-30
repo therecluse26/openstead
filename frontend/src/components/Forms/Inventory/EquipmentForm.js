@@ -13,6 +13,7 @@ import { convertUploadedFilesToBase64 } from '@/utils/file-utils'
 import { csrf } from '@/hooks/auth'
 import EquipmentService from '@/services/inventory/EquipmentService'
 import { ErrorMessage } from '@hookform/error-message'
+import ToastContext, { useToastContext } from '@/context/ToastContext'
 
 const EquipmentForm = ({ mode = 'create' }) => {
     const isMounted = useRef(false)
@@ -20,7 +21,6 @@ const EquipmentForm = ({ mode = 'create' }) => {
     const [images, setImages] = useState([])
     const { query, isReady } = useRouter()
     const { id } = query
-
     const defaultValues = {
         name: null,
         type: null,
@@ -32,11 +32,12 @@ const EquipmentForm = ({ mode = 'create' }) => {
         url: null,
     }
 
+    const toast = useToastContext(ToastContext)
+
     const {
         control,
         formState: { errors },
         handleSubmit,
-        setError,
         setValue,
     } = useForm({ defaultValues })
 
@@ -84,17 +85,17 @@ const EquipmentForm = ({ mode = 'create' }) => {
                 router.push('/inventory/equipment/' + r.data?.id)
             })
             .catch(error => {
-                // if (error.response.status !== 422) throw error
-                setError('notRegisteredInput', {
-                    type: 'custom',
-                    name: 'name',
-                    message: error.response.data.message,
-                    ref: 'backendErrors',
-                })
-
-                // for (let err in error.response.data.errors) {
-                //     setError('asdf', err)
-                // }
+                let errors = []
+                for (let errField in error.response.data.errors) {
+                    for (let err of error.response.data.errors[errField]) {
+                        errors.push({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: err,
+                        })
+                    }
+                }
+                toast.current?.show(errors)
             })
     }
 

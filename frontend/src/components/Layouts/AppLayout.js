@@ -6,8 +6,8 @@ import { AppFooter } from '@/components/AppFooter'
 import { CSSTransition } from 'react-transition-group'
 import { TopBar } from '@/components/Layouts/TopBar'
 import SidebarMenu from '@/SidebarMenu'
-import { Toast } from 'primereact/toast'
 import { ScrollTop } from 'primereact/scrolltop'
+import { ToastContextProvider } from '@/context/ToastContext'
 
 const AppLayout = ({ children }) => {
     const { user } = useAuth({ middleware: 'auth' })
@@ -31,7 +31,6 @@ const AppLayout = ({ children }) => {
     })
     let menuClick = false
     let mobileTopbarMenuClick = false
-    const toast = useRef()
 
     useEffect(() => {
         setSidebarMenuActive(
@@ -97,51 +96,50 @@ const AppLayout = ({ children }) => {
     }
 
     return (
-        <div className={wrapperClass} onClick={onWrapperClick}>
-            <Tooltip
-                ref={copyTooltipRef}
-                target=".block-action-copy"
-                position="bottom"
-                content="Copied to clipboard"
-                event="focus"
-            />
+        <ToastContextProvider>
+            <div className={wrapperClass} onClick={onWrapperClick}>
+                <Tooltip
+                    ref={copyTooltipRef}
+                    target=".block-action-copy"
+                    position="bottom"
+                    content="Copied to clipboard"
+                    event="focus"
+                />
 
-            <TopBar
-                onToggleMenuClick={onToggleMenuClick}
-                mobileTopbarMenuActive={mobileTopbarMenuActive}
-                onMobileTopbarMenuClick={onMobileTopbarMenuClick}
-                onMobileSubTopbarMenuClick={onMobileSubTopbarMenuClick}
-                user={user}
-            />
+                <TopBar
+                    onToggleMenuClick={onToggleMenuClick}
+                    mobileTopbarMenuActive={mobileTopbarMenuActive}
+                    onMobileTopbarMenuClick={onMobileTopbarMenuClick}
+                    onMobileSubTopbarMenuClick={onMobileSubTopbarMenuClick}
+                    user={user}
+                />
 
-            <SidebarMenu
-                mobileMenuActive={mobileMenuActive}
-                sidebarMenuActive={sidebarMenuActive}
-                onToggleMenuClick={onToggleMenuClick}
-                onSidebarClick={onSidebarClick}
-                onMenuItemClick={onMenuItemClick}
-                layoutColorMode={layoutColorMode}
-            />
+                <SidebarMenu
+                    mobileMenuActive={mobileMenuActive}
+                    sidebarMenuActive={sidebarMenuActive}
+                    onToggleMenuClick={onToggleMenuClick}
+                    onSidebarClick={onSidebarClick}
+                    onMenuItemClick={onMenuItemClick}
+                    layoutColorMode={layoutColorMode}
+                />
 
-            {/* Page Content */}
-            <div className="layout-main-container">
-                <Toast ref={toast} />
+                {/* Page Content */}
+                <div className="layout-main-container">
+                    <div className="layout-main">{children}</div>
+                    <AppFooter layoutColorMode={layoutColorMode} />
+                </div>
 
-                <div className="layout-main">{children}</div>
+                <CSSTransition
+                    classNames="layout-mask"
+                    timeout={{ enter: 200, exit: 200 }}
+                    in={mobileMenuActive}
+                    unmountOnExit>
+                    <div className="layout-mask p-component-overlay" />
+                </CSSTransition>
 
-                <AppFooter layoutColorMode={layoutColorMode} />
+                <ScrollTop threshold={200} />
             </div>
-
-            <CSSTransition
-                classNames="layout-mask"
-                timeout={{ enter: 200, exit: 200 }}
-                in={mobileMenuActive}
-                unmountOnExit>
-                <div className="layout-mask p-component-overlay" />
-            </CSSTransition>
-
-            <ScrollTop threshold={200} />
-        </div>
+        </ToastContextProvider>
     )
 }
 
