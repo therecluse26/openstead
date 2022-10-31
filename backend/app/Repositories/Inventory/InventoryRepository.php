@@ -13,16 +13,16 @@ class InventoryRepository implements InventoryContract, Repository
 	/**
 	 * Model that implements Inventoriable contract
 	 *
-	 * @var Inventoriable
+	 * @var Inventoriable|Model
 	 */
-	private Inventoriable $model;
+	private Inventoriable|Model $model;
 
 	/**
 	 * Constructs repository using any model that implements the Inventoriable contract
 	 *
-	 * @param Inventoriable $model
+	 * @param Inventoriable|Model $model
 	 */
-	public function __construct(Inventoriable $model)
+	public function __construct(Inventoriable|Model $model)
 	{
 		$this->model = $model;
 	}

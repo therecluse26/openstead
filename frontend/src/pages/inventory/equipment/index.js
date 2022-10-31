@@ -6,11 +6,7 @@ import Link from 'next/link'
 import QuantityFilterTemplate from '@/pages/inventory/templates/QuantityFilterTemplate'
 import ScalableTag from '@/components/ScalableTag'
 import TypeFilterElement from '@/components/Custom/Inventory/TypeFilterElement'
-import dynamic from 'next/dynamic'
-
-const InventoryList = dynamic(() =>
-    import('@/components/Custom/Inventory/InventoryList'),
-)
+import InventoryList from '@/components/Custom/Inventory/InventoryList'
 
 const Equipment = () => {
     const [types, setTypes] = useState([])

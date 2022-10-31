@@ -7,6 +7,8 @@ use App\Contracts\Inventoriable;
 use App\Contracts\VarietyContract;
 use App\Enums\LivestockType;
 use App\Resources\FormattedFilter;
+use App\Resources\Inventory\Detail\LivestockResource as LivestockDetailResource;
+use App\Resources\Inventory\List\LivestockResource as LivestockListResource;
 use App\Traits\HasInventory;
 use App\Traits\HasVariety;
 use Carbon\Carbon;
@@ -14,6 +16,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\HasMedia;
@@ -48,6 +51,16 @@ class Livestock extends Model implements Inventoriable, VarietyContract, Fronten
 	protected $with = [
 		'variety'
 	];
+
+	public function getDetailResource(): JsonResource
+	{
+		return LivestockDetailResource::make($this);
+	}
+
+	public function getListResource(): JsonResource
+	{
+		return LivestockListResource::make($this);
+	}
 
 	public function parents(): BelongsToMany
 	{

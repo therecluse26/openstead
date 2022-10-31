@@ -175,11 +175,26 @@ const EquipmentDetail = () => {
                                 {equipmentData?.description}
                             </span>
                         </div>
+
+                        {equipmentData?.url ? (
+                            <div className={'row my-4'}>
+                                <LinkButton
+                                    href={equipmentData?.url}
+                                    text={'Purchase'}
+                                    external={true}
+                                    rightIcon={'ti ti-external-link'}
+                                />
+                            </div>
+                        ) : null}
                     </div>
                 </div>
             </Card>
 
-            <ServiceLogsTimeline logs={equipmentData?.service_logs} />
+            <ServiceLogsTimeline
+                logs={equipmentData?.service_logs}
+                inventoryId={id}
+                inventoryType={'equipment'}
+            />
 
             {similarItems?.length > 0 ? (
                 <div className={'mt-4 align-content-end'}>

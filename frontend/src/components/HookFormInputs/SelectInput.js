@@ -11,6 +11,8 @@ const SelectInput = ({
     name,
     rules,
     label,
+    selectedValue = null,
+    invalidateOnChange = null,
 }) => {
     const [selectOptions, setSelectOptions] = useState(options)
 
@@ -19,11 +21,19 @@ const SelectInput = ({
             .get(optionsEndpoint)
             .then(res => res.data)
             .then(data => {
-                setSelectOptions(
-                    data.map(t => {
-                        return { label: t.label, value: t.key }
-                    }),
-                )
+                if (Object.prototype.hasOwnProperty.call(data, 'data')) {
+                    setSelectOptions(
+                        data?.data?.map(t => {
+                            return { label: t.label, value: t.key }
+                        }),
+                    )
+                } else {
+                    setSelectOptions(
+                        data.map(t => {
+                            return { label: t.label, value: t.key }
+                        }),
+                    )
+                }
             })
     }
 
@@ -33,12 +43,17 @@ const SelectInput = ({
         }
     }, [optionsEndpoint])
 
+    useEffect(() => {
+        getOptions()
+    }, [invalidateOnChange])
+
     return (
         <span className="p-float-label">
             <Controller
                 name={name}
                 control={control}
                 rules={rules}
+                defaultValue={selectedValue}
                 render={({ field: { onChange, value, name }, fieldState }) => (
                     <Dropdown
                         id={name}

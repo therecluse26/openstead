@@ -19,6 +19,7 @@ class EquipmentRepository extends InventoryRepository
 		'description',
 		'location_id',
 		'quantity',
+		'url',
 		'acquired_at'
 	];
 

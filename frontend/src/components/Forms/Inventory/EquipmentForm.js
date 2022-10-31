@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Card } from 'primereact/card'
-import axios from '@/lib/axios'
 import { Button } from 'primereact/button'
 import TextInput from '@/components/HookFormInputs/TextInput'
 import SelectInput from '@/components/HookFormInputs/SelectInput'
@@ -12,9 +11,8 @@ import { FileUpload } from 'primereact/fileupload'
 import { convertUploadedFilesToBase64 } from '@/utils/file-utils'
 import { csrf } from '@/hooks/auth'
 import EquipmentService from '@/services/inventory/EquipmentService'
-import { ErrorMessage } from '@hookform/error-message'
-import AddErrorToasts from '@/utils/AddErrorToasts'
 import ToastContext, { useToastContext } from '@/context/ToastContext'
+import AddErrorToasts from '@/utils/AddErrorToasts'
 
 const EquipmentForm = ({ mode = 'create' }) => {
     const isMounted = useRef(false)
@@ -73,34 +71,15 @@ const EquipmentForm = ({ mode = 'create' }) => {
             })
     }
 
-    const submitForm = async ({ ...props }) => {
+    const onSubmit = async data => {
         await csrf()
-        const url =
-            typeof id === 'undefined'
-                ? `/api/inventory/equipment`
-                : `/api/inventory/equipment/${id}`
-        axios
-            .post(url, props)
+        EquipmentService.createOrUpdate(id, data, images)
             .then(r => {
                 router.push('/inventory/equipment/' + r.data?.id)
             })
             .catch(error => {
                 AddErrorToasts(toast, error)
             })
-    }
-
-    const onSubmit = data => {
-        submitForm({
-            name: data.name,
-            type: data.type,
-            quantity: data.quantity,
-            condition: data.condition,
-            description: data.description,
-            acquired_at: data.acquired_at,
-            url: data.url,
-            _method: mode === 'edit' ? 'PUT' : 'POST',
-            images: images,
-        })
     }
 
     const onUploadImage = async data => {
@@ -248,7 +227,6 @@ const EquipmentForm = ({ mode = 'create' }) => {
                             </div>
                         </Card>
                     </div>
-                    <ErrorMessage name={'backendErrors'} errors={errors} />
 
                     <div className={'col-10'}>
                         <Button type="submit" label="Save" className="mt-2" />

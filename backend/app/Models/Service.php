@@ -21,5 +21,4 @@ class Service extends Model
 	protected $casts = [
 		'type' => ServiceType::class
 	];
-	
 }

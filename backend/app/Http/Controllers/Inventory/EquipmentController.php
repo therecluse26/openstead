@@ -8,7 +8,6 @@ use App\Http\Requests\Inventory\StoreEquipmentRequest;
 use App\Http\Requests\Inventory\UpdateEquipmentRequest;
 use App\Models\Inventory\Equipment;
 use App\Repositories\Inventory\EquipmentRepository;
-use App\Resources\Inventory\Detail\EquipmentResource as EquipmentDetailResource;
 use App\Resources\Inventory\List\EquipmentResource as EquipmentListResource;
 use App\Resources\Inventory\List\PaginatedInventoryResource;
 use App\Services\Inventory\EquipmentService;
@@ -56,9 +55,9 @@ class EquipmentController extends Controller
 	 * @param Equipment $equipment
 	 * @return Response
 	 */
-	public function show(Equipment $equipment)
+	public function show(Equipment $equipment): Response
 	{
-		return response(EquipmentDetailResource::make($equipment));
+		return response($equipment->getDetailResource());
 	}
 
 	/**

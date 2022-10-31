@@ -35,7 +35,7 @@ const customizedTimelineContent = item => {
     )
 }
 
-const ServiceLogsTimeline = ({ logs }) => {
+const ServiceLogsTimeline = ({ logs, inventoryType, inventoryId }) => {
     return (
         <div className={'my-4'}>
             <h5 className={'text-center'}>Service Logs</h5>
@@ -43,7 +43,7 @@ const ServiceLogsTimeline = ({ logs }) => {
             <Card>
                 <div className={'flex justify-content-center'}>
                     <LinkButton
-                        href={`/inventory/equipment/service-logs/add`}
+                        href={`/inventory/${inventoryType}/${inventoryId}/add-service-log`}
                         leftIcon={'ti ti-plus'}
                         text={' New'}
                     />
