@@ -11,7 +11,6 @@ const SelectInput = ({
     name,
     rules,
     label,
-    selectedValue = null,
     invalidateOnChange = null,
 }) => {
     const [selectOptions, setSelectOptions] = useState(options)
@@ -53,7 +52,6 @@ const SelectInput = ({
                 name={name}
                 control={control}
                 rules={rules}
-                defaultValue={selectedValue}
                 render={({ field: { onChange, value, name }, fieldState }) => (
                     <Dropdown
                         id={name}

@@ -30,6 +30,7 @@ const ServiceLogForm = () => {
         formState: { errors },
         handleSubmit,
         watch,
+        setValue,
     } = useForm({
         type: null,
         notes: null,
@@ -89,6 +90,7 @@ const ServiceLogForm = () => {
             .then(r => {
                 // Reload services list
                 setNewServiceId(r?.data?.id)
+                setValue('service_id', r?.data?.id)
                 setAddServiceFormVisible(false)
                 serviceFormReset()
             })
@@ -136,7 +138,6 @@ const ServiceLogForm = () => {
                                                 required:
                                                     'Service is required.',
                                             }}
-                                            selectedValue={newServiceId}
                                             invalidateOnChange={newServiceId}
                                         />{' '}
                                         <Button
