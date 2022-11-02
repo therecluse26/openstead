@@ -6,45 +6,50 @@ import axios from '@/lib/axios'
 
 const SelectInput = ({
     options,
-    optionsEndpoint,
+    optionsEndpoint = false,
     control,
     name,
     rules,
     label,
-    invalidateOnChange = null,
+    invalidateOnChange,
 }) => {
     const [selectOptions, setSelectOptions] = useState(options)
 
-    const getOptions = () => {
-        return axios
-            .get(optionsEndpoint)
-            .then(res => res.data)
-            .then(data => {
-                if (Object.prototype.hasOwnProperty.call(data, 'data')) {
-                    setSelectOptions(
-                        data?.data?.map(t => {
-                            return { label: t.label, value: t.key }
-                        }),
-                    )
-                } else {
-                    setSelectOptions(
-                        data.map(t => {
-                            return { label: t.label, value: t.key }
-                        }),
-                    )
-                }
-            })
+    const getOptions = async () => {
+        if (optionsEndpoint) {
+            return await axios
+                .get(optionsEndpoint)
+                .then(res => res.data)
+                .then(data => {
+                    if (typeof data !== 'undefined') {
+                        if (
+                            Object.prototype.hasOwnProperty.call(data, 'data')
+                        ) {
+                            setSelectOptions(
+                                data?.data?.map(t => {
+                                    return { label: t.label, value: t.key }
+                                }),
+                            )
+                        } else {
+                            setSelectOptions(
+                                data?.map(t => {
+                                    return { label: t.label, value: t.key }
+                                }),
+                            )
+                        }
+                    }
+                })
+                .catch(e => {
+                    console.error(e)
+                })
+        }
     }
 
     useEffect(() => {
         if (optionsEndpoint) {
             getOptions()
         }
-    }, [optionsEndpoint])
-
-    useEffect(() => {
-        getOptions()
-    }, [invalidateOnChange])
+    }, [optionsEndpoint, invalidateOnChange])
 
     return (
         <span className="p-float-label">
