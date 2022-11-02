@@ -17,7 +17,6 @@ class ServiceLog extends Model
 	protected $table = 'service_logs';
 
 	protected $fillable = [
-		'type',
 		'notes',
 		'service_date',
 		'service_id'

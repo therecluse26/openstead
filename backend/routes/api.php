@@ -45,8 +45,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 			Route::get('/seeds/types', [SeedController::class, 'getTypes']);
 			Route::apiResource('/seeds', SeedController::class);
 
-			Route::apiResource('/services/logs', ServiceLogController::class);
-
 		});
 
 	Route::prefix('/services')
@@ -57,6 +55,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
 				->group(function () {
 					Route::get('/', [ServiceLogController::class, 'getTypes']);
 					Route::get('/{type}/services', [ServiceLogController::class, 'getTypeService']);
+				});
+			Route::prefix('/logs')
+				->group(function () {
+					Route::post('/', [ServiceLogController::class, 'store']);
 				});
 
 		});

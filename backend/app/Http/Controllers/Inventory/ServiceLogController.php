@@ -42,7 +42,12 @@ class ServiceLogController extends Controller
 	 */
 	public function store(StoreServiceLogRequest $request, ServiceLogRepository $serviceLogRepository): Response
 	{
-		return response($serviceLogRepository->create($request), 200);
+		return response($serviceLogRepository->create(
+			collect(
+				$request->all()
+			)),
+			200
+		);
 	}
 
 	/**

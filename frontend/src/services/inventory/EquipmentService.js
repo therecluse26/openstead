@@ -49,7 +49,9 @@ const createOrUpdate = (id, data, images = []) => {
 }
 
 const addServiceLog = (id, data) => {
-    return axios.post(`/api/inventory/equipment/${id}/add-service-log`, {
+    return axios.post(`/api/services/logs`, {
+        serviceable_type: 'equipment',
+        serviceable_id: id,
         type: data.type,
         notes: data.notes,
         service_date: data.service_date,

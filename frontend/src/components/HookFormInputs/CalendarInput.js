@@ -3,7 +3,7 @@ import { classNames } from 'primereact/utils'
 import React from 'react'
 import { Calendar } from 'primereact/calendar'
 
-const TextInput = ({ control, name, rules, label }) => {
+const TextInput = ({ control, name, rules, label, showTime }) => {
     return (
         <span className="p-float-label">
             <Controller
@@ -14,6 +14,7 @@ const TextInput = ({ control, name, rules, label }) => {
                     <Calendar
                         id={name}
                         value={value}
+                        showTime={showTime}
                         className={classNames({
                             'p-invalid': fieldState.error,
                         })}

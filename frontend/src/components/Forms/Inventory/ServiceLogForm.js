@@ -15,8 +15,6 @@ import { Dialog } from 'primereact/dialog'
 import TextInput from '@/components/HookFormInputs/TextInput'
 
 const ServiceLogForm = () => {
-    const dialog = Dialog
-
     const isMounted = useRef(false)
     const [addServiceFormVisible, setAddServiceFormVisible] = useState(false)
     const router = useRouter()
@@ -37,7 +35,7 @@ const ServiceLogForm = () => {
         service_date: null,
         service_id: null,
     })
-    const watchType = watch('type') // you can supply default value as second argument
+    const watchType = watch('type')
 
     const {
         control: serviceControl,
@@ -76,8 +74,8 @@ const ServiceLogForm = () => {
     const onSubmit = async data => {
         await csrf()
         EquipmentService.addServiceLog(id, data)
-            .then(r => {
-                router.push('/inventory/equipment/' + r.data?.id)
+            .then(() => {
+                router.push(`/inventory/equipment/${id}`)
             })
             .catch(error => {
                 AddErrorToasts(toast, error)
@@ -168,6 +166,7 @@ const ServiceLogForm = () => {
                             <div className="field">
                                 <CalendarInput
                                     control={control}
+                                    showTime={true}
                                     name={'service_date'}
                                     label={'Service Date'}
                                     rules={{
