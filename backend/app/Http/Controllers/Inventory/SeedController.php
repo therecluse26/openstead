@@ -10,16 +10,16 @@ use App\Repositories\Inventory\SeedRepository;
 use App\Resources\Inventory\List\PaginatedInventoryResource;
 use App\Resources\Inventory\List\SeedResource;
 use App\Services\Inventory\InventoryService;
-use App\Services\Inventory\PlantService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 use JsonException;
 
 class SeedController extends Controller
 {
-	public function getTypes()
+	public function getTypes(): Collection
 	{
-		return PlantService::getFormattedTypes();
+		return SeedRepository::getFormattedTypes();
 	}
 
 	/**

@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Inventory;
 
+use App\Enums\LivestockType;
 use App\Http\Requests\Inventory\StoreLivestockRequest;
 use App\Models\Inventory\Livestock;
 use Illuminate\Support\Collection;
@@ -43,5 +44,15 @@ class LivestockRepository extends InventoryRepository
 		return $equipment;
 	}
 
+	public static function getTypes(): array
+	{
+		return LivestockType::cases();
+	}
 
+	public static function getFormattedTypes(): Collection
+	{
+		return collect(LivestockType::cases())->map(function ($type) {
+			return $type->toFilter();
+		});
+	}
 }

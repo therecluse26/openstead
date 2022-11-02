@@ -10,7 +10,6 @@ use App\Repositories\Inventory\LivestockRepository;
 use App\Resources\Inventory\List\LivestockResource;
 use App\Resources\Inventory\List\PaginatedInventoryResource;
 use App\Services\Inventory\InventoryService;
-use App\Services\Inventory\LivestockService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use JsonException;
@@ -19,7 +18,7 @@ class LivestockController extends Controller
 {
 	public function getTypes()
 	{
-		return LivestockService::getFormattedTypes();
+		return LivestockRepository::getFormattedTypes();
 	}
 
 	/**

@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Inventory;
 
+use App\Enums\PlantType;
 use App\Http\Requests\Inventory\StoreSeedRequest;
 use App\Models\Inventory\Seed;
 use Illuminate\Support\Collection;
@@ -43,5 +44,15 @@ class SeedRepository extends InventoryRepository
 		return $model;
 	}
 
+	public static function getTypes(): array
+	{
+		return PlantType::cases();
+	}
 
+	public static function getFormattedTypes(): Collection
+	{
+		return collect(PlantType::cases())->map(function ($type) {
+			return $type->toFilter();
+		});
+	}
 }

@@ -3,6 +3,7 @@
 namespace App\Repositories\Inventory;
 
 use App\Enums\EquipmentCondition;
+use App\Enums\EquipmentType;
 use App\Models\Inventory\Equipment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -99,4 +100,15 @@ class EquipmentRepository extends InventoryRepository
 		}
 	}
 
+	public static function getFormattedTypes(): Collection
+	{
+		return collect(EquipmentType::cases())->map(function ($type) {
+			return $type->toFilter();
+		});
+	}
+
+	public static function getSimilar(Equipment $equipment): Collection
+	{
+		return Equipment::whereNot('id', $equipment->id)->where('type', $equipment->type)->inRandomOrder()->take(6)->get();
+	}
 }

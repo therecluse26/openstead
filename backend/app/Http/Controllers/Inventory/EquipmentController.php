@@ -10,7 +10,6 @@ use App\Models\Inventory\Equipment;
 use App\Repositories\Inventory\EquipmentRepository;
 use App\Resources\Inventory\List\EquipmentResource as EquipmentListResource;
 use App\Resources\Inventory\List\PaginatedInventoryResource;
-use App\Services\Inventory\EquipmentService;
 use App\Services\Inventory\InventoryService;
 use Illuminate\Http\Response;
 use JsonException;
@@ -19,7 +18,7 @@ class EquipmentController extends Controller
 {
 	public function getTypes()
 	{
-		return EquipmentService::getFormattedTypes();
+		return EquipmentRepository::getFormattedTypes();
 	}
 
 	/**
@@ -69,7 +68,7 @@ class EquipmentController extends Controller
 	public function getSimilar(Equipment $equipment)
 	{
 		return response(EquipmentListResource::collection(
-			EquipmentService::getSimilar($equipment)
+			EquipmentRepository::getSimilar($equipment)
 		));
 	}
 
