@@ -1,6 +1,6 @@
 import axios from '@/lib/axios'
 
-const getList = params => {
+const getList = async params => {
     const queryParams = params
         ? Object.keys(params)
               .map(
@@ -11,31 +11,35 @@ const getList = params => {
               )
               .join('&')
         : ''
-    return axios
+    return await axios
         .get('/api/inventory/equipment?' + queryParams)
         .then(res => res.data)
 }
 
-const getItem = id => {
-    return axios.get('/api/inventory/equipment/' + id).then(res => res.data)
+const getItem = async id => {
+    return await axios
+        .get('/api/inventory/equipment/' + id)
+        .then(res => res.data)
 }
 
-const getSimilarItems = id => {
-    return axios
+const getSimilarItems = async id => {
+    return await axios
         .get(`/api/inventory/equipment/${id}/similar`)
         .then(res => res.data)
 }
 
-const getTypes = () => {
-    return axios.get('/api/inventory/equipment/types').then(res => res.data)
+const getTypes = async () => {
+    return await axios
+        .get('/api/inventory/equipment/types')
+        .then(res => res.data)
 }
 
-const createOrUpdate = (id, data, images = []) => {
+const createOrUpdate = async (id, data, images = []) => {
     const url =
         typeof id === 'undefined'
             ? `/api/inventory/equipment`
             : `/api/inventory/equipment/${id}`
-    return axios.post(url, {
+    return await axios.post(url, {
         name: data.name,
         type: data.type,
         quantity: data.quantity,
@@ -48,8 +52,14 @@ const createOrUpdate = (id, data, images = []) => {
     })
 }
 
-const addServiceLog = (id, data) => {
-    return axios.post(`/api/services/logs`, {
+const deleteItem = async id => {
+    return await axios.post(`/api/inventory/equipment/${id}`, {
+        _method: 'DELETE',
+    })
+}
+
+const addServiceLog = async (id, data) => {
+    return await axios.post(`/api/services/logs`, {
         serviceable_type: 'equipment',
         serviceable_id: id,
         type: data.type,
@@ -60,8 +70,8 @@ const addServiceLog = (id, data) => {
     })
 }
 
-const addService = (id, data) => {
-    return axios.post(`/api/services`, {
+const addService = async (id, data) => {
+    return await axios.post(`/api/services`, {
         type: data.type,
         title: data.title,
         description: data.description,
@@ -77,4 +87,5 @@ export default {
     createOrUpdate,
     addServiceLog,
     addService,
+    deleteItem,
 }

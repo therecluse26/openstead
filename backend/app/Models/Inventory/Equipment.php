@@ -53,6 +53,16 @@ class Equipment extends Model implements Inventoriable, FrontendFilterable, HasM
 		'primary_image'
 	];
 
+	public static function boot()
+	{
+		parent::boot();
+		self::deleting(function ($model) {
+			$model->serviceLogs()->each(function ($r) {
+				$r->delete();
+			});
+		});
+	}
+
 	public function getDetailResource(): JsonResource
 	{
 		return EquipmentDetailResource::make($this);

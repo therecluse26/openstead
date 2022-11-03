@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Inventory;
 
+use App\Enums\ModelName;
 use App\Enums\ServiceType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Inventory\StoreServiceLogRequest;
@@ -9,6 +10,7 @@ use App\Http\Requests\Inventory\UpdateServiceLogRequest;
 use App\Models\ServiceLog;
 use App\Repositories\Inventory\ServiceLogRepository;
 use App\Resources\ServiceDropdownResource;
+use App\Resources\ServiceLogResource;
 use App\Services\Inventory\ServiceLogService;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Response;
@@ -32,6 +34,24 @@ class ServiceLogController extends Controller
 			ServiceLogService::getTypeServices(ServiceType::from($type))
 		);
 	}
+
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param ServiceLogRepository $repository
+	 * @param string $modelName
+	 * @param int $modelId
+	 * @return Response
+	 */
+	public function index(ServiceLogRepository $repository, string $modelName, int $modelId): Response
+	{
+		return response(
+			ServiceLogResource::collection(
+				$repository->list(ModelName::from($modelName), $modelId)
+			)
+		);
+	}
+
 
 	/**
 	 * Store a newly created resource in storage.

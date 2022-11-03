@@ -9,10 +9,11 @@ const LinkButton = ({
     fontSize = '1.2rem',
     leftIcon = null,
     rightIcon = null,
+    className = 'p-button-text',
 }) =>
     external ? (
         <Button
-            className="p-button-text"
+            className={className}
             style={{ fontSize: fontSize }}
             onClick={() => {
                 window.open(href)
@@ -25,7 +26,7 @@ const LinkButton = ({
         </Button>
     ) : (
         <Link href={href}>
-            <Button className="p-button-text" style={{ fontSize: fontSize }}>
+            <Button className={className} style={{ fontSize: fontSize }}>
                 <span>
                     <i className={leftIcon} />
                     {text}

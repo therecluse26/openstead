@@ -25,6 +25,10 @@ class ServiceLogRepository extends InventoryRepository
 		parent::__construct($this->model);
 	}
 
+	public function list(ModelName $modelName, int $modelId)
+	{
+		return ServiceLog::where('serviceable_type', $modelName->class())->where('serviceable_id', $modelId)->orderByDesc('service_date')->get();
+	}
 
 	public function create(Collection $data): ServiceLog
 	{

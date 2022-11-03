@@ -5,7 +5,6 @@ use App\Http\Controllers\Inventory\InventoryController;
 use App\Http\Controllers\Inventory\LivestockController;
 use App\Http\Controllers\Inventory\SeedController;
 use App\Http\Controllers\Inventory\ServiceLogController;
-use App\Http\Controllers\LocationController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,8 +25,6 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
-
-	Route::get('/locations/dropdown', [LocationController::class, 'getLocationsDropdown']);
 
 	Route::prefix('/inventory')
 		->group(function () {
@@ -58,6 +55,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 				});
 			Route::prefix('/logs')
 				->group(function () {
+					Route::get('/{modelName}/{modelId}', [ServiceLogController::class, 'index']);
 					Route::post('/', [ServiceLogController::class, 'store']);
 				});
 

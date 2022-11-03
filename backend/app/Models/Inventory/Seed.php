@@ -41,7 +41,7 @@ class Seed extends Model implements Inventoriable, VarietyContract, FrontendFilt
 	protected $casts = [
 		'acquired_at' => 'datetime'
 	];
-
+	
 	public function getDetailResource(): JsonResource
 	{
 		return SeedDetailResource::make($this);

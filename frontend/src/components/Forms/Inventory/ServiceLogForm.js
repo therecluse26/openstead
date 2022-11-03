@@ -14,7 +14,11 @@ import { Dialog } from 'primereact/dialog'
 
 import TextInput from '@/components/HookFormInputs/TextInput'
 
-const ServiceLogForm = () => {
+const ServiceLogForm = ({
+    inline = false,
+    onComplete = () => {},
+    onClose = () => {},
+}) => {
     const isMounted = useRef(false)
     const [addServiceFormVisible, setAddServiceFormVisible] = useState(false)
     const router = useRouter()
@@ -75,6 +79,10 @@ const ServiceLogForm = () => {
         await csrf()
         EquipmentService.addServiceLog(id, data)
             .then(() => {
+                if (inline) {
+                    onComplete()
+                    return
+                }
                 router.push(`/inventory/equipment/${id}`)
             })
             .catch(error => {
@@ -99,9 +107,23 @@ const ServiceLogForm = () => {
 
     return (
         <>
-            <div className={'justify-content-center align-content-center grid'}>
+            <div
+                className={
+                    'justify-content-center align-content-center grid  ' +
+                    (inline ? 'text-right' : '')
+                }>
                 <div className={'col-5'}>
-                    <h3 className={'text-center'}>Add New Service Log</h3>
+                    {inline ? (
+                        <Button
+                            className={'p-button-text text-right'}
+                            onClick={() => {
+                                onClose()
+                            }}>
+                            <i className={'ti ti-x'} /> &nbsp;{'Close'}
+                        </Button>
+                    ) : (
+                        <h3 className={'text-center'}>Add New Service Log</h3>
+                    )}
                 </div>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="p-fluid">

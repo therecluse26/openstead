@@ -33,7 +33,7 @@ class UpdateEquipmentRequest extends FormRequest
 			'condition' => ['required', new Enum(EquipmentCondition::class)],
 			'quantity' => ['required', 'integer', "min:0"],
 			'images' => ['array'],
-			'url' => ['active_url'],
+			'url' => ['url'],
 			'images.*' => ['string', 'max:1361920', new Contains('data:image/')],
 		];
 	}

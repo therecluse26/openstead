@@ -10,11 +10,13 @@ import ServiceLogsTimeline from '@/components/Custom/Services/ServiceLogsTimelin
 import SimilarItemsTemplate from '@/components/Inventory/SimilarItems'
 import { formatDate } from '@/utils/FormatDate'
 import { Galleria } from 'primereact/galleria'
+import { Button } from 'primereact/button'
 
 const EquipmentDetail = () => {
     const isMounted = useRef(false)
     const [equipmentData, setEquipmentData] = useState()
     const [similarItems, setSimilarItems] = useState()
+    const router = useRouter()
     const { query, isReady } = useRouter()
     const { id } = query
 
@@ -68,6 +70,17 @@ const EquipmentDetail = () => {
             .catch(e => {
                 alert(e)
             })
+    }
+
+    const deleteEquipment = async () => {
+        await EquipmentService.deleteItem(id)
+    }
+
+    const confirmDelete = () => {
+        if (confirm('Are you sure you want to delete this item?')) {
+            deleteEquipment()
+            router.push('/inventory/equipment')
+        }
     }
 
     // Load initial data
@@ -188,12 +201,23 @@ const EquipmentDetail = () => {
                         ) : null}
                     </div>
                 </div>
+                <div className="col-12 sm:col-fixed text-right">
+                    <Button
+                        className={'p-button-danger'}
+                        onClick={confirmDelete}>
+                        <span>
+                            <i className={'ti ti-trash'} />
+                            {' Delete'}
+                        </span>
+                    </Button>
+                </div>
             </Card>
 
             <ServiceLogsTimeline
-                logs={equipmentData?.service_logs}
-                inventoryId={id}
-                inventoryType={'equipment'}
+                // logs={equipmentData?.service_logs}
+
+                parentId={id}
+                parentType={'equipment'}
             />
 
             {similarItems?.length > 0 ? (

@@ -52,6 +52,23 @@ class Livestock extends Model implements Inventoriable, VarietyContract, Fronten
 		'variety'
 	];
 
+	public static function boot()
+	{
+		parent::boot();
+		self::deleting(function ($model) {
+			$model->serviceLogs()->each(function ($r) {
+				$r->delete();
+			});
+			$model->parents()->detach();
+			$model->children()->detach();
+
+		});
+
+
+	}
+
+	// API Resources
+
 	public function getDetailResource(): JsonResource
 	{
 		return LivestockDetailResource::make($this);
@@ -62,6 +79,7 @@ class Livestock extends Model implements Inventoriable, VarietyContract, Fronten
 		return LivestockListResource::make($this);
 	}
 
+	// Relationships
 	public function parents(): BelongsToMany
 	{
 		return $this->belongsToMany(self::class)->using(LivestockParent::class)->wherePivot('livestock_id');
@@ -72,6 +90,7 @@ class Livestock extends Model implements Inventoriable, VarietyContract, Fronten
 		return $this->BelongsToMany(self::class)->using(LivestockParent::class)->wherePivot('parent_id');
 	}
 
+	// Attributes
 	public function primaryImage(): Attribute
 	{
 		return Attribute::make(

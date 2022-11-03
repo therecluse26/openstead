@@ -95,7 +95,11 @@ const EquipmentForm = ({ mode = 'create' }) => {
         <>
             <div className={'justify-content-center align-content-center grid'}>
                 <div className={'col-10'}>
-                    <h3 className={'text-center'}>Add New Equipment</h3>
+                    <h3 className={'text-center'}>
+                        {mode === 'create'
+                            ? 'Add New Equipment'
+                            : 'Edit Equipment'}
+                    </h3>
                 </div>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="p-fluid">

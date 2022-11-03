@@ -2,7 +2,6 @@
 
 namespace App\Resources\Inventory\Detail;
 
-use App\Resources\ServiceLogResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class EquipmentResource extends JsonResource
@@ -20,7 +19,6 @@ class EquipmentResource extends JsonResource
 			'quantity' => $this->quantity,
 			'url' => $this->url,
 			'acquired_at' => $this->acquired_at,
-			'service_logs' => ServiceLogResource::collection($this->serviceLogs->sortByDesc('service_date'))
 		];
 	}
 }
