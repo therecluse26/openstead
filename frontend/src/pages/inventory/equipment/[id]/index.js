@@ -140,20 +140,42 @@ const EquipmentDetail = () => {
                                 {equipmentData?.type?.label}
                             </span>
                         </div>
-                        <div className={'flex align-content-center mb-4'}>
-                            <span className={'align-self-center text-2xl mr-2'}>
-                                Condition:
-                            </span>
-                            <Rating
-                                stars={5}
-                                cancel={false}
-                                readOnly={true}
-                                value={equipmentData?.condition}
-                                placeholder={
-                                    equipmentData?.condition_description
-                                }
-                            />
-                        </div>
+                        {equipmentData?.condition ? (
+                            <div className={'flex align-content-center mb-4'}>
+                                <span
+                                    className={
+                                        'align-self-center text-2xl mr-2'
+                                    }>
+                                    Condition:
+                                </span>
+                                <Rating
+                                    stars={5}
+                                    cancel={false}
+                                    readOnly={true}
+                                    value={equipmentData?.condition}
+                                    placeholder={
+                                        equipmentData?.condition_description
+                                    }
+                                />
+                            </div>
+                        ) : null}
+
+                        {equipmentData?.rating ? (
+                            <div className={'flex align-content-center mb-4'}>
+                                <span
+                                    className={
+                                        'align-self-center text-2xl mr-2'
+                                    }>
+                                    Rating:
+                                </span>
+                                <Rating
+                                    stars={5}
+                                    cancel={false}
+                                    readOnly={true}
+                                    value={equipmentData?.rating}
+                                />
+                            </div>
+                        ) : null}
 
                         {equipmentData?.acquired_at ? (
                             <div className={'flex align-content-center mb-4'}>

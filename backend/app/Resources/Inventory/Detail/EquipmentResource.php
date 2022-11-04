@@ -13,6 +13,7 @@ class EquipmentResource extends JsonResource
 			'name' => $this->name,
 			'type' => $this->type->toFilter(),
 			'condition' => $this->condition,
+			'rating' => $this->rating,
 			'condition_description' => $this->condition_description,
 			'primary_image' => $this->primary_image,
 			'description' => $this->description,

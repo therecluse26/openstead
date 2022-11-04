@@ -12,7 +12,6 @@ const Livestock = () => {
     const isMounted = useRef(false)
     const [filters, setFilters] = useState({
         name: { value: '', matchMode: 'contains' },
-        date_of_birth: { value: '', matchMode: 'equals' },
         quantity: { value: null, matchMode: 'equals' },
         variety: {
             value: '',
@@ -32,14 +31,6 @@ const Livestock = () => {
         isMounted.current = true
         loadTypes()
     }, [])
-
-    const formatDate = value => {
-        return new Date(value).toLocaleDateString('en-US', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-        })
-    }
 
     const lazyParamsCallback = lazyParams => {
         return {
@@ -151,18 +142,7 @@ const Livestock = () => {
                 }}
                 showFilterMenu={false}
                 showClear
-                style={{ minWidth: '160px' }}
-            />
-            <Column
-                field="date_of_birth"
-                header="Date of Birth"
-                sortable
-                filter
-                filterPlaceholder="Search"
-                body={rowData => formatDate(rowData.date_of_birth)}
-                showFilterMenu={false}
-                showClear
-                style={{ minWidth: '160px' }}
+                style={{ minWidth: '160px', maxWidth: '200px' }}
             />
         </InventoryList>
     )

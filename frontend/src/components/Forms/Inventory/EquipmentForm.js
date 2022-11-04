@@ -13,6 +13,8 @@ import { csrf } from '@/hooks/auth'
 import EquipmentService from '@/services/inventory/EquipmentService'
 import ToastContext, { useToastContext } from '@/context/ToastContext'
 import AddErrorToasts from '@/utils/AddErrorToasts'
+import RatingInput from '@/components/HookFormInputs/RatingInput'
+import TextAreaInput from '@/components/HookFormInputs/TextAreaInput'
 
 const EquipmentForm = ({ mode = 'create' }) => {
     const isMounted = useRef(false)
@@ -26,18 +28,21 @@ const EquipmentForm = ({ mode = 'create' }) => {
         type: null,
         condition: null,
         quantity: 1,
+        rating: null,
         description: null,
         images: [],
         acquired_at: null,
         url: null,
     }
-
     const {
         control,
         formState: { errors },
         handleSubmit,
         setValue,
+        watch,
     } = useForm({ defaultValues })
+
+    const quantity = watch('quantity')
 
     useEffect(() => {
         if (!isReady || !id) {
@@ -61,6 +66,7 @@ const EquipmentForm = ({ mode = 'create' }) => {
                 setValue('name', data?.name)
                 setValue('type', data?.type?.key)
                 setValue('condition', data?.condition)
+                setValue('rating', data?.rating)
                 setValue('description', data?.description)
                 setValue('quantity', data?.quantity)
                 setValue('acquired_at', new Date(data?.acquired_at))
@@ -137,26 +143,38 @@ const EquipmentForm = ({ mode = 'create' }) => {
                             </div>
 
                             <div className="field">
-                                <SelectInput
-                                    options={[
-                                        { label: 'Excellent', value: 5 },
-                                        { label: 'Good', value: 4 },
-                                        { label: 'Fair', value: 3 },
-                                        { label: 'Poor', value: 2 },
-                                        { label: 'Broken', value: 1 },
-                                    ]}
+                                <NumberInput
                                     control={control}
-                                    name={'condition'}
-                                    label={'Condition'}
+                                    name={'quantity'}
+                                    label={'Quantity'}
+                                    showButtons={true}
+                                    max={10000}
                                     rules={{
-                                        required: 'Condition is required.',
+                                        required: 'Quantity is required.',
                                     }}
                                 />
-                                {getFormErrorMessage('condition')}
+                                {getFormErrorMessage('quantity')}
                             </div>
+                            {quantity === 1 ? (
+                                <div className="field">
+                                    <SelectInput
+                                        options={[
+                                            { label: 'Excellent', value: 5 },
+                                            { label: 'Good', value: 4 },
+                                            { label: 'Fair', value: 3 },
+                                            { label: 'Poor', value: 2 },
+                                            { label: 'Broken', value: 1 },
+                                        ]}
+                                        control={control}
+                                        name={'condition'}
+                                        label={'Condition'}
+                                    />
+                                    {getFormErrorMessage('condition')}
+                                </div>
+                            ) : null}
 
                             <div className="field">
-                                <TextInput
+                                <TextAreaInput
                                     control={control}
                                     name={'description'}
                                     label={'Description'}
@@ -166,7 +184,10 @@ const EquipmentForm = ({ mode = 'create' }) => {
                                 />
                                 {getFormErrorMessage('description')}
                             </div>
-
+                        </Card>
+                    </div>
+                    <div className={'col-10 md:col-5'}>
+                        <Card className={'min-h-full'}>
                             <div className="field">
                                 <TextInput
                                     control={control}
@@ -182,22 +203,13 @@ const EquipmentForm = ({ mode = 'create' }) => {
                                 />
                                 {getFormErrorMessage('url')}
                             </div>
-                        </Card>
-                    </div>
-                    <div className={'col-10 md:col-5'}>
-                        <Card className={'min-h-full'}>
+
                             <div className="field">
-                                <NumberInput
+                                <RatingInput
                                     control={control}
-                                    name={'quantity'}
-                                    label={'Quantity'}
-                                    showButtons={true}
-                                    max={10000}
-                                    rules={{
-                                        required: 'Quantity is required.',
-                                    }}
+                                    name={'rating'}
+                                    label={'Rating'}
                                 />
-                                {getFormErrorMessage('quantity')}
                             </div>
 
                             <div className="field">

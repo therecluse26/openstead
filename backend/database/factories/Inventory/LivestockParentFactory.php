@@ -21,7 +21,7 @@ class LivestockParentFactory extends Factory
 	{
 		$this_livestock = Livestock::inRandomOrder()->first();
 		$parent = Livestock::where('id', '!=', $this_livestock->id)->inRandomOrder()->first();
-		$sex = Sex::from($parent->sex) ?? fake()->randomElement(Sex::cases());
+		$sex = $parent->sex ?? fake()->randomElement(Sex::cases());
 		return [
 			'livestock_id' => $this_livestock,
 			'parent_id' => $parent,

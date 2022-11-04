@@ -35,6 +35,7 @@ class Equipment extends Model implements Inventoriable, FrontendFilterable, HasM
 		'name',
 		'type',
 		'condition',
+		'rating',
 		'description',
 		'url',
 		'location_id',

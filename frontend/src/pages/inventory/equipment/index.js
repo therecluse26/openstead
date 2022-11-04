@@ -1,10 +1,8 @@
 import React, { Suspense, useEffect, useRef, useState } from 'react'
 import { Column } from 'primereact/column'
 import EquipmentService from '@/services/inventory/EquipmentService'
-import { Dropdown } from 'primereact/dropdown'
 import Link from 'next/link'
 import QuantityFilterTemplate from '@/pages/inventory/templates/QuantityFilterTemplate'
-import ScalableTag from '@/components/ScalableTag'
 import TypeFilterElement from '@/components/Custom/Inventory/TypeFilterElement'
 import InventoryList from '@/components/Custom/Inventory/InventoryList'
 
@@ -13,18 +11,10 @@ const Equipment = () => {
     const isMounted = useRef(false)
     const [filters, setFilters] = useState({
         name: { value: '', matchMode: 'contains' },
-        condition: { value: '', matchMode: 'equals' },
         description: { value: '', matchMode: 'contains' },
         quantity: { value: null, matchMode: 'equals' },
         type: { value: '', matchMode: 'equals' },
     })
-    const equipmentConditions = [
-        { value: 1, label: 'Broken' },
-        { value: 2, label: 'Poor' },
-        { value: 3, label: 'Fair' },
-        { value: 4, label: 'Good' },
-        { value: 5, label: 'Excellent' },
-    ]
 
     const lazyParamsCallback = lazyParams => {
         return {
@@ -35,10 +25,6 @@ const Equipment = () => {
                     ...filters.type,
                     value: filters.type.value,
                 },
-                condition: {
-                    ...filters.condition,
-                    value: filters.condition.value,
-                },
             },
         }
     }
@@ -47,26 +33,6 @@ const Equipment = () => {
         isMounted.current = true
         loadTypes()
     }, [])
-
-    const conditionFilterElement = options => {
-        return (
-            <Dropdown
-                value={options.value}
-                options={equipmentConditions}
-                onChange={e => {
-                    options.filterCallback(e.value, options.index)
-                    setFilters({
-                        ...filters,
-                        condition: {
-                            ...filters.condition,
-                            value: e.value,
-                        },
-                    })
-                }}
-                placeholder={'Search'}
-            />
-        )
-    }
 
     const loadTypes = () => {
         EquipmentService.getTypes().then(data => {
@@ -121,7 +87,7 @@ const Equipment = () => {
                     }}
                     filter
                     filterPlaceholder="Search"
-                    style={{ minWidth: '200px' }}
+                    style={{ minWidth: '260px' }}
                 />
                 <Column
                     field="type"
@@ -141,26 +107,9 @@ const Equipment = () => {
                     }}
                     filterPlaceholder="Search"
                     showFilterMenu={false}
+                    style={{ minWidth: '240px' }}
                 />
-                <Column
-                    field="condition"
-                    header="Condition"
-                    body={rowData => {
-                        return (
-                            <ScalableTag
-                                condition={rowData?.condition}
-                                text={rowData?.condition_description}
-                            />
-                        )
-                    }}
-                    sortable
-                    filter
-                    filterElement={conditionFilterElement}
-                    filterPlaceholder="Search"
-                    showFilterMenu={false}
-                    showClear
-                    style={{ minWidth: '150px' }}
-                />
+
                 <Column
                     field="quantity"
                     header="Quantity"
@@ -179,7 +128,7 @@ const Equipment = () => {
                     dataType="numeric"
                     showFilterMenu={false}
                     showClear
-                    style={{ minWidth: '160px' }}
+                    style={{ minWidth: '160px', maxWidth: '200px' }}
                 />
                 <Column
                     field="description"

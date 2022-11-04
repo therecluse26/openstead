@@ -17,6 +17,7 @@ class EquipmentRepository extends InventoryRepository
 		'name',
 		'type',
 		'condition',
+		'rating',
 		'description',
 		'location_id',
 		'quantity',

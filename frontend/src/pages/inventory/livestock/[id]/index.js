@@ -139,18 +139,23 @@ const LivestockDetail = () => {
                             </span>
                         </div>
 
+                        <div className={'flex align-content-center mb-4'}>
+                            <span className={'align-self-center text-2xl mr-2'}>
+                                Breed: {livestockData?.variety?.variety_name}{' '}
+                            </span>
+                        </div>
+
                         {livestockData?.sex ? (
                             <div className={'flex align-content-center mb-4'}>
                                 <span
                                     className={
                                         'align-self-center text-2xl mr-2'
                                     }>
-                                    Sex:{' '}
                                     <span
                                         className={
-                                            'text-5xl align-self-center'
+                                            'text-2xl align-self-center'
                                         }>
-                                        {' '}
+                                        {livestockData?.sex?.label}{' '}
                                         {livestockData?.sex?.icon}
                                     </span>
                                 </span>

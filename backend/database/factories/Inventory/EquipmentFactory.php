@@ -23,7 +23,7 @@ class EquipmentFactory extends Factory
 		return [
 			'name' => fake()->words(3, true),
 			'type' => fake()->randomElement(EquipmentType::cases()),
-			'condition' => fake()->randomElement(EquipmentCondition::cases()),
+			'condition' => fake()->randomElement([...EquipmentCondition::cases(), null]),
 			'description' => fake()->paragraph(2),
 			'url' => fake()->url(),
 			'quantity' => fake()->numberBetween(0, 10),

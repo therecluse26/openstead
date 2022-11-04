@@ -44,6 +44,7 @@ const createOrUpdate = async (id, data, images = []) => {
         type: data.type,
         quantity: data.quantity,
         condition: data.condition,
+        rating: data.rating,
         description: data.description,
         acquired_at: data.acquired_at,
         url: data.url,

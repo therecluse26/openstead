@@ -30,10 +30,10 @@ class StoreEquipmentRequest extends FormRequest
 		return [
 			'name' => 'required',
 			'type' => ['required', new Enum(EquipmentType::class)],
-			'condition' => ['required', new Enum(EquipmentCondition::class)],
+			'condition' => ['nullable', new Enum(EquipmentCondition::class)],
 			'quantity' => ['required', 'integer', "min:0"],
 			'images' => ['array'],
-			'url' => ['url'],
+			'url' => ['nullable', 'string'],
 			'images.*' => ['string', 'max:1361920', new Contains('data:image/')],
 		];
 	}
