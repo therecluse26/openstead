@@ -10,7 +10,7 @@ class VarietyResource extends JsonResource
 	{
 		return [
 			'id' => $this->id,
-			'group_type' => $this->group_type,
+			'group_type' => $this->group_type->toFilter(),
 			'variety_name' => $this->variety_name,
 		];
 	}

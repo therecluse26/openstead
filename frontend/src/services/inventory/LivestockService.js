@@ -36,4 +36,10 @@ const getTypes = () => {
     return axios.get('/api/inventory/livestock/types').then(res => res.data)
 }
 
-export default { getItem, getTypes, getList }
+const getSimilarItems = id => {
+    return axios
+        .get('/api/inventory/livestock/' + id + '/similar')
+        .then(res => res.data)
+}
+
+export default { getItem, getTypes, getList, getSimilarItems }

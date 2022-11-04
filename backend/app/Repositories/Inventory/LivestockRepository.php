@@ -32,7 +32,7 @@ class LivestockRepository extends InventoryRepository
 
 	public function create(StoreLivestockRequest $request): Livestock
 	{
-		$equipment = $this->model->create($request->only([
+		$livestock = $this->model->create($request->only([
 			'name',
 			'type',
 			'date_of_birth',
@@ -40,8 +40,7 @@ class LivestockRepository extends InventoryRepository
 
 		]));
 
-
-		return $equipment;
+		return $livestock;
 	}
 
 	public static function getTypes(): array
@@ -54,5 +53,11 @@ class LivestockRepository extends InventoryRepository
 		return collect(LivestockType::cases())->map(function ($type) {
 			return $type->toFilter();
 		});
+	}
+
+
+	public static function getSimilar(Livestock $livestock): Collection
+	{
+		return Livestock::whereNot('id', $livestock->id)->where('variety_id', $livestock->variety_id)->inRandomOrder()->take(6)->get();
 	}
 }

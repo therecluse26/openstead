@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\Service;
-use App\Models\ServiceLog;
 use App\Repositories\Inventory\InventoryRepository;
 use Illuminate\Http\Request;
 
@@ -31,13 +30,13 @@ class ServiceRepository extends InventoryRepository
 		);
 	}
 
-	public function update(ServiceLog $serviceLog, Request $request): Service
+	public function update(Service $service, Request $request): Service
 	{
-		$serviceLog->update(
+		$service->update(
 			$request->only($this->fields)
 		);
 
-		return $serviceLog;
+		return $service;
 	}
 
 }

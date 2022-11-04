@@ -6,6 +6,7 @@ use App\Contracts\FrontendFilterable;
 use App\Contracts\Inventoriable;
 use App\Contracts\VarietyContract;
 use App\Enums\LivestockType;
+use App\Enums\Sex;
 use App\Resources\FormattedFilter;
 use App\Resources\Inventory\Detail\LivestockResource as LivestockDetailResource;
 use App\Resources\Inventory\List\LivestockResource as LivestockListResource;
@@ -44,6 +45,7 @@ class Livestock extends Model implements Inventoriable, VarietyContract, Fronten
 	];
 
 	protected $casts = [
+		'sex' => Sex::class,
 		'date_of_birth' => 'datetime',
 		'acquired_at' => 'datetime'
 	];
@@ -63,8 +65,6 @@ class Livestock extends Model implements Inventoriable, VarietyContract, Fronten
 			$model->children()->detach();
 
 		});
-
-
 	}
 
 	// API Resources

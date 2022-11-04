@@ -19,11 +19,24 @@ enum Sex: string
 		};
 	}
 
+	public function label(): string
+	{
+		return match ($this) {
+			self::Male => 'Male️',
+			self::Female => 'Female',
+		};
+	}
+
 	public function icon(): string
 	{
 		return match ($this) {
 			self::Male => '♂️',
 			self::Female => '♀️',
 		};
+	}
+
+	public function toFilter(): array
+	{
+		return ['key' => $this, 'label' => $this->label(), 'icon' => $this->icon()];
 	}
 }

@@ -37,6 +37,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 			Route::apiResource('/equipment', EquipmentController::class);
 
 			Route::get('/livestock/types', [LivestockController::class, 'getTypes']);
+			Route::get('/livestock/{livestock}/similar', [LivestockController::class, 'getSimilar']);
 			Route::apiResource('/livestock', LivestockController::class);
 
 			Route::get('/seeds/types', [SeedController::class, 'getTypes']);

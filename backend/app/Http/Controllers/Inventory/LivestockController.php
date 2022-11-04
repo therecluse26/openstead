@@ -64,9 +64,9 @@ class LivestockController extends Controller
 	 * @param Livestock $livestock
 	 * @return Response
 	 */
-	public function show(Livestock $livestock)
+	public function show(Livestock $livestock): Response
 	{
-		return response($livestock);
+		return response($livestock->getDetailResource());
 	}
 
 	/**
@@ -101,5 +101,12 @@ class LivestockController extends Controller
 	public function destroy(Livestock $livestock)
 	{
 		$livestock->delete();
+	}
+
+	public function getSimilar(Livestock $livestock)
+	{
+		return response(LivestockResource::collection(
+			LivestockRepository::getSimilar($livestock)
+		));
 	}
 }

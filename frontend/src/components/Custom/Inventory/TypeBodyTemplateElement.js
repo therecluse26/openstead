@@ -8,9 +8,13 @@ const TypeBodyTemplateElement = ({
 }) => {
     const type = types.find(e => {
         if (subMatchField) {
-            return e.value === rowData[matchField][subMatchField]
+            return typeof rowData[matchField][subMatchField] === 'object'
+                ? e.value === rowData[matchField][subMatchField]['key']
+                : e.value === rowData[matchField][subMatchField]
         }
-        return e.value === rowData[matchField]
+        return typeof rowData[matchField][subMatchField] === 'object'
+            ? e.value === rowData[matchField]['key']
+            : e.value === rowData[matchField]
     })
     const icon = type?.icon ? (
         <span className={'type-icon'} aria-label={type?.label}>
