@@ -15,8 +15,8 @@ import AddErrorToasts from '@/utils/AddErrorToasts'
 import RatingInput from '@/components/HookFormInputs/RatingInput'
 import TextAreaInput from '@/components/HookFormInputs/TextAreaInput'
 import LivestockService from '@/services/inventory/LivestockService'
-import AppendableSelect from '@/components/HookFormInputs/AppendableSelect'
 import EquipmentService from '@/services/inventory/EquipmentService'
+import SubtypeSelect from '@/components/HookFormInputs/SubtypeSelect'
 
 const LivestockForm = ({ mode = 'create' }) => {
     const isMounted = useRef(false)
@@ -128,7 +128,7 @@ const LivestockForm = ({ mode = 'create' }) => {
                                 {getFormErrorMessage('name')}
                             </div>
 
-                            <AppendableSelect
+                            <SubtypeSelect
                                 ApiService={EquipmentService}
                                 supertype={'livestock'}
                                 control={control}

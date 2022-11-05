@@ -9,7 +9,7 @@ import { csrf } from '@/hooks/auth'
 import AddErrorToasts from '@/utils/AddErrorToasts'
 import ToastContext, { useToastContext } from '@/context/ToastContext'
 import EquipmentService from '@/services/inventory/EquipmentService'
-import AppendableSelect from '@/components/HookFormInputs/AppendableSelect'
+import SubtypeSelect from '@/components/HookFormInputs/SubtypeSelect'
 
 const ServiceLogForm = ({
     inline = false,
@@ -93,7 +93,7 @@ const ServiceLogForm = ({
                     }>
                     <div className={'col-5'}>
                         <Card>
-                            <AppendableSelect
+                            <SubtypeSelect
                                 ApiService={EquipmentService}
                                 supertype={'services'}
                                 control={control}

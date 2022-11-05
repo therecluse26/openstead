@@ -58,6 +58,9 @@ if [ $# -gt 0 ]; then
         ./os docker-login
         docker-compose up -d
 
+    elif [ "$1" == "reload" ]; then
+      ./os down && ./os up
+
     elif [ "$1" == "build" ]; then
         ./os docker-login
         docker-compose build

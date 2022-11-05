@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Inventory;
 
+use App\Contracts\HasAppendableSelect;
 use App\Enums\ModelName;
 use App\Enums\ServiceType;
 use App\Http\Controllers\Controller;
@@ -16,7 +17,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 
-class ServiceLogController extends Controller
+class ServiceLogController extends Controller implements HasAppendableSelect
 {
 	public function getTypes(): Collection
 	{
@@ -28,7 +29,7 @@ class ServiceLogController extends Controller
 		return ServiceLogService::getServices();
 	}
 
-	public function getTypeService(string $type): ResourceCollection
+	public function getTypeValues(string $type): ResourceCollection
 	{
 		return ServiceDropdownResource::collection(
 			ServiceLogService::getTypeServices(ServiceType::from($type))

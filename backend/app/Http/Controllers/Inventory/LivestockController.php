@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Inventory;
 
+use App\Contracts\HasAppendableSelect;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Inventory\StoreLivestockRequest;
 use App\Http\Requests\Inventory\UpdateLivestockRequest;
@@ -14,14 +15,14 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use JsonException;
 
-class LivestockController extends Controller
+class LivestockController extends Controller implements HasAppendableSelect
 {
-	public function getTypes()
+	public function getTypes(): iterable
 	{
 		return LivestockRepository::getFormattedTypes();
 	}
 
-	public function getTypeVarieties(string $type)
+	public function getTypeValues(string $type): iterable
 	{
 		return LivestockRepository::getTypeVarieties($type);
 	}

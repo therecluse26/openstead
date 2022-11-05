@@ -16,14 +16,13 @@ const AppendableSelect = ({
     fieldId,
     errors,
     toast,
-    watch,
+    selectedType,
     id,
 }) => {
     const [newServiceId, setNewServiceId] = useState(null)
     const [addSupertypeFormVisible, setAddSupertypeFormVisible] = useState(
         false,
     )
-    const watchType = watch('type')
 
     const formattedSuperType = supertype.toUpperCase()
 
@@ -75,43 +74,27 @@ const AppendableSelect = ({
     return (
         <>
             <div className="field">
-                <SelectInput
-                    optionsEndpoint={supertypeApiUrl}
-                    control={control}
-                    name={'type'}
-                    label={'Type'}
-                    rules={{
-                        required: 'Type is required.',
-                    }}
-                />
-                {getFormErrorMessage('type')}
-            </div>
-
-            {watchType ? (
-                <div className="field">
-                    <div className="p-inputgroup">
-                        <SelectInput
-                            optionsEndpoint={`${supertypeApiUrl}/${watchType}/values`}
-                            control={control}
-                            name={`${supertype}_id`}
-                            label={supertype}
-                            rules={{
-                                required: `${supertype} is required.`,
-                            }}
-                            invalidateOnChange={newServiceId}
-                        />{' '}
-                        <Button
-                            className={'w-2'}
-                            label="+ New"
-                            onClick={() => {
-                                setAddSupertypeFormVisible(true)
-                            }}
-                        />
-                    </div>
-                    {getFormErrorMessage(`${supertype}_id`)}
+                <div className="p-inputgroup">
+                    <SelectInput
+                        optionsEndpoint={`${supertypeApiUrl}/${selectedType}/values`}
+                        control={control}
+                        name={fieldId}
+                        label={supertype}
+                        rules={{
+                            required: `${supertype} is required.`,
+                        }}
+                        invalidateOnChange={newServiceId}
+                    />{' '}
+                    <Button
+                        className={'w-2'}
+                        label="+ New"
+                        onClick={() => {
+                            setAddSupertypeFormVisible(true)
+                        }}
+                    />
                 </div>
-            ) : null}
-
+                {getFormErrorMessage(fieldId)}
+            </div>
             <Dialog
                 header={`Add New ${formattedSuperType}`}
                 visible={addSupertypeFormVisible}
@@ -122,7 +105,8 @@ const AppendableSelect = ({
                 closable={true}>
                 <div>
                     <h5>
-                        Type: {watchType ? watchType.toUpperCase() + ' ' : ''}
+                        Type:{' '}
+                        {selectedType ? selectedType.toUpperCase() + ' ' : ''}
                     </h5>
                     <form
                         onSubmit={supertypeHandleSubmit(onSubmitNewSuperType)}
@@ -130,7 +114,7 @@ const AppendableSelect = ({
                         <div className={'field'}>
                             <Controller
                                 name={'type'}
-                                defaultValue={watchType}
+                                defaultValue={selectedType}
                                 control={serviceControl}
                                 render={({
                                     field: { onChange, value, name },

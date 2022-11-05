@@ -6,6 +6,7 @@ use App\Http\Controllers\Inventory\LivestockController;
 use App\Http\Controllers\Inventory\SeedController;
 use App\Http\Controllers\Inventory\ServiceLogController;
 use App\Http\Controllers\ServiceController;
+use App\Services\RouteBuilderService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,40 +30,33 @@ Route::middleware(['auth:sanctum'])->group(function () {
 	Route::prefix('/inventory')
 		->group(function () {
 			Route::get('/filters', [InventoryController::class, 'getFilters']);
-
 			Route::get('/base/types', [InventoryController::class, 'getTypes']);
 
+			// Equipment
 			Route::get('/equipment/types', [EquipmentController::class, 'getTypes']);
 			Route::get('/equipment/{equipment}/similar', [EquipmentController::class, 'getSimilar']);
 			Route::apiResource('/equipment', EquipmentController::class);
 
+			// Livestock
 			Route::prefix('/livestock')
 				->group(function () {
-					Route::prefix('/types')
-						->group(function () {
-							Route::get('', [LivestockController::class, 'getTypes']);
-							Route::get('/{type}/values', [LivestockController::class, 'getTypeVarieties']);
-						});
-
+					RouteBuilderService::buildTypeFilterRoute(LivestockController::class);
 					Route::get('/{livestock}/similar', [LivestockController::class, 'getSimilar']);
-					Route::apiResource('/', LivestockController::class);
-
 				});
+			Route::apiResource('/livestock', LivestockController::class);
 
+			// Seeds
 			Route::get('/seeds/types', [SeedController::class, 'getTypes']);
 			Route::apiResource('/seeds', SeedController::class);
 
 		});
 
+	// Services/Service Logs
 	Route::prefix('/services')
 		->group(function () {
 			Route::get('/', [ServiceLogController::class, 'getServices']);
 			Route::post('/', [ServiceController::class, 'store']);
-			Route::prefix('/types')
-				->group(function () {
-					Route::get('/', [ServiceLogController::class, 'getTypes']);
-					Route::get('/{type}/values', [ServiceLogController::class, 'getTypeService']);
-				});
+			RouteBuilderService::buildTypeFilterRoute(ServiceLogController::class);
 			Route::prefix('/logs')
 				->group(function () {
 					Route::get('/{modelName}/{modelId}', [ServiceLogController::class, 'index']);
