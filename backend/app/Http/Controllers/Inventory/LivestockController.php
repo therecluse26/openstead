@@ -21,6 +21,11 @@ class LivestockController extends Controller
 		return LivestockRepository::getFormattedTypes();
 	}
 
+	public function getTypeVarieties(string $type)
+	{
+		return LivestockRepository::getTypeVarieties($type);
+	}
+
 	/**
 	 * Display a listing of the resource.
 	 *

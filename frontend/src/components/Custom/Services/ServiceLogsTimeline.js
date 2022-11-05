@@ -3,7 +3,7 @@ import { Divider } from 'primereact/divider'
 import { Timeline } from 'primereact/timeline'
 import React, { useEffect, useState } from 'react'
 import { Tooltip } from 'primereact/tooltip'
-import ServiceLogForm from '@/components/Forms/Inventory/ServiceLogForm'
+import ServiceLogForm from '@/forms/Inventory/ServiceLogForm'
 import { Button } from 'primereact/button'
 import axios from '@/lib/axios'
 

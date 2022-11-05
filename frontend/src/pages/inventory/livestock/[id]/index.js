@@ -145,7 +145,7 @@ const LivestockDetail = () => {
                             </span>
                         </div>
 
-                        {livestockData?.sex ? (
+                        {livestockData?.quantity === 1 && livestockData?.sex ? (
                             <div className={'flex align-content-center mb-4'}>
                                 <span
                                     className={
@@ -162,7 +162,8 @@ const LivestockDetail = () => {
                             </div>
                         ) : null}
 
-                        {livestockData?.date_of_birth ? (
+                        {livestockData?.quantity === 1 &&
+                        livestockData?.date_of_birth ? (
                             <div className={'flex align-content-center mb-4'}>
                                 <span
                                     className={
@@ -174,7 +175,8 @@ const LivestockDetail = () => {
                             </div>
                         ) : null}
 
-                        {livestockData?.acquired_at ? (
+                        {livestockData?.quantity === 1 &&
+                        livestockData?.acquired_at ? (
                             <div className={'flex align-content-center mb-4'}>
                                 <span
                                     className={

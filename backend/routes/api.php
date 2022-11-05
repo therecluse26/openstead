@@ -36,9 +36,18 @@ Route::middleware(['auth:sanctum'])->group(function () {
 			Route::get('/equipment/{equipment}/similar', [EquipmentController::class, 'getSimilar']);
 			Route::apiResource('/equipment', EquipmentController::class);
 
-			Route::get('/livestock/types', [LivestockController::class, 'getTypes']);
-			Route::get('/livestock/{livestock}/similar', [LivestockController::class, 'getSimilar']);
-			Route::apiResource('/livestock', LivestockController::class);
+			Route::prefix('/livestock')
+				->group(function () {
+					Route::prefix('/types')
+						->group(function () {
+							Route::get('', [LivestockController::class, 'getTypes']);
+							Route::get('/{type}/values', [LivestockController::class, 'getTypeVarieties']);
+						});
+
+					Route::get('/{livestock}/similar', [LivestockController::class, 'getSimilar']);
+					Route::apiResource('/', LivestockController::class);
+
+				});
 
 			Route::get('/seeds/types', [SeedController::class, 'getTypes']);
 			Route::apiResource('/seeds', SeedController::class);
@@ -52,7 +61,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 			Route::prefix('/types')
 				->group(function () {
 					Route::get('/', [ServiceLogController::class, 'getTypes']);
-					Route::get('/{type}/services', [ServiceLogController::class, 'getTypeService']);
+					Route::get('/{type}/values', [ServiceLogController::class, 'getTypeService']);
 				});
 			Route::prefix('/logs')
 				->group(function () {

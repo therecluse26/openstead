@@ -1,8 +1,21 @@
 import React from 'react'
-import EquipmentForm from '@/components/Forms/Inventory/EquipmentForm'
+import LivestockForm from '@/forms/Inventory/LivestockForm'
+import LinkButton from '@/components/LinkButton'
+import { useRouter } from 'next/router'
 
-const EditEquipment = () => {
-    return <EquipmentForm mode={'edit'} />
+const EditLivestock = () => {
+    const { query } = useRouter()
+    const { id } = query
+    return (
+        <>
+            {' '}
+            <LinkButton
+                href={`/inventory/livestock/${id}`}
+                text={'< Back'}
+            />{' '}
+            <LivestockForm mode={'edit'} />
+        </>
+    )
 }
 
-export default React.memo(EditEquipment)
+export default React.memo(EditLivestock)

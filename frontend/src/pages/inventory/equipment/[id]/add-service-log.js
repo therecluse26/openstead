@@ -1,6 +1,6 @@
 import LinkButton from '@/components/LinkButton'
 import React from 'react'
-import ServiceLogForm from '@/components/Forms/Inventory/ServiceLogForm'
+import ServiceLogForm from '@/forms/Inventory/ServiceLogForm'
 import { useRouter } from 'next/router'
 
 const AddServiceLog = () => {

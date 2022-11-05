@@ -5,6 +5,7 @@ namespace App\Repositories\Inventory;
 use App\Enums\LivestockType;
 use App\Http\Requests\Inventory\StoreLivestockRequest;
 use App\Models\Inventory\Livestock;
+use App\Models\Variety;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -55,6 +56,10 @@ class LivestockRepository extends InventoryRepository
 		});
 	}
 
+	public static function getTypeVarieties(string $type)
+	{
+		return collect(Variety::where('kingdom', 'animal')->where('group_type', $type)->get());
+	}
 
 	public static function getSimilar(Livestock $livestock): Collection
 	{

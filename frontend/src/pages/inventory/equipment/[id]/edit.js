@@ -1,5 +1,5 @@
 import React from 'react'
-import EquipmentForm from '@/components/Forms/Inventory/EquipmentForm'
+import EquipmentForm from '@/forms/Inventory/EquipmentForm'
 
 const EditEquipment = () => {
     return <EquipmentForm mode={'edit'} />
