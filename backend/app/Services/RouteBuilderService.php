@@ -27,7 +27,9 @@ class RouteBuilderService
 		Route::prefix('/types')
 			->group(function () use ($controllerClass) {
 				Route::get('/', [$controllerClass, 'getTypes']);
+				Route::post('/', [$controllerClass, 'storeTypeValue']);
 				Route::get('/{type}/values', [$controllerClass, 'getTypeValues']);
 			});
+
 	}
 }

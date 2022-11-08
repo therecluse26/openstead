@@ -3,7 +3,7 @@ import React from 'react'
 import AppendableSelect from '@/components/HookFormInputs/AppendableSelect'
 
 const SubtypeSelect = ({
-    ApiService,
+    valueAddRequest,
     supertype,
     supertypeValueUrl = null,
     control,
@@ -12,6 +12,7 @@ const SubtypeSelect = ({
     errors,
     toast,
     watch,
+    label,
     id,
 }) => {
     const watchType = watch('type')
@@ -43,7 +44,8 @@ const SubtypeSelect = ({
 
             {watchType ? (
                 <AppendableSelect
-                    ApiService={ApiService}
+                    valueAddRequest={valueAddRequest}
+                    label={label}
                     supertype={supertype}
                     supertypeValueUrl={supertypeValueUrl}
                     control={control}

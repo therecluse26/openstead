@@ -4,12 +4,14 @@ namespace App\Models\Inventory;
 
 use App\Contracts\FrontendFilterable;
 use App\Contracts\Inventoriable;
+use App\Contracts\Notable;
 use App\Contracts\VarietyContract;
 use App\Enums\PlantType;
 use App\Resources\FormattedFilter;
 use App\Resources\Inventory\Detail\SeedResource as SeedDetailResource;
 use App\Resources\Inventory\List\SeedResource as SeedListResource;
 use App\Traits\HasInventory;
+use App\Traits\HasNotes;
 use App\Traits\HasVariety;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -22,11 +24,12 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Seed extends Model implements Inventoriable, VarietyContract, FrontendFilterable, HasMedia
+class Seed extends Model implements Inventoriable, VarietyContract, FrontendFilterable, HasMedia, Notable
 {
 	use HasFactory;
 	use HasInventory;
 	use HasVariety;
+	use HasNotes;
 	use InteractsWithMedia;
 
 	protected $table = 'seeds';
@@ -41,7 +44,7 @@ class Seed extends Model implements Inventoriable, VarietyContract, FrontendFilt
 	protected $casts = [
 		'acquired_at' => 'datetime'
 	];
-	
+
 	public function getDetailResource(): JsonResource
 	{
 		return SeedDetailResource::make($this);

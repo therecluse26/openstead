@@ -5,11 +5,14 @@ namespace App\Repositories\Inventory;
 use App\Enums\PlantType;
 use App\Http\Requests\Inventory\StoreSeedRequest;
 use App\Models\Inventory\Seed;
+use App\Traits\AddMedia;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class SeedRepository extends InventoryRepository
 {
+	use AddMedia;
+
 	private Seed $model;
 
 	public function __construct()

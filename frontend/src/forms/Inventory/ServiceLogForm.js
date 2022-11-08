@@ -94,8 +94,9 @@ const ServiceLogForm = ({
                     <div className={'col-5'}>
                         <Card>
                             <SubtypeSelect
-                                ApiService={EquipmentService}
+                                valueAddRequest={EquipmentService.addService}
                                 supertype={'services'}
+                                label={'Service'}
                                 control={control}
                                 setValue={setValue}
                                 errors={errors}

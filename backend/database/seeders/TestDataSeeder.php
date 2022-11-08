@@ -41,15 +41,18 @@ class TestDataSeeder extends Seeder
 
 
 			Seed::factory()
+				->hasNotes(random_int(0, 3))
 				->count(4)
 				->create();
 
 			Equipment::factory()
 				->hasServiceLogs(random_int(0, 4))
+				->hasNotes(random_int(0, 3))
 				->count(2)
 				->create();
 
 			Livestock::factory()
+				->hasNotes(random_int(0, 3))
 				->count(4)
 				->create();
 		}

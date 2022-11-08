@@ -40,13 +40,13 @@ return new class extends Migration {
 		Schema::create('livestock', function (Blueprint $table) {
 			$table->id();
 			$table->string('name', 255);
+			$table->string('description', 1000)->nullable();
 			$table->enum('sex', ['male', 'female'])->nullable();
 			$table->dateTime('date_of_birth')->nullable();
 			$table->unsignedBigInteger('variety_id');
 			$table->unsignedInteger('quantity')->default(1);
 			$table->dateTime('acquired_at')->nullable();
 			$table->timestamps();
-
 			$table->index('name');
 			$table->index('variety_id');
 		});
@@ -74,7 +74,7 @@ return new class extends Migration {
 			$table->string('type', 50);
 			$table->unsignedTinyInteger('condition')->nullable();
 			$table->unsignedTinyInteger('rating')->nullable();
-			$table->string('description')->nullable();
+			$table->string('description', 1000)->nullable();
 			$table->string('url', 2000)->nullable();
 			$table->unsignedInteger('quantity')->default(1);
 			$table->dateTime('acquired_at')->nullable();
@@ -103,6 +103,13 @@ return new class extends Migration {
 			$table->dateTime('service_date');
 			$table->timestamps();
 		});
+
+		Schema::create('notes', function (Blueprint $table) {
+			$table->id();
+			$table->morphs('notable');
+			$table->string('note', 2000);
+			$table->timestamps();
+		});
 	}
 
 	/**
@@ -112,6 +119,7 @@ return new class extends Migration {
 	 */
 	public function down()
 	{
+		Schema::dropIfExists('notes');
 		Schema::dropIfExists('livestock');
 		Schema::dropIfExists('equipment');
 		Schema::dropIfExists('seeds');

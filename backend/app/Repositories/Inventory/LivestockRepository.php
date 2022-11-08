@@ -3,14 +3,18 @@
 namespace App\Repositories\Inventory;
 
 use App\Enums\LivestockType;
+use App\Http\Requests\Inventory\StoreLivestockBreedRequest;
 use App\Http\Requests\Inventory\StoreLivestockRequest;
 use App\Models\Inventory\Livestock;
 use App\Models\Variety;
+use App\Traits\AddMedia;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class LivestockRepository extends InventoryRepository
 {
+	use AddMedia;
+
 	private Livestock $model;
 
 	public function __construct()
@@ -33,20 +37,39 @@ class LivestockRepository extends InventoryRepository
 
 	public function create(StoreLivestockRequest $request): Livestock
 	{
-		$livestock = $this->model->create($request->only([
+		return $this->model->create($request->only([
 			'name',
-			'type',
+			'description',
+			'variety_id',
+			'sex',
 			'date_of_birth',
+			'parent_id',
 			'quantity',
-
+			'acquired_at'
 		]));
-
-		return $livestock;
 	}
 
 	public static function getTypes(): array
 	{
 		return LivestockType::cases();
+	}
+
+	public function getTypeMembers(LivestockType $type)
+	{
+		return Livestock::whereHas('variety', function ($query) use ($type) {
+			$query->where('kingdom', 'animal');
+			$query->where('group_type', $type);
+		})->get();
+	}
+
+	public function createBreedValue(StoreLivestockBreedRequest $request): Variety
+	{
+		return Variety::create($request->only([
+			'kingdom',
+			'group_type',
+			'variety_name',
+			'description'
+		]));
 	}
 
 	public static function getFormattedTypes(): Collection

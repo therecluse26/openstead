@@ -3,20 +3,18 @@ import { useForm } from 'react-hook-form'
 import { Card } from 'primereact/card'
 import { Button } from 'primereact/button'
 import TextInput from '@/components/HookFormInputs/TextInput'
-import SelectInput from '@/components/HookFormInputs/SelectInput'
 import { useRouter } from 'next/router'
-import NumberInput from '@/components/HookFormInputs/NumberInput'
 import CalendarInput from '@/components/HookFormInputs/CalendarInput'
 import { FileUpload } from 'primereact/fileupload'
 import { convertUploadedFilesToBase64 } from '@/utils/file-utils'
 import { csrf } from '@/hooks/auth'
 import ToastContext, { useToastContext } from '@/context/ToastContext'
 import AddErrorToasts from '@/utils/AddErrorToasts'
-import RatingInput from '@/components/HookFormInputs/RatingInput'
-import TextAreaInput from '@/components/HookFormInputs/TextAreaInput'
 import LivestockService from '@/services/inventory/LivestockService'
-import EquipmentService from '@/services/inventory/EquipmentService'
 import SubtypeSelect from '@/components/HookFormInputs/SubtypeSelect'
+import ListboxInput from '@/components/HookFormInputs/ListboxInput'
+import NumberInput from '@/components/HookFormInputs/NumberInput'
+import TextAreaInput from '@/components/HookFormInputs/TextAreaInput'
 
 const LivestockForm = ({ mode = 'create' }) => {
     const isMounted = useRef(false)
@@ -41,10 +39,11 @@ const LivestockForm = ({ mode = 'create' }) => {
         formState: { errors },
         handleSubmit,
         setValue,
+        resetField,
         watch,
     } = useForm({ defaultValues })
 
-    const quantity = watch('quantity')
+    const type = watch('type')
 
     useEffect(() => {
         if (!isReady || !id) {
@@ -53,6 +52,11 @@ const LivestockForm = ({ mode = 'create' }) => {
         isMounted.current = true
         getEditData(id)
     }, [id])
+
+    useEffect(() => {
+        resetField('parents')
+        resetField('children')
+    }, [type])
 
     const getFormErrorMessage = name => {
         return (
@@ -129,18 +133,18 @@ const LivestockForm = ({ mode = 'create' }) => {
                             </div>
 
                             <SubtypeSelect
-                                ApiService={EquipmentService}
+                                valueAddRequest={LivestockService.addBreed}
+                                label={'Breed'}
                                 supertype={'livestock'}
                                 control={control}
                                 setValue={setValue}
                                 errors={errors}
                                 supertypeValueUrl={`/api/inventory/livestock/types`}
-                                fieldId={'livestock_id'}
+                                fieldId={'variety_id'}
                                 toast={toast}
                                 watch={watch}
                                 id={id}
                             />
-
                             <div className="field">
                                 <NumberInput
                                     control={control}
@@ -154,24 +158,18 @@ const LivestockForm = ({ mode = 'create' }) => {
                                 />
                                 {getFormErrorMessage('quantity')}
                             </div>
-                            {quantity === 1 ? (
-                                <div className="field">
-                                    <SelectInput
-                                        options={[
-                                            { label: 'Excellent', value: 5 },
-                                            { label: 'Good', value: 4 },
-                                            { label: 'Fair', value: 3 },
-                                            { label: 'Poor', value: 2 },
-                                            { label: 'Broken', value: 1 },
-                                        ]}
-                                        control={control}
-                                        name={'condition'}
-                                        label={'Condition'}
-                                    />
-                                    {getFormErrorMessage('condition')}
-                                </div>
-                            ) : null}
-
+                            <div className="field">
+                                <CalendarInput
+                                    control={control}
+                                    name={'acquired_at'}
+                                    label={'Date Acquired'}
+                                />
+                                {getFormErrorMessage('acquired_at')}
+                            </div>
+                        </Card>
+                    </div>
+                    <div className={'col-10 md:col-5'}>
+                        <Card className={'min-h-full'}>
                             <div className="field">
                                 <TextAreaInput
                                     control={control}
@@ -182,42 +180,6 @@ const LivestockForm = ({ mode = 'create' }) => {
                                     }}
                                 />
                                 {getFormErrorMessage('description')}
-                            </div>
-                        </Card>
-                    </div>
-                    <div className={'col-10 md:col-5'}>
-                        <Card className={'min-h-full'}>
-                            <div className="field">
-                                <TextInput
-                                    control={control}
-                                    name={'url'}
-                                    label={'Purchase URL'}
-                                    rules={{
-                                        pattern: {
-                                            value:
-                                                '/((([A-Za-z]{3,9}:(?://)?)(?:[-;:&=+$,w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=+$,w]+@)[A-Za-z0-9.-]+)((?:/[+~%/.w-_]*)???(?:[-+=&;%@.w_]*)#?(?:[w]*))?)/',
-                                            message: 'Invalid URL',
-                                        },
-                                    }}
-                                />
-                                {getFormErrorMessage('url')}
-                            </div>
-
-                            <div className="field">
-                                <RatingInput
-                                    control={control}
-                                    name={'rating'}
-                                    label={'Rating'}
-                                />
-                            </div>
-
-                            <div className="field">
-                                <CalendarInput
-                                    control={control}
-                                    name={'acquired_at'}
-                                    label={'Date Acquired'}
-                                />
-                                {getFormErrorMessage('acquired_at')}
                             </div>
 
                             <div className="field">
@@ -242,7 +204,45 @@ const LivestockForm = ({ mode = 'create' }) => {
                             </div>
                         </Card>
                     </div>
+                </div>
 
+                {type ? (
+                    <div
+                        className={
+                            'justify-content-center align-content-center grid'
+                        }>
+                        <div className={'col-10 md:col-5'}>
+                            <Card className={'min-h-full'}>
+                                <div className="field">
+                                    <ListboxInput
+                                        optionsEndpoint={`/api/inventory/livestock/types/${type}/members`}
+                                        control={control}
+                                        name={'parents'}
+                                        label={'Parents'}
+                                        maxSelection={2}
+                                    />
+                                </div>
+                            </Card>
+                        </div>
+                        <div className={'col-10 md:col-5'}>
+                            <Card className={'min-h-full'}>
+                                <div className="field">
+                                    <ListboxInput
+                                        optionsEndpoint={`/api/inventory/livestock/types/${type}/members`}
+                                        control={control}
+                                        name={'children'}
+                                        label={'Children'}
+                                    />
+                                </div>
+                            </Card>
+                        </div>
+                    </div>
+                ) : null}
+
+                <div
+                    className={
+                        'justify-content-center align-content-center grid'
+                    }>
                     <div className={'col-10'}>
                         <Button type="submit" label="Save" className="mt-2" />
                     </div>

@@ -2,9 +2,8 @@
 
 namespace App\Http\Requests\Inventory;
 
-use App\Enums\LivestockType;
+use App\Rules\Contains;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Enum;
 
 class StoreLivestockRequest extends FormRequest
 {
@@ -27,7 +26,20 @@ class StoreLivestockRequest extends FormRequest
 	{
 		return [
 			'name' => 'required',
-			'type' => ['required', new Enum(LivestockType::class)],
+			'description' => ['required', 'max:1000'],
+			'variety_id' => ['required', 'exists:varieties,id'],
+			'sex' => ['optional', 'in:male,female'],
+			'date_of_birth' => ['optional', 'date'],
+			'parent_id' => ['optional'],
+			'quantity' => ['required', 'int'],
+			'images.*' => ['string', 'max:1361920', new Contains('data:image/')],
+		];
+	}
+
+	public function messages()
+	{
+		return [
+			'images.*.max' => 'Maximum image upload size is 1MB',
 		];
 	}
 }

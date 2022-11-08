@@ -42,6 +42,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 				->group(function () {
 					RouteBuilderService::buildTypeFilterRoute(LivestockController::class);
 					Route::get('/{livestock}/similar', [LivestockController::class, 'getSimilar']);
+					Route::get('/types/{type}/members', [LivestockController::class, 'getTypeMembers']);
+
 				});
 			Route::apiResource('/livestock', LivestockController::class);
 

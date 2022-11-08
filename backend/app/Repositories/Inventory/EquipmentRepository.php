@@ -5,12 +5,15 @@ namespace App\Repositories\Inventory;
 use App\Enums\EquipmentCondition;
 use App\Enums\EquipmentType;
 use App\Models\Inventory\Equipment;
+use App\Traits\AddMedia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class EquipmentRepository extends InventoryRepository
 {
+	use AddMedia;
+
 	private Equipment $model;
 
 	private array $fields = [
@@ -83,23 +86,6 @@ class EquipmentRepository extends InventoryRepository
 		return $equipment;
 	}
 
-	public function addOrReplaceImagesBase64(Equipment $equipment, iterable $images = null): void
-	{
-		if (is_array($images)) {
-			$images = collect($images);
-		}
-		if ($images->count() === 0) {
-			return;
-		}
-
-		$equipment->clearMediaCollection('images');
-
-		foreach ($images as $image) {
-			$equipment
-				->addMediaFromBase64($image, ['image/*'])
-				->toMediaCollection('images');
-		}
-	}
 
 	public static function getFormattedTypes(): Collection
 	{

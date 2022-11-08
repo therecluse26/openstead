@@ -6,9 +6,10 @@ import AddErrorToasts from '@/utils/AddErrorToasts'
 import { Controller, useForm } from 'react-hook-form'
 import TextInput from '@/components/HookFormInputs/TextInput'
 import { Dialog } from 'primereact/dialog'
+import { upperCaseFirstLetters } from '@/utils/string-utils'
 
 const AppendableSelect = ({
-    ApiService,
+    valueAddRequest,
     supertype,
     supertypeValueUrl = null,
     control,
@@ -16,6 +17,7 @@ const AppendableSelect = ({
     fieldId,
     errors,
     toast,
+    label,
     selectedType,
     id,
 }) => {
@@ -24,7 +26,7 @@ const AppendableSelect = ({
         false,
     )
 
-    const formattedSuperType = supertype.toUpperCase()
+    const formattedSuperType = upperCaseFirstLetters(label ?? supertype)
 
     const supertypeApiUrl = supertypeValueUrl ?? `/api/${supertype}/types`
 
@@ -59,7 +61,7 @@ const AppendableSelect = ({
 
     const onSubmitNewSuperType = async data => {
         await csrf()
-        ApiService.addService(id, data)
+        valueAddRequest(id, data)
             .then(r => {
                 // Reload services list
                 setNewServiceId(r?.data?.id)
@@ -79,9 +81,9 @@ const AppendableSelect = ({
                         optionsEndpoint={`${supertypeApiUrl}/${selectedType}/values`}
                         control={control}
                         name={fieldId}
-                        label={supertype}
+                        label={label ?? supertype}
                         rules={{
-                            required: `${supertype} is required.`,
+                            required: `${label ?? supertype} is required.`,
                         }}
                         invalidateOnChange={newServiceId}
                     />{' '}
@@ -106,7 +108,9 @@ const AppendableSelect = ({
                 <div>
                     <h5>
                         Type:{' '}
-                        {selectedType ? selectedType.toUpperCase() + ' ' : ''}
+                        {selectedType
+                            ? upperCaseFirstLetters(selectedType) + ' '
+                            : ''}
                     </h5>
                     <form
                         onSubmit={supertypeHandleSubmit(onSubmitNewSuperType)}

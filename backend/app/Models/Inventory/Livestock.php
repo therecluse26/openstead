@@ -4,6 +4,8 @@ namespace App\Models\Inventory;
 
 use App\Contracts\FrontendFilterable;
 use App\Contracts\Inventoriable;
+use App\Contracts\Notable;
+use App\Contracts\Serviceable;
 use App\Contracts\VarietyContract;
 use App\Enums\LivestockType;
 use App\Enums\Sex;
@@ -11,6 +13,8 @@ use App\Resources\FormattedFilter;
 use App\Resources\Inventory\Detail\LivestockResource as LivestockDetailResource;
 use App\Resources\Inventory\List\LivestockResource as LivestockListResource;
 use App\Traits\HasInventory;
+use App\Traits\HasNotes;
+use App\Traits\HasServiceLogs;
 use App\Traits\HasVariety;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -24,22 +28,24 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Livestock extends Model implements Inventoriable, VarietyContract, FrontendFilterable, HasMedia
+class Livestock extends Model implements Inventoriable, VarietyContract, FrontendFilterable, HasMedia, Serviceable, Notable
 {
 	use HasFactory;
 	use HasInventory;
+	use HasServiceLogs;
 	use HasVariety;
+	use HasNotes;
 	use InteractsWithMedia;
 
 	protected $table = 'livestock';
 
 	protected $fillable = [
 		'name',
+		'description',
 		'variety_id',
 		'sex',
 		'date_of_birth',
 		'parent_id',
-		'location_id',
 		'quantity',
 		'acquired_at'
 	];
@@ -51,7 +57,7 @@ class Livestock extends Model implements Inventoriable, VarietyContract, Fronten
 	];
 
 	protected $with = [
-		'variety'
+		'variety',
 	];
 
 	public static function boot()
@@ -68,7 +74,6 @@ class Livestock extends Model implements Inventoriable, VarietyContract, Fronten
 	}
 
 	// API Resources
-
 	public function getDetailResource(): JsonResource
 	{
 		return LivestockDetailResource::make($this);
