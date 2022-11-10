@@ -80,7 +80,21 @@ class LivestockController extends Controller implements HasAppendableSelect
 	 */
 	public function store(StoreLivestockRequest $request, LivestockRepository $livestockRepository)
 	{
-		return response($livestockRepository->create($request), 200);
+		return response(
+			$livestockRepository->create(
+				$request->only([
+						'name',
+						'description',
+						'variety_id',
+						'sex',
+						'date_of_birth',
+						'quantity',
+						'acquired_at'
+					]
+				),
+				$request->get('parents'),
+				$request->get('children')),
+			200);
 	}
 
 	/**

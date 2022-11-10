@@ -30,6 +30,8 @@ const LivestockForm = ({ mode = 'create' }) => {
         quantity: 1,
         rating: null,
         description: null,
+        parents: [],
+        children: [],
         images: [],
         acquired_at: null,
         url: null,
@@ -44,6 +46,8 @@ const LivestockForm = ({ mode = 'create' }) => {
     } = useForm({ defaultValues })
 
     const type = watch('type')
+    const watchParents = watch('parents')
+    const watchChildren = watch('children')
 
     useEffect(() => {
         if (!isReady || !id) {
@@ -75,6 +79,8 @@ const LivestockForm = ({ mode = 'create' }) => {
                 setValue('description', data?.description)
                 setValue('quantity', data?.quantity)
                 setValue('acquired_at', new Date(data?.acquired_at))
+                setValue('parents', data['parents'])
+                setValue('children', data['children'])
                 setValue('url', data?.url)
             })
             .catch(e => {
@@ -102,6 +108,43 @@ const LivestockForm = ({ mode = 'create' }) => {
         setImages([])
     }
 
+    const parentsOnChange = (e, callback) => {
+        if (e.value.length > 2) {
+            AddErrorToasts(toast, new Error('Only 2 parents are allowed'))
+            return
+        }
+        const matches = e.value.filter(element =>
+            watchChildren.includes(element),
+        )
+        if (matches.length > 0) {
+            AddErrorToasts(
+                toast,
+                new Error(
+                    'Cannot add the same member as both parent and child',
+                ),
+            )
+            return
+        }
+
+        callback(e)
+    }
+
+    const childrenOnChange = (e, callback) => {
+        const matches = e.value.filter(element =>
+            watchParents.includes(element),
+        )
+        if (matches.length > 0) {
+            AddErrorToasts(
+                toast,
+                new Error(
+                    'Cannot add the same member as both parent and child',
+                ),
+            )
+            return
+        }
+        callback(e)
+    }
+
     return (
         <>
             <div className={'justify-content-center align-content-center grid'}>
@@ -114,12 +157,12 @@ const LivestockForm = ({ mode = 'create' }) => {
                 </div>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="p-fluid">
-                <div
-                    className={
-                        'justify-content-center align-content-center grid'
-                    }>
-                    <div className={'col-10 md:col-5'}>
-                        <Card className={'min-h-full'}>
+                <Card className={'min-h-full'}>
+                    <div
+                        className={
+                            'justify-content-center align-content-center grid'
+                        }>
+                        <div className={'col-10 md:col-6'}>
                             <div className="field">
                                 <TextInput
                                     control={control}
@@ -166,10 +209,8 @@ const LivestockForm = ({ mode = 'create' }) => {
                                 />
                                 {getFormErrorMessage('acquired_at')}
                             </div>
-                        </Card>
-                    </div>
-                    <div className={'col-10 md:col-5'}>
-                        <Card className={'min-h-full'}>
+                        </div>
+                        <div className={'col-10 md:col-6'}>
                             <div className="field">
                                 <TextAreaInput
                                     control={control}
@@ -202,42 +243,41 @@ const LivestockForm = ({ mode = 'create' }) => {
                                     }
                                 />
                             </div>
-                        </Card>
-                    </div>
-                </div>
+                        </div>
 
-                {type ? (
-                    <div
-                        className={
-                            'justify-content-center align-content-center grid'
-                        }>
-                        <div className={'col-10 md:col-5'}>
-                            <Card className={'min-h-full'}>
-                                <div className="field">
-                                    <ListboxInput
-                                        optionsEndpoint={`/api/inventory/livestock/types/${type}/members`}
-                                        control={control}
-                                        name={'parents'}
-                                        label={'Parents'}
-                                        maxSelection={2}
-                                    />
+                        {type ? (
+                            <>
+                                <div className={'col-10 md:col-6'}>
+                                    <div className="field">
+                                        <ListboxInput
+                                            optionsEndpoint={`/api/inventory/livestock/types/${type}/members`}
+                                            control={control}
+                                            name={'parents'}
+                                            label={'Parents'}
+                                            optionLabel={o => {
+                                                return o.label
+                                            }}
+                                            customOnChange={parentsOnChange}
+                                        />
+                                    </div>
                                 </div>
-                            </Card>
-                        </div>
-                        <div className={'col-10 md:col-5'}>
-                            <Card className={'min-h-full'}>
-                                <div className="field">
-                                    <ListboxInput
-                                        optionsEndpoint={`/api/inventory/livestock/types/${type}/members`}
-                                        control={control}
-                                        name={'children'}
-                                        label={'Children'}
-                                    />
+                                <div className={'col-10 md:col-6'}>
+                                    <div className="field">
+                                        <ListboxInput
+                                            optionsEndpoint={`/api/inventory/livestock/types/${type}/members`}
+                                            control={control}
+                                            name={'children'}
+                                            label={'Children'}
+                                            customOnChange={childrenOnChange}
+                                        />
+                                    </div>
                                 </div>
-                            </Card>
-                        </div>
+                            </>
+                        ) : null}
                     </div>
-                ) : null}
+                </Card>
+
+                <br />
 
                 <div
                     className={
@@ -248,6 +288,7 @@ const LivestockForm = ({ mode = 'create' }) => {
                     </div>
                 </div>
             </form>
+            <br />
         </>
     )
 }

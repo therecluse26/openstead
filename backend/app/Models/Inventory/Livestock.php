@@ -87,12 +87,12 @@ class Livestock extends Model implements Inventoriable, VarietyContract, Fronten
 	// Relationships
 	public function parents(): BelongsToMany
 	{
-		return $this->belongsToMany(self::class)->using(LivestockParent::class)->wherePivot('livestock_id');
+		return $this->belongsToMany(self::class, 'livestock_parents', 'parent_id', 'livestock_id')->using(LivestockParent::class)->wherePivot('livestock_id', '=', $this->id);
 	}
 
 	public function children(): BelongsToMany
 	{
-		return $this->BelongsToMany(self::class)->using(LivestockParent::class)->wherePivot('parent_id');
+		return $this->belongsToMany(self::class, 'livestock_parents', 'livestock_id', 'parent_id')->using(LivestockParent::class)->wherePivot('parent_id', '=', $this->id);
 	}
 
 	// Attributes

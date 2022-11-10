@@ -27,11 +27,19 @@ enum Sex: string
 		};
 	}
 
+	public function letter(): string
+	{
+		return match ($this) {
+			self::Male => 'M',
+			self::Female => 'F',
+		};
+	}
+
 	public function icon(): string
 	{
 		return match ($this) {
-			self::Male => '♂️',
-			self::Female => '♀️',
+			self::Male => '<i class="ti ti-gender-male"></i>',
+			self::Female => '<i class="ti ti-gender-female"></i>',
 		};
 	}
 

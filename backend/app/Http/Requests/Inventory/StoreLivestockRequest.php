@@ -29,8 +29,9 @@ class StoreLivestockRequest extends FormRequest
 			'description' => ['required', 'max:1000'],
 			'variety_id' => ['required', 'exists:varieties,id'],
 			'sex' => ['optional', 'in:male,female'],
-			'date_of_birth' => ['optional', 'date'],
-			'parent_id' => ['optional'],
+			'date_of_birth' => ['nullable', 'date'],
+			'parents' => ['nullable', 'array'],
+			'children' => ['nullable', 'array'],
 			'quantity' => ['required', 'int'],
 			'images.*' => ['string', 'max:1361920', new Contains('data:image/')],
 		];

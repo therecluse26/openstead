@@ -43,6 +43,8 @@ const createOrUpdate = async (id, data, images = []) => {
         variety_id: data.variety_id,
         sex: data.sex,
         date_of_birth: data.date_of_birth,
+        parents: data.parents,
+        children: data.children,
         // parent_id: data.parent_id,
         quantity: data.quantity,
         _method: typeof id === 'undefined' ? 'POST' : 'PUT',

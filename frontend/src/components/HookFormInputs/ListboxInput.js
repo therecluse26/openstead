@@ -14,7 +14,7 @@ const ListboxInput = ({
     label,
     invalidateOnChange,
     optionLabel,
-    maxSelection,
+    customOnChange,
     multiple = true,
     filter = true,
 }) => {
@@ -69,15 +69,11 @@ const ListboxInput = ({
                         value={value}
                         options={selectOptions}
                         dataKey={'key'}
-                        onChange={
-                            maxSelection
-                                ? e => {
-                                      if (e.value.length <= maxSelection) {
-                                          onChange(e)
-                                      }
-                                  }
-                                : onChange
-                        }
+                        onChange={e => {
+                            customOnChange
+                                ? customOnChange(e, onChange)
+                                : onChange(e)
+                        }}
                         multiple={multiple}
                         filter={filter}
                         optionLabel={optionLabel ?? ''}

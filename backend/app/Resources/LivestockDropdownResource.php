@@ -10,7 +10,8 @@ class LivestockDropdownResource extends JsonResource
 	{
 		return [
 			'key' => $this->id,
-			'label' => $this->name . " (" . $this->variety->variety_name . ")",
+			'sex' => $this->sex,
+			'label' => ($this->sex ? $this->sex?->label() . " - " : '? - ') . $this->name . " (" . $this->variety->variety_name . ")",
 		];
 	}
 }

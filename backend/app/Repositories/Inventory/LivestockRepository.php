@@ -4,7 +4,6 @@ namespace App\Repositories\Inventory;
 
 use App\Enums\LivestockType;
 use App\Http\Requests\Inventory\StoreLivestockBreedRequest;
-use App\Http\Requests\Inventory\StoreLivestockRequest;
 use App\Models\Inventory\Livestock;
 use App\Models\Variety;
 use App\Traits\AddMedia;
@@ -35,18 +34,17 @@ class LivestockRepository extends InventoryRepository
 			});
 	}
 
-	public function create(StoreLivestockRequest $request): Livestock
+	public function create(array $data, ?array $parents, ?array $children): Livestock
 	{
-		return $this->model->create($request->only([
-			'name',
-			'description',
-			'variety_id',
-			'sex',
-			'date_of_birth',
-			'parent_id',
-			'quantity',
-			'acquired_at'
-		]));
+		$model = $this->model->create($data);
+
+		if ($parents) {
+			$model->parents()->attach($parents);
+		}
+		if ($children) {
+			$model->children()->attach($children);
+		}
+		return $model;
 	}
 
 	public static function getTypes(): array
@@ -59,7 +57,7 @@ class LivestockRepository extends InventoryRepository
 		return Livestock::whereHas('variety', function ($query) use ($type) {
 			$query->where('kingdom', 'animal');
 			$query->where('group_type', $type);
-		})->get();
+		})->orderBy('name')->get();
 	}
 
 	public function createBreedValue(StoreLivestockBreedRequest $request): Variety
