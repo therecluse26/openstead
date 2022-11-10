@@ -82,16 +82,8 @@ class LivestockController extends Controller implements HasAppendableSelect
 	{
 		return response(
 			$livestockRepository->create(
-				$request->only([
-						'name',
-						'description',
-						'variety_id',
-						'sex',
-						'date_of_birth',
-						'quantity',
-						'acquired_at'
-					]
-				),
+				$request->only((new Livestock())->getFillable()),
+				$request->get('images'),
 				$request->get('parents'),
 				$request->get('children')),
 			200);

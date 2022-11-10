@@ -6,7 +6,6 @@ use App\Enums\EquipmentCondition;
 use App\Enums\EquipmentType;
 use App\Models\Inventory\Equipment;
 use App\Traits\AddMedia;
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -64,24 +63,26 @@ class EquipmentRepository extends InventoryRepository
 			->only('type', 'count');
 	}
 
-	public function create(Request $request): Equipment
+	public function create(array $data, ?array $images): Equipment
 	{
-		$equipment = $this->model->create(
-			$request->only($this->fields)
-		);
+		$equipment = $this->model->create($data);
 
-		$this->addOrReplaceImagesBase64($equipment, $request->input('images'));
+		if ($images) {
+			$this->addOrReplaceImagesBase64($equipment, $images);
+		}
 
 		return $equipment;
 	}
 
-	public function update(Equipment $equipment, Request $request): Equipment
+	public function update(Equipment $equipment, array $data, ?array $images): Equipment
 	{
 		$equipment->update(
-			$request->only($this->fields)
+			$data
 		);
 
-		$this->addOrReplaceImagesBase64($equipment, $request->input('images'));
+		if ($images) {
+			$this->addOrReplaceImagesBase64($equipment, $images);
+		}
 
 		return $equipment;
 	}

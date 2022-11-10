@@ -45,7 +45,10 @@ class EquipmentController extends Controller
 	 */
 	public function store(StoreEquipmentRequest $request, EquipmentRepository $equipmentRepository)
 	{
-		return response($equipmentRepository->create($request), 200);
+		return response(
+			$equipmentRepository->create($request->only((new Equipment())->getFillable()),
+				$request->get('images')
+			), 200);
 	}
 
 	/**
@@ -92,7 +95,9 @@ class EquipmentController extends Controller
 	 */
 	public function update(UpdateEquipmentRequest $request, Equipment $equipment, EquipmentRepository $equipmentRepository)
 	{
-		return response($equipmentRepository->update($equipment, $request), 200);
+		return response($equipmentRepository->update($equipment,
+			$request->only((new Equipment())->getFillable()),
+			$request->get('images')), 200);
 	}
 
 	/**

@@ -1,4 +1,7 @@
 const upperCaseFirstLetters = sentence => {
+    if (typeof sentence !== 'string') {
+        return
+    }
     return sentence
         .split(' ')
         .map(word => {

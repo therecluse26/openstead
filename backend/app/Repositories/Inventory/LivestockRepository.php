@@ -34,7 +34,7 @@ class LivestockRepository extends InventoryRepository
 			});
 	}
 
-	public function create(array $data, ?array $parents, ?array $children): Livestock
+	public function create(array $data, ?array $images, ?array $parents, ?array $children): Livestock
 	{
 		$model = $this->model->create($data);
 
@@ -44,6 +44,10 @@ class LivestockRepository extends InventoryRepository
 		if ($children) {
 			$model->children()->attach($children);
 		}
+		if ($images) {
+			$this->addOrReplaceImagesBase64($model, $images);
+		}
+
 		return $model;
 	}
 

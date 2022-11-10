@@ -5,7 +5,7 @@ namespace App\Resources\Inventory\Detail;
 use App\Resources\VarietyResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class LivestockResource extends JsonResource
+class LivestockAncestryResource extends JsonResource
 {
 	public function toArray($request)
 	{

@@ -15,6 +15,7 @@ import SubtypeSelect from '@/components/HookFormInputs/SubtypeSelect'
 import ListboxInput from '@/components/HookFormInputs/ListboxInput'
 import NumberInput from '@/components/HookFormInputs/NumberInput'
 import TextAreaInput from '@/components/HookFormInputs/TextAreaInput'
+import SelectButtonInput from '@/components/HookFormInputs/SelectButtonInput'
 
 const LivestockForm = ({ mode = 'create' }) => {
     const isMounted = useRef(false)
@@ -48,6 +49,7 @@ const LivestockForm = ({ mode = 'create' }) => {
     const type = watch('type')
     const watchParents = watch('parents')
     const watchChildren = watch('children')
+    const watchQuantity = watch('quantity')
 
     useEffect(() => {
         if (!isReady || !id) {
@@ -74,14 +76,15 @@ const LivestockForm = ({ mode = 'create' }) => {
         LivestockService.getItem(id)
             .then(data => {
                 setValue('name', data?.name)
-                setValue('type', data?.type?.key)
-                setValue('rating', data?.rating)
                 setValue('description', data?.description)
-                setValue('quantity', data?.quantity)
+                setValue('type', data?.variety?.group_type?.key)
+                setValue('variety_id', data?.variety?.id)
+                setValue('sex', data?.sex?.key)
+                setValue('date_of_birth', new Date(data?.date_of_birth))
                 setValue('acquired_at', new Date(data?.acquired_at))
-                setValue('parents', data['parents'])
-                setValue('children', data['children'])
-                setValue('url', data?.url)
+                setValue('quantity', data?.quantity)
+                setValue('parents', data?.parents)
+                setValue('children', data?.children)
             })
             .catch(e => {
                 alert(e)
@@ -109,10 +112,12 @@ const LivestockForm = ({ mode = 'create' }) => {
     }
 
     const parentsOnChange = (e, callback) => {
+        // Prevents adding more than 2 parents
         if (e.value.length > 2) {
             AddErrorToasts(toast, new Error('Only 2 parents are allowed'))
             return
         }
+        // Prevent adding same member as both parent and child
         const matches = e.value.filter(element =>
             watchChildren.includes(element),
         )
@@ -130,6 +135,7 @@ const LivestockForm = ({ mode = 'create' }) => {
     }
 
     const childrenOnChange = (e, callback) => {
+        // Prevent adding same member as both parent and child
         const matches = e.value.filter(element =>
             watchParents.includes(element),
         )
@@ -194,6 +200,7 @@ const LivestockForm = ({ mode = 'create' }) => {
                                     name={'quantity'}
                                     label={'Quantity'}
                                     showButtons={true}
+                                    min={1}
                                     max={10000}
                                     rules={{
                                         required: 'Quantity is required.',
@@ -201,6 +208,35 @@ const LivestockForm = ({ mode = 'create' }) => {
                                 />
                                 {getFormErrorMessage('quantity')}
                             </div>
+                            {watchQuantity === 1 ? (
+                                <div className="field">
+                                    <CalendarInput
+                                        control={control}
+                                        name={'date_of_birth'}
+                                        label={'Date of Birth'}
+                                    />
+                                    {getFormErrorMessage('date_of_birth')}
+                                </div>
+                            ) : null}
+
+                            {watchQuantity === 1 ? (
+                                <div className="field">
+                                    <p>Sex</p>
+                                    <SelectButtonInput
+                                        name={'sex'}
+                                        control={control}
+                                        options={[
+                                            { label: 'Male', value: 'male' },
+                                            {
+                                                label: 'Female',
+                                                value: 'female',
+                                            },
+                                        ]}
+                                    />
+                                </div>
+                            ) : null}
+                        </div>
+                        <div className={'col-10 md:col-6'}>
                             <div className="field">
                                 <CalendarInput
                                     control={control}
@@ -209,8 +245,6 @@ const LivestockForm = ({ mode = 'create' }) => {
                                 />
                                 {getFormErrorMessage('acquired_at')}
                             </div>
-                        </div>
-                        <div className={'col-10 md:col-6'}>
                             <div className="field">
                                 <TextAreaInput
                                     control={control}
@@ -219,6 +253,7 @@ const LivestockForm = ({ mode = 'create' }) => {
                                     rules={{
                                         required: 'Description is required.',
                                     }}
+                                    rows={4}
                                 />
                                 {getFormErrorMessage('description')}
                             </div>

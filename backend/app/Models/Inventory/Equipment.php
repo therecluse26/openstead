@@ -55,9 +55,8 @@ class Equipment extends Model implements Inventoriable, FrontendFilterable, HasM
 
 	protected $appends = [
 		'condition_description',
-		'primary_image'
 	];
-	
+
 	public static function boot()
 	{
 		parent::boot();

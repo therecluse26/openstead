@@ -13,7 +13,7 @@ class LivestockResource extends JsonResource
 			'id' => $this->id,
 			'name' => $this->name,
 			'variety' => VarietyResource::make($this->variety),
-			'sex' => $this->sex->toFilter(),
+			'sex' => $this->sex?->toFilter(),
 			'quantity' => $this->quantity,
 			'date_of_birth' => $this->date_of_birth,
 			'acquired_at' => $this->acquired_at

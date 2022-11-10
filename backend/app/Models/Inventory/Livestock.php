@@ -45,7 +45,6 @@ class Livestock extends Model implements Inventoriable, VarietyContract, Fronten
 		'variety_id',
 		'sex',
 		'date_of_birth',
-		'parent_id',
 		'quantity',
 		'acquired_at'
 	];

@@ -38,16 +38,18 @@ const createOrUpdate = async (id, data, images = []) => {
             ? `/api/inventory/livestock`
             : `/api/inventory/livestock/${id}`
     return await axios.post(url, {
+        _method: typeof id === 'undefined' ? 'POST' : 'PUT',
+
         name: data.name,
         description: data.description,
         variety_id: data.variety_id,
         sex: data.sex,
         date_of_birth: data.date_of_birth,
+        acquired_at: data.acquired_at,
+        quantity: data.quantity,
+
         parents: data.parents,
         children: data.children,
-        // parent_id: data.parent_id,
-        quantity: data.quantity,
-        _method: typeof id === 'undefined' ? 'POST' : 'PUT',
         images: images,
     })
 }
