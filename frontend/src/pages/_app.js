@@ -1,10 +1,10 @@
 import '@/style/style.scss'
-
 import { useRouter } from 'next/router'
 import AppLayout from '@/components/Layouts/AppLayout'
 import Head from 'next/head'
+import React from 'react'
 
-const App = ({ Component, pageProps }) => {
+const MyApp = ({ Component, pageProps }) => {
     const router = useRouter()
     if (
         [`/register`].includes(router.pathname) ||
@@ -19,10 +19,11 @@ const App = ({ Component, pageProps }) => {
                 <Head>
                     <title>Openstead</title>
                 </Head>
+
                 <Component {...pageProps} />
             </AppLayout>
         </div>
     )
 }
 
-export default App
+export default MyApp

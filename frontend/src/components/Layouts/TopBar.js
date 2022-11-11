@@ -3,17 +3,54 @@ import ResponsiveNavLink from '@/components/ResponsiveNavLink'
 import classNames from 'classnames'
 import { useAuth } from '@/hooks/auth'
 import { Menu } from 'primereact/menu'
+import { useThemeContext } from '@/context/ThemeContext'
 
 export const TopBar = props => {
     const { logout } = useAuth()
-    const menu = useRef(null)
+    const accountMenu = useRef(null)
+    const themeMenu = useRef(null)
 
-    const items = [
+    const theme = useThemeContext()
+
+    const accountItems = [
         {
             label: 'Logout',
             icon: 'ti ti-logout',
             command: () => {
                 logout()
+            },
+        },
+    ]
+
+    const themeItems = [
+        {
+            label: 'Nova',
+            command: () => {
+                theme.setTheme('nova')
+            },
+        },
+        {
+            label: 'Arya (Blue)',
+            command: () => {
+                theme.setTheme('arya-blue')
+            },
+        },
+        {
+            label: 'Lara Dark (Blue)',
+            command: () => {
+                theme.setTheme('lara-dark-blue')
+            },
+        },
+        {
+            label: 'Vela (Blue)',
+            command: () => {
+                theme.setTheme('vela-blue')
+            },
+        },
+        {
+            label: 'Material Dark (Indigo)',
+            command: () => {
+                theme.setTheme('md-dark-indigo')
             },
         },
     ]
@@ -48,19 +85,29 @@ export const TopBar = props => {
                     </button>
                 </li>
                 <li>
+                    <Menu
+                        model={themeItems}
+                        popup
+                        ref={themeMenu}
+                        id="popup_menu"
+                    />
                     <button
                         className="p-link layout-topbar-button"
-                        onClick={props.onMobileSubTopbarMenuClick}>
-                        <i className="ti ti-settings" />
-                        <span>Settings</span>
+                        onClick={event => themeMenu.current.toggle(event)}>
+                        <i className="ti ti-paint" />
+                        <span>Theme</span>
                     </button>
                 </li>
                 <li>
-                    <Menu model={items} popup ref={menu} id="popup_menu" />
-
+                    <Menu
+                        model={accountItems}
+                        popup
+                        ref={accountMenu}
+                        id="popup_menu"
+                    />
                     <button
                         className="p-link layout-topbar-button"
-                        onClick={event => menu.current.toggle(event)}
+                        onClick={event => accountMenu.current.toggle(event)}
                         aria-controls="popup_menu"
                         aria-haspopup>
                         <i className="ti ti-user" />

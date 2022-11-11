@@ -8,6 +8,7 @@ import { TopBar } from '@/components/Layouts/TopBar'
 import SidebarMenu from '@/SidebarMenu'
 import { ScrollTop } from 'primereact/scrolltop'
 import { ToastContextProvider } from '@/context/ToastContext'
+import { ThemeContextProvider } from '@/context/ThemeContext'
 
 const AppLayout = ({ children }) => {
     const { user } = useAuth({ middleware: 'auth' })
@@ -96,50 +97,52 @@ const AppLayout = ({ children }) => {
     }
 
     return (
-        <ToastContextProvider>
-            <div className={wrapperClass} onClick={onWrapperClick}>
-                <Tooltip
-                    ref={copyTooltipRef}
-                    target=".block-action-copy"
-                    position="bottom"
-                    content="Copied to clipboard"
-                    event="focus"
-                />
+        <ThemeContextProvider>
+            <ToastContextProvider>
+                <div className={wrapperClass} onClick={onWrapperClick}>
+                    <Tooltip
+                        ref={copyTooltipRef}
+                        target=".block-action-copy"
+                        position="bottom"
+                        content="Copied to clipboard"
+                        event="focus"
+                    />
 
-                <TopBar
-                    onToggleMenuClick={onToggleMenuClick}
-                    mobileTopbarMenuActive={mobileTopbarMenuActive}
-                    onMobileTopbarMenuClick={onMobileTopbarMenuClick}
-                    onMobileSubTopbarMenuClick={onMobileSubTopbarMenuClick}
-                    user={user}
-                />
+                    <TopBar
+                        onToggleMenuClick={onToggleMenuClick}
+                        mobileTopbarMenuActive={mobileTopbarMenuActive}
+                        onMobileTopbarMenuClick={onMobileTopbarMenuClick}
+                        onMobileSubTopbarMenuClick={onMobileSubTopbarMenuClick}
+                        user={user}
+                    />
 
-                <SidebarMenu
-                    mobileMenuActive={mobileMenuActive}
-                    sidebarMenuActive={sidebarMenuActive}
-                    onToggleMenuClick={onToggleMenuClick}
-                    onSidebarClick={onSidebarClick}
-                    onMenuItemClick={onMenuItemClick}
-                    layoutColorMode={layoutColorMode}
-                />
+                    <SidebarMenu
+                        mobileMenuActive={mobileMenuActive}
+                        sidebarMenuActive={sidebarMenuActive}
+                        onToggleMenuClick={onToggleMenuClick}
+                        onSidebarClick={onSidebarClick}
+                        onMenuItemClick={onMenuItemClick}
+                        layoutColorMode={layoutColorMode}
+                    />
 
-                {/* Page Content */}
-                <div className="layout-main-container">
-                    <div className="layout-main">{children}</div>
-                    <AppFooter layoutColorMode={layoutColorMode} />
+                    {/* Page Content */}
+                    <div className="layout-main-container">
+                        <div className="layout-main">{children}</div>
+                        <AppFooter layoutColorMode={layoutColorMode} />
+                    </div>
+
+                    <CSSTransition
+                        classNames="layout-mask"
+                        timeout={{ enter: 200, exit: 200 }}
+                        in={mobileMenuActive}
+                        unmountOnExit>
+                        <div className="layout-mask p-component-overlay" />
+                    </CSSTransition>
+
+                    <ScrollTop threshold={200} />
                 </div>
-
-                <CSSTransition
-                    classNames="layout-mask"
-                    timeout={{ enter: 200, exit: 200 }}
-                    in={mobileMenuActive}
-                    unmountOnExit>
-                    <div className="layout-mask p-component-overlay" />
-                </CSSTransition>
-
-                <ScrollTop threshold={200} />
-            </div>
-        </ToastContextProvider>
+            </ToastContextProvider>
+        </ThemeContextProvider>
     )
 }
 

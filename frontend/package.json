@@ -8,6 +8,11 @@
     "start": "next start"
   },
   "dependencies": {
+    "@fullcalendar/core": "^5.11.3",
+    "@fullcalendar/daygrid": "^5.11.3",
+    "@fullcalendar/interaction": "^5.11.3",
+    "@fullcalendar/react": "^5.11.2",
+    "@fullcalendar/timegrid": "^5.11.3",
     "@headlessui/react": "^1.4.2",
     "@hookform/error-message": "^2.0.0",
     "@tabler/icons": "^1.96.0",
@@ -29,8 +34,7 @@
     "react-hook-form": "^7.35.0",
     "sass": "^1.54.9",
     "swr": "^1.2.2",
-    "webpack": "^5.74.0",
-    "ziggy-js": "^1.4.6"
+    "webpack": "^5.74.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.12.1",
