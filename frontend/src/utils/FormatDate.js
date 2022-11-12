@@ -1,5 +1,5 @@
 export const formatDate = (datestring = null) => {
-    return datestring ? new Date(datestring).toDateString() : null
+    return datestring && new Date(datestring).toDateString()
 }
 
 export const getAgeInYears = dob => {

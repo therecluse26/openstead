@@ -12,26 +12,26 @@ const SimilarItemsTemplate = ({ similarItems = [], type = 'equipment' }) => {
                         {item.name}
                     </span>
                 </Link>
-                {item?.description ? (
+                {item?.description && (
                     <div className={'mt-4'}>{item.description}</div>
-                ) : null}
+                )}
 
                 <div className={'text-center mt-4'}>
-                    {item?.quantity === 1 && item?.date_of_birth ? (
+                    {item?.quantity === 1 && item?.date_of_birth && (
                         <span className={'text-3xl'}>
                             {getAgeInYears(item.date_of_birth)} {' year old '}
                         </span>
-                    ) : null}
+                    )}
 
-                    {item?.quantity === 1 && item?.sex ? (
+                    {item?.quantity === 1 && item?.sex && (
                         <span className={'text-5xl'}>{item.sex.icon}</span>
-                    ) : null}
+                    )}
 
-                    {item?.quantity > 1 ? (
+                    {item?.quantity > 1 && (
                         <span className={'text-3xl'}>
                             Quantity: {item.quantity}
                         </span>
-                    ) : null}
+                    )}
                 </div>
             </InventoryCard>
         )

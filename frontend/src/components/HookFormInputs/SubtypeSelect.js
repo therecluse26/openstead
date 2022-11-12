@@ -42,7 +42,7 @@ const SubtypeSelect = ({
                 {getFormErrorMessage('type')}
             </div>
 
-            {watchType ? (
+            {watchType && (
                 <AppendableSelect
                     valueAddRequest={valueAddRequest}
                     label={label}
@@ -57,7 +57,7 @@ const SubtypeSelect = ({
                     watch={watch}
                     id={id}
                 />
-            ) : null}
+            )}
         </>
     )
 }

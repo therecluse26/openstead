@@ -145,7 +145,7 @@ const LivestockDetail = () => {
                             </span>
                         </div>
 
-                        {livestockData?.quantity === 1 && livestockData?.sex ? (
+                        {livestockData?.quantity === 1 && livestockData?.sex && (
                             <div className={'flex align-content-center mb-4'}>
                                 <span
                                     className={
@@ -160,33 +160,41 @@ const LivestockDetail = () => {
                                     </span>
                                 </span>
                             </div>
-                        ) : null}
+                        )}
 
                         {livestockData?.quantity === 1 &&
-                        livestockData?.date_of_birth ? (
-                            <div className={'flex align-content-center mb-4'}>
-                                <span
+                            livestockData?.date_of_birth && (
+                                <div
                                     className={
-                                        'align-self-center text-2xl mr-2'
+                                        'flex align-content-center mb-4'
                                     }>
-                                    Date Of Birth:{' '}
-                                    {formatDate(livestockData?.date_of_birth)}
-                                </span>
-                            </div>
-                        ) : null}
+                                    <span
+                                        className={
+                                            'align-self-center text-2xl mr-2'
+                                        }>
+                                        Date Of Birth:{' '}
+                                        {formatDate(
+                                            livestockData?.date_of_birth,
+                                        )}
+                                    </span>
+                                </div>
+                            )}
 
                         {livestockData?.quantity === 1 &&
-                        livestockData?.acquired_at ? (
-                            <div className={'flex align-content-center mb-4'}>
-                                <span
+                            livestockData?.acquired_at && (
+                                <div
                                     className={
-                                        'align-self-center text-2xl mr-2'
+                                        'flex align-content-center mb-4'
                                     }>
-                                    Date Acquired:{' '}
-                                    {formatDate(livestockData?.acquired_at)}
-                                </span>
-                            </div>
-                        ) : null}
+                                    <span
+                                        className={
+                                            'align-self-center text-2xl mr-2'
+                                        }>
+                                        Date Acquired:{' '}
+                                        {formatDate(livestockData?.acquired_at)}
+                                    </span>
+                                </div>
+                            )}
 
                         {livestockData?.quantity === 0 ? (
                             <ScalableTag
@@ -210,7 +218,7 @@ const LivestockDetail = () => {
                             </span>
                         </div>
 
-                        {livestockData?.url ? (
+                        {livestockData?.url && (
                             <div className={'row my-4'}>
                                 <LinkButton
                                     href={livestockData?.url}
@@ -219,7 +227,7 @@ const LivestockDetail = () => {
                                     rightIcon={'ti ti-external-link'}
                                 />
                             </div>
-                        ) : null}
+                        )}
                     </div>
                 </div>
                 <div className="col-12 sm:col-fixed text-right">
@@ -234,7 +242,7 @@ const LivestockDetail = () => {
                 </div>
             </Card>
 
-            {similarItems?.length > 0 ? (
+            {similarItems?.length > 0 && (
                 <div className={'mt-4 align-content-end'}>
                     <h5 className={'text-center'}>Similar Items</h5>
 
@@ -248,7 +256,7 @@ const LivestockDetail = () => {
                         />
                     </div>
                 </div>
-            ) : null}
+            )}
         </Suspense>
     )
 }

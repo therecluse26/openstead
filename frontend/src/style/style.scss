@@ -1,9 +1,13 @@
+body {
+  background-color: black;
+}
+
 @import 'primeflex/primeflex.scss';
 @import 'primeicons/primeicons.css';
 @import 'primereact/resources/primereact.css';
 @import 'node_modules/@tabler/icons/iconfont/tabler-icons.scss';
-//@import 'primereact/resources/themes/md-dark-indigo/theme.css';
 
 @import "./_variables";
 @import "./sass/_layout";
 @import "./_overrides";
+

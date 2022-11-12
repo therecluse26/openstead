@@ -208,7 +208,7 @@ const LivestockForm = ({ mode = 'create' }) => {
                                 />
                                 {getFormErrorMessage('quantity')}
                             </div>
-                            {watchQuantity === 1 ? (
+                            {watchQuantity === 1 && (
                                 <div className="field">
                                     <CalendarInput
                                         control={control}
@@ -217,9 +217,9 @@ const LivestockForm = ({ mode = 'create' }) => {
                                     />
                                     {getFormErrorMessage('date_of_birth')}
                                 </div>
-                            ) : null}
+                            )}
 
-                            {watchQuantity === 1 ? (
+                            {watchQuantity === 1 && (
                                 <div className="field">
                                     <p>Sex</p>
                                     <SelectButtonInput
@@ -234,7 +234,7 @@ const LivestockForm = ({ mode = 'create' }) => {
                                         ]}
                                     />
                                 </div>
-                            ) : null}
+                            )}
                         </div>
                         <div className={'col-10 md:col-6'}>
                             <div className="field">
@@ -280,7 +280,7 @@ const LivestockForm = ({ mode = 'create' }) => {
                             </div>
                         </div>
 
-                        {type ? (
+                        {type && (
                             <>
                                 <div className={'col-10 md:col-6'}>
                                     <div className="field">
@@ -308,7 +308,7 @@ const LivestockForm = ({ mode = 'create' }) => {
                                     </div>
                                 </div>
                             </>
-                        ) : null}
+                        )}
                     </div>
                 </Card>
 

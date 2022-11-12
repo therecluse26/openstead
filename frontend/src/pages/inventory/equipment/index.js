@@ -48,11 +48,11 @@ const Equipment = () => {
         const type = types.find(e => {
             return e.value === rowData[elem.field]
         })
-        const icon = type?.icon ? (
+        const icon = type?.icon && (
             <span className={'type-icon'} aria-label={type?.label}>
                 {type?.icon} &nbsp;
             </span>
-        ) : null
+        )
         return (
             <div>
                 {icon}

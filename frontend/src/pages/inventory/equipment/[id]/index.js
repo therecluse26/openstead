@@ -140,7 +140,7 @@ const EquipmentDetail = () => {
                                 {equipmentData?.type?.label}
                             </span>
                         </div>
-                        {equipmentData?.condition ? (
+                        {equipmentData?.condition && (
                             <div className={'flex align-content-center mb-4'}>
                                 <span
                                     className={
@@ -158,9 +158,9 @@ const EquipmentDetail = () => {
                                     }
                                 />
                             </div>
-                        ) : null}
+                        )}
 
-                        {equipmentData?.rating ? (
+                        {equipmentData?.rating && (
                             <div className={'flex align-content-center mb-4'}>
                                 <span
                                     className={
@@ -175,9 +175,9 @@ const EquipmentDetail = () => {
                                     value={equipmentData?.rating}
                                 />
                             </div>
-                        ) : null}
+                        )}
 
-                        {equipmentData?.acquired_at ? (
+                        {equipmentData?.acquired_at && (
                             <div className={'flex align-content-center mb-4'}>
                                 <span
                                     className={
@@ -187,7 +187,7 @@ const EquipmentDetail = () => {
                                     {formatDate(equipmentData?.acquired_at)}
                                 </span>
                             </div>
-                        ) : null}
+                        )}
 
                         {equipmentData?.quantity === 0 ? (
                             <ScalableTag
@@ -211,7 +211,7 @@ const EquipmentDetail = () => {
                             </span>
                         </div>
 
-                        {equipmentData?.url ? (
+                        {equipmentData?.url && (
                             <div className={'row my-4'}>
                                 <LinkButton
                                     href={equipmentData?.url}
@@ -220,7 +220,7 @@ const EquipmentDetail = () => {
                                     rightIcon={'ti ti-external-link'}
                                 />
                             </div>
-                        ) : null}
+                        )}
                     </div>
                 </div>
                 <div className="col-12 sm:col-fixed text-right">
@@ -237,7 +237,7 @@ const EquipmentDetail = () => {
 
             <ServiceLogsTimeline parentId={id} parentType={'equipment'} />
 
-            {similarItems?.length > 0 ? (
+            {similarItems?.length > 0 && (
                 <div className={'mt-4 align-content-end'}>
                     <h5 className={'text-center'}>Similar Items</h5>
 
@@ -248,7 +248,7 @@ const EquipmentDetail = () => {
                         <SimilarItemsTemplate similarItems={similarItems} />
                     </div>
                 </div>
-            ) : null}
+            )}
         </Suspense>
     )
 }

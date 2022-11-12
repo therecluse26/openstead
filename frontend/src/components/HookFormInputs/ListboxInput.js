@@ -58,7 +58,7 @@ const ListboxInput = ({
 
     return (
         <>
-            {label ? <p>{label}</p> : null}
+            {label && <p>{label}</p>}
             <Controller
                 name={name}
                 control={control}

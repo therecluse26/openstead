@@ -155,7 +155,7 @@ const EquipmentForm = ({ mode = 'create' }) => {
                                 />
                                 {getFormErrorMessage('quantity')}
                             </div>
-                            {quantity === 1 ? (
+                            {quantity === 1 && (
                                 <div className="field">
                                     <SelectInput
                                         options={[
@@ -171,7 +171,7 @@ const EquipmentForm = ({ mode = 'create' }) => {
                                     />
                                     {getFormErrorMessage('condition')}
                                 </div>
-                            ) : null}
+                            )}
 
                             <div className="field">
                                 <TextAreaInput

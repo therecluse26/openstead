@@ -135,11 +135,13 @@ const AppSubmenu = React.memo(props => {
             }
         })
 
-    return items ? (
-        <ul className={props.className} role="menu">
-            {items}
-        </ul>
-    ) : null
+    return (
+        items && (
+            <ul className={props.className} role="menu">
+                {items}
+            </ul>
+        )
+    )
 })
 
 const AppMenu = React.memo(function (props) {

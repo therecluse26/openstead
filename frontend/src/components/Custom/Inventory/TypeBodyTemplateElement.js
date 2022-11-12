@@ -16,11 +16,11 @@ const TypeBodyTemplateElement = ({
             ? e.value === rowData[matchField]['key']
             : e.value === rowData[matchField]
     })
-    const icon = type?.icon ? (
+    const icon = type?.icon && (
         <span className={'type-icon'} aria-label={type?.label}>
             {type?.icon} &nbsp;
         </span>
-    ) : null
+    )
     return (
         <div>
             {icon}

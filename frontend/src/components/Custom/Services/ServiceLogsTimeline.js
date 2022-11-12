@@ -88,7 +88,7 @@ const ServiceLogsTimeline = ({ parentType, parentId }) => {
                     </div>
                 )}
 
-                {logs?.length > 0 ? <Divider /> : null}
+                {logs?.length > 0 && <Divider />}
 
                 <Timeline
                     value={logs?.map(log => {
