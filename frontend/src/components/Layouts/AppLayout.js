@@ -8,13 +8,18 @@ import { TopBar } from '@/components/Layouts/TopBar'
 import SidebarMenu from '@/SidebarMenu'
 import { ScrollTop } from 'primereact/scrolltop'
 import { ToastContextProvider } from '@/context/ToastContext'
+import { useLocalStorage } from 'primereact/hooks'
 
 const AppLayout = ({ children }) => {
     const { user } = useAuth({ middleware: 'auth' })
     const [layoutMode] = useState('static')
     const [layoutColorMode] = useState('dark')
     const [overlayMenuActive, setOverlayMenuActive] = useState(false)
-    const [sidebarMenuActive, setSidebarMenuActive] = useState(true)
+    const [sidebarMenuActive, setSidebarMenuActive] = useLocalStorage(
+        true,
+        'sidebarMenuActive',
+    )
+
     const [mobileMenuActive, setMobileMenuActive] = useState(false)
     const [mobileTopbarMenuActive, setMobileTopbarMenuActive] = useState(false)
     const copyTooltipRef = useRef()

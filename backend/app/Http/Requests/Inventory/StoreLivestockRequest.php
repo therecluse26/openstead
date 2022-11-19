@@ -30,6 +30,7 @@ class StoreLivestockRequest extends FormRequest
 			'variety_id' => ['required', 'exists:varieties,id'],
 			'sex' => ['nullable', 'in:male,female'],
 			'date_of_birth' => ['nullable', 'date'],
+			'date_of_death' => ['nullable', 'date'],
 			'acquired_at' => ['nullable', 'date'],
 			'parents' => ['nullable', 'array'],
 			'children' => ['nullable', 'array'],

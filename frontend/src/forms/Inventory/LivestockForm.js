@@ -81,6 +81,7 @@ const LivestockForm = ({ mode = 'create' }) => {
                 setValue('variety_id', data?.variety?.id)
                 setValue('sex', data?.sex?.key)
                 setValue('date_of_birth', new Date(data?.date_of_birth))
+                setValue('date_of_death', new Date(data?.date_of_death))
                 setValue('acquired_at', new Date(data?.acquired_at))
                 setValue('quantity', data?.quantity)
                 setValue('parents', data?.parents)
@@ -119,7 +120,7 @@ const LivestockForm = ({ mode = 'create' }) => {
         }
         // Prevent adding same member as both parent and child
         const matches = e.value.filter(element =>
-            watchChildren.includes(element),
+            watchChildren?.includes(element),
         )
         if (matches.length > 0) {
             AddErrorToasts(
@@ -137,7 +138,7 @@ const LivestockForm = ({ mode = 'create' }) => {
     const childrenOnChange = (e, callback) => {
         // Prevent adding same member as both parent and child
         const matches = e.value.filter(element =>
-            watchParents.includes(element),
+            watchParents?.includes(element),
         )
         if (matches.length > 0) {
             AddErrorToasts(
@@ -216,6 +217,17 @@ const LivestockForm = ({ mode = 'create' }) => {
                                         label={'Date of Birth'}
                                     />
                                     {getFormErrorMessage('date_of_birth')}
+                                </div>
+                            )}
+
+                            {watchQuantity === 1 && (
+                                <div className="field">
+                                    <CalendarInput
+                                        control={control}
+                                        name={'date_of_death'}
+                                        label={'Date of Death'}
+                                    />
+                                    {getFormErrorMessage('date_of_death')}
                                 </div>
                             )}
 

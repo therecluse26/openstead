@@ -38,8 +38,8 @@ enum Sex: string
 	public function icon(): string
 	{
 		return match ($this) {
-			self::Male => '<i class="ti ti-gender-male"></i>',
-			self::Female => '<i class="ti ti-gender-female"></i>',
+			self::Male => '♂️',
+			self::Female => '♀',
 		};
 	}
 

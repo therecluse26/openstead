@@ -9,6 +9,7 @@ import SimilarItemsTemplate from '@/components/Inventory/SimilarItems'
 import { formatDate } from '@/utils/FormatDate'
 import { Galleria } from 'primereact/galleria'
 import { Button } from 'primereact/button'
+import FamilyTree from '@/components/Custom/Livestock/FamilyTree'
 
 const LivestockDetail = () => {
     const isMounted = useRef(false)
@@ -101,7 +102,12 @@ const LivestockDetail = () => {
                         />
                     </div>
                     <div className={'col-12 sm:col'}>
-                        <h1 className={'text-center'}>{livestockData?.name}</h1>
+                        <h1 className={'text-center'}>
+                            {livestockData?.name}
+                            {livestockData?.date_of_death
+                                ? ' (deceased)'
+                                : null}
+                        </h1>
                     </div>
                     <div
                         className="col-12 sm:col-fixed"
@@ -241,6 +247,13 @@ const LivestockDetail = () => {
                     </Button>
                 </div>
             </Card>
+
+            <FamilyTree
+                original={livestockData}
+                ancestors={livestockData?.family?.parents}
+                offspring={livestockData?.family?.children}
+                siblings={livestockData?.family?.siblings}
+            />
 
             {similarItems?.length > 0 && (
                 <div className={'mt-4 align-content-end'}>

@@ -6,6 +6,8 @@ import { Tooltip } from 'primereact/tooltip'
 import ServiceLogForm from '@/forms/Inventory/ServiceLogForm'
 import { Button } from 'primereact/button'
 import axios from '@/lib/axios'
+import { Panel } from 'primereact/panel'
+import CollapsiblePanelTemplate from '@/components/Custom/Templates/CollapsiblePanelTemplate'
 
 const customizedTimelineMarker = item => {
     return (
@@ -60,9 +62,11 @@ const ServiceLogsTimeline = ({ parentType, parentId }) => {
 
     return (
         <div className={'my-4'}>
-            <h5 className={'text-center'}>Service Logs</h5>
-
-            <Card>
+            <Panel
+                toggleable
+                headerTemplate={options => {
+                    return CollapsiblePanelTemplate(options, 'Service Logs')
+                }}>
                 {editing === true ? (
                     <ServiceLogForm
                         inline={true}
@@ -98,7 +102,7 @@ const ServiceLogsTimeline = ({ parentType, parentId }) => {
                     marker={customizedTimelineMarker}
                     content={customizedTimelineContent}
                 />
-            </Card>
+            </Panel>
         </div>
     )
 }

@@ -17,8 +17,14 @@ class LivestockResource extends JsonResource
 			'sex' => $this->sex?->toFilter(),
 			'quantity' => $this->quantity,
 			'date_of_birth' => $this->date_of_birth,
+			'date_of_death' => $this->date_of_death,
 			'acquired_at' => $this->acquired_at,
 			'primary_image' => $this->primary_image,
+			'family' => [
+				'parents' => LivestockFamilyResource::collection($this->parents),
+				'children' => LivestockFamilyResource::collection($this->children),
+				'siblings' => LivestockFamilyResource::collection($this->siblings)
+			]
 		];
 	}
 }

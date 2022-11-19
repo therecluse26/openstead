@@ -9,6 +9,7 @@ use App\Contracts\Serviceable;
 use App\Contracts\VarietyContract;
 use App\Enums\LivestockType;
 use App\Enums\Sex;
+use App\Models\Scopes\AliveScope;
 use App\Resources\FormattedFilter;
 use App\Resources\Inventory\Detail\LivestockResource as LivestockDetailResource;
 use App\Resources\Inventory\List\LivestockResource as LivestockListResource;
@@ -45,6 +46,7 @@ class Livestock extends Model implements Inventoriable, VarietyContract, Fronten
 		'variety_id',
 		'sex',
 		'date_of_birth',
+		'date_of_death',
 		'quantity',
 		'acquired_at'
 	];
@@ -52,6 +54,7 @@ class Livestock extends Model implements Inventoriable, VarietyContract, Fronten
 	protected $casts = [
 		'sex' => Sex::class,
 		'date_of_birth' => 'datetime',
+		'date_of_death' => 'datetime',
 		'acquired_at' => 'datetime'
 	];
 
@@ -68,9 +71,13 @@ class Livestock extends Model implements Inventoriable, VarietyContract, Fronten
 			});
 			$model->parents()->detach();
 			$model->children()->detach();
-
 		});
 	}
+
+//	protected static function booted()
+//	{
+//		static::addGlobalScope(new AliveScope);
+//	}
 
 	// API Resources
 	public function getDetailResource(): JsonResource
@@ -86,15 +93,34 @@ class Livestock extends Model implements Inventoriable, VarietyContract, Fronten
 	// Relationships
 	public function parents(): BelongsToMany
 	{
-		return $this->belongsToMany(self::class, 'livestock_parents', 'parent_id', 'livestock_id')->using(LivestockParent::class)->wherePivot('livestock_id', '=', $this->id);
+		return $this->belongsToMany(self::class, 'livestock_parents', 'livestock_id', 'parent_id')
+			->using(LivestockParent::class)
+			->wherePivot('livestock_id', '=', $this->id)
+			->withoutGlobalScope(AliveScope::class);
 	}
 
 	public function children(): BelongsToMany
 	{
-		return $this->belongsToMany(self::class, 'livestock_parents', 'livestock_id', 'parent_id')->using(LivestockParent::class)->wherePivot('parent_id', '=', $this->id);
+		return $this->belongsToMany(self::class, 'livestock_parents', 'parent_id', 'livestock_id')
+			->using(LivestockParent::class)
+			->wherePivot('parent_id', '=', $this->id)
+			->withoutGlobalScope(AliveScope::class);
 	}
 
-	// Attributes
+	// Accessors
+	public function siblings(): Attribute
+	{
+		return Attribute::make(
+			get: function () {
+				return $this->parents->flatMap(function ($parent) {
+					return $parent->children()
+						->whereNot('livestock.id', $this->id)
+						->get();
+				})->unique();
+			}
+		);
+	}
+
 	public function primaryImage(): Attribute
 	{
 		return Attribute::make(
@@ -102,6 +128,7 @@ class Livestock extends Model implements Inventoriable, VarietyContract, Fronten
 		);
 	}
 
+	// Other methods
 	public static function getFilters(): Collection
 	{
 		return collect(['types' => FormattedFilter::collection(LivestockType::cases())]);

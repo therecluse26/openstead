@@ -16,7 +16,6 @@ class LivestockParent extends Pivot
 	protected $fillable = [
 		'livestock_id',
 		'parent_id',
-		'relationship'
 	];
 
 }

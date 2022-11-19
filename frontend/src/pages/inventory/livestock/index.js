@@ -76,6 +76,7 @@ const Livestock = () => {
                     return (
                         <Link href={`/inventory/livestock/${rowData.id}`}>
                             {rowData[elem.field]}
+                            {rowData.date_of_death ? ' (deceased)' : null}
                         </Link>
                     )
                 }}

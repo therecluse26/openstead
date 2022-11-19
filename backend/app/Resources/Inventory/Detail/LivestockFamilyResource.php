@@ -5,20 +5,17 @@ namespace App\Resources\Inventory\Detail;
 use App\Resources\VarietyResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class LivestockAncestryResource extends JsonResource
+class LivestockFamilyResource extends JsonResource
 {
 	public function toArray($request)
 	{
 		return [
 			'id' => $this->id,
 			'name' => $this->name,
-			'description' => $this->description,
 			'variety' => VarietyResource::make($this->variety),
-			'sex' => $this->sex?->toFilter(),
-			'quantity' => $this->quantity,
 			'date_of_birth' => $this->date_of_birth,
-			'acquired_at' => $this->acquired_at,
-			'primary_image' => $this->primary_image,
+			'date_of_death' => $this->date_of_death,
+			'sex' => $this->sex?->toFilter(),
 		];
 	}
 }
