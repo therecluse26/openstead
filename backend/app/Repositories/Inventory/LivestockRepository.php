@@ -56,6 +56,32 @@ class LivestockRepository extends InventoryRepository
 		return $model;
 	}
 
+	public function update(Livestock $model, array $data, ?array $images, ?array $parents, ?array $children): Livestock
+	{
+		$model->update($data);
+
+		// Deletes parents
+		$model->parents()->detach();
+		// Reattaches parents if found
+		if ($parents) {
+			$model->parents()->attach($parents);
+		}
+
+		// Deletes children
+		$model->children()->detach();
+		// Reattaches children if found
+		if ($children) {
+			$model->children()->attach($children);
+		}
+
+		if ($images) {
+			$this->addOrReplaceImagesBase64($model, $images);
+		}
+
+		return $model;
+	}
+
+
 	public static function getTypes(): array
 	{
 		return LivestockType::cases();

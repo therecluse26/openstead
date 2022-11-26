@@ -11,26 +11,27 @@ const FamilyTree = ({
     siblings = null,
 }) => {
     const ancestorData = () => {
-        return ancestors?.map(a => {
-            return {
-                label: (
-                    <Link href={`/inventory/livestock/${a.id}`}>
-                        {a.name + (a.date_of_death ? ' (deceased)' : '')}
-                    </Link>
-                ),
+        return [
+            {
+                label:
+                    original.name +
+                    (original.date_of_death ? ' (deceased)' : ''),
                 expanded: true,
-                className: 'family-tree-parent',
-                children: [
-                    {
-                        label:
-                            original.name +
-                            (original.date_of_death ? ' (deceased)' : ''),
+                className: 'family-tree-self',
+                children: ancestors?.map(a => {
+                    return {
+                        label: (
+                            <Link href={`/inventory/livestock/${a.id}`}>
+                                {a.name +
+                                    (a.date_of_death ? ' (deceased)' : '')}
+                            </Link>
+                        ),
                         expanded: true,
-                        className: 'family-tree-self',
-                    },
-                ],
-            }
-        })
+                        className: 'family-tree-parent',
+                    }
+                }),
+            },
+        ]
     }
 
     const offspringData = () => {

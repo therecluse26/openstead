@@ -89,28 +89,25 @@ class LivestockController extends Controller implements HasAppendableSelect
 	{
 		return response($livestock->getDetailResource());
 	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param Livestock $livestock
-	 * @return Response
-	 */
-	public function edit(Livestock $livestock)
-	{
-		//
-	}
-
+	
 	/**
 	 * Update the specified resource in storage.
 	 *
+	 * @param LivestockRepository $livestockRepository
 	 * @param UpdateLivestockRequest $request
 	 * @param Livestock $livestock
 	 * @return Response
 	 */
-	public function update(UpdateLivestockRequest $request, Livestock $livestock)
+	public function update(LivestockRepository $livestockRepository, UpdateLivestockRequest $request, Livestock $livestock): Response
 	{
-		//
+		return response(
+			$livestockRepository->update(
+				$livestock,
+				$request->only((new Livestock())->getFillable()),
+				$request->get('images'),
+				$request->get('parents'),
+				$request->get('children')),
+			200);
 	}
 
 	/**

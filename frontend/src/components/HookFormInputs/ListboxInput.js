@@ -63,29 +63,31 @@ const ListboxInput = ({
                 name={name}
                 control={control}
                 rules={rules}
-                render={({ field: { onChange, value, name }, fieldState }) => (
-                    <ListBox
-                        id={name}
-                        value={value}
-                        options={selectOptions}
-                        dataKey={'key'}
-                        onChange={e => {
-                            customOnChange
-                                ? customOnChange(e, onChange)
-                                : onChange(e)
-                        }}
-                        multiple={multiple}
-                        filter={filter}
-                        optionLabel={optionLabel ?? ''}
-                        className={classNames(className, {
-                            'p-invalid': fieldState.invalid,
-                        })}
-                        listStyle={{ maxHeight: '200px' }}
-                    />
-                )}
+                render={({ field: { onChange, value, name }, fieldState }) => {
+                    return (
+                        <ListBox
+                            id={name}
+                            value={value}
+                            options={selectOptions}
+                            dataKey={'key'}
+                            onChange={e => {
+                                customOnChange
+                                    ? customOnChange(e, onChange)
+                                    : onChange(e)
+                            }}
+                            multiple={multiple}
+                            filter={filter}
+                            optionLabel={optionLabel ?? ''}
+                            className={classNames(className, {
+                                'p-invalid': fieldState.invalid,
+                            })}
+                            listStyle={{ maxHeight: '200px' }}
+                        />
+                    )
+                }}
             />
         </>
     )
 }
 
-export default ListboxInput
+export default React.memo(ListboxInput)

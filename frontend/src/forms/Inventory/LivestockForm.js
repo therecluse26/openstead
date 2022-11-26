@@ -21,6 +21,7 @@ const LivestockForm = ({ mode = 'create' }) => {
     const isMounted = useRef(false)
     const router = useRouter()
     const [images, setImages] = useState([])
+    const [initialType, setInitialType] = useState(null)
     const toast = useToastContext(ToastContext)
     const { query, isReady } = useRouter()
     const { id } = query
@@ -60,8 +61,10 @@ const LivestockForm = ({ mode = 'create' }) => {
     }, [id])
 
     useEffect(() => {
-        resetField('parents')
-        resetField('children')
+        if (type !== initialType) {
+            resetField('parents')
+            resetField('children')
+        }
     }, [type])
 
     const getFormErrorMessage = name => {
@@ -73,7 +76,7 @@ const LivestockForm = ({ mode = 'create' }) => {
     }
 
     const getEditData = id => {
-        LivestockService.getItem(id)
+        return LivestockService.getItem(id)
             .then(data => {
                 setValue('name', data?.name)
                 setValue('description', data?.description)
@@ -84,9 +87,21 @@ const LivestockForm = ({ mode = 'create' }) => {
                 setValue('date_of_death', new Date(data?.date_of_death))
                 setValue('acquired_at', new Date(data?.acquired_at))
                 setValue('quantity', data?.quantity)
-                setValue('parents', data?.parents)
-                setValue('children', data?.children)
+                setValue(
+                    'parents',
+                    data?.family?.parents.map(i => {
+                        return i.id
+                    }),
+                )
+                setValue(
+                    'children',
+                    data?.family?.children.map(i => {
+                        return i.id
+                    }),
+                )
+                setInitialType(data?.variety?.group_type?.key)
             })
+
             .catch(e => {
                 alert(e)
             })
@@ -129,6 +144,7 @@ const LivestockForm = ({ mode = 'create' }) => {
                     'Cannot add the same member as both parent and child',
                 ),
             )
+
             return
         }
 
@@ -297,13 +313,10 @@ const LivestockForm = ({ mode = 'create' }) => {
                                 <div className={'col-10 md:col-6'}>
                                     <div className="field">
                                         <ListboxInput
-                                            optionsEndpoint={`/api/inventory/livestock/types/${type}/members`}
                                             control={control}
+                                            optionsEndpoint={`/api/inventory/livestock/types/${type}/members`}
                                             name={'parents'}
                                             label={'Parents'}
-                                            optionLabel={o => {
-                                                return o.label
-                                            }}
                                             customOnChange={parentsOnChange}
                                         />
                                     </div>
@@ -311,8 +324,8 @@ const LivestockForm = ({ mode = 'create' }) => {
                                 <div className={'col-10 md:col-6'}>
                                     <div className="field">
                                         <ListboxInput
-                                            optionsEndpoint={`/api/inventory/livestock/types/${type}/members`}
                                             control={control}
+                                            optionsEndpoint={`/api/inventory/livestock/types/${type}/members`}
                                             name={'children'}
                                             label={'Children'}
                                             customOnChange={childrenOnChange}
