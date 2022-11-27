@@ -37,7 +37,9 @@ const addNote = async (id, data) => {
 }
 
 const deleteNote = async id => {
-    return await axios.delete(`/api/notes/${id}`)
+    if (confirm('Are you sure you want to delete this note?')) {
+        return await axios.delete(`/api/notes/${id}`)
+    }
 }
 
 export default {

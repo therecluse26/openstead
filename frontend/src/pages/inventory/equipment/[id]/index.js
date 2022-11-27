@@ -11,6 +11,7 @@ import SimilarItemsTemplate from '@/components/Inventory/SimilarItems'
 import { formatDate } from '@/utils/FormatDate'
 import { Galleria } from 'primereact/galleria'
 import { Button } from 'primereact/button'
+import Notes from '@/components/Custom/Notes'
 
 const EquipmentDetail = () => {
     const isMounted = useRef(false)
@@ -236,6 +237,8 @@ const EquipmentDetail = () => {
             </Card>
 
             <ServiceLogsTimeline parentId={id} parentType={'equipment'} />
+
+            <Notes parentId={id} parentType={'equipment'} />
 
             {similarItems?.length > 0 && (
                 <div className={'mt-4 align-content-end'}>

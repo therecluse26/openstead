@@ -24,7 +24,9 @@ const addService = async (id, data) => {
 }
 
 const deleteServiceLog = async id => {
-    return await axios.delete(`/api/services/logs/${id}`)
+    if (confirm('Are you sure you want to delete this service log?')) {
+        return await axios.delete(`/api/services/logs/${id}`)
+    }
 }
 
 export default {

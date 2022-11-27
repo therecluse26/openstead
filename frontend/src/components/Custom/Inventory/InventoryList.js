@@ -205,4 +205,4 @@ const InventoryList = ({
     )
 }
 
-export default React.memo(InventoryList)
+export default InventoryList
