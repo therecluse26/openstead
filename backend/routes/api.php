@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Generic\NoteController;
 use App\Http\Controllers\Inventory\EquipmentController;
 use App\Http\Controllers\Inventory\InventoryController;
 use App\Http\Controllers\Inventory\LivestockController;
@@ -53,6 +54,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 		});
 
+	Route::prefix('/notes')
+		->group(function () {
+			Route::delete('/{id}', [NoteController::class, 'destroy']);
+			Route::get('/{modelName}/{modelId}', [NoteController::class, 'index']);
+			Route::post('/', [NoteController::class, 'store']);
+		});
+
 	// Services/Service Logs
 	Route::prefix('/services')
 		->group(function () {
@@ -61,6 +69,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 			RouteBuilderService::buildTypeFilterRoute(ServiceLogController::class);
 			Route::prefix('/logs')
 				->group(function () {
+					Route::delete('/{id}', [ServiceLogController::class, 'destroy']);
 					Route::get('/{modelName}/{modelId}', [ServiceLogController::class, 'index']);
 					Route::post('/', [ServiceLogController::class, 'store']);
 				});

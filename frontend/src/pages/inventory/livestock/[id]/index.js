@@ -11,6 +11,7 @@ import { Galleria } from 'primereact/galleria'
 import { Button } from 'primereact/button'
 import FamilyTree from '@/components/Custom/Livestock/FamilyTree'
 import ServiceLogsTimeline from '@/components/Custom/Services/ServiceLogsTimeline'
+import Notes from '@/components/Custom/Notes'
 
 const LivestockDetail = () => {
     const isMounted = useRef(false)
@@ -78,9 +79,9 @@ const LivestockDetail = () => {
         await LivestockService.markDeceased(id)
     }
 
-    const confirmDeceased = () => {
+    const confirmDeceased = async () => {
         if (confirm(`Are you sure you want to mark this animal as deceased?`)) {
-            markLivestockDeceased()
+            await markLivestockDeceased()
             router.reload()
         }
     }
@@ -245,6 +246,8 @@ const LivestockDetail = () => {
             />
 
             <ServiceLogsTimeline parentId={id} parentType={'livestock'} />
+
+            <Notes parentId={id} parentType={'livestock'} />
 
             {similarItems?.length > 0 && (
                 <div className={'mt-4 align-content-end'}>

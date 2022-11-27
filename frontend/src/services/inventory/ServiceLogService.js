@@ -23,8 +23,13 @@ const addService = async (id, data) => {
     })
 }
 
+const deleteServiceLog = async id => {
+    return await axios.delete(`/api/services/logs/${id}`)
+}
+
 export default {
     getServiceLogs,
     addServiceLog,
     addService,
+    deleteServiceLog,
 }

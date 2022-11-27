@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Inventory;
 
 use App\Contracts\HasAppendableSelect;
-use App\Enums\ModelName;
 use App\Enums\ServiceType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Inventory\StoreServiceLogRequest;
@@ -48,7 +47,7 @@ final class ServiceLogController extends Controller implements HasAppendableSele
 	{
 		return response(
 			ServiceLogResource::collection(
-				$repository->list(ModelName::from($modelName), $modelId)
+				$repository->list($modelName, $modelId)
 			)
 		);
 	}
@@ -99,11 +98,12 @@ final class ServiceLogController extends Controller implements HasAppendableSele
 	/**
 	 * Remove the specified resource from storage.
 	 *
-	 * @param ServiceLog $serviceLog
+	 * @param ServiceLogRepository $repository
+	 * @param int $id
 	 * @return Response
 	 */
-	public function destroy(ServiceLog $serviceLog): Response
+	public function destroy(ServiceLogRepository $repository, int $id): Response
 	{
-		return response($serviceLog->delete());
+		return response($repository->delete($id));
 	}
 }

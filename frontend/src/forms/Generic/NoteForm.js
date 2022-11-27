@@ -2,23 +2,20 @@ import React, { useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { Card } from 'primereact/card'
 import { Button } from 'primereact/button'
-import TextAreaInput from '@/components/HookFormInputs/TextAreaInput'
-import CalendarInput from '@/components/HookFormInputs/CalendarInput'
 import { useRouter } from 'next/router'
 import { csrf } from '@/hooks/auth'
 import AddErrorToasts from '@/utils/AddErrorToasts'
 import ToastContext, { useToastContext } from '@/context/ToastContext'
-import SubtypeSelect from '@/components/HookFormInputs/SubtypeSelect'
-import ServiceLogService from '@/services/inventory/ServiceLogService'
+import NoteService from '@/services/Generic/NoteService'
+import EditorInput from '@/components/HookFormInputs/EditorInput'
 
-const ServiceLogForm = ({
+const NoteForm = ({
     inline = false,
-    serviceable_type,
+    notableType,
     onComplete = () => {},
     onClose = () => {},
 }) => {
     const isMounted = useRef(false)
-    const router = useRouter()
     const toast = useToastContext(ToastContext)
     const { query, isReady } = useRouter()
     const { id } = query
@@ -27,13 +24,9 @@ const ServiceLogForm = ({
         control,
         formState: { errors },
         handleSubmit,
-        watch,
-        setValue,
     } = useForm({
         type: null,
-        notes: null,
-        service_date: null,
-        service_id: null,
+        note: null,
     })
 
     useEffect(() => {
@@ -43,24 +36,14 @@ const ServiceLogForm = ({
         isMounted.current = true
     }, [id])
 
-    const getFormErrorMessage = name => {
-        return (
-            errors[name] && (
-                <small className="p-error">{errors[name].message}</small>
-            )
-        )
-    }
-
     const onSubmit = async data => {
         await csrf()
-        data['serviceable_type'] = serviceable_type
-        ServiceLogService.addServiceLog(id, data)
+        data['notable_type'] = notableType
+        NoteService.addNote(id, data)
             .then(() => {
                 if (inline) {
                     onComplete()
-                    return
                 }
-                router.push(`/inventory/${serviceable_type}/${id}`)
             })
             .catch(error => {
                 AddErrorToasts(toast, error)
@@ -84,7 +67,7 @@ const ServiceLogForm = ({
                             <i className={'ti ti-x'} /> &nbsp;{'Close'}
                         </Button>
                     ) : (
-                        <h3 className={'text-center'}>Add New Service Log</h3>
+                        <h3 className={'text-center'}>Add New Note</h3>
                     )}
                 </div>
             </div>
@@ -95,43 +78,17 @@ const ServiceLogForm = ({
                     }>
                     <div className={'col-8'}>
                         <Card>
-                            <SubtypeSelect
-                                valueAddRequest={ServiceLogService.addService}
-                                supertype={'services'}
-                                label={'Service'}
-                                control={control}
-                                setValue={setValue}
-                                errors={errors}
-                                fieldId={'service_id'}
-                                toast={toast}
-                                watch={watch}
-                                id={id}
-                            />
-
                             <div className={'field'}>
-                                <TextAreaInput
+                                <EditorInput
                                     control={control}
-                                    name={'notes'}
-                                    label={'Notes'}
+                                    name={'note'}
+                                    label={'Note'}
+                                    errors={errors}
                                     rules={{
-                                        required: 'Notes are required.',
+                                        required: 'Note is required.',
                                     }}
-                                    rows={8}
-                                    cols={30}
-                                    autoResize
+                                    height={'240px'}
                                 />
-                            </div>
-                            <div className="field">
-                                <CalendarInput
-                                    control={control}
-                                    showTime={true}
-                                    name={'service_date'}
-                                    label={'Service Date'}
-                                    rules={{
-                                        required: 'Service date is required.',
-                                    }}
-                                />
-                                {getFormErrorMessage('service_date')}
                             </div>
                         </Card>
                         <Button type="submit" label="Save" className="mt-2" />
@@ -142,4 +99,4 @@ const ServiceLogForm = ({
     )
 }
 
-export default React.memo(ServiceLogForm)
+export default React.memo(NoteForm)

@@ -1,5 +1,16 @@
-export const formatDate = (datestring = null) => {
-    return datestring && new Date(datestring).toDateString()
+export const formatDate = (datetimestring = null) => {
+    return datetimestring && new Date(datetimestring).toLocaleDateString()
+}
+
+export const formatTime = (datetimestring = null) => {
+    return datetimestring && new Date(datetimestring).toLocaleTimeString()
+}
+
+export const formatDateTime = (datetimestring = null) => {
+    return (
+        datetimestring &&
+        `${formatDate(datetimestring)} ${formatTime(datetimestring)}`
+    )
 }
 
 export const getAgeInYears = dob => {
