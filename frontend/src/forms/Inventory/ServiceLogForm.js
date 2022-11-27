@@ -74,7 +74,7 @@ const ServiceLogForm = ({
                     'justify-content-center align-content-center grid  ' +
                     (inline ? 'text-right' : '')
                 }>
-                <div className={'col-5'}>
+                <div className={'col-12'}>
                     {inline ? (
                         <Button
                             className={'p-button-text text-right'}
@@ -93,7 +93,7 @@ const ServiceLogForm = ({
                     className={
                         'justify-content-center align-content-center grid'
                     }>
-                    <div className={'col-8'}>
+                    <div className={'col-8 -mt-4'}>
                         <Card>
                             <SubtypeSelect
                                 valueAddRequest={ServiceLogService.addService}

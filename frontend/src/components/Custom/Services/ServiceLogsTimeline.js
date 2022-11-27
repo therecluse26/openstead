@@ -61,7 +61,7 @@ const ServiceLogsTimeline = ({ parentType, parentId }) => {
                     <p>{item?.log?.notes}</p>
                     <div
                         className={
-                            'w-full flex justify-content-end ml-2 -mt-4 -mb-4'
+                            'w-full flex justify-content-end ml-2 -mb-4'
                         }>
                         <Button
                             className={'p-button-danger'}

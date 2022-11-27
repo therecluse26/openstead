@@ -46,7 +46,7 @@ const Notes = ({ parentType, parentId }) => {
                 {editing === true ? (
                     <NoteForm
                         inline={true}
-                        notable_type={parentType}
+                        notableType={parentType}
                         onClose={() => {
                             setEditing(false)
                         }}
@@ -76,24 +76,27 @@ const Notes = ({ parentType, parentId }) => {
                                 className={'mb-2'}
                                 legend={formatDateTime(note.timestamp)}
                                 toggleable>
-                                <div
-                                    className={
-                                        'w-full flex justify-content-end ml-2 -mt-4 -mb-4'
-                                    }>
-                                    <Button
-                                        className={'p-button-danger'}
-                                        onClick={() => {
-                                            deleteNote(note.id)
-                                        }}>
-                                        <i className={'ti ti-trash'} />
-                                    </Button>
-                                </div>
+                                <div className={'grid'}>
+                                    <div
+                                        className={
+                                            'col-1 w-full flex justify-content-end ml-2 -mt-4 -mb-4'
+                                        }>
+                                        <Button
+                                            className={'p-button-danger'}
+                                            onClick={() => {
+                                                deleteNote(note.id)
+                                            }}>
+                                            <i className={'ti ti-trash'} />
+                                        </Button>
+                                    </div>
 
-                                <div
-                                    dangerouslySetInnerHTML={{
-                                        __html: note?.note,
-                                    }}
-                                />
+                                    <div
+                                        className={'col-11'}
+                                        dangerouslySetInnerHTML={{
+                                            __html: note?.note,
+                                        }}
+                                    />
+                                </div>
                             </Fieldset>
                         </div>
                     )

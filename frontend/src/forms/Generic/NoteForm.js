@@ -54,10 +54,10 @@ const NoteForm = ({
         <>
             <div
                 className={
-                    'justify-content-center align-content-center grid  ' +
+                    'justify-content-center align-content-center grid ' +
                     (inline ? 'text-right' : '')
                 }>
-                <div className={'col-5'}>
+                <div className={'col-12'}>
                     {inline ? (
                         <Button
                             className={'p-button-text text-right'}
@@ -70,31 +70,29 @@ const NoteForm = ({
                         <h3 className={'text-center'}>Add New Note</h3>
                     )}
                 </div>
-            </div>
-            <form onSubmit={handleSubmit(onSubmit)} className="p-fluid">
-                <div
-                    className={
-                        'justify-content-center align-content-center grid'
-                    }>
-                    <div className={'col-8'}>
-                        <Card>
-                            <div className={'field'}>
-                                <EditorInput
-                                    control={control}
-                                    name={'note'}
-                                    label={'Note'}
-                                    errors={errors}
-                                    rules={{
-                                        required: 'Note is required.',
-                                    }}
-                                    height={'240px'}
-                                />
-                            </div>
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="col-12  -mt-4">
+                    <div
+                        className={
+                            'justify-content-center align-content-center'
+                        }>
+                        <Card className={'mb-4'}>
+                            <EditorInput
+                                control={control}
+                                name={'note'}
+                                label={'Note'}
+                                errors={errors}
+                                rules={{
+                                    required: 'Note is required.',
+                                }}
+                                height={'240px'}
+                            />
                         </Card>
                         <Button type="submit" label="Save" className="mt-2" />
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </>
     )
 }
