@@ -47,6 +47,17 @@ const LivestockForm = ({ mode = 'create' }) => {
         watch,
     } = useForm({ defaultValues })
 
+    const deleteLivestock = async () => {
+        await LivestockService.deleteItem(id)
+    }
+
+    const confirmDelete = () => {
+        if (confirm('Are you sure you want to delete this item?')) {
+            deleteLivestock()
+            router.push('/inventory/livestock')
+        }
+    }
+
     const type = watch('type')
     const watchParents = watch('parents')
     const watchChildren = watch('children')
@@ -83,8 +94,14 @@ const LivestockForm = ({ mode = 'create' }) => {
                 setValue('type', data?.variety?.group_type?.key)
                 setValue('variety_id', data?.variety?.id)
                 setValue('sex', data?.sex?.key)
-                setValue('date_of_birth', new Date(data?.date_of_birth))
-                setValue('date_of_death', new Date(data?.date_of_death))
+                setValue(
+                    'date_of_birth',
+                    data?.date_of_birth ? new Date(data?.date_of_birth) : null,
+                )
+                setValue(
+                    'date_of_death',
+                    data?.date_of_death ? new Date(data?.date_of_death) : null,
+                )
                 setValue('acquired_at', new Date(data?.acquired_at))
                 setValue('quantity', data?.quantity)
                 setValue(
@@ -173,9 +190,24 @@ const LivestockForm = ({ mode = 'create' }) => {
             <div className={'justify-content-center align-content-center grid'}>
                 <div className={'col-10'}>
                     <h3 className={'text-center'}>
-                        {mode === 'create'
-                            ? 'Add New Livestock'
-                            : 'Edit Livestock'}
+                        {mode === 'create' ? (
+                            'Add New Livestock'
+                        ) : (
+                            <div className={'flex justify-content-between'}>
+                                <div />
+                                <div>Edit Livestock</div>
+                                <Button
+                                    className={
+                                        'p-button-danger align-right text-right'
+                                    }
+                                    onClick={confirmDelete}>
+                                    <span>
+                                        <i className={'ti ti-trash'} />
+                                        {' Delete'}
+                                    </span>
+                                </Button>
+                            </div>
+                        )}
                     </h3>
                 </div>
             </div>
@@ -348,6 +380,7 @@ const LivestockForm = ({ mode = 'create' }) => {
                     </div>
                 </div>
             </form>
+
             <br />
         </>
     )

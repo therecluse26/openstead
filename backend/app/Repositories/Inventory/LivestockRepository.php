@@ -5,8 +5,10 @@ namespace App\Repositories\Inventory;
 use App\Enums\LivestockType;
 use App\Http\Requests\Inventory\StoreLivestockBreedRequest;
 use App\Models\Inventory\Livestock;
+use App\Models\Scopes\AliveScope;
 use App\Models\Variety;
 use App\Traits\AddMedia;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -34,9 +36,14 @@ class LivestockRepository extends InventoryRepository
 			});
 	}
 
-	public function find(int $livestock_id): Livestock
+	public function find(int $id): Livestock
 	{
-		return $this->model->findOrFail($livestock_id);
+		return $this->model->findOrFail($id);
+	}
+
+	public function findUnscoped(int $id): Livestock
+	{
+		return $this->model->withoutGlobalScope(AliveScope::class)->findOrFail($id);
 	}
 
 	public function create(array $data, ?array $images, ?array $parents, ?array $children): Livestock
@@ -81,6 +88,15 @@ class LivestockRepository extends InventoryRepository
 		return $model;
 	}
 
+	public function delete(Livestock $model): ?bool
+	{
+		return $model->delete();
+	}
+
+	public function markDeceased(Livestock $model, bool $deceased = true): bool
+	{
+		return $model->update(['date_of_death' => $deceased ? Carbon::now() : null]);
+	}
 
 	public static function getTypes(): array
 	{
@@ -107,85 +123,25 @@ class LivestockRepository extends InventoryRepository
 
 	public static function getFormattedTypes(): Collection
 	{
-		return collect(LivestockType::cases())->map(function ($type) {
-			return $type->toFilter();
-		});
+		return collect(LivestockType::cases())
+			->map(function ($type) {
+				return $type->toFilter();
+			});
 	}
 
-	public static function getTypeVarieties(string $type)
+	public static function getTypeVarieties(string $type): Collection
 	{
 		return collect(Variety::where('kingdom', 'animal')->where('group_type', $type)->get());
 	}
 
-	public static function getSimilar(Livestock $livestock): Collection
+	public function getSimilar(int $livestock_id): Collection
 	{
-		return Livestock::whereNot('id', $livestock->id)->where('variety_id', $livestock->variety_id)->inRandomOrder()->take(6)->get();
+		$livestock = $this->findUnscoped($livestock_id);
+		return Livestock::whereNot('id', $livestock_id)
+			->where('variety_id', $livestock->variety_id)
+			->inRandomOrder()
+			->take(6)
+			->get();
 	}
-
-//	public function getFamilyTree(Livestock $livestock)
-//	{
-//		return collect([
-//			'ancestors' => $this->getAncestry($livestock),
-//			'posterity' => $this->getPosterity($livestock),
-//			'siblings' => $this->getSiblings($livestock)
-//		]);
-//	}
-
-	public function getFamilyTree(Livestock $livestock, int $generations = 5): Collection
-	{
-		$familyTree = collect();
-
-		// Traverse lineage up until max ($generations) # is reached
-		$topAncestor = $livestock;
-		for ($g = 0; $g <= $generations; $g++) {
-			if ($topAncestor->parents()->count() === 0) {
-				break;
-			}
-			$topAncestor = $topAncestor->parents->first();
-		}
-
-		// Find all siblings of ancestor if possible
-		$generation = collect();
-		if ($topAncestor->parents()->count() > 0) {
-			foreach ($topAncestor->parents as $parent) {
-				$generation->push($parent->children);
-			}
-		} else {
-			foreach ($topAncestor->children as $child) {
-				$generation->push($child->parents);
-			}
-		}
-		$generation = $generation->flatten()->unique();
-
-		// Foreach final ancestor generation member, find all children (eliminating duplicates)
-		// Do this recursively until ($generations) number of generations x2 is reached
-		// (this will satisfy the generation count for children)
-		foreach ($generation as $member) {
-			// Get all posterity of family tree member
-			$familyTree->push($this->getPosterity($member));
-		}
-		return $familyTree;
-	}
-
-	public function getAncestry(Livestock $livestock)
-	{
-		$ancestors = collect();
-		foreach ($livestock->parents as $parent) {
-			$ancestors->push($parent);
-			$this->getAncestry($parent);
-		}
-		return $ancestors;
-	}
-
-	public function getPosterity(Livestock $livestock)
-	{
-		$posterity = collect();
-		foreach ($livestock->children as $child) {
-			$posterity->push($child);
-			$this->getPosterity($child);
-		}
-		return $posterity;
-	}
-
 
 }

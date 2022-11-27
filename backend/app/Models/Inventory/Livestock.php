@@ -74,10 +74,10 @@ class Livestock extends Model implements Inventoriable, VarietyContract, Fronten
 		});
 	}
 
-//	protected static function booted()
-//	{
-//		static::addGlobalScope(new AliveScope);
-//	}
+	protected static function booted()
+	{
+		static::addGlobalScope(new AliveScope);
+	}
 
 	// API Resources
 	public function getDetailResource(): JsonResource

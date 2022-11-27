@@ -70,6 +70,7 @@ const ServiceLogsTimeline = ({ parentType, parentId }) => {
                 {editing === true ? (
                     <ServiceLogForm
                         inline={true}
+                        serviceable_type={parentType}
                         onClose={() => {
                             setEditing(false)
                         }}

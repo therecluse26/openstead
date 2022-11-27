@@ -10,11 +10,12 @@ import { formatDate } from '@/utils/FormatDate'
 import { Galleria } from 'primereact/galleria'
 import { Button } from 'primereact/button'
 import FamilyTree from '@/components/Custom/Livestock/FamilyTree'
+import ServiceLogsTimeline from '@/components/Custom/Services/ServiceLogsTimeline'
 
 const LivestockDetail = () => {
     const isMounted = useRef(false)
     const [livestockData, setLivestockData] = useState()
-    const [similarItems, setSimilarItems] = useState()
+    const [similarItems, setSimilarItems] = useState([])
     const router = useRouter()
     const { query, isReady } = useRouter()
     const { id } = query
@@ -23,13 +24,15 @@ const LivestockDetail = () => {
         if (!isReady) {
             return
         }
-        LivestockService.getSimilarItems(id)
-            .then(data => {
-                setSimilarItems(data)
-            })
-            .catch(e => {
-                alert(e)
-            })
+        if (similarItems.length === 0) {
+            LivestockService.getSimilarItems(id)
+                .then(data => {
+                    setSimilarItems(data)
+                })
+                .catch(e => {
+                    alert(e)
+                })
+        }
     }
 
     const responsiveOptions = [
@@ -71,14 +74,14 @@ const LivestockDetail = () => {
             })
     }
 
-    const deleteLivestock = async () => {
-        await LivestockService.deleteItem(id)
+    const markLivestockDeceased = async () => {
+        await LivestockService.markDeceased(id)
     }
 
-    const confirmDelete = () => {
-        if (confirm('Are you sure you want to delete this item?')) {
-            deleteLivestock()
-            router.push('/inventory/livestock')
+    const confirmDeceased = () => {
+        if (confirm(`Are you sure you want to mark this animal as deceased?`)) {
+            markLivestockDeceased()
+            router.reload()
         }
     }
 
@@ -223,27 +226,13 @@ const LivestockDetail = () => {
                                 {livestockData?.description}
                             </span>
                         </div>
-
-                        {livestockData?.url && (
-                            <div className={'row my-4'}>
-                                <LinkButton
-                                    href={livestockData?.url}
-                                    text={'Purchase'}
-                                    external={true}
-                                    rightIcon={'ti ti-external-link'}
-                                />
-                            </div>
-                        )}
                     </div>
                 </div>
                 <div className="col-12 sm:col-fixed text-right">
                     <Button
                         className={'p-button-danger'}
-                        onClick={confirmDelete}>
-                        <span>
-                            <i className={'ti ti-trash'} />
-                            {' Delete'}
-                        </span>
+                        onClick={confirmDeceased}>
+                        <span>{'Mark Deceased'}</span>
                     </Button>
                 </div>
             </Card>
@@ -254,6 +243,8 @@ const LivestockDetail = () => {
                 offspring={livestockData?.family?.children}
                 siblings={livestockData?.family?.siblings}
             />
+
+            <ServiceLogsTimeline parentId={id} parentType={'livestock'} />
 
             {similarItems?.length > 0 && (
                 <div className={'mt-4 align-content-end'}>

@@ -33,6 +33,11 @@ class EquipmentRepository extends InventoryRepository
 		parent::__construct($this->model);
 	}
 
+	public function find(int $id): Equipment
+	{
+		return $this->model->findOrFail($id);
+	}
+
 	public function getEquipmentByCondition(EquipmentCondition $condition): Collection
 	{
 		return $this->model->where('condition', $condition)->get();
@@ -87,6 +92,10 @@ class EquipmentRepository extends InventoryRepository
 		return $equipment;
 	}
 
+	public function delete(Equipment $equipment): ?bool
+	{
+		return $equipment->delete();
+	}
 
 	public static function getFormattedTypes(): Collection
 	{
@@ -95,8 +104,13 @@ class EquipmentRepository extends InventoryRepository
 		});
 	}
 
-	public static function getSimilar(Equipment $equipment): Collection
+	public function getSimilar(int $id): Collection
 	{
-		return Equipment::whereNot('id', $equipment->id)->where('type', $equipment->type)->inRandomOrder()->take(6)->get();
+		$equipment = $this->find($id);
+		return Equipment::whereNot('id', $equipment->id)
+			->where('type', $equipment->type)
+			->inRandomOrder()
+			->take(6)
+			->get();
 	}
 }

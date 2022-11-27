@@ -55,6 +55,16 @@ const createOrUpdate = async (id, data, images = []) => {
     })
 }
 
+const deleteItem = async id => {
+    return await axios.post(`/api/inventory/livestock/${id}`, {
+        _method: 'DELETE',
+    })
+}
+
+const markDeceased = async id => {
+    return axios.post(`/api/inventory/livestock/${id}/deceased`)
+}
+
 const getTypes = () => {
     return axios.get('/api/inventory/livestock/types').then(res => res.data)
 }
@@ -82,4 +92,6 @@ export default {
     getSimilarItems,
     addBreed,
     createOrUpdate,
+    deleteItem,
+    markDeceased,
 }

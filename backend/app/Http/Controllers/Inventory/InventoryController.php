@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use JsonException;
 
-class InventoryController extends Controller
+final class InventoryController extends Controller
 {
 	public function getTypes()
 	{

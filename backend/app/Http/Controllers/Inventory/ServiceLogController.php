@@ -17,7 +17,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 
-class ServiceLogController extends Controller implements HasAppendableSelect
+final class ServiceLogController extends Controller implements HasAppendableSelect
 {
 	public function getTypes(): Collection
 	{

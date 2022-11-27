@@ -15,7 +15,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use JsonException;
 
-class SeedController extends Controller
+final class SeedController extends Controller
 {
 	public function getTypes(): Collection
 	{

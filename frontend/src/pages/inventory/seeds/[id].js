@@ -3,7 +3,7 @@ import { Card } from 'primereact/card'
 import { useRouter } from 'next/router'
 import LivestockService from '@/services/inventory/LivestockService'
 
-const LivestockDetail = () => {
+const SeedDetail = () => {
     const isMounted = useRef(false)
     const [data, setData] = useState()
     const { query, isReady } = useRouter()
@@ -35,4 +35,4 @@ const LivestockDetail = () => {
     )
 }
 
-export default React.memo(LivestockDetail)
+export default React.memo(SeedDetail)

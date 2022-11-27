@@ -8,7 +8,7 @@ use App\Models\Service;
 use App\Repositories\ServiceRepository;
 use Illuminate\Http\Response;
 
-class ServiceController extends Controller
+final class ServiceController extends Controller
 {
 
 	/**

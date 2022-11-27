@@ -5,7 +5,9 @@ import { useRouter } from 'next/router'
 
 const EditLivestock = () => {
     const { query } = useRouter()
+
     const { id } = query
+
     return (
         <>
             {' '}

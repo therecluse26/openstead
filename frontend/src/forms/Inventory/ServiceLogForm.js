@@ -8,11 +8,12 @@ import { useRouter } from 'next/router'
 import { csrf } from '@/hooks/auth'
 import AddErrorToasts from '@/utils/AddErrorToasts'
 import ToastContext, { useToastContext } from '@/context/ToastContext'
-import EquipmentService from '@/services/inventory/EquipmentService'
 import SubtypeSelect from '@/components/HookFormInputs/SubtypeSelect'
+import ServiceLogService from '@/services/inventory/ServiceLogService'
 
 const ServiceLogForm = ({
     inline = false,
+    serviceable_type,
     onComplete = () => {},
     onClose = () => {},
 }) => {
@@ -52,13 +53,15 @@ const ServiceLogForm = ({
 
     const onSubmit = async data => {
         await csrf()
-        EquipmentService.addServiceLog(id, data)
+        data['serviceable_type'] = serviceable_type
+        console.log(data)
+        ServiceLogService.addServiceLog(id, data)
             .then(() => {
                 if (inline) {
                     onComplete()
                     return
                 }
-                router.push(`/inventory/equipment/${id}`)
+                router.push(`/inventory/${serviceable_type}/${id}`)
             })
             .catch(error => {
                 AddErrorToasts(toast, error)
@@ -94,7 +97,7 @@ const ServiceLogForm = ({
                     <div className={'col-5'}>
                         <Card>
                             <SubtypeSelect
-                                valueAddRequest={EquipmentService.addService}
+                                valueAddRequest={ServiceLogService.addService}
                                 supertype={'services'}
                                 label={'Service'}
                                 control={control}

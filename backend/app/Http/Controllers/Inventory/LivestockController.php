@@ -20,7 +20,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Response;
 use JsonException;
 
-class LivestockController extends Controller implements HasAppendableSelect
+final class LivestockController extends Controller implements HasAppendableSelect
 {
 	public function getTypes(): iterable
 	{
@@ -85,24 +85,26 @@ class LivestockController extends Controller implements HasAppendableSelect
 	 * @param Livestock $livestock
 	 * @return Response
 	 */
-	public function show(Livestock $livestock): Response
+	public function show(LivestockRepository $livestockRepository, int $livestock_id): Response
 	{
-		return response($livestock->getDetailResource());
+		return response(
+			$livestockRepository->findUnscoped($livestock_id)->getDetailResource()
+		);
 	}
-	
+
 	/**
 	 * Update the specified resource in storage.
 	 *
 	 * @param LivestockRepository $livestockRepository
 	 * @param UpdateLivestockRequest $request
-	 * @param Livestock $livestock
+	 * @param int $livestock
 	 * @return Response
 	 */
-	public function update(LivestockRepository $livestockRepository, UpdateLivestockRequest $request, Livestock $livestock): Response
+	public function update(LivestockRepository $livestockRepository, UpdateLivestockRequest $request, int $livestock): Response
 	{
 		return response(
 			$livestockRepository->update(
-				$livestock,
+				$livestockRepository->findUnscoped($livestock),
 				$request->only((new Livestock())->getFillable()),
 				$request->get('images'),
 				$request->get('parents'),
@@ -113,18 +115,47 @@ class LivestockController extends Controller implements HasAppendableSelect
 	/**
 	 * Remove the specified resource from storage.
 	 *
-	 * @param Livestock $livestock
+	 * @param int $livestock
+	 * @param LivestockRepository $livestockRepository
 	 * @return Response
 	 */
-	public function destroy(Livestock $livestock)
+	public function destroy(int $livestock, LivestockRepository $livestockRepository): Response
 	{
-		$livestock->delete();
+		return response(
+			$livestockRepository->delete(
+				$livestockRepository->findUnscoped($livestock)
+			),
+			200);
 	}
 
-	public function getSimilar(Livestock $livestock)
+	/**
+	 * Marks livestock as deceased
+	 *
+	 * @param int $livestock
+	 * @param LivestockRepository $livestockRepository
+	 * @return Response
+	 */
+	public function markDeceased(int $livestock, LivestockRepository $livestockRepository): Response
+	{
+		return response(
+			$livestockRepository->markDeceased(
+				$livestockRepository->findUnscoped($livestock),
+				true),
+			200);
+	}
+
+	/**
+	 * Gets similar livestock by type
+	 *
+	 * @param int $livestock
+	 * @return Response
+	 */
+	public function getSimilar(LivestockRepository $livestockRepository, int $livestock)
 	{
 		return response(LivestockResource::collection(
-			LivestockRepository::getSimilar($livestock)
+			$livestockRepository->getSimilar(
+				$livestock
+			)
 		));
 	}
 }

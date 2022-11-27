@@ -12,11 +12,13 @@ use App\Resources\Inventory\List\EquipmentResource as EquipmentListResource;
 use App\Resources\Inventory\List\PaginatedInventoryResource;
 use App\Services\Inventory\InventoryService;
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 use JsonException;
+use ReflectionException;
 
-class EquipmentController extends Controller
+final class EquipmentController extends Controller
 {
-	public function getTypes()
+	public function getTypes(): Collection
 	{
 		return EquipmentRepository::getFormattedTypes();
 	}
@@ -24,10 +26,13 @@ class EquipmentController extends Controller
 	/**
 	 * Display a listing of the resource.
 	 *
+	 * @param ListInventoryRequest $request
+	 * @param InventoryService $inventoryService
 	 * @return Response
 	 * @throws JsonException
+	 * @throws ReflectionException
 	 */
-	public function index(ListInventoryRequest $request, InventoryService $inventoryService)
+	public function index(ListInventoryRequest $request, InventoryService $inventoryService): Response
 	{
 		return response(
 			PaginatedInventoryResource::make(
@@ -41,9 +46,10 @@ class EquipmentController extends Controller
 	 * Store a newly created resource in storage.
 	 *
 	 * @param StoreEquipmentRequest $request
+	 * @param EquipmentRepository $equipmentRepository
 	 * @return Response
 	 */
-	public function store(StoreEquipmentRequest $request, EquipmentRepository $equipmentRepository)
+	public function store(StoreEquipmentRequest $request, EquipmentRepository $equipmentRepository): Response
 	{
 		return response(
 			$equipmentRepository->create($request->only((new Equipment())->getFillable()),
@@ -54,36 +60,29 @@ class EquipmentController extends Controller
 	/**
 	 * Display the specified resource.
 	 *
-	 * @param Equipment $equipment
+	 * @param EquipmentRepository $equipmentRepository
+	 * @param int $equipment
 	 * @return Response
 	 */
-	public function show(Equipment $equipment): Response
+	public function show(EquipmentRepository $equipmentRepository, int $equipment): Response
 	{
-		return response($equipment->getDetailResource());
+		return response(
+			$equipmentRepository->find($equipment)->getDetailResource()
+		);
 	}
 
 	/**
 	 * Display the specified resource.
 	 *
-	 * @param Equipment $equipment
+	 * @param EquipmentRepository $equipmentRepository
+	 * @param int $equipment
 	 * @return Response
 	 */
-	public function getSimilar(Equipment $equipment)
+	public function getSimilar(EquipmentRepository $equipmentRepository, int $equipment): Response
 	{
 		return response(EquipmentListResource::collection(
-			EquipmentRepository::getSimilar($equipment)
+			$equipmentRepository->getSimilar($equipment)
 		));
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param Equipment $equipment
-	 * @return Response
-	 */
-	public function edit(Equipment $equipment)
-	{
-		//
 	}
 
 	/**
@@ -91,9 +90,10 @@ class EquipmentController extends Controller
 	 *
 	 * @param UpdateEquipmentRequest $request
 	 * @param Equipment $equipment
+	 * @param EquipmentRepository $equipmentRepository
 	 * @return Response
 	 */
-	public function update(UpdateEquipmentRequest $request, Equipment $equipment, EquipmentRepository $equipmentRepository)
+	public function update(UpdateEquipmentRequest $request, Equipment $equipment, EquipmentRepository $equipmentRepository): Response
 	{
 		return response($equipmentRepository->update($equipment,
 			$request->only((new Equipment())->getFillable()),
@@ -104,10 +104,12 @@ class EquipmentController extends Controller
 	 * Remove the specified resource from storage.
 	 *
 	 * @param Equipment $equipment
+	 * @param EquipmentRepository $equipmentRepository
 	 * @return Response
 	 */
-	public function destroy(Equipment $equipment)
+	public function destroy(Equipment $equipment, EquipmentRepository $equipmentRepository): Response
 	{
-		$equipment->delete();
+		return response($equipmentRepository->delete($equipment), 200);
 	}
+
 }
