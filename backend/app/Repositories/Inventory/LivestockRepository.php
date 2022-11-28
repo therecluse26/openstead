@@ -88,11 +88,6 @@ class LivestockRepository extends InventoryRepository
 		return $model;
 	}
 
-	public function delete(Livestock $model): ?bool
-	{
-		return $model->delete();
-	}
-
 	public function markDeceased(Livestock $model, bool $deceased = true): bool
 	{
 		return $model->update(['date_of_death' => $deceased ? Carbon::now() : null]);
@@ -120,13 +115,15 @@ class LivestockRepository extends InventoryRepository
 			'description'
 		]));
 	}
-
-	public static function getFormattedTypes(): Collection
+	
+	public static function getFilters(): Collection
 	{
-		return collect(LivestockType::cases())
-			->map(function ($type) {
-				return $type->toFilter();
-			});
+		return collect([
+			'types' => collect(LivestockType::cases())
+				->map(function ($type) {
+					return $type->toFilter();
+				})
+		]);
 	}
 
 	public static function getTypeVarieties(string $type): Collection

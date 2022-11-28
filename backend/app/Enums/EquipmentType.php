@@ -67,10 +67,4 @@ enum EquipmentType: string
 			self::Other => 'Other'
 		};
 	}
-
-	public function toFilter(): array
-	{
-		return ['key' => $this, 'label' => $this->label(), 'icon' => $this->icon(), 'description' => $this->description()];
-	}
-
 }

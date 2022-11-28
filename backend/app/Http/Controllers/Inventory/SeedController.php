@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Inventory;
 
+use App\Contracts\HasAppendableSelect;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Inventory\StoreSeedRequest;
 use App\Http\Requests\Inventory\UpdateSeedRequest;
@@ -9,17 +10,32 @@ use App\Models\Inventory\Seed;
 use App\Repositories\Inventory\SeedRepository;
 use App\Resources\Inventory\List\PaginatedInventoryResource;
 use App\Resources\Inventory\List\SeedResource;
+use App\Resources\VarietyDropdownResource;
 use App\Services\Inventory\InventoryService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use JsonException;
 
-final class SeedController extends Controller
+final class SeedController extends Controller implements HasAppendableSelect
 {
+
 	public function getTypes(): Collection
 	{
 		return SeedRepository::getFormattedTypes();
+	}
+
+	public function getTypeValues(string $type): ResourceCollection
+	{
+		return VarietyDropdownResource::collection(
+			SeedRepository::getTypeVarieties($type)
+		);
+	}
+
+	public function getFilters(): Collection
+	{
+		return SeedRepository::getFilters();
 	}
 
 	/**
@@ -36,16 +52,6 @@ final class SeedController extends Controller
 				SeedResource::class
 			)
 		);
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
 	}
 
 	/**
@@ -72,17 +78,6 @@ final class SeedController extends Controller
 	}
 
 	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param Seed $model
-	 * @return Response
-	 */
-	public function edit(Seed $model): Response
-	{
-		//
-	}
-
-	/**
 	 * Update the specified resource in storage.
 	 *
 	 * @param UpdateSeedRequest $request
@@ -91,7 +86,7 @@ final class SeedController extends Controller
 	 */
 	public function update(UpdateSeedRequest $request, Seed $model): Response
 	{
-		//
+		return response(null, 200);
 	}
 
 	/**

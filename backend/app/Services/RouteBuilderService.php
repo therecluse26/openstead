@@ -30,6 +30,5 @@ class RouteBuilderService
 				Route::post('/', [$controllerClass, 'storeTypeValue']);
 				Route::get('/{type}/values', [$controllerClass, 'getTypeValues']);
 			});
-
 	}
 }

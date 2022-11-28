@@ -24,7 +24,7 @@ final class LivestockController extends Controller implements HasAppendableSelec
 {
 	public function getTypes(): iterable
 	{
-		return LivestockRepository::getFormattedTypes();
+		return LivestockRepository::getFilters()['types'];
 	}
 
 	public function getTypeValues(string $type): ResourceCollection
@@ -34,6 +34,11 @@ final class LivestockController extends Controller implements HasAppendableSelec
 		);
 	}
 
+	public function getFilters(): iterable
+	{
+		return LivestockRepository::getFilters();
+	}
+	
 	public function storeTypeValue(LivestockRepository $livestockRepository, StoreLivestockBreedRequest $request): Response
 	{
 		return response($livestockRepository->createBreedValue($request), 200);
@@ -125,6 +130,20 @@ final class LivestockController extends Controller implements HasAppendableSelec
 			$livestockRepository->delete(
 				$livestockRepository->findUnscoped($livestock)
 			),
+			200);
+	}
+
+	/**
+	 * Remove the specified resources from storage by array of IDs
+	 *
+	 * @param array $ids
+	 * @param LivestockRepository $livestockRepository
+	 * @return Response
+	 */
+	public function destroyMultiple(array $ids, LivestockRepository $livestockRepository): Response
+	{
+		return response(
+			$livestockRepository->deleteMultiple($ids),
 			200);
 	}
 

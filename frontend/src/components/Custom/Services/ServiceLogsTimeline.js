@@ -64,7 +64,7 @@ const ServiceLogsTimeline = ({ parentType, parentId }) => {
                             'w-full flex justify-content-end ml-2 -mb-4'
                         }>
                         <Button
-                            className={'p-button-danger'}
+                            className={'p-button-danger justify-content-center'}
                             onClick={() => {
                                 deleteServiceLog(item?.log?.id)
                             }}>

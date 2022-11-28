@@ -1,5 +1,8 @@
 <?php
 
+use App\Enums\HardinessZone;
+use App\Enums\PlantLifeCycle;
+use App\Enums\PlantLightRequirement;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -62,6 +65,23 @@ return new class extends Migration {
 			$table->id();
 			$table->unsignedBigInteger('variety_id');
 			$table->unsignedInteger('quantity')->default(1);
+			$table->enum('life_cycle', collect(PlantLifeCycle::cases())->map(function ($case) {
+				return $case->value;
+			})->toArray())->default(PlantLifeCycle::Annual->value);
+			$table->unsignedSmallInteger('days_to_germination')->nullable();
+			$table->unsignedSmallInteger('days_to_maturity')->nullable();
+			$table->unsignedFloat('planting_depth')->nullable();
+			$table->unsignedSmallInteger('plant_spacing')->nullable();
+			$table->enum('light_requirement', collect(PlantLightRequirement::cases())->map(function ($case) {
+				return $case->value;
+			})->toArray())->nullable();
+			$table->enum('zone_lower', collect(HardinessZone::cases())->map(function ($case) {
+				return $case->value;
+			})->toArray())->nullable();
+			$table->enum('zone_upper', collect(HardinessZone::cases())->map(function ($case) {
+				return $case->value;
+			})->toArray())->nullable();
+			$table->string('url', 2000)->nullable();
 			$table->dateTime('acquired_at')->nullable();
 			$table->timestamps();
 

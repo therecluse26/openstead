@@ -92,16 +92,20 @@ class EquipmentRepository extends InventoryRepository
 		return $equipment;
 	}
 
-	public function delete(Equipment $equipment): ?bool
-	{
-		return $equipment->delete();
-	}
-
 	public static function getFormattedTypes(): Collection
 	{
 		return collect(EquipmentType::cases())->map(function ($type) {
 			return $type->toFilter();
 		});
+	}
+	
+	public static function getFilters(): Collection
+	{
+		return collect([
+			'types' => collect(EquipmentType::cases())->map(function ($type) {
+				return $type->toFilter();
+			}),
+		]);
 	}
 
 	public function getSimilar(int $id): Collection

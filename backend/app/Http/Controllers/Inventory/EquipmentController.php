@@ -23,6 +23,11 @@ final class EquipmentController extends Controller
 		return EquipmentRepository::getFormattedTypes();
 	}
 
+	public function getFilters(): Collection
+	{
+		return EquipmentRepository::getFilters();
+	}
+
 	/**
 	 * Display a listing of the resource.
 	 *

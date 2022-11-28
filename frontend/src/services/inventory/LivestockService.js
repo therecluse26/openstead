@@ -65,8 +65,8 @@ const markDeceased = async id => {
     return axios.post(`/api/inventory/livestock/${id}/deceased`)
 }
 
-const getTypes = () => {
-    return axios.get('/api/inventory/livestock/types').then(res => res.data)
+const getFilters = () => {
+    return axios.get('/api/inventory/livestock/filters').then(res => res.data)
 }
 
 const addBreed = async (id, data) => {
@@ -87,7 +87,7 @@ const getSimilarItems = id => {
 
 export default {
     getItem,
-    getTypes,
+    getFilters,
     getList,
     getSimilarItems,
     addBreed,

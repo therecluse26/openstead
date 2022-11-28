@@ -34,23 +34,34 @@ Route::middleware(['auth:sanctum'])->group(function () {
 			Route::get('/base/types', [InventoryController::class, 'getTypes']);
 
 			// Equipment
-			Route::get('/equipment/types', [EquipmentController::class, 'getTypes']);
-			Route::get('/equipment/{equipment}/similar', [EquipmentController::class, 'getSimilar']);
+			Route::prefix('/equipment')
+				->group(function () {
+					Route::get('/types', [EquipmentController::class, 'getTypes']);
+					Route::get('/filters', [EquipmentController::class, 'getFilters']);
+					Route::get('/{equipment}/similar', [EquipmentController::class, 'getSimilar']);
+				});
 			Route::apiResource('/equipment', EquipmentController::class);
 
 			// Livestock
 			Route::prefix('/livestock')
 				->group(function () {
 					RouteBuilderService::buildTypeFilterRoute(LivestockController::class);
+					Route::get('/filters', [LivestockController::class, 'getFilters']);
 					Route::get('/{livestock}/similar', [LivestockController::class, 'getSimilar']);
 					Route::post('/{livestock}/deceased', [LivestockController::class, 'markDeceased']);
 					Route::get('/types/{type}/members', [LivestockController::class, 'getTypeMembers']);
 				});
 			Route::apiResource('/livestock', LivestockController::class);
 
+
 			// Seeds
-			Route::get('/seeds/types', [SeedController::class, 'getTypes']);
+			Route::prefix('/seeds')
+				->group(function () {
+					RouteBuilderService::buildTypeFilterRoute(SeedController::class);
+					Route::get('/filters', [SeedController::class, 'getFilters']);
+				});
 			Route::apiResource('/seeds', SeedController::class);
+
 
 		});
 

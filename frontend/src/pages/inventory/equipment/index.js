@@ -31,13 +31,13 @@ const Equipment = () => {
 
     useEffect(() => {
         isMounted.current = true
-        loadTypes()
+        loadFilters()
     }, [])
 
-    const loadTypes = () => {
-        EquipmentService.getTypes().then(data => {
+    const loadFilters = () => {
+        EquipmentService.getFilters().then(data => {
             setTypes(
-                data.map(t => {
+                data?.types?.map(t => {
                     return { label: t.label, value: t.key, icon: t.icon }
                 }),
             )

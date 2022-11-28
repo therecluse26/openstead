@@ -6,6 +6,9 @@ use App\Contracts\FrontendFilterable;
 use App\Contracts\Inventoriable;
 use App\Contracts\Notable;
 use App\Contracts\VarietyContract;
+use App\Enums\HardinessZone;
+use App\Enums\PlantLifeCycle;
+use App\Enums\PlantLightRequirement;
 use App\Enums\PlantType;
 use App\Resources\FormattedFilter;
 use App\Resources\Inventory\Detail\SeedResource as SeedDetailResource;
@@ -36,12 +39,24 @@ class Seed extends Model implements Inventoriable, VarietyContract, FrontendFilt
 
 	protected $fillable = [
 		'variety_id',
-		'location_id',
 		'quantity',
+		'life_cycle',
+		'days_to_germination',
+		'days_to_maturity',
+		'planting_depth',
+		'plant_spacing',
+		'light_requirement',
+		'zone_lower',
+		'zone_upper',
+		'url',
 		'acquired_at'
 	];
 
 	protected $casts = [
+		'life_cycle' => PlantLifeCycle::class,
+		'light_requirement' => PlantLightRequirement::class,
+		'zone_lower' => HardinessZone::class,
+		'zone_upper' => HardinessZone::class,
 		'acquired_at' => 'datetime'
 	];
 

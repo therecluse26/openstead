@@ -71,16 +71,36 @@ class InventoryRepository implements InventoryContract, Repository
 	 * Finds model by ID
 	 *
 	 * @param string|int $id
-	 * @return ?Model
+	 * @return Model
 	 */
-	public function getById(string|int $id): ?Model
+	public function getById(string|int $id): Model
 	{
-		return $this->model->find($id);
+		return $this->model->findOrFail($id);
 	}
 
-	public function getInventory($id)
+	/**
+	 * Deletes model by ID
+	 *
+	 * @param Model|Inventoriable|int|string $model
+	 * @return ?bool
+	 */
+	public function delete(Model|Inventoriable|int|string $model): ?bool
 	{
-		return $this->getById($id)?->inventory;
+		if (is_int($model) || is_string($model)) {
+			$model = $this->getById($model);
+		}
+		return $model->delete();
+	}
+
+	/**
+	 * Deletes multiple models by list of ids
+	 *
+	 * @param array $ids
+	 * @return ?bool
+	 */
+	public function deleteMultiple(array $ids): ?bool
+	{
+		return $this->model->whereIn($ids)->delete();
 	}
 
 	/**
@@ -100,20 +120,6 @@ class InventoryRepository implements InventoryContract, Repository
 	 * @return int
 	 */
 	public function getTotalItemQuantity($item_id): int
-	{
-		return $this->model
-			->where('id', $item_id)
-			->sum('quantity');
-	}
-
-	/**
-	 * Retrieves total inventory quantity of given model
-	 *
-	 * @param $item_id
-	 * @param $location_id
-	 * @return int
-	 */
-	public function getItemQuantityAtLocation($item_id, $location_id): int
 	{
 		return $this->model
 			->where('id', $item_id)

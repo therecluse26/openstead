@@ -6,14 +6,19 @@ import QuantityFilterTemplate from '@/pages/inventory/templates/QuantityFilterTe
 import SeedService from '@/services/inventory/SeedService'
 import TypeFilterElement from '@/components/Custom/Inventory/TypeFilterElement'
 import TypeBodyTemplateElement from '@/components/Custom/Inventory/TypeBodyTemplateElement'
+import { Dropdown } from 'primereact/dropdown'
 
 const Seeds = () => {
     const [types, setTypes] = useState([])
+    const [lightRequirements, setLightRequirements] = useState([])
+    const [lifeCycles, setLifeCycles] = useState([])
     const isMounted = useRef(false)
     const [filters, setFilters] = useState({
         name: { value: '', matchMode: 'contains' },
         date_of_birth: { value: '', matchMode: 'equals' },
         quantity: { value: null, matchMode: 'equals' },
+        life_cycle: { value: '', matchMode: 'equals' },
+        light_requirement: { value: '', matchMode: 'equals' },
         variety: {
             value: '',
             matchMode: 'contains',
@@ -30,7 +35,7 @@ const Seeds = () => {
 
     useEffect(() => {
         isMounted.current = true
-        loadTypes()
+        loadFilters()
     }, [])
 
     const formatDate = value => {
@@ -46,6 +51,14 @@ const Seeds = () => {
             ...lazyParams,
             filters: {
                 ...filters,
+                life_cycle: {
+                    ...filters.life_cycle,
+                    value: filters.life_cycle.value,
+                },
+                light_requirement: {
+                    ...filters.light_requirement,
+                    value: filters.light_requirement.value,
+                },
                 type: {
                     ...filters.type,
                     value: filters.type.value,
@@ -58,10 +71,20 @@ const Seeds = () => {
         }
     }
 
-    const loadTypes = () => {
-        SeedService.getTypes().then(data => {
+    const loadFilters = () => {
+        SeedService.getFilters().then(data => {
+            setLifeCycles(
+                data?.life_cycles?.map(t => {
+                    return { label: t.label, value: t.key, icon: t.icon }
+                }),
+            )
+            setLightRequirements(
+                data?.light_requirements?.map(t => {
+                    return { label: t.label, value: t.key, icon: t.icon }
+                }),
+            )
             setTypes(
-                data.map(t => {
+                data?.types?.map(t => {
                     return { label: t.label, value: t.key, icon: t.icon }
                 }),
             )
@@ -124,6 +147,76 @@ const Seeds = () => {
                 showClear
                 showFilterMenu={false}
                 style={{ minWidth: '200px' }}
+            />
+
+            <Column
+                field="life_cycle"
+                header="Lifecycle"
+                sortable
+                filter
+                filterPlaceholder="Search"
+                filterElement={options => {
+                    return (
+                        <Dropdown
+                            value={options.value}
+                            options={lifeCycles}
+                            onChange={e => {
+                                options.filterCallback(e.value, options.index)
+                                setFilters({
+                                    ...filters,
+                                    life_cycle: {
+                                        ...filters.life_cycle,
+                                        value: e.value,
+                                    },
+                                })
+                            }}
+                            placeholder={'Search'}
+                        />
+                    )
+                }}
+                body={rowData => {
+                    return rowData?.life_cycle?.label
+                }}
+                showFilterMenu={false}
+                showClear
+                style={{ width: '160px', minWidth: '160px' }}
+            />
+
+            <Column
+                field="light_requirement"
+                header="Light Requirement"
+                sortable
+                filter
+                filterPlaceholder="Search"
+                filterElement={options => {
+                    return (
+                        <Dropdown
+                            value={options.value}
+                            options={lightRequirements}
+                            onChange={e => {
+                                options.filterCallback(e.value, options.index)
+                                setFilters({
+                                    ...filters,
+                                    light_requirement: {
+                                        ...filters.light_requirement,
+                                        value: e.value,
+                                    },
+                                })
+                            }}
+                            placeholder={'Search'}
+                        />
+                    )
+                }}
+                body={rowData => {
+                    return (
+                        rowData?.light_requirement?.icon +
+                        '  ' +
+                        rowData?.light_requirement?.label
+                    )
+                }}
+                showFilterMenu={false}
+                showClear
+                style={{ width: '240px', minWidth: '200px' }}
             />
 
             <Column

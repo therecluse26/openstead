@@ -23,4 +23,10 @@ trait FilterableEnum
 	{
 		return null;
 	}
+
+	public function toFilter(): array
+	{
+		return ['key' => $this, 'label' => $this->label(), 'icon' => $this->icon(), 'description' => $this->description()];
+	}
+
 }

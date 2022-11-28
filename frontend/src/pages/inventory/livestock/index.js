@@ -50,9 +50,9 @@ const Livestock = () => {
     }
 
     const loadTypes = () => {
-        LivestockService.getTypes().then(data => {
+        LivestockService.getFilters().then(data => {
             setTypes(
-                data.map(t => {
+                data?.types?.map(t => {
                     return { label: t.label, value: t.key, icon: t.icon }
                 }),
             )

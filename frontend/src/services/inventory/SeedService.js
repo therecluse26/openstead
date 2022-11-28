@@ -32,8 +32,12 @@ const getItem = id => {
     return axios.get('/api/inventory/seeds/' + id).then(res => res.data)
 }
 
+const getFilters = () => {
+    return axios.get('/api/inventory/seeds/filters').then(res => res.data)
+}
+
 const getTypes = () => {
     return axios.get('/api/inventory/seeds/types').then(res => res.data)
 }
 
-export default { getItem, getTypes, getList }
+export default { getItem, getTypes, getList, getFilters }

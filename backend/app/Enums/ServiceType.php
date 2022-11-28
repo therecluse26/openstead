@@ -41,10 +41,4 @@ enum ServiceType: string
 			self::Other => '❔',
 		};
 	}
-
-	public function toFilter(): array
-	{
-		return ['key' => $this, 'label' => $this->label(), 'icon' => $this->icon()];
-	}
-
 }

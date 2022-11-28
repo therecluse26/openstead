@@ -42,9 +42,4 @@ enum Sex: string
 			self::Female => '♀',
 		};
 	}
-
-	public function toFilter(): array
-	{
-		return ['key' => $this, 'label' => $this->label(), 'icon' => $this->icon()];
-	}
 }

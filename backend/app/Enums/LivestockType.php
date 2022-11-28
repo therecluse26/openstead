@@ -58,10 +58,5 @@ enum LivestockType: string
 			self::Other => 'Frog, elephant, martian',
 		};
 	}
-
-	public function toFilter(): array
-	{
-		return ['key' => $this, 'icon' => $this->icon(), 'label' => $this->label()];
-	}
 	
 }

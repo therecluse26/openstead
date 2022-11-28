@@ -82,7 +82,9 @@ const Notes = ({ parentType, parentId }) => {
                                             'col-1 w-full flex justify-content-end ml-2 -mt-4 -mb-4'
                                         }>
                                         <Button
-                                            className={'p-button-danger'}
+                                            className={
+                                                'p-button-danger justify-content-center'
+                                            }
                                             onClick={() => {
                                                 deleteNote(note.id)
                                             }}>

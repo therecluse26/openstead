@@ -2,9 +2,12 @@
 
 namespace App\Repositories\Inventory;
 
+use App\Enums\PlantLifeCycle;
+use App\Enums\PlantLightRequirement;
 use App\Enums\PlantType;
 use App\Http\Requests\Inventory\StoreSeedRequest;
 use App\Models\Inventory\Seed;
+use App\Models\Variety;
 use App\Traits\AddMedia;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -52,10 +55,31 @@ class SeedRepository extends InventoryRepository
 		return PlantType::cases();
 	}
 
+	public static function getTypeVarieties(string $type): Collection
+	{
+		return collect(Variety::where('kingdom', 'plant')->where('group_type', $type)->get());
+	}
+
+
 	public static function getFormattedTypes(): Collection
 	{
 		return collect(PlantType::cases())->map(function ($type) {
 			return $type->toFilter();
 		});
+	}
+
+	public static function getFilters(): Collection
+	{
+		return collect([
+			'types' => collect(PlantType::cases())->map(function ($type) {
+				return $type->toFilter();
+			}),
+			'life_cycles' => collect(PlantLifeCycle::cases())->map(function ($type) {
+				return $type->toFilter();
+			}),
+			'light_requirements' => collect(PlantLightRequirement::cases())->map(function ($type) {
+				return $type->toFilter();
+			})
+		]);
 	}
 }

@@ -28,9 +28,9 @@ const getSimilarItems = async id => {
         .then(res => res.data)
 }
 
-const getTypes = async () => {
+const getFilters = async () => {
     return await axios
-        .get('/api/inventory/equipment/types')
+        .get('/api/inventory/equipment/filters')
         .then(res => res.data)
 }
 
@@ -82,11 +82,11 @@ const addService = async (id, data) => {
 
 export default {
     getItem,
-    getTypes,
     getList,
     getSimilarItems,
     createOrUpdate,
     addServiceLog,
     addService,
     deleteItem,
+    getFilters,
 }

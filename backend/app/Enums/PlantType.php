@@ -139,10 +139,4 @@ enum PlantType: string
 			self::Other => "Ginkgo biloba",
 		};
 	}
-
-	public function toFilter(): array
-	{
-		return ['key' => $this, 'label' => $this->label(), 'icon' => $this->icon(), 'description' => $this->description()];
-	}
-
 }
