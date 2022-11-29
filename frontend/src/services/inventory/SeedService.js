@@ -40,4 +40,27 @@ const getTypes = () => {
     return axios.get('/api/inventory/seeds/types').then(res => res.data)
 }
 
-export default { getItem, getTypes, getList, getFilters }
+const addVariety = async (id, data) => {
+    return await axios.post(`/api/inventory/seeds/types`, {
+        kingdom: 'plant',
+        group_type: data.type,
+        variety_name: data.title,
+        description: data.description,
+        _method: 'POST',
+    })
+}
+
+const getSimilarItems = id => {
+    return axios
+        .get('/api/inventory/seeds/' + id + '/similar')
+        .then(res => res.data)
+}
+
+export default {
+    getItem,
+    getTypes,
+    getList,
+    getFilters,
+    getSimilarItems,
+    addVariety,
+}

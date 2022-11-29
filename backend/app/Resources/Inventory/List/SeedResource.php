@@ -11,6 +11,7 @@ class SeedResource extends JsonResource
 	{
 		return [
 			'id' => $this->id,
+			'name' => $this->variety?->variety_name,
 			'variety' => VarietyResource::make($this->variety),
 			'quantity' => $this->quantity,
 			'life_cycle' => $this->life_cycle?->toFilter(),

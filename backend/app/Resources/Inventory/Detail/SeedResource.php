@@ -13,7 +13,14 @@ class SeedResource extends JsonResource
 			'id' => $this->id,
 			'variety' => VarietyResource::make($this->variety),
 			'quantity' => $this->quantity,
-			'acquired_at' => $this->acquired_at
+			'acquired_at' => $this->acquired_at,
+			'primary_image' => $this->primary_image,
+			'description' => $this->description,
+			'life_cycle' => $this->life_cycle?->toFilter(),
+			'light_requirement' => $this->light_requirement?->toFilter(),
+			'zone_lower' => $this->zone_lower?->toFilter(),
+			'zone_upper' => $this->zone_upper?->toFilter(),
+			'url' => $this->url
 		];
 	}
 }

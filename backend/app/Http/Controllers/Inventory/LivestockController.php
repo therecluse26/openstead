@@ -38,10 +38,10 @@ final class LivestockController extends Controller implements HasAppendableSelec
 	{
 		return LivestockRepository::getFilters();
 	}
-	
-	public function storeTypeValue(LivestockRepository $livestockRepository, StoreLivestockBreedRequest $request): Response
+
+	public function storeTypeValue(LivestockRepository $repository, StoreLivestockBreedRequest $request): Response
 	{
-		return response($livestockRepository->createBreedValue($request), 200);
+		return response($repository->createVarietyValue($request), 200);
 	}
 
 	public function getTypeMembers(LivestockRepository $livestockRepository, LivestockType $type): ResourceCollection

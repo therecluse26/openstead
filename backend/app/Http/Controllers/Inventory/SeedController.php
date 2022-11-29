@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Inventory;
 use App\Contracts\HasAppendableSelect;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Inventory\StoreSeedRequest;
+use App\Http\Requests\Inventory\StoreSeedVarietyRequest;
 use App\Http\Requests\Inventory\UpdateSeedRequest;
 use App\Models\Inventory\Seed;
 use App\Repositories\Inventory\SeedRepository;
@@ -17,6 +18,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use JsonException;
+use ReflectionException;
 
 final class SeedController extends Controller implements HasAppendableSelect
 {
@@ -38,11 +40,16 @@ final class SeedController extends Controller implements HasAppendableSelect
 		return SeedRepository::getFilters();
 	}
 
+	public function storeTypeValue(SeedRepository $repository, StoreSeedVarietyRequest $request): Response
+	{
+		return response($repository->createVarietyValue($request), 200);
+	}
+
 	/**
 	 * Display a listing of the resource.
 	 *
 	 * @return Response
-	 * @throws JsonException
+	 * @throws JsonException|ReflectionException
 	 */
 	public function index(Request $request, InventoryService $inventoryService)
 	{
@@ -69,12 +76,13 @@ final class SeedController extends Controller implements HasAppendableSelect
 	/**
 	 * Display the specified resource.
 	 *
-	 * @param Seed $model
+	 * @param SeedRepository $repository
+	 * @param int $id
 	 * @return Response
 	 */
-	public function show(Seed $model): Response
+	public function show(SeedRepository $repository, int $id): Response
 	{
-		return response($model);
+		return response($repository->find($id)->getDetailResource());
 	}
 
 	/**
@@ -98,5 +106,21 @@ final class SeedController extends Controller implements HasAppendableSelect
 	public function destroy(Seed $model)
 	{
 		$model->delete();
+	}
+
+	/**
+	 * Gets similar item by type
+	 *
+	 * @param SeedRepository $repository
+	 * @param int $id
+	 * @return Response
+	 */
+	public function getSimilar(SeedRepository $repository, int $id)
+	{
+		return response(SeedResource::collection(
+			$repository->getSimilar(
+				$id
+			)
+		));
 	}
 }

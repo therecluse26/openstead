@@ -59,6 +59,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 				->group(function () {
 					RouteBuilderService::buildTypeFilterRoute(SeedController::class);
 					Route::get('/filters', [SeedController::class, 'getFilters']);
+					Route::get('/{id}/similar', [SeedController::class, 'getSimilar']);
 				});
 			Route::apiResource('/seeds', SeedController::class);
 

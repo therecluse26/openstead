@@ -24,5 +24,5 @@ interface HasAppendableSelect
 	 * @return ResourceCollection|Collection
 	 */
 	public function getTypeValues(string $type): ResourceCollection|Collection;
-
+	
 }

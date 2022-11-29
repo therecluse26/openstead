@@ -106,7 +106,7 @@ class LivestockRepository extends InventoryRepository
 		})->orderBy('name')->get();
 	}
 
-	public function createBreedValue(StoreLivestockBreedRequest $request): Variety
+	public function createVarietyValue(StoreLivestockBreedRequest $request): Variety
 	{
 		return Variety::create($request->only([
 			'kingdom',
@@ -115,7 +115,7 @@ class LivestockRepository extends InventoryRepository
 			'description'
 		]));
 	}
-	
+
 	public static function getFilters(): Collection
 	{
 		return collect([

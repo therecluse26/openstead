@@ -6,9 +6,11 @@ use App\Enums\PlantLifeCycle;
 use App\Enums\PlantLightRequirement;
 use App\Enums\PlantType;
 use App\Http\Requests\Inventory\StoreSeedRequest;
+use App\Http\Requests\Inventory\StoreSeedVarietyRequest;
 use App\Models\Inventory\Seed;
 use App\Models\Variety;
 use App\Traits\AddMedia;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -36,6 +38,12 @@ class SeedRepository extends InventoryRepository
 				return $e;
 			});
 	}
+
+	public function find(int $id): Seed
+	{
+		return $this->model->findOrFail($id);
+	}
+
 
 	public function create(StoreSeedRequest $request): Seed
 	{
@@ -81,5 +89,25 @@ class SeedRepository extends InventoryRepository
 				return $type->toFilter();
 			})
 		]);
+	}
+
+	public function createVarietyValue(StoreSeedVarietyRequest|FormRequest $request): Variety
+	{
+		return Variety::create($request->only([
+			'kingdom',
+			'group_type',
+			'variety_name',
+			'description'
+		]));
+	}
+
+	public function getSimilar(int $id): Collection
+	{
+		$result = $this->find($id);
+		return $this->model->whereNot('id', $id)
+			->where('variety_id', $result->variety_id)
+			->inRandomOrder()
+			->take(6)
+			->get();
 	}
 }

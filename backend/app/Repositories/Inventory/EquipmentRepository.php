@@ -98,7 +98,7 @@ class EquipmentRepository extends InventoryRepository
 			return $type->toFilter();
 		});
 	}
-	
+
 	public static function getFilters(): Collection
 	{
 		return collect([

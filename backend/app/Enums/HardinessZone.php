@@ -37,6 +37,40 @@ enum HardinessZone: string
 	case ThirteenA = '13a';
 	case ThirteenB = '13b';
 
+	public function order(): int
+	{
+		return match ($this) {
+			self::ZeroA => 1,
+			self::ZeroB => 2,
+			self::OneA => 3,
+			self::OneB => 4,
+			self::TwoA => 5,
+			self::TwoB => 6,
+			self::ThreeA => 7,
+			self::ThreeB => 8,
+			self::FourA => 9,
+			self::FourB => 10,
+			self::FiveA => 11,
+			self::FiveB => 12,
+			self::SixA => 13,
+			self::SixB => 14,
+			self::SevenA => 15,
+			self::SevenB => 16,
+			self::EightA => 17,
+			self::EightB => 18,
+			self::NineA => 19,
+			self::NineB => 20,
+			self::TenA => 21,
+			self::TenB => 22,
+			self::ElevenA => 23,
+			self::ElevenB => 24,
+			self::TwelveA => 25,
+			self::TwelveB => 26,
+			self::ThirteenA => 27,
+			self::ThirteenB => 28
+		};
+	}
+
 	private function format(float $celsiusValue, string $unit = 'c'): float
 	{
 		return $unit === 'f' ? ($celsiusValue * 1.8) + 32 : $celsiusValue;

@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace App\Repositories\Inventory;
 
 use App\Contracts\Inventoriable;
-use App\Contracts\Repositories\InventoryContract;
 use App\Contracts\Repository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
-class InventoryRepository implements InventoryContract, Repository
+class InventoryRepository implements Repository
 {
 	/**
 	 * Model that implements Inventoriable contract
