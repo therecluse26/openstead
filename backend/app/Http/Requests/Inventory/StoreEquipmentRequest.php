@@ -34,6 +34,7 @@ class StoreEquipmentRequest extends FormRequest
 			'quantity' => ['required', 'integer', "min:0"],
 			'images' => ['array'],
 			'url' => ['nullable', 'string'],
+			'acquired_at' => ['nullable', 'date'],
 			'images.*' => ['string', 'max:1361920', new Contains('data:image/')],
 		];
 	}

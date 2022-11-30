@@ -20,6 +20,7 @@ const AppendableSelect = ({
     label,
     selectedType,
     id,
+    className,
 }) => {
     const [newServiceId, setNewServiceId] = useState(null)
     const [addSupertypeFormVisible, setAddSupertypeFormVisible] = useState(
@@ -75,7 +76,7 @@ const AppendableSelect = ({
     }
     return (
         <>
-            <div className="field">
+            <div className={className ?? 'field'}>
                 <div className="p-inputgroup">
                     <SelectInput
                         optionsEndpoint={`${supertypeApiUrl}/${selectedType}/values`}

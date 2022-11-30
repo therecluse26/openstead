@@ -147,7 +147,6 @@ const EquipmentForm = ({ mode = 'create' }) => {
                                     control={control}
                                     name={'quantity'}
                                     label={'Quantity'}
-                                    showButtons={true}
                                     max={10000}
                                     rules={{
                                         required: 'Quantity is required.',

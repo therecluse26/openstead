@@ -24,6 +24,7 @@ const NumberInput = ({
                     <InputNumber
                         id={name}
                         value={value}
+                        defaultValue={value}
                         mode={mode}
                         className={classNames({
                             'p-invalid': fieldState.error,

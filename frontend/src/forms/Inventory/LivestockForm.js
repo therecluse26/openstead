@@ -28,15 +28,12 @@ const LivestockForm = ({ mode = 'create' }) => {
     const defaultValues = {
         name: null,
         type: null,
-        condition: null,
         quantity: 1,
-        rating: null,
         description: null,
         parents: [],
         children: [],
         images: [],
         acquired_at: null,
-        url: null,
     }
     const {
         control,
@@ -248,7 +245,6 @@ const LivestockForm = ({ mode = 'create' }) => {
                                     control={control}
                                     name={'quantity'}
                                     label={'Quantity'}
-                                    showButtons={true}
                                     min={1}
                                     max={10000}
                                     rules={{

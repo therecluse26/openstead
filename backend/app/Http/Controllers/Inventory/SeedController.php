@@ -35,6 +35,21 @@ final class SeedController extends Controller implements HasAppendableSelect
 		);
 	}
 
+	public function getLifeCycles(): Collection
+	{
+		return SeedRepository::getLifecycles();
+	}
+
+	public function getLightRequirements(): Collection
+	{
+		return SeedRepository::getLightRequirements();
+	}
+
+	public function getHardinessZones(): Collection
+	{
+		return SeedRepository::getHardinessZones();
+	}
+
 	public function getFilters(): Collection
 	{
 		return SeedRepository::getFilters();
@@ -70,7 +85,10 @@ final class SeedController extends Controller implements HasAppendableSelect
 	 */
 	public function store(StoreSeedRequest $request, SeedRepository $repository)
 	{
-		return response($repository->create($request), 200);
+		return response($repository->create(
+			$request->only((new Seed())->getFillable()),
+			$request->get('images'),
+		), 200);
 	}
 
 	/**
@@ -89,12 +107,16 @@ final class SeedController extends Controller implements HasAppendableSelect
 	 * Update the specified resource in storage.
 	 *
 	 * @param UpdateSeedRequest $request
-	 * @param Seed $model
+	 * @param SeedRepository $repository
 	 * @return Response
 	 */
-	public function update(UpdateSeedRequest $request, Seed $model): Response
+	public function update(UpdateSeedRequest $request, SeedRepository $repository, int $id): Response
 	{
-		return response(null, 200);
+		return response($repository->update(
+			$repository->find($id),
+			$request->only((new Seed())->getFillable()),
+			$request->get('images'),
+		), 200);
 	}
 
 	/**

@@ -20,6 +20,10 @@ class SeedResource extends JsonResource
 			'light_requirement' => $this->light_requirement?->toFilter(),
 			'zone_lower' => $this->zone_lower?->toFilter(),
 			'zone_upper' => $this->zone_upper?->toFilter(),
+			'days_to_germination' => $this->days_to_germination,
+			'days_to_maturity' => $this->days_to_maturity,
+			'planting_depth' => $this->planting_depth,
+			'plant_spacing' => $this->plant_spacing,
 			'url' => $this->url
 		];
 	}

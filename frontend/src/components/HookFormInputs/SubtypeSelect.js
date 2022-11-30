@@ -14,6 +14,7 @@ const SubtypeSelect = ({
     watch,
     label,
     id,
+    className,
 }) => {
     const watchType = watch('type')
 
@@ -29,7 +30,7 @@ const SubtypeSelect = ({
 
     return (
         <>
-            <div className="field">
+            <div className={className ?? 'field'}>
                 <SelectInput
                     optionsEndpoint={supertypeApiUrl}
                     control={control}

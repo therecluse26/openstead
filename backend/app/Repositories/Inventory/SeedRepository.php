@@ -2,10 +2,10 @@
 
 namespace App\Repositories\Inventory;
 
+use App\Enums\HardinessZone;
 use App\Enums\PlantLifeCycle;
 use App\Enums\PlantLightRequirement;
 use App\Enums\PlantType;
-use App\Http\Requests\Inventory\StoreSeedRequest;
 use App\Http\Requests\Inventory\StoreSeedVarietyRequest;
 use App\Models\Inventory\Seed;
 use App\Models\Variety;
@@ -45,15 +45,24 @@ class SeedRepository extends InventoryRepository
 	}
 
 
-	public function create(StoreSeedRequest $request): Seed
+	public function create(array $data, ?array $images = null): Seed
 	{
-		$model = $this->model->create($request->only([
-			'name',
-			'type',
-			'variety',
-			'quantity',
-			'acquired_at'
-		]));
+		$model = $this->model->create($data);
+
+		if ($images) {
+			$this->addOrReplaceImagesBase64($model, $images);
+		}
+
+		return $model;
+	}
+
+	public function update(Seed $model, array $data, ?array $images = null): Seed
+	{
+		$model->update($data);
+
+		if ($images) {
+			$this->addOrReplaceImagesBase64($model, $images);
+		}
 
 		return $model;
 	}
@@ -76,18 +85,33 @@ class SeedRepository extends InventoryRepository
 		});
 	}
 
+	public static function getLifecycles(): Collection
+	{
+		return collect(PlantLifeCycle::cases())->map(function ($type) {
+			return $type->toFilter();
+		});
+	}
+
+	public static function getLightRequirements(): Collection
+	{
+		return collect(PlantLightRequirement::cases())->map(function ($type) {
+			return $type->toFilter();
+		});
+	}
+
+	public static function getHardinessZones(): Collection
+	{
+		return collect(HardinessZone::cases())->map(function ($type) {
+			return $type->toFilter();
+		});
+	}
+
 	public static function getFilters(): Collection
 	{
 		return collect([
-			'types' => collect(PlantType::cases())->map(function ($type) {
-				return $type->toFilter();
-			}),
-			'life_cycles' => collect(PlantLifeCycle::cases())->map(function ($type) {
-				return $type->toFilter();
-			}),
-			'light_requirements' => collect(PlantLightRequirement::cases())->map(function ($type) {
-				return $type->toFilter();
-			})
+			'types' => self::getFormattedTypes(),
+			'life_cycles' => self::getLifecycles(),
+			'light_requirements' => self::getLightRequirements()
 		]);
 	}
 

@@ -9,13 +9,11 @@ import { convertUploadedFilesToBase64 } from '@/utils/file-utils'
 import { csrf } from '@/hooks/auth'
 import ToastContext, { useToastContext } from '@/context/ToastContext'
 import AddErrorToasts from '@/utils/AddErrorToasts'
-import LivestockService from '@/services/inventory/LivestockService'
 import SubtypeSelect from '@/components/HookFormInputs/SubtypeSelect'
-import ListboxInput from '@/components/HookFormInputs/ListboxInput'
 import NumberInput from '@/components/HookFormInputs/NumberInput'
-import TextAreaInput from '@/components/HookFormInputs/TextAreaInput'
-import SelectButtonInput from '@/components/HookFormInputs/SelectButtonInput'
 import SeedService from '@/services/inventory/SeedService'
+import SelectInput from '@/components/HookFormInputs/SelectInput'
+import TextInput from '@/components/HookFormInputs/TextInput'
 
 const SeedForm = ({ mode = 'create' }) => {
     const isMounted = useRef(false)
@@ -26,17 +24,18 @@ const SeedForm = ({ mode = 'create' }) => {
     const { query, isReady } = useRouter()
     const { id } = query
     const defaultValues = {
-        name: null,
-        type: null,
-        condition: null,
+        variety_id: null,
         quantity: 1,
-        rating: null,
-        description: null,
-        parents: [],
-        children: [],
-        images: [],
+        days_to_germination: null,
+        days_to_maturity: null,
+        planting_depth: null,
+        plant_spacing: null,
+        light_requirement: null,
+        zone_lower: null,
+        zone_upper: null,
         acquired_at: null,
         url: null,
+        images: [],
     }
     const {
         control,
@@ -47,21 +46,18 @@ const SeedForm = ({ mode = 'create' }) => {
         watch,
     } = useForm({ defaultValues })
 
-    const deleteLivestock = async () => {
-        await LivestockService.deleteItem(id)
+    const deleteItem = async () => {
+        await SeedService.deleteItem(id)
     }
 
     const confirmDelete = () => {
         if (confirm('Are you sure you want to delete this item?')) {
-            deleteLivestock()
-            router.push('/inventory/livestock')
+            deleteItem()
+            router.push('/inventory/seeds')
         }
     }
 
     const type = watch('type')
-    const watchParents = watch('parents')
-    const watchChildren = watch('children')
-    const watchQuantity = watch('quantity')
 
     useEffect(() => {
         if (!isReady || !id) {
@@ -87,35 +83,22 @@ const SeedForm = ({ mode = 'create' }) => {
     }
 
     const getEditData = id => {
-        return LivestockService.getItem(id)
+        return SeedService.getItem(id)
             .then(data => {
-                setValue('name', data?.name)
-                setValue('description', data?.description)
-                setValue('type', data?.variety?.group_type?.key)
                 setValue('variety_id', data?.variety?.id)
-                setValue('sex', data?.sex?.key)
-                setValue(
-                    'date_of_birth',
-                    data?.date_of_birth ? new Date(data?.date_of_birth) : null,
-                )
-                setValue(
-                    'date_of_death',
-                    data?.date_of_death ? new Date(data?.date_of_death) : null,
-                )
-                setValue('acquired_at', new Date(data?.acquired_at))
+                setValue('type', data?.variety?.group_type?.key)
                 setValue('quantity', data?.quantity)
-                setValue(
-                    'parents',
-                    data?.family?.parents.map(i => {
-                        return i.id
-                    }),
-                )
-                setValue(
-                    'children',
-                    data?.family?.children.map(i => {
-                        return i.id
-                    }),
-                )
+                setValue('acquired_at', new Date(data?.acquired_at))
+                setValue('life_cycle', data?.life_cycle?.key)
+                setValue('light_requirement', data?.light_requirement?.key)
+                setValue('zone_lower', data?.zone_lower?.key)
+                setValue('zone_upper', data?.zone_upper?.key)
+                setValue('days_to_germination', data?.days_to_germination)
+                setValue('days_to_maturity', data?.days_to_maturity)
+                setValue('planting_depth', data?.planting_depth)
+                setValue('plant_spacing', data?.plant_spacing)
+                setValue('url', data?.url)
+
                 setInitialType(data?.variety?.group_type?.key)
             })
 
@@ -126,9 +109,9 @@ const SeedForm = ({ mode = 'create' }) => {
 
     const onSubmit = async data => {
         await csrf()
-        LivestockService.createOrUpdate(id, data, images)
+        SeedService.createOrUpdate(id, data, images)
             .then(r => {
-                router.push('/inventory/livestock/' + r.data?.id)
+                router.push('/inventory/seeds/' + r.data?.id)
             })
             .catch(error => {
                 AddErrorToasts(toast, error)
@@ -142,47 +125,6 @@ const SeedForm = ({ mode = 'create' }) => {
 
     const onRemoveImage = () => {
         setImages([])
-    }
-
-    const parentsOnChange = (e, callback) => {
-        // Prevents adding more than 2 parents
-        if (e.value.length > 2) {
-            AddErrorToasts(toast, new Error('Only 2 parents are allowed'))
-            return
-        }
-        // Prevent adding same member as both parent and child
-        const matches = e.value.filter(element =>
-            watchChildren?.includes(element),
-        )
-        if (matches.length > 0) {
-            AddErrorToasts(
-                toast,
-                new Error(
-                    'Cannot add the same member as both parent and child',
-                ),
-            )
-
-            return
-        }
-
-        callback(e)
-    }
-
-    const childrenOnChange = (e, callback) => {
-        // Prevent adding same member as both parent and child
-        const matches = e.value.filter(element =>
-            watchParents?.includes(element),
-        )
-        if (matches.length > 0) {
-            AddErrorToasts(
-                toast,
-                new Error(
-                    'Cannot add the same member as both parent and child',
-                ),
-            )
-            return
-        }
-        callback(e)
     }
 
     return (
@@ -230,13 +172,14 @@ const SeedForm = ({ mode = 'create' }) => {
                                 toast={toast}
                                 watch={watch}
                                 id={id}
+                                className={'mt-2'}
                             />
+
                             <div className="field">
                                 <NumberInput
                                     control={control}
                                     name={'quantity'}
                                     label={'Quantity'}
-                                    showButtons={true}
                                     min={1}
                                     max={10000}
                                     rules={{
@@ -245,46 +188,102 @@ const SeedForm = ({ mode = 'create' }) => {
                                 />
                                 {getFormErrorMessage('quantity')}
                             </div>
-                            {watchQuantity === 1 && (
-                                <div className="field">
-                                    <CalendarInput
-                                        control={control}
-                                        name={'date_of_birth'}
-                                        label={'Date of Birth'}
-                                    />
-                                    {getFormErrorMessage('date_of_birth')}
-                                </div>
-                            )}
 
-                            {watchQuantity === 1 && (
-                                <div className="field">
-                                    <CalendarInput
-                                        control={control}
-                                        name={'date_of_death'}
-                                        label={'Date of Death'}
-                                    />
-                                    {getFormErrorMessage('date_of_death')}
-                                </div>
-                            )}
+                            <div className="field">
+                                <SelectInput
+                                    optionsEndpoint={
+                                        '/api/inventory/seeds/light-requirements'
+                                    }
+                                    control={control}
+                                    name={'light_requirement'}
+                                    label={'Light Requirement'}
+                                />
+                                {getFormErrorMessage('light_requirement')}
+                            </div>
 
-                            {watchQuantity === 1 && (
-                                <div className="field">
-                                    <p>Sex</p>
-                                    <SelectButtonInput
-                                        name={'sex'}
-                                        control={control}
-                                        options={[
-                                            { label: 'Male', value: 'male' },
-                                            {
-                                                label: 'Female',
-                                                value: 'female',
-                                            },
-                                        ]}
-                                    />
-                                </div>
-                            )}
+                            <div className="field">
+                                <NumberInput
+                                    control={control}
+                                    name={'days_to_germination'}
+                                    label={'Days to Germination'}
+                                    min={0}
+                                    max={10000}
+                                />
+                                {getFormErrorMessage('days_to_germination')}
+                            </div>
+
+                            <div className="field">
+                                <NumberInput
+                                    control={control}
+                                    name={'days_to_maturity'}
+                                    label={'Days to Maturity'}
+                                    min={0}
+                                    max={10000}
+                                />
+                                {getFormErrorMessage('days_to_maturity')}
+                            </div>
+
+                            <div className="field">
+                                <NumberInput
+                                    control={control}
+                                    name={'planting_depth'}
+                                    label={'Planting Depth (in)'}
+                                    min={0.01}
+                                    max={10000}
+                                    step={0.01}
+                                />
+                                {getFormErrorMessage('planting_depth')}
+                            </div>
+
+                            <div className="field">
+                                <NumberInput
+                                    control={control}
+                                    name={'plant_spacing'}
+                                    label={'Plant Spacing (in)'}
+                                    min={0.25}
+                                    max={10000}
+                                    step={0.01}
+                                />
+                                {getFormErrorMessage('plant_spacing')}
+                            </div>
                         </div>
                         <div className={'col-10 md:col-6'}>
+                            <div className="field mt-2">
+                                <SelectInput
+                                    optionsEndpoint={
+                                        '/api/inventory/seeds/life-cycles'
+                                    }
+                                    control={control}
+                                    name={'life_cycle'}
+                                    label={'Life Cycle'}
+                                />
+                                {getFormErrorMessage('life_cycle')}
+                            </div>
+
+                            <div className="field">
+                                <SelectInput
+                                    optionsEndpoint={
+                                        '/api/inventory/seeds/hardiness-zones'
+                                    }
+                                    control={control}
+                                    name={'zone_lower'}
+                                    label={'Grow Zone (Minimum)'}
+                                />
+                                {getFormErrorMessage('zone_lower')}
+                            </div>
+
+                            <div className="field">
+                                <SelectInput
+                                    optionsEndpoint={
+                                        '/api/inventory/seeds/hardiness-zones'
+                                    }
+                                    control={control}
+                                    name={'zone_upper'}
+                                    label={'Grow Zone (Maximum)'}
+                                />
+                                {getFormErrorMessage('zone_upper')}
+                            </div>
+
                             <div className="field">
                                 <CalendarInput
                                     control={control}
@@ -293,17 +292,21 @@ const SeedForm = ({ mode = 'create' }) => {
                                 />
                                 {getFormErrorMessage('acquired_at')}
                             </div>
+
                             <div className="field">
-                                <TextAreaInput
+                                <TextInput
                                     control={control}
-                                    name={'description'}
-                                    label={'Description'}
+                                    name={'url'}
+                                    label={'Purchase URL'}
                                     rules={{
-                                        required: 'Description is required.',
+                                        pattern: {
+                                            value:
+                                                '/((([A-Za-z]{3,9}:(?://)?)(?:[-;:&=+$,w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=+$,w]+@)[A-Za-z0-9.-]+)((?:/[+~%/.w-_]*)???(?:[-+=&;%@.w_]*)#?(?:[w]*))?)/',
+                                            message: 'Invalid URL',
+                                        },
                                     }}
-                                    rows={4}
                                 />
-                                {getFormErrorMessage('description')}
+                                {getFormErrorMessage('url')}
                             </div>
 
                             <div className="field">
@@ -327,33 +330,6 @@ const SeedForm = ({ mode = 'create' }) => {
                                 />
                             </div>
                         </div>
-
-                        {type && (
-                            <>
-                                <div className={'col-10 md:col-6'}>
-                                    <div className="field">
-                                        <ListboxInput
-                                            control={control}
-                                            optionsEndpoint={`/api/inventory/livestock/types/${type}/members`}
-                                            name={'parents'}
-                                            label={'Parents'}
-                                            customOnChange={parentsOnChange}
-                                        />
-                                    </div>
-                                </div>
-                                <div className={'col-10 md:col-6'}>
-                                    <div className="field">
-                                        <ListboxInput
-                                            control={control}
-                                            optionsEndpoint={`/api/inventory/livestock/types/${type}/members`}
-                                            name={'children'}
-                                            label={'Children'}
-                                            customOnChange={childrenOnChange}
-                                        />
-                                    </div>
-                                </div>
-                            </>
-                        )}
                     </div>
                 </Card>
 

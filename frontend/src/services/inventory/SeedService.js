@@ -32,6 +32,30 @@ const getItem = id => {
     return axios.get('/api/inventory/seeds/' + id).then(res => res.data)
 }
 
+const createOrUpdate = async (id, data, images = []) => {
+    const url =
+        typeof id === 'undefined'
+            ? `/api/inventory/seeds`
+            : `/api/inventory/seeds/${id}`
+    return await axios.post(url, {
+        _method: typeof id === 'undefined' ? 'POST' : 'PUT',
+
+        variety_id: data.variety_id,
+        quantity: data.quantity,
+        life_cycle: data.life_cycle,
+        days_to_germination: data.days_to_germination,
+        days_to_maturity: data.days_to_maturity,
+        planting_depth: data.planting_depth,
+        plant_spacing: data.plant_spacing,
+        light_requirement: data.light_requirement,
+        zone_lower: data.zone_lower,
+        zone_upper: data.zone_upper,
+        acquired_at: data.acquired_at,
+        url: data.url,
+        images: images,
+    })
+}
+
 const getFilters = () => {
     return axios.get('/api/inventory/seeds/filters').then(res => res.data)
 }
@@ -63,4 +87,5 @@ export default {
     getFilters,
     getSimilarItems,
     addVariety,
+    createOrUpdate,
 }
