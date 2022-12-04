@@ -101,7 +101,7 @@ class LivestockRepository extends InventoryRepository
 	public function getTypeMembers(LivestockType $type)
 	{
 		return Livestock::whereHas('variety', function ($query) use ($type) {
-			$query->where('kingdom', 'animal');
+			$query->where('group', 'animal');
 			$query->where('group_type', $type);
 		})->orderBy('name')->get();
 	}
@@ -109,7 +109,7 @@ class LivestockRepository extends InventoryRepository
 	public function createVarietyValue(StoreLivestockBreedRequest $request): Variety
 	{
 		return Variety::create($request->only([
-			'kingdom',
+			'group',
 			'group_type',
 			'variety_name',
 			'description'
@@ -128,7 +128,7 @@ class LivestockRepository extends InventoryRepository
 
 	public static function getTypeVarieties(string $type): Collection
 	{
-		return collect(Variety::where('kingdom', 'animal')->where('group_type', $type)->get());
+		return collect(Variety::where('group', 'animal')->where('group_type', $type)->get());
 	}
 
 	public function getSimilar(int $livestock_id): Collection

@@ -26,7 +26,7 @@ class StoreSeedVarietyRequest extends FormRequest
 	public function rules()
 	{
 		return [
-			'kingdom' => ['required', 'in:plant'],
+			'group' => ['required', 'in:plant'],
 			'group_type' => ['required', new Enum(PlantType::class)],
 			'variety_name' => ['required', 'string', 'max:50'],
 			'description' => ['required', 'string', 'max:1000']

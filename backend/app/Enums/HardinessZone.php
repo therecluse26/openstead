@@ -71,16 +71,21 @@ enum HardinessZone: string
 		};
 	}
 
-	private function format(float $celsiusValue, string $unit = 'c'): float
+	private function formatValue(): string
 	{
-		return $unit === 'f' ? ($celsiusValue * 1.8) + 32 : $celsiusValue;
+		return preg_replace('/[^0-9]/', '', $this->value) . '-' . strtoupper(preg_replace('/[^a-zA-Z]/', '', $this->value));
 	}
 
-	public function lowerTemp(string $unit = 'c'): float
+	private function formatTemp(float $celsiusValue = null, string $unit = 'c'): ?float
 	{
-		return $this->format(
+		return $celsiusValue ? round($unit === 'f' ? ($celsiusValue * 1.8) + 32 : $celsiusValue, 2) : null;
+	}
+
+	public function lowerTemp(string $unit = 'c'): ?float
+	{
+		return $this->formatTemp(
 			match ($this) {
-				self::ZeroA => -100,
+				self::ZeroA => null,
 				self::ZeroB => -53.9,
 				self::OneA => -51.1,
 				self::OneB => -48.3,
@@ -111,9 +116,9 @@ enum HardinessZone: string
 			}, $unit);
 	}
 
-	public function upperTemp(string $unit = 'c'): float
+	public function upperTemp(string $unit = 'c'): ?float
 	{
-		return $this->format(match ($this) {
+		return $this->formatTemp(match ($this) {
 			self::ZeroA => -53.9,
 			self::ZeroB => -51.1,
 			self::OneA => -48.3,
@@ -141,7 +146,7 @@ enum HardinessZone: string
 			self::TwelveA => 12.8,
 			self::TwelveB => 15.6,
 			self::ThirteenA => 18.3,
-			self::ThirteenB => 100
+			self::ThirteenB => null
 		}, $unit);
 	}
 
@@ -152,6 +157,15 @@ enum HardinessZone: string
 
 	public function label(): string
 	{
-		return $this->value;
+		$lower = $this->lowerTemp('f');
+		$upper = $this->upperTemp('f');
+		if (!$lower) {
+			$formatted = ' (<' . $upper . '°F)';
+		} else if (!$upper) {
+			$formatted = ' (>' . $lower . '°F)';
+		} else {
+			$formatted = " ({$lower} °F to {$upper}°F)";
+		}
+		return $this->formatValue() . $formatted;
 	}
 }

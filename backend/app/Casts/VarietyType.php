@@ -21,9 +21,10 @@ class VarietyType implements CastsAttributes
 	 */
 	public function get($model, $key, $value, $attributes)
 	{
-		return match ($model->kingdom) {
+		return match ($model->group) {
 			'plant' => PlantType::from($value),
 			'animal' => LivestockType::from($value),
+			'edible' => PlantType::cases()[0]
 		};
 	}
 

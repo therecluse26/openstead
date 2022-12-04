@@ -2,7 +2,9 @@
 
 namespace Database\Factories\Inventory;
 
-use App\Enums\LivestockType;
+use App\Enums\KitchenUnit;
+use App\Enums\PantryItemType;
+use App\Enums\PantryItemVariety;
 use App\Models\Inventory\Equipment;
 use App\Models\Inventory\Livestock;
 use App\Models\Variety;
@@ -13,7 +15,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends Factory<Equipment>
  */
-class LivestockFactory extends Factory
+class PantryItemFactory extends Factory
 {
 	/**
 	 * Define the model's default state.
@@ -24,9 +26,11 @@ class LivestockFactory extends Factory
 	{
 		return [
 			'name' => fake()->name(),
+			'type' => fake()->randomElement(PantryItemType::cases()),
 			'description' => fake()->paragraph(2),
-			'variety_id' => Variety::where('group', 'animal')->whereIn('group_type', LivestockType::cases())->inRandomOrder()->first(),
-			'sex' => fake()->randomElement(['male', 'female']),
+			'variety_id' => Variety::whereIn('group_type', PantryItemVariety::cases())->inRandomOrder()->first(),
+			'unit' => fake()->randomElement(KitchenUnit::cases()),
+
 			'date_of_birth' => fake()->biasedNumberBetween(0, 1, [Biased::class, 'linearHigh']) === 0 ? null : fake()->dateTimeThisDecade(),
 			'date_of_death' => fake()->biasedNumberBetween(0, 1, [Biased::class, 'linearLow']) === 0 ? null : fake()->dateTimeThisDecade(),
 			'quantity' => fake()->numberBetween(0, 10),

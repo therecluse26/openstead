@@ -71,7 +71,7 @@ const getFilters = () => {
 
 const addBreed = async (id, data) => {
     return await axios.post(`/api/inventory/livestock/types`, {
-        kingdom: 'animal',
+        group: 'animal',
         group_type: data.type,
         variety_name: data.title,
         description: data.description,

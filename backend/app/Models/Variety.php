@@ -13,7 +13,7 @@ class Variety extends Model
 	protected $table = 'varieties';
 
 	protected $fillable = [
-		'kingdom',
+		'group',
 		'group_type',
 		'variety_name',
 		'description',

@@ -16,8 +16,6 @@ class SeedResource extends JsonResource
 			'quantity' => $this->quantity,
 			'life_cycle' => $this->life_cycle?->toFilter(),
 			'light_requirement' => $this->light_requirement?->toFilter(),
-			'zone_lower' => $this->zone_lower?->toFilter(),
-			'zone_upper' => $this->zone_upper?->toFilter(),
 			'acquired_at' => $this->acquired_at
 		];
 	}

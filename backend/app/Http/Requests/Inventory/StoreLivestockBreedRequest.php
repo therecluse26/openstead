@@ -26,7 +26,7 @@ class StoreLivestockBreedRequest extends FormRequest
 	public function rules()
 	{
 		return [
-			'kingdom' => ['required', 'in:animal'],
+			'group' => ['required', 'in:animal'],
 			'group_type' => ['required', new Enum(LivestockType::class)],
 			'variety_name' => ['required', 'string', 'max:50'],
 			'description' => ['required', 'string', 'max:1000']

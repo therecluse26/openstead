@@ -66,7 +66,7 @@ const getTypes = () => {
 
 const addVariety = async (id, data) => {
     return await axios.post(`/api/inventory/seeds/types`, {
-        kingdom: 'plant',
+        group: 'plant',
         group_type: data.type,
         variety_name: data.title,
         description: data.description,

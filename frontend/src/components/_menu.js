@@ -21,6 +21,11 @@ const menu = [
                         to: '/inventory/livestock',
                     },
                     {
+                        label: 'Pantry',
+                        icon: 'ti ti-fridge',
+                        to: '/inventory/pantry',
+                    },
+                    {
                         label: 'Seeds',
                         icon: 'ti ti-seeding',
                         to: '/inventory/seeds',

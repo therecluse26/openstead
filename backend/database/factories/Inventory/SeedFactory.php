@@ -23,7 +23,7 @@ class SeedFactory extends Factory
 	public function definition()
 	{
 		return [
-			'variety_id' => Variety::where('kingdom', 'plant')->whereIn('group_type', PlantType::cases())->inRandomOrder()->first(),
+			'variety_id' => Variety::where('group', 'plant')->whereIn('group_type', PlantType::cases())->inRandomOrder()->first(),
 			'quantity' => fake()->numberBetween(0, 10),
 			'life_cycle' => fake()->randomElement(PlantLifeCycle::cases()),
 			'days_to_germination' => fake()->numberBetween(4, 42),

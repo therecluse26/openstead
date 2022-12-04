@@ -74,7 +74,7 @@ class SeedRepository extends InventoryRepository
 
 	public static function getTypeVarieties(string $type): Collection
 	{
-		return collect(Variety::where('kingdom', 'plant')->where('group_type', $type)->get());
+		return collect(Variety::where('group', 'plant')->where('group_type', $type)->get());
 	}
 
 
@@ -118,7 +118,7 @@ class SeedRepository extends InventoryRepository
 	public function createVarietyValue(StoreSeedVarietyRequest|FormRequest $request): Variety
 	{
 		return Variety::create($request->only([
-			'kingdom',
+			'group',
 			'group_type',
 			'variety_name',
 			'description'

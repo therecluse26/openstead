@@ -14,5 +14,6 @@ enum InventoryType: string
 	case Equipment = Equipment::class;
 	case Livestock = Livestock::class;
 	case Seed = Seed::class;
-	
+//	case PantryItem = Seed::class;
+
 }

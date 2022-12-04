@@ -5,6 +5,7 @@ import { Dropdown } from 'primereact/dropdown'
 import axios from '@/lib/axios'
 
 const SelectInput = ({
+    optionLabel = 'label',
     options,
     optionsEndpoint = false,
     control,
@@ -27,13 +28,19 @@ const SelectInput = ({
                         ) {
                             setSelectOptions(
                                 data?.data?.map(t => {
-                                    return { label: t.label, value: t.key }
+                                    return {
+                                        label: t[optionLabel],
+                                        value: t.key,
+                                    }
                                 }),
                             )
                         } else {
                             setSelectOptions(
                                 data?.map(t => {
-                                    return { label: t.label, value: t.key }
+                                    return {
+                                        label: t[optionLabel],
+                                        value: t.key,
+                                    }
                                 }),
                             )
                         }

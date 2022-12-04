@@ -1,6 +1,8 @@
 <?php
 
 use App\Enums\HardinessZone;
+use App\Enums\KitchenUnit;
+use App\Enums\PantryItemType;
 use App\Enums\PlantLifeCycle;
 use App\Enums\PlantLightRequirement;
 use Illuminate\Database\Migrations\Migration;
@@ -31,7 +33,7 @@ return new class extends Migration {
 
 		Schema::create('varieties', function (Blueprint $table) {
 			$table->id();
-			$table->enum('kingdom', ['plant', 'animal']);
+			$table->enum('group', ['plant', 'animal', 'edible']);
 			$table->string('group_type', 50);
 			$table->string('variety_name', 50);
 			$table->string('description', 1000);
@@ -51,6 +53,7 @@ return new class extends Migration {
 			$table->unsignedInteger('quantity')->default(1);
 			$table->dateTime('acquired_at')->nullable();
 			$table->timestamps();
+
 			$table->index('name');
 			$table->index('variety_id');
 		});
@@ -101,7 +104,26 @@ return new class extends Migration {
 			$table->timestamps();
 
 			$table->index(['name', 'type']);
+		});
 
+		Schema::create('pantry_items', function (Blueprint $table) {
+			$table->id();
+			$table->string('name', 255);
+			$table->enum('type', collect(PantryItemType::cases())->map(function ($case) {
+				return $case->value;
+			})->toArray())->nullable();
+			$table->unsignedBigInteger('variety_id');
+			$table->enum('unit', collect(KitchenUnit::cases())->map(function ($case) {
+				return $case->value;
+			})->toArray())->nullable();
+			$table->float('unit_amount')->nullable();
+			$table->string('description', 1000)->nullable();
+			$table->unsignedInteger('quantity')->default(1);
+			$table->dateTime('expiration_date')->nullable();
+			$table->timestamps();
+
+			$table->index('name');
+			$table->index('variety_id');
 		});
 
 		Schema::create('services', function (Blueprint $table) {
