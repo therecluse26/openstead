@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Inventory\Equipment;
 use App\Models\Inventory\Livestock;
 use App\Models\Inventory\LivestockParent;
+use App\Models\Inventory\PantryItem;
 use App\Models\Inventory\Seed;
 use App\Models\Location;
 use App\Models\Service;
@@ -30,8 +31,9 @@ class TestDataSeeder extends Seeder
 			->count(1)
 			->create();
 
-		Variety::factory()->count(100)->create();
-		Service::factory()->count(100)->create();
+		Variety::factory()->count(200)->create();
+
+		Service::factory()->count(200)->create();
 
 		for ($i = 0; $i < 50; $i++) {
 
@@ -39,8 +41,12 @@ class TestDataSeeder extends Seeder
 				->count(1)
 				->create();
 
-
 			Seed::factory()
+				->hasNotes(random_int(0, 3))
+				->count(4)
+				->create();
+
+			PantryItem::factory()
 				->hasNotes(random_int(0, 3))
 				->count(4)
 				->create();

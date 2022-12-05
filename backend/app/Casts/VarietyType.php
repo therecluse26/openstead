@@ -2,7 +2,7 @@
 
 namespace App\Casts;
 
-use App\Enums\LivestockType;
+use App\Enums\AnimalType;
 use App\Enums\PlantType;
 use App\Models\Variety;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
@@ -23,7 +23,7 @@ class VarietyType implements CastsAttributes
 	{
 		return match ($model->group) {
 			'plant' => PlantType::from($value),
-			'animal' => LivestockType::from($value),
+			'animal' => AnimalType::from($value),
 			'edible' => PlantType::cases()[0]
 		};
 	}

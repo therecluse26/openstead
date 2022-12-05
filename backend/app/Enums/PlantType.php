@@ -8,6 +8,8 @@ enum PlantType: string
 {
 	use FilterableEnum;
 
+	public const VARIETY_GROUP = 'plant';
+
 	// Vegetables
 	case VegBulb = 'veg.bulb';
 	case VegFlower = 'veg.flower';

@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Inventory;
 
-use App\Enums\LivestockType;
+use App\Enums\AnimalType;
 use App\Http\Requests\Inventory\StoreLivestockBreedRequest;
 use App\Models\Inventory\Livestock;
 use App\Models\Scopes\AliveScope;
@@ -95,10 +95,10 @@ class LivestockRepository extends InventoryRepository
 
 	public static function getTypes(): array
 	{
-		return LivestockType::cases();
+		return AnimalType::cases();
 	}
 
-	public function getTypeMembers(LivestockType $type)
+	public function getTypeMembers(AnimalType $type)
 	{
 		return Livestock::whereHas('variety', function ($query) use ($type) {
 			$query->where('group', 'animal');
@@ -119,7 +119,7 @@ class LivestockRepository extends InventoryRepository
 	public static function getFilters(): Collection
 	{
 		return collect([
-			'types' => collect(LivestockType::cases())
+			'types' => collect(AnimalType::cases())
 				->map(function ($type) {
 					return $type->toFilter();
 				})

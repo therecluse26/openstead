@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Inventory;
 
 use App\Contracts\HasAppendableSelect;
-use App\Enums\LivestockType;
+use App\Enums\AnimalType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Inventory\StoreLivestockBreedRequest;
 use App\Http\Requests\Inventory\StoreLivestockRequest;
@@ -44,7 +44,7 @@ final class LivestockController extends Controller implements HasAppendableSelec
 		return response($repository->createVarietyValue($request), 200);
 	}
 
-	public function getTypeMembers(LivestockRepository $livestockRepository, LivestockType $type): ResourceCollection
+	public function getTypeMembers(LivestockRepository $livestockRepository, AnimalType $type): ResourceCollection
 	{
 		return LivestockDropdownResource::collection(
 			$livestockRepository->getTypeMembers($type)

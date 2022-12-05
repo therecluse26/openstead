@@ -4,9 +4,11 @@ namespace App\Enums;
 
 use App\Traits\FilterableEnum;
 
-enum LivestockType: string
+enum AnimalType: string
 {
 	use FilterableEnum;
+
+	public const VARIETY_GROUP = 'animal';
 
 	case Bird = 'bird';
 	case Cattle = 'cattle';
@@ -58,5 +60,5 @@ enum LivestockType: string
 			self::Other => 'Frog, elephant, martian',
 		};
 	}
-	
+
 }

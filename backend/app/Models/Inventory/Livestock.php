@@ -7,7 +7,7 @@ use App\Contracts\Inventoriable;
 use App\Contracts\Notable;
 use App\Contracts\Serviceable;
 use App\Contracts\VarietyContract;
-use App\Enums\LivestockType;
+use App\Enums\AnimalType;
 use App\Enums\Sex;
 use App\Models\Scopes\AliveScope;
 use App\Resources\FormattedFilter;
@@ -131,7 +131,7 @@ class Livestock extends Model implements Inventoriable, VarietyContract, Fronten
 	// Other methods
 	public static function getFilters(): Collection
 	{
-		return collect(['types' => FormattedFilter::collection(LivestockType::cases())]);
+		return collect(['types' => FormattedFilter::collection(AnimalType::cases())]);
 	}
 
 	public function registerMediaConversions(Media $media = null): void

@@ -3,41 +3,44 @@
 namespace App\Enums;
 
 use App\Traits\FilterableEnum;
-use Enum;
 
 enum PantryItemType: string
 {
 	use FilterableEnum;
 
+	public const VARIETY_GROUP = 'edible';
+
 	case Other = 'other';
-	case Canned = 'canned';
-	case Ingredient = 'ingredient';
-	case Condiment = 'condiment';
-	case Produce = 'produce';
-	case Meat = 'meat';
-	case Spice = 'spice';
+	case Dairy = 'dairy';
+	case Egg = 'egg';
+	case Seasoning = 'seasoning';
 	case Grain = 'grain';
 	case Pasta = 'pasta';
+	case Junk = 'junk';
 
 	public function label(): string
 	{
 		return match ($this) {
 			self::Other => 'Other',
-			self::Canned => 'Canned Food',
-			self::Ingredient => 'Ingredient',
-			self::Condiment => 'Condiment',
-			self::Produce => 'Fresh Produce',
-			self::Meat => 'Meat',
+			self::Dairy => 'Dairy',
+			self::Egg => 'Egg',
+			self::Seasoning => 'Seasoning/Condiment',
 			self::Grain => 'Grain',
 			self::Pasta => 'Pasta',
+			self::Junk => 'Junk Food'
 		};
 	}
 
-	public function getGroupTypes(): Enum|array
+	public function icon(): string
 	{
 		return match ($this) {
-			self::Meat => LivestockType::cases(),
-			self::Produce => PlantType::cases(),
+			self::Other => '🪨',
+			self::Dairy => '🧀',
+			self::Egg => '🥚',
+			self::Seasoning => '🧂',
+			self::Grain => '🌾',
+			self::Pasta => '🍝',
+			self::Junk => '🍭'
 		};
 	}
 }

@@ -2,14 +2,13 @@
 
 namespace Database\Factories\Inventory;
 
+use App\Enums\EdibleCompositeEnum;
 use App\Enums\KitchenUnit;
-use App\Enums\PantryItemType;
-use App\Enums\PantryItemVariety;
+use App\Enums\PantryStorageType;
 use App\Models\Inventory\Equipment;
-use App\Models\Inventory\Livestock;
+use App\Models\Inventory\PantryItem;
 use App\Models\Variety;
 use App\Providers\FakerImageProvider;
-use Faker\Provider\Biased;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -26,21 +25,20 @@ class PantryItemFactory extends Factory
 	{
 		return [
 			'name' => fake()->name(),
-			'type' => fake()->randomElement(PantryItemType::cases()),
 			'description' => fake()->paragraph(2),
-			'variety_id' => Variety::whereIn('group_type', PantryItemVariety::cases())->inRandomOrder()->first(),
+			'storage_type' => fake()->randomElement(PantryStorageType::cases()),
+			'variety_id' => Variety::whereIn('group', EdibleCompositeEnum::getVarietyGroups())->whereIn('group_type', EdibleCompositeEnum::cases())->inRandomOrder()->first(),
 			'unit' => fake()->randomElement(KitchenUnit::cases()),
-
-			'date_of_birth' => fake()->biasedNumberBetween(0, 1, [Biased::class, 'linearHigh']) === 0 ? null : fake()->dateTimeThisDecade(),
-			'date_of_death' => fake()->biasedNumberBetween(0, 1, [Biased::class, 'linearLow']) === 0 ? null : fake()->dateTimeThisDecade(),
+			'unit_amount' => fake()->numberBetween(1, 12),
 			'quantity' => fake()->numberBetween(0, 10),
-			'acquired_at' => fake()->dateTimeThisYear(),
+			'shelf_life_months' => fake()->numberBetween(1, 120),
+			'expiration_date' => fake()->dateTimeBetween('+0 days', '+4 years')
 		];
 	}
 
 	public function configure()
 	{
-		return $this->afterCreating(function (Livestock $model) {
+		return $this->afterCreating(function (PantryItem $model) {
 			$faker = \Faker\Factory::create();
 			$faker->addProvider(new FakerImageProvider($faker));
 			$image = $faker->image('/tmp', 1280, 720);

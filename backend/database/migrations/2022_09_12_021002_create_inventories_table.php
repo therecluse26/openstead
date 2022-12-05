@@ -2,7 +2,7 @@
 
 use App\Enums\HardinessZone;
 use App\Enums\KitchenUnit;
-use App\Enums\PantryItemType;
+use App\Enums\PantryStorageType;
 use App\Enums\PlantLifeCycle;
 use App\Enums\PlantLightRequirement;
 use Illuminate\Database\Migrations\Migration;
@@ -109,7 +109,8 @@ return new class extends Migration {
 		Schema::create('pantry_items', function (Blueprint $table) {
 			$table->id();
 			$table->string('name', 255);
-			$table->enum('type', collect(PantryItemType::cases())->map(function ($case) {
+			$table->string('description', 1000)->nullable();
+			$table->enum('storage_type', collect(PantryStorageType::cases())->map(function ($case) {
 				return $case->value;
 			})->toArray())->nullable();
 			$table->unsignedBigInteger('variety_id');
@@ -117,8 +118,8 @@ return new class extends Migration {
 				return $case->value;
 			})->toArray())->nullable();
 			$table->float('unit_amount')->nullable();
-			$table->string('description', 1000)->nullable();
 			$table->unsignedInteger('quantity')->default(1);
+			$table->unsignedInteger('shelf_life_months')->nullable();
 			$table->dateTime('expiration_date')->nullable();
 			$table->timestamps();
 
