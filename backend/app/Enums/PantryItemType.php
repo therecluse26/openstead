@@ -10,18 +10,18 @@ enum PantryItemType: string
 
 	public const VARIETY_GROUP = 'edible';
 
-	case Other = 'other';
-	case Dairy = 'dairy';
-	case Egg = 'egg';
-	case Seasoning = 'seasoning';
-	case Grain = 'grain';
-	case Pasta = 'pasta';
-	case Junk = 'junk';
+	case Other = 'pantry.other';
+	case Dairy = 'pantry.dairy';
+	case Egg = 'pantry.egg';
+	case Seasoning = 'pantry.seasoning';
+	case Grain = 'pantry.grain';
+	case Pasta = 'pantry.pasta';
+	case Junk = 'pantry.junk';
 
 	public function label(): string
 	{
 		return match ($this) {
-			self::Other => 'Other',
+			self::Other => 'Other Pantry Item',
 			self::Dairy => 'Dairy',
 			self::Egg => 'Egg',
 			self::Seasoning => 'Seasoning/Condiment',

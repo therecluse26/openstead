@@ -4,6 +4,7 @@ use App\Http\Controllers\Generic\NoteController;
 use App\Http\Controllers\Inventory\EquipmentController;
 use App\Http\Controllers\Inventory\InventoryController;
 use App\Http\Controllers\Inventory\LivestockController;
+use App\Http\Controllers\Inventory\PantryController;
 use App\Http\Controllers\Inventory\SeedController;
 use App\Http\Controllers\Inventory\ServiceLogController;
 use App\Http\Controllers\ServiceController;
@@ -65,6 +66,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
 					Route::get('/{id}/similar', [SeedController::class, 'getSimilar']);
 				});
 			Route::apiResource('/seeds', SeedController::class);
+
+			// Pantry Items
+			Route::prefix('/pantry')
+				->group(function () {
+					RouteBuilderService::buildTypeFilterRoute(PantryController::class);
+					Route::get('/filters', [PantryController::class, 'getFilters']);
+					Route::get('/{id}/similar', [PantryController::class, 'getSimilar']);
+				});
+			Route::apiResource('/pantry', PantryController::class);
 
 
 		});

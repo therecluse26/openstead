@@ -6,6 +6,7 @@ const TypeBodyTemplateElement = ({
     matchField,
     subMatchField = null,
 }) => {
+    console.log(rowData, matchField, subMatchField)
     const type = types.find(e => {
         if (subMatchField) {
             return typeof rowData[matchField][subMatchField] === 'object'

@@ -3,22 +3,18 @@ import InventoryList from '@/components/Custom/Inventory/InventoryList'
 import { Column } from 'primereact/column'
 import Link from 'next/link'
 import QuantityFilterTemplate from '@/pages/inventory/templates/QuantityFilterTemplate'
-import SeedService from '@/services/inventory/SeedService'
+import PantryService from '@/services/inventory/PantryService'
 import TypeFilterElement from '@/components/Custom/Inventory/TypeFilterElement'
 import TypeBodyTemplateElement from '@/components/Custom/Inventory/TypeBodyTemplateElement'
-import { Dropdown } from 'primereact/dropdown'
 
 const PantryItems = () => {
     const [types, setTypes] = useState([])
-    const [lightRequirements, setLightRequirements] = useState([])
-    const [lifeCycles, setLifeCycles] = useState([])
     const isMounted = useRef(false)
     const [filters, setFilters] = useState({
         name: { value: '', matchMode: 'contains' },
-        date_of_birth: { value: '', matchMode: 'equals' },
+        description: { value: '', matchMode: 'contains' },
         quantity: { value: null, matchMode: 'equals' },
-        life_cycle: { value: '', matchMode: 'equals' },
-        light_requirement: { value: '', matchMode: 'equals' },
+        expiration_date: { value: '', matchMode: 'equals' },
         variety: {
             value: '',
             matchMode: 'contains',
@@ -51,14 +47,6 @@ const PantryItems = () => {
             ...lazyParams,
             filters: {
                 ...filters,
-                life_cycle: {
-                    ...filters.life_cycle,
-                    value: filters.life_cycle.value,
-                },
-                light_requirement: {
-                    ...filters.light_requirement,
-                    value: filters.light_requirement.value,
-                },
                 type: {
                     ...filters.type,
                     value: filters.type.value,
@@ -72,17 +60,7 @@ const PantryItems = () => {
     }
 
     const loadFilters = () => {
-        SeedService.getFilters().then(data => {
-            setLifeCycles(
-                data?.life_cycles?.map(t => {
-                    return { label: t.label, value: t.key, icon: t.icon }
-                }),
-            )
-            setLightRequirements(
-                data?.light_requirements?.map(t => {
-                    return { label: t.label, value: t.key, icon: t.icon }
-                }),
-            )
+        PantryService.getFilters().then(data => {
             setTypes(
                 data?.types?.map(t => {
                     return { label: t.label, value: t.key, icon: t.icon }
@@ -94,11 +72,27 @@ const PantryItems = () => {
     return (
         <InventoryList
             title={'Pantry Items'}
-            inventoryType={'seeds'}
-            service={SeedService}
+            inventoryType={'pantry_items'}
+            service={PantryService}
             filters={filters}
             setLazyParamsCallack={lazyParamsCallback}>
             <Column selectionMode="multiple" headerStyle={{ width: '3em' }} />
+
+            <Column
+                field="name"
+                header="Name"
+                sortable
+                body={(rowData, elem) => {
+                    return (
+                        <Link href={`/inventory/pantry/${rowData.id}`}>
+                            {rowData[elem.field]}
+                        </Link>
+                    )
+                }}
+                filter
+                filterPlaceholder="Search"
+                style={{ minWidth: '260px' }}
+            />
 
             <Column
                 field="variety"
@@ -106,11 +100,7 @@ const PantryItems = () => {
                 header="Variety"
                 sortable
                 body={rowData => {
-                    return (
-                        <Link href={`/inventory/seeds/${rowData.id}`}>
-                            {rowData['variety']['variety_name']}
-                        </Link>
-                    )
+                    return <> {rowData['variety']['variety_name']}</>
                 }}
                 filter
                 filterPlaceholder="Search"
@@ -150,76 +140,6 @@ const PantryItems = () => {
             />
 
             <Column
-                field="life_cycle"
-                header="Lifecycle"
-                sortable
-                filter
-                filterPlaceholder="Search"
-                filterElement={options => {
-                    return (
-                        <Dropdown
-                            value={options.value}
-                            options={lifeCycles}
-                            onChange={e => {
-                                options.filterCallback(e.value, options.index)
-                                setFilters({
-                                    ...filters,
-                                    life_cycle: {
-                                        ...filters.life_cycle,
-                                        value: e.value,
-                                    },
-                                })
-                            }}
-                            placeholder={'Search'}
-                        />
-                    )
-                }}
-                body={rowData => {
-                    return rowData?.life_cycle?.label
-                }}
-                showFilterMenu={false}
-                showClear
-                style={{ width: '160px', minWidth: '160px' }}
-            />
-
-            <Column
-                field="light_requirement"
-                header="Light Requirement"
-                sortable
-                filter
-                filterPlaceholder="Search"
-                filterElement={options => {
-                    return (
-                        <Dropdown
-                            value={options.value}
-                            options={lightRequirements}
-                            onChange={e => {
-                                options.filterCallback(e.value, options.index)
-                                setFilters({
-                                    ...filters,
-                                    light_requirement: {
-                                        ...filters.light_requirement,
-                                        value: e.value,
-                                    },
-                                })
-                            }}
-                            placeholder={'Search'}
-                        />
-                    )
-                }}
-                body={rowData => {
-                    return (
-                        rowData?.light_requirement?.icon +
-                        '  ' +
-                        rowData?.light_requirement?.label
-                    )
-                }}
-                showFilterMenu={false}
-                showClear
-                style={{ width: '240px', minWidth: '200px' }}
-            />
-
-            <Column
                 field="quantity"
                 header="Quantity"
                 sortable
@@ -240,12 +160,12 @@ const PantryItems = () => {
                 style={{ width: '160px', minWidth: '160px' }}
             />
             <Column
-                field="acquired_at"
-                header="Date Acquired"
+                field="expiration_date"
+                header="Expiration Date"
                 sortable
                 filter
                 filterPlaceholder="Search"
-                body={rowData => formatDate(rowData.acquired_at)}
+                body={rowData => formatDate(rowData.expiration_date)}
                 showFilterMenu={false}
                 showClear
                 style={{ minWidth: '160px', width: '200px' }}

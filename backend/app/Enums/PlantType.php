@@ -11,30 +11,30 @@ enum PlantType: string
 	public const VARIETY_GROUP = 'plant';
 
 	// Vegetables
-	case VegBulb = 'veg.bulb';
-	case VegFlower = 'veg.flower';
-	case VegFruit = 'veg.fruit';
-	case VegFungus = 'veg.fungus';
-	case VegLeaf = 'veg.leaf';
-	case VegRoot = 'veg.root';
-	case VegSeed = 'veg.seed';
-	case VegStem = 'veg.stem';
-	case VegTuber = 'veg.tuber';
-	case VegGrass = 'veg.grass';
+	case VegBulb = 'plant.veg.bulb';
+	case VegFlower = 'plant.veg.flower';
+	case VegFruit = 'plant.veg.fruit';
+	case VegFungus = 'plant.veg.fungus';
+	case VegLeaf = 'plant.veg.leaf';
+	case VegRoot = 'plant.veg.root';
+	case VegSeed = 'plant.veg.seed';
+	case VegStem = 'plant.veg.stem';
+	case VegTuber = 'plant.veg.tuber';
+	case VegGrass = 'plant.veg.grass';
 
 	// Fruits
-	case FruitStone = 'fruit.stone';
-	case FruitPome = 'fruit.pome';
-	case FruitBerry = 'fruit.berry';
-	case FruitCitrus = 'fruit.citrus';
-	case FruitMelon = 'fruit.melon';
-	case FruitTropical = 'fruit.tropical';
+	case FruitStone = 'plant.fruit.stone';
+	case FruitPome = 'plant.fruit.pome';
+	case FruitBerry = 'plant.fruit.berry';
+	case FruitCitrus = 'plant.fruit.citrus';
+	case FruitMelon = 'plant.fruit.melon';
+	case FruitTropical = 'plant.fruit.tropical';
 
 	// Other
-	case Tree = 'tree';
-	case Flower = 'flower';
-	case Nut = 'nut';
-	case Other = 'other';
+	case Tree = 'plant.tree';
+	case Flower = 'plant.flower';
+	case Nut = 'plant.nut';
+	case Other = 'plant.other';
 
 	public function label(): string
 	{
@@ -58,7 +58,7 @@ enum PlantType: string
 			self::Flower => 'Flower',
 			self::Tree => 'Tree',
 			self::Nut => 'Nut',
-			self::Other => 'Other'
+			self::Other => 'Other Plant'
 		};
 	}
 

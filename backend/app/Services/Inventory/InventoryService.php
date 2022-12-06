@@ -4,7 +4,6 @@ namespace App\Services\Inventory;
 
 use App\Contracts\Inventoriable;
 use App\Enums\InventoryType;
-use App\Models\Inventory\Inventory;
 use App\Repositories\Inventory\InventoryRepository;
 use App\Services\DataTableService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -42,7 +41,7 @@ class InventoryService
 	public static function buildInventoryTableData(string $model, Request $request): LengthAwarePaginator
 	{
 		if (!isset(class_implements($model)[Inventoriable::class])) {
-			throw new InvalidArgumentException('Given model must implement Inventoriable');
+			throw new InvalidArgumentException('Given model must implement ' . Inventoriable::class);
 		}
 
 		return DataTableService::buildAndExecuteQuery(
@@ -50,6 +49,4 @@ class InventoryService
 			json_decode($request->get('lazyEvent'), false, 512, JSON_THROW_ON_ERROR)
 		);
 	}
-
-
 }

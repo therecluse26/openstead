@@ -4,7 +4,7 @@ namespace App\Http\Requests\Inventory;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreSeedRequest extends FormRequest
+class UpdatePantryItemRequest extends FormRequest
 {
 	/**
 	 * Determine if the user is authorized to make this request.

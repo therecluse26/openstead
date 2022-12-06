@@ -89,7 +89,7 @@ class DataTableService
 				$query->where($key, $formattedFilter['method'], $formattedFilter['value']);
 			}
 		}
-
+		
 		return $query;
 	}
 
@@ -115,6 +115,8 @@ class DataTableService
 		if (!$fieldName) {
 			return ['relation' => null, 'field' => null];
 		}
+
+		// Checks for relation via dot notation. Currently only handles 1 relation deep.
 		$fieldParts = explode('.', $fieldName);
 		return count($fieldParts) > 1 ? ['relation' => $fieldParts[0], 'field' => $fieldParts[1]] : ['relation' => null, 'field' => $fieldName];
 	}

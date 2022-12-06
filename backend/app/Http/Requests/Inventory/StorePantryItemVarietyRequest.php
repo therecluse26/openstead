@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests\Inventory;
 
+use App\Enums\EdibleCompositeEnum;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
-class StoreSeedRequest extends FormRequest
+class StorePantryItemVarietyRequest extends FormRequest
 {
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -24,9 +26,10 @@ class StoreSeedRequest extends FormRequest
 	public function rules()
 	{
 		return [
-			'variety_id' => 'required',
-			'quantity' => ['required', 'int'],
-			'expiration_date' => ['nullable', 'date'],
+			'group' => ['required', 'in:plant'],
+			'group_type' => ['required', new Enum(EdibleCompositeEnum::class)],
+			'variety_name' => ['required', 'string', 'max:50'],
+			'description' => ['required', 'string', 'max:1000']
 		];
 	}
 }

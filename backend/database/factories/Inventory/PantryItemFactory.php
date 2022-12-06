@@ -24,7 +24,7 @@ class PantryItemFactory extends Factory
 	public function definition()
 	{
 		return [
-			'name' => fake()->name(),
+			'name' => fake()->words(3, true),
 			'description' => fake()->paragraph(2),
 			'storage_type' => fake()->randomElement(PantryStorageType::cases()),
 			'variety_id' => Variety::whereIn('group', EdibleCompositeEnum::getVarietyGroups())->whereIn('group_type', EdibleCompositeEnum::cases())->inRandomOrder()->first(),

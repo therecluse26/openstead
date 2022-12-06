@@ -10,26 +10,26 @@ enum AnimalType: string
 
 	public const VARIETY_GROUP = 'animal';
 
-	case Bird = 'bird';
-	case Cattle = 'cattle';
-	case Swine = 'swine';
-	case Sheep = 'sheep';
-	case Goat = 'goat';
-	case Equine = 'equine';
-	case Fish = 'fish';
-	case Other = 'other';
+	case Bird = 'animal.bird';
+	case Cattle = 'animal.cattle';
+	case Swine = 'animal.swine';
+	case Sheep = 'animal.sheep';
+	case Goat = 'animal.goat';
+	case Equine = 'animal.equine';
+	case Fish = 'animal.fish';
+	case Other = 'animal.other';
 
 	public function label(): string
 	{
 		return match ($this) {
 			self::Bird => 'Bird/Poultry',
 			self::Cattle => 'Cattle',
-			self::Swine => 'Pig/Swine',
-			self::Sheep => 'Sheep',
-			self::Goat => 'Goat',
 			self::Equine => 'Horse/Equine',
 			self::Fish => 'Fish',
-			self::Other => 'Other'
+			self::Goat => 'Goat',
+			self::Sheep => 'Sheep',
+			self::Swine => 'Pig/Swine',
+			self::Other => 'Other Animal'
 		};
 	}
 
