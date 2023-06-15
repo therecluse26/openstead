@@ -1,5 +1,5 @@
 import SelectInput from '@/components/HookFormInputs/SelectInput'
-import React from 'react'
+import { useState } from 'react'
 import AppendableSelect from '@/components/HookFormInputs/AppendableSelect'
 
 const SubtypeSelect = ({
@@ -16,6 +16,7 @@ const SubtypeSelect = ({
     id,
     className,
 }) => {
+    const [group, setGroup] = useState(null)
     const watchType = watch('type')
 
     const supertypeApiUrl = supertypeValueUrl ?? `/api/${supertype}/types`
@@ -39,6 +40,7 @@ const SubtypeSelect = ({
                     rules={{
                         required: 'Type is required.',
                     }}
+                    groupSetter={setGroup}
                 />
                 {getFormErrorMessage('type')}
             </div>
@@ -57,6 +59,7 @@ const SubtypeSelect = ({
                     selectedType={watchType}
                     watch={watch}
                     id={id}
+                    supergroup={group}
                 />
             )}
         </>

@@ -39,10 +39,15 @@ const createOrUpdate = async (id, data, images = []) => {
             : `/api/inventory/pantry/${id}`
     return await axios.post(url, {
         _method: typeof id === 'undefined' ? 'POST' : 'PUT',
-
+        name: data.name,
+        description: data.description,
+        storage_type: data.storage_type,
         variety_id: data.variety_id,
         quantity: data.quantity,
-
+        unit: data.unit,
+        unit_amount: data.unit_amount,
+        shelf_life_months: data.shelf_life_months,
+        expiration_date: data.expiration_date,
         images: images,
     })
 }
@@ -57,7 +62,7 @@ const getTypes = () => {
 
 const addVariety = async (id, data) => {
     return await axios.post(`/api/inventory/pantry/types`, {
-        group: 'plant',
+        group: data?.group ?? '',
         group_type: data.type,
         variety_name: data.title,
         description: data.description,

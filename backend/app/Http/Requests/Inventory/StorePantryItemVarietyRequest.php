@@ -26,8 +26,8 @@ class StorePantryItemVarietyRequest extends FormRequest
 	public function rules()
 	{
 		return [
-			'group' => ['required', 'in:plant'],
-			'group_type' => ['required', new Enum(EdibleCompositeEnum::class)],
+			'group' => ['required', 'in:'.collect(EdibleCompositeEnum::groups())->implode(',')],
+			'group_type' => ['required', 'in:'.collect(EdibleCompositeEnum::cases())->map(fn($case) => $case->value)->implode(',')],
 			'variety_name' => ['required', 'string', 'max:50'],
 			'description' => ['required', 'string', 'max:1000']
 		];

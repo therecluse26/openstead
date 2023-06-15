@@ -16,7 +16,11 @@ class PantryItemResource extends JsonResource
 			'quantity' => $this->quantity,
 			'primary_image' => $this->primary_image,
 			'description' => $this->description,
-			'expiration_date' => $this->expiration_date
+			'expiration_date' => $this->expiration_date,
+			'storage_type' => $this->storage_type,
+			'unit' => $this->unit,
+			'unit_amount' => $this->unit_amount,
+			'shelf_life_months' => $this->shelf_life_months,
 		];
 	}
 }

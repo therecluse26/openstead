@@ -11,11 +11,13 @@ enum KitchenUnit: string
 	case Tsp = 'teaspoon';
 	case Tbsp = 'tablespoon';
 	case FluidOz = 'fluidoz';
+	case Oz = 'oz';
 	case Gill = 'gill';
 	case Cup = 'cup';
 	case Pint = 'pint';
 	case Quart = 'quart';
 	case Gallon = 'gallon';
+	case None = 'none';
 
 	/**
 	 * Readable unit label
@@ -28,11 +30,13 @@ enum KitchenUnit: string
 			self::Tsp => 'Teaspoon',
 			self::Tbsp => 'Tablespoon',
 			self::FluidOz => 'Fluid Ounce',
+			self::Oz => 'Ounce',
 			self::Gill => 'Gill',
 			self::Cup => 'Cup',
 			self::Pint => 'Pint',
 			self::Quart => 'Quart',
 			self::Gallon => 'Gallon',
+			self::None => '',
 		};
 	}
 
@@ -47,14 +51,15 @@ enum KitchenUnit: string
 			self::Tsp => 1,
 			self::Tbsp => 3,
 			self::FluidOz => 6,
+			self::Oz => 6,
 			self::Gill => 24,
 			self::Cup => 48,
 			self::Pint => 96,
 			self::Quart => 192,
 			self::Gallon => 768,
+			self::None => 0,
 		};
 	}
-
 
 	/**
 	 * Converts value from one unit to another

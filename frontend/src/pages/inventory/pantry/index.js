@@ -72,7 +72,7 @@ const PantryItems = () => {
     return (
         <InventoryList
             title={'Pantry Items'}
-            inventoryType={'pantry_items'}
+            inventoryType={'pantry'}
             service={PantryService}
             filters={filters}
             setLazyParamsCallack={lazyParamsCallback}>
@@ -163,11 +163,7 @@ const PantryItems = () => {
                 field="expiration_date"
                 header="Expiration Date"
                 sortable
-                filter
-                filterPlaceholder="Search"
                 body={rowData => formatDate(rowData.expiration_date)}
-                showFilterMenu={false}
-                showClear
                 style={{ minWidth: '160px', width: '200px' }}
             />
         </InventoryList>

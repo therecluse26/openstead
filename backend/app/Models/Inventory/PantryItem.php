@@ -7,6 +7,8 @@ use App\Contracts\Inventoriable;
 use App\Contracts\Notable;
 use App\Contracts\VarietyContract;
 use App\Enums\EdibleCompositeEnum;
+use App\Enums\KitchenUnit;
+use App\Enums\PantryStorageType;
 use App\Resources\FormattedFilter;
 use App\Resources\Inventory\Detail\PantryItemResource as PantryItemDetailResource;
 use App\Resources\Inventory\List\PantryItemResource as PantryItemListResource;
@@ -38,10 +40,15 @@ class PantryItem extends Model implements Inventoriable, VarietyContract, Fronte
 		'unit',
 		'unit_amount',
 		'quantity',
-		'expiration_date'
+		'expiration_date',
+		'storage_type',
+		'shelf_life_months',
 	];
 
 	protected $casts = [
+		'expiration_date' => 'datetime',
+		'storage_type' => PantryStorageType::class,
+		'unit' => KitchenUnit::class,
 	];
 
 	public function getDetailResource(): JsonResource

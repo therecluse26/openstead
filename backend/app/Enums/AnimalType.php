@@ -19,6 +19,12 @@ enum AnimalType: string
 	case Fish = 'animal.fish';
 	case Other = 'animal.other';
 
+	public function group(): string
+	{
+		return self::VARIETY_GROUP;
+	}
+
+
 	public function label(): string
 	{
 		return match ($this) {

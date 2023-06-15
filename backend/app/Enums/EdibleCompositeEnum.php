@@ -4,7 +4,14 @@ namespace App\Enums;
 
 final class EdibleCompositeEnum
 {
-	public const ENUMS = [PlantType::class, AnimalType::class, PantryItemType::class];
+	public const ENUMS = [PantryItemType::class, PlantType::class, AnimalType::class];
+
+	public static function groups(): array
+	{
+		return collect(self::ENUMS)->map(function ($enum) {
+			return $enum::VARIETY_GROUP;
+		})->toArray();
+	}
 
 	public static function cases(): array
 	{

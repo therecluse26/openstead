@@ -5,6 +5,7 @@ namespace App\Enums;
 use App\Models\Inventory\Equipment;
 use App\Models\Inventory\Livestock;
 use App\Models\Inventory\Seed;
+use App\Models\Inventory\PantryItem;
 use App\Models\Note;
 use App\Traits\FilterableEnum;
 
@@ -16,6 +17,7 @@ enum ModelName: string
 	case Livestock = 'livestock';
 	case Seed = 'seed';
 	case Note = 'note';
+	case PantryItem = 'pantry_item';
 
 	public function class(): string
 	{
@@ -23,7 +25,8 @@ enum ModelName: string
 			self::Equipment => Equipment::class,
 			self::Livestock => Livestock::class,
 			self::Seed => Seed::class,
-			self::Note => Note::class
+			self::Note => Note::class,
+			self::PantryItem => PantryItem::class
 		};
 	}
 }

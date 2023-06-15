@@ -18,6 +18,11 @@ enum PantryItemType: string
 	case Pasta = 'pantry.pasta';
 	case Junk = 'pantry.junk';
 
+	public function group(): string
+	{
+		return self::VARIETY_GROUP;
+	}
+
 	public function label(): string
 	{
 		return match ($this) {

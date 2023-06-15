@@ -21,6 +21,7 @@ const AppendableSelect = ({
     selectedType,
     id,
     className,
+    supergroup,
 }) => {
     const [newServiceId, setNewServiceId] = useState(null)
     const [addSupertypeFormVisible, setAddSupertypeFormVisible] = useState(
@@ -118,6 +119,25 @@ const AppendableSelect = ({
                         className="p-fluid">
                         <div className={'field'}>
                             <Controller
+                                name={'group'}
+                                defaultValue={supergroup}
+                                control={serviceControl}
+                                render={({
+                                    field: { onChange, value, name },
+                                }) => (
+                                    <input
+                                        id={name}
+                                        value={value}
+                                        onChange={onChange}
+                                        readOnly={true}
+                                        hidden={true}
+                                    />
+                                )}
+                            />
+                        </div>
+
+                        <div className={'field'}>
+                            <Controller
                                 name={'type'}
                                 defaultValue={selectedType}
                                 control={serviceControl}
@@ -165,4 +185,4 @@ const AppendableSelect = ({
     )
 }
 
-export default AppendableSelect
+export default React.memo(AppendableSelect)

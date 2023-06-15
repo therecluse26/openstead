@@ -13,6 +13,7 @@ const SelectInput = ({
     rules,
     label,
     invalidateOnChange,
+    groupSetter,
 }) => {
     const [selectOptions, setSelectOptions] = useState(options)
 
@@ -31,6 +32,7 @@ const SelectInput = ({
                                     return {
                                         label: t[optionLabel],
                                         value: t.key,
+                                        group: t.group,
                                     }
                                 }),
                             )
@@ -40,6 +42,7 @@ const SelectInput = ({
                                     return {
                                         label: t[optionLabel],
                                         value: t.key,
+                                        group: t.group,
                                     }
                                 }),
                             )
@@ -50,6 +53,10 @@ const SelectInput = ({
                     console.error(e)
                 })
         }
+    }
+
+    const findGroup = value => {
+        return selectOptions?.find(o => o.value === value)?.group
     }
 
     useEffect(() => {
@@ -69,12 +76,20 @@ const SelectInput = ({
                         id={name}
                         value={value}
                         options={selectOptions?.map(o => {
-                            return { label: o.label, value: o.value }
+                            return {
+                                label: o.label,
+                                value: o.value,
+                            }
                         })}
                         className={classNames({
                             'p-invalid': fieldState.invalid,
                         })}
-                        onChange={onChange}
+                        onChange={({ value }) => {
+                            onChange(value)
+                            if (groupSetter) {
+                                groupSetter(findGroup(value))
+                            }
+                        }}
                     />
                 )}
             />

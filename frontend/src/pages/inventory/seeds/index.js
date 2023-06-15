@@ -243,11 +243,7 @@ const Seeds = () => {
                 field="acquired_at"
                 header="Date Acquired"
                 sortable
-                filter
-                filterPlaceholder="Search"
                 body={rowData => formatDate(rowData.acquired_at)}
-                showFilterMenu={false}
-                showClear
                 style={{ minWidth: '160px', width: '200px' }}
             />
         </InventoryList>
