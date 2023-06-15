@@ -1,0 +1,36 @@
+//Suggested location to add your overrides so that migration would be easy by just updating the SASS folder in the future
+
+.login-form {
+
+  .login-form-card {
+    min-width: 25vw;
+    max-width: 90vw;
+  }
+
+  .field {
+    margin-bottom: 1.5rem !important;
+  }
+}
+
+.loading-spinner {
+  @include styleclass('ti ti-rotate-clockwise');
+  //width: 100px;
+  //height: 100px;
+  animation-name: spin;
+  animation-duration: 1000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  /* transform: rotate(3deg); */
+  /* transform: rotate(0.3rad);/ */
+  /* transform: rotate(3grad); */
+  /* transform: rotate(.03turn);  */
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,125 +1,210 @@
-import ApplicationLogo from '@/components/ApplicationLogo'
-import AuthCard from '@/components/AuthCard'
-import Button from '@/components/Button'
-import GuestLayout from '@/components/Layouts/GuestLayout'
-import Input from '@/components/Input'
-import InputError from '@/components/InputError'
-import Label from '@/components/Label'
-import Link from 'next/link'
+import React from 'react'
+import { InputText } from 'primereact/inputtext'
+import { Button } from 'primereact/button'
+import { Controller, useForm } from 'react-hook-form'
+import { classNames } from 'primereact/utils'
+import { Password } from 'primereact/password'
 import { useAuth } from '@/hooks/auth'
-import { useState } from 'react'
+import GuestLayout from '@/components/Layouts/GuestLayout'
+import Link from 'next/link'
 
 const Register = () => {
+    const defaultValues = {
+        name: '',
+        email: '',
+        password: '',
+        password_confirmation: '',
+    }
+    const {
+        control,
+        formState: { errors },
+        handleSubmit,
+        setError,
+        watch,
+    } = useForm({ defaultValues })
+
     const { register } = useAuth({
         middleware: 'guest',
-        redirectIfAuthenticated: '/dashboard',
+        redirectIfAuthenticated: '/',
     })
 
-    const [name, setName] = useState('')
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [passwordConfirmation, setPasswordConfirmation] = useState('')
-    const [errors, setErrors] = useState([])
+    const onSubmit = data => {
+        register({
+            name: data.name,
+            email: data.email,
+            password: data.password,
+            password_confirmation: data.password_confirmation,
+            setError,
+        })
+    }
 
-    const submitForm = event => {
-        event.preventDefault()
-
-        register({ name, email, password, password_confirmation: passwordConfirmation, setErrors })
+    const getFormErrorMessage = name => {
+        return (
+            errors[name] && (
+                <small className="p-error">{errors[name].message}</small>
+            )
+        )
     }
 
     return (
         <GuestLayout>
-            <AuthCard
-                logo={
-                    <Link href="/frontend/src/pages">
-                        <a>
-                            <ApplicationLogo className="w-20 h-20 fill-current text-gray-500" />
-                        </a>
-                    </Link>
-                }>
-
-                <form onSubmit={submitForm}>
-                    {/* Name */}
-                    <div>
-                        <Label htmlFor="name">Name</Label>
-
-                        <Input
-                            id="name"
-                            type="text"
-                            value={name}
-                            className="block mt-1 w-full"
-                            onChange={event => setName(event.target.value)}
-                            required
-                            autoFocus
+            <h3 className="text-center">Openstead</h3>
+            <form onSubmit={handleSubmit(onSubmit)} className="p-fluid">
+                <div className="field">
+                    <span className="p-float-label p-input-icon-right">
+                        <i className="ti ti-user" />
+                        <Controller
+                            name="name"
+                            control={control}
+                            rules={{
+                                required: 'Name is required.',
+                            }}
+                            render={({
+                                field: { onChange, value, name },
+                                fieldState,
+                            }) => (
+                                <InputText
+                                    id={name}
+                                    value={value}
+                                    className={classNames({
+                                        'p-invalid': fieldState.invalid,
+                                    })}
+                                    onChange={onChange}
+                                />
+                            )}
                         />
+                        <label
+                            htmlFor="email"
+                            className={classNames({
+                                'p-error': !!errors.email,
+                            })}>
+                            Name
+                        </label>
+                    </span>
+                    {getFormErrorMessage('email')}
+                </div>
 
-                        <InputError messages={errors.name} className="mt-2" />
-                    </div>
-
-                    {/* Email Address */}
-                    <div className="mt-4">
-                        <Label htmlFor="email">Email</Label>
-
-                        <Input
-                            id="email"
-                            type="email"
-                            value={email}
-                            className="block mt-1 w-full"
-                            onChange={event => setEmail(event.target.value)}
-                            required
+                <div className="field">
+                    <span className="p-float-label p-input-icon-right">
+                        <i className="ti ti-mail" />
+                        <Controller
+                            name="email"
+                            control={control}
+                            rules={{
+                                required: 'Email is required.',
+                                pattern: {
+                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                                    message: 'Invalid email address',
+                                },
+                            }}
+                            render={({
+                                field: { onChange, value, name },
+                                fieldState,
+                            }) => (
+                                <InputText
+                                    id={name}
+                                    value={value}
+                                    className={classNames({
+                                        'p-invalid': fieldState.invalid,
+                                    })}
+                                    onChange={onChange}
+                                />
+                            )}
                         />
-
-                        <InputError messages={errors.email} className="mt-2" />
-                    </div>
-
-                    {/* Password */}
-                    <div className="mt-4">
-                        <Label htmlFor="password">Password</Label>
-
-                        <Input
-                            id="password"
-                            type="password"
-                            value={password}
-                            className="block mt-1 w-full"
-                            onChange={event => setPassword(event.target.value)}
-                            required
-                            autoComplete="new-password"
+                        <label
+                            htmlFor="email"
+                            className={classNames({
+                                'p-error': !!errors.email,
+                            })}>
+                            Email
+                        </label>
+                    </span>
+                    {getFormErrorMessage('email')}
+                </div>
+                <div className="field">
+                    <span className="p-float-label">
+                        <Controller
+                            name="password"
+                            control={control}
+                            rules={{
+                                required: 'Password is required.',
+                            }}
+                            render={({
+                                field: { onChange, value, name },
+                                fieldState,
+                            }) => (
+                                <Password
+                                    id={name}
+                                    value={value}
+                                    toggleMask
+                                    icon={<i className="ti ti-key" />}
+                                    className={classNames({
+                                        'p-invalid': fieldState.invalid,
+                                    })}
+                                    onChange={onChange}
+                                />
+                            )}
                         />
+                        <label
+                            htmlFor="password"
+                            className={classNames({
+                                'p-error': errors.password,
+                            })}>
+                            Password
+                        </label>
+                    </span>
+                    {getFormErrorMessage('password')}
+                </div>
 
-                        <InputError messages={errors.password} className="mt-2" />
-                    </div>
-
-                    {/* Confirm Password */}
-                    <div className="mt-4">
-                        <Label htmlFor="passwordConfirmation">
+                <div className="field">
+                    <span className="p-float-label">
+                        <Controller
+                            name="password_confirmation"
+                            control={control}
+                            rules={{
+                                required: 'Password confirmation is required.',
+                                validate: val => {
+                                    if (watch('password') != val) {
+                                        return 'Your passwords do no match'
+                                    }
+                                },
+                            }}
+                            render={({
+                                field: { onChange, value, name },
+                                fieldState,
+                            }) => (
+                                <Password
+                                    id={name}
+                                    value={value}
+                                    toggleMask
+                                    icon={<i className="ti ti-copy" />}
+                                    className={classNames({
+                                        'p-invalid': fieldState.invalid,
+                                    })}
+                                    onChange={onChange}
+                                    feedback={false}
+                                />
+                            )}
+                        />
+                        <label
+                            htmlFor="password"
+                            className={classNames({
+                                'p-error': errors.password,
+                            })}>
                             Confirm Password
-                        </Label>
+                        </label>
+                    </span>
+                    {getFormErrorMessage('password_confirmation')}
+                </div>
 
-                        <Input
-                            id="passwordConfirmation"
-                            type="password"
-                            value={passwordConfirmation}
-                            className="block mt-1 w-full"
-                            onChange={event =>
-                                setPasswordConfirmation(event.target.value)
-                            }
-                            required
-                        />
+                <div className="field">
+                    <Link href="/login">
+                        Have an Account? Click here to login
+                    </Link>
+                </div>
 
-                        <InputError messages={errors.password_confirmation} className="mt-2" />
-                    </div>
-
-                    <div className="flex items-center justify-end mt-4">
-                        <Link href="/login">
-                            <a className="underline text-sm text-gray-600 hover:text-gray-900">
-                                Already registered?
-                            </a>
-                        </Link>
-
-                        <Button className="ml-4">Register</Button>
-                    </div>
-                </form>
-            </AuthCard>
+                <Button type="submit" label="Register" className="mt-2" />
+            </form>
         </GuestLayout>
     )
 }

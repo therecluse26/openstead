@@ -1,16 +1,19 @@
-import Head from 'next/head'
+import { ThemeContextProvider } from '@/context/ThemeContext'
+import { useState } from 'react'
 
 const GuestLayout = ({ children }) => {
-    return (
-        <div>
-            <Head>
-                <title>Laravel</title>
-            </Head>
+    const [themeHasLoaded, setThemeHasLoaded] = useState(false)
 
-            <div className="font-sans text-gray-900 antialiased">
-                {children}
-            </div>
-        </div>
+    return (
+        <ThemeContextProvider onLoad={setThemeHasLoaded}>
+            {themeHasLoaded && (
+                <div className="login-form h-screen">
+                    <div className="flex justify-content-center align-items-center h-screen">
+                        <div className="card login-form-card">{children}</div>
+                    </div>
+                </div>
+            )}
+        </ThemeContextProvider>
     )
 }
 

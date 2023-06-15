@@ -12,4 +12,6 @@ The backend uses a docker-compose for development and a docker for the productio
 
 To start the backend services, navigate to the `backend` folder and run `docker-compose up -d`
 
+- To connect to the docker container, `docker exec -it openstead-api /bin/ash` under the `backend` directory
+
 To start the frontend in development mode, navigate to `frontend` and run `npm run dev`

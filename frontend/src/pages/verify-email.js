@@ -9,7 +9,7 @@ import { useState } from 'react'
 const VerifyEmail = () => {
     const { logout, resendEmailVerification } = useAuth({
         middleware: 'auth',
-        redirectIfAuthenticated: '/dashboard',
+        redirectIfAuthenticated: '/',
     })
 
     const [status, setStatus] = useState(null)
@@ -24,7 +24,6 @@ const VerifyEmail = () => {
                         </a>
                     </Link>
                 }>
-
                 <div className="mb-4 text-sm text-gray-600">
                     Thanks for signing up! Before getting started, could you
                     verify your email address by clicking on the link we just

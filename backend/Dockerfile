@@ -1,4 +1,4 @@
-FROM phpswoole/swoole:php8.0-alpine
+FROM phpswoole/swoole:php8.1-alpine
 
 ENV PHPIZE_DEPS \
     autoconf \
@@ -19,7 +19,7 @@ ENV PHPIZE_DEPS \
     icu-dev \
     openssl-dev
 
-RUN apk --no-cache add wget \
+RUN apk add wget \
   coreutils \
   curl \
   openssh-client \
@@ -44,6 +44,7 @@ RUN apk --no-cache add wget \
   libzip-dev \
   php8-zip \
   nfs-utils \
+  less \
   nginx
 
 RUN set -xe && ln -s /usr/lib /usr/local/lib64 \
@@ -65,7 +66,7 @@ RUN docker-php-ext-install  -j$(nproc) \
     dom \
     opcache \
     pcntl \
-    tokenizer \
+    exif \
     bcmath \
     intl \
     sockets \
@@ -80,12 +81,12 @@ RUN docker-php-ext-install  -j$(nproc) \
 
 RUN pecl channel-update pecl.php.net && pecl install imagick mcrypt-1.0.4 ssh2-1.3.1
 
-RUN docker-php-ext-enable imagick mcrypt redis dom xml xmlwriter tokenizer
+RUN docker-php-ext-enable imagick redis dom xml xmlwriter exif
 
 ARG APP_ENV
 
 RUN if [ "$APP_ENV" = "local" ] ; then apk add npm ; fi
-RUN if [ "$APP_ENV" = "local" ] ; then npm install -g chokidar ; fi
+RUN if [ "$APP_ENV" = "local" ] ; then npm install chokidar ; fi
 
 COPY --chown=www-data:www-data . /var/www/html/
 COPY nginx/nginx_config.conf /etc/nginx/nginx.conf
