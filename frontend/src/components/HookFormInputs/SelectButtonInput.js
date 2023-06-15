@@ -39,9 +39,6 @@ const SelectButtonInput = ({
                         }
                     }
                 })
-                .catch(e => {
-                    console.error(e)
-                })
         }
     }
 

@@ -49,9 +49,6 @@ const SelectInput = ({
                         }
                     }
                 })
-                .catch(e => {
-                    console.error(e)
-                })
         }
     }
 

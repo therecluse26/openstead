@@ -14,23 +14,9 @@ import SimilarItems from '@/components/Inventory/SimilarItems'
 const EquipmentDetail = () => {
     const isMounted = useRef(false)
     const [equipmentData, setEquipmentData] = useState()
-    const [similarItems, setSimilarItems] = useState()
     const router = useRouter()
     const { query, isReady } = useRouter()
     const { id } = query
-
-    const loadSimilarItems = () => {
-        if (!isReady) {
-            return
-        }
-        EquipmentService.getSimilarItems(id)
-            .then(data => {
-                setSimilarItems(data)
-            })
-            .catch(e => {
-                alert(e)
-            })
-    }
 
     const loadData = () => {
         if (!isReady) {
@@ -60,7 +46,6 @@ const EquipmentDetail = () => {
     useEffect(() => {
         isMounted.current = true
         loadData()
-        loadSimilarItems()
     }, [id])
 
     return (

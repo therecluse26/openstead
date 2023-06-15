@@ -44,9 +44,6 @@ const ListboxInput = ({
                         }
                     }
                 })
-                .catch(e => {
-                    console.error(e)
-                })
         }
     }
 
