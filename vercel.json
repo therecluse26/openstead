@@ -6,7 +6,7 @@
             "use": "vercel-php@0.3.1"
         },
         {
-            "src": "frontend/public/**",
+            "src": "/frontend/public/**",
             "use": "@vercel/static"
         }
     ],
