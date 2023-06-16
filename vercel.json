@@ -6,15 +6,11 @@
             "use": "vercel-php@0.3.1"
         },
         {
-            "src": "/frontend/public/**",
+            "src": "/backend/public/**",
             "use": "@vercel/static"
         }
     ],
     "routes": [
-        {
-            "src": "/(css|js)/(.*)",
-            "dest": "frontend/public/$1/$2"
-        },
         {
             "src": "/(.*)",
             "dest": "/api/index.php"
