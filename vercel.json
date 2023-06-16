@@ -8,7 +8,7 @@
     "routes": [
         {
             "src": "/api/(.*)",
-            "dest": "/api/index.php"
+            "dest": "/backend/public/index.php"
         }
     ],
     "env": {
