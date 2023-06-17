@@ -1,3 +1,5 @@
+import AxiosError from 'axios'
+
 const AddErrorToasts = (
     toast,
     error,
@@ -12,6 +14,14 @@ const AddErrorToasts = (
             detail: error,
         })
     }
+    if (error instanceof AxiosError) {
+        errors.push({
+            severity: severity,
+            summary: summary,
+            detail: error.response?.data?.message,
+        })
+    }
+
     if (error instanceof Error) {
         errors.push({
             severity: severity,
@@ -30,7 +40,7 @@ const AddErrorToasts = (
             }
         }
     }
-    toast.current?.show(errors)
+    toast?.current?.show(errors)
 }
 
 export default AddErrorToasts

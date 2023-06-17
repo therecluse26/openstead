@@ -24,6 +24,11 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
             .post('/register', props)
             .then(() => mutate())
             .catch(error => {
+                if (error.response === undefined) {
+                    alert(error)
+                    return
+                }
+
                 if (error.response.status !== 422) throw error
                 for (let err in error.response.data.errors) {
                     setError(err, err[0])
@@ -37,6 +42,11 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
             .post('/login', props)
             .then(() => mutate())
             .catch(error => {
+                if (error.response === undefined) {
+                    alert(error)
+                    return
+                }
+
                 for (const [key, value] of Object.entries(
                     error.response.data.errors,
                 )) {
@@ -54,6 +64,11 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
             .post('/forgot-password', { email })
             .then(response => setStatus(response.data.status))
             .catch(error => {
+                if (error.response === undefined) {
+                    alert(error)
+                    return
+                }
+
                 if (error.response.status !== 422) throw error
 
                 setErrors(error.response.data.errors)
@@ -71,6 +86,11 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
                 router.push('/login?reset=' + btoa(response.data.status)),
             )
             .catch(error => {
+                if (error.response === undefined) {
+                    alert(error)
+                    return
+                }
+
                 if (error.response.status !== 422) throw error
 
                 setErrors(error.response.data.errors)
@@ -85,7 +105,15 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
 
     const logout = async () => {
         if (!error) {
-            await axios.post('/logout').then(() => mutate())
+            await axios
+                .post('/logout')
+                .then(() => mutate())
+                .catch(error => {
+                    if (error.response === undefined) {
+                        alert(error)
+                        return
+                    }
+                })
         }
 
         window.location.pathname = '/login'
