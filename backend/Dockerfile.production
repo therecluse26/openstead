@@ -83,15 +83,12 @@ RUN pecl channel-update pecl.php.net && pecl install imagick mcrypt-1.0.4 ssh2-1
 
 RUN docker-php-ext-enable imagick redis dom xml xmlwriter exif
 
-ARG APP_ENV
-
-RUN if [ "$APP_ENV" = "local" ] ; then apk add npm ; fi
-RUN if [ "$APP_ENV" = "local" ] ; then npm install chokidar ; fi
 
 COPY --chown=www-data:www-data . /var/www/html/
 COPY nginx/nginx_config.conf /etc/nginx/nginx.conf
 RUN rm /etc/supervisord.conf
-COPY supervisord-$APP_ENV.conf* /etc/supervisord.conf
+
+COPY supervisord-production.conf* /etc/supervisord.conf
 
 COPY docker_startup.sh /root/docker_startup.sh
 COPY docker_php_startup_scripts.sh /root/docker_php_startup_scripts.sh
@@ -99,10 +96,6 @@ COPY docker/php.ini-production /usr/local/etc/php/php.ini
 COPY docker/php.ini-production /etc/php8/php.ini
 
 RUN chmod +x /root/docker_startup.sh && chmod +x /var/www/html/docker_startup.sh && chmod +x /var/www/html/docker_prod_cleanup.sh && chmod +x /root/docker_php_startup_scripts.sh
-
-RUN echo '*  *  *  *  *    cd /var/www/html && php artisan schedule:run >> /dev/null 2>&1' > /etc/crontabs/root
-
-ARG ENV
 
 RUN mkdir -p /run/nginx
 
@@ -112,6 +105,6 @@ ENV COMPOSER_MEMORY_LIMIT=-1
 # Points docker-compose at different file based on environment
 RUN  cd /var/www/html && /usr/local/bin/php /usr/bin/composer.phar install --no-ansi --no-dev --no-interaction --no-plugins --no-progress --no-scripts --optimize-autoloader
 
-RUN if [ "$APP_ENV" != "local" ] ; then /var/www/html/docker_prod_cleanup.sh ; fi
+RUN /var/www/html/docker_prod_cleanup.sh
 
 ENTRYPOINT ["/var/www/html/docker_startup.sh"]

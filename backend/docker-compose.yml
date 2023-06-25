@@ -3,7 +3,7 @@ services:
   openstead-api:
     build:
       context: ./
-      dockerfile: Dockerfile
+      dockerfile: local.Dockerfile
       args:
         - APP_ENV=${APP_ENV:-production}
         - UID=1000
