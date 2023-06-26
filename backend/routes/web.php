@@ -19,3 +19,9 @@ Route::get('/', function () {
 });
 
 require __DIR__.'/auth.php';
+
+Route::fallback(function () {
+    return response()->json([
+		'message' => "Invalid route"
+	], 404);
+});

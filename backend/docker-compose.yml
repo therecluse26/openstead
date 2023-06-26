@@ -21,9 +21,11 @@ services:
     container_name: openstead-api
     image: openstead-api
     ports:
-      - 8000:8000
+      - 8000:80
     depends_on:
       - mysql
+      - redis
+      - minio
   mysql:
     image: mysql:8.0
     volumes:

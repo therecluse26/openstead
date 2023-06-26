@@ -103,5 +103,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 });
 
-
-
+Route::fallback(function () {
+    return response()->json([
+		'message' => "Invalid route"
+	], 404);
+});

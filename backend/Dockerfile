@@ -43,9 +43,7 @@ RUN apk add wget \
   zip \
   libzip-dev \
   php8-zip \
-  nfs-utils \
-  less \
-  nginx
+  nfs-utils 
 
 RUN set -xe && ln -s /usr/lib /usr/local/lib64 \
     && apk add --virtual .build-deps \
@@ -83,9 +81,7 @@ RUN pecl channel-update pecl.php.net && pecl install imagick mcrypt-1.0.4 ssh2-1
 
 RUN docker-php-ext-enable imagick redis dom xml xmlwriter exif
 
-
 COPY --chown=www-data:www-data . /var/www/html/
-COPY nginx/nginx_config.conf /etc/nginx/nginx.conf
 RUN rm /etc/supervisord.conf
 
 COPY supervisord-production.conf* /etc/supervisord.conf
@@ -96,8 +92,6 @@ COPY docker/php.ini-production /usr/local/etc/php/php.ini
 COPY docker/php.ini-production /etc/php8/php.ini
 
 RUN chmod +x /root/docker_startup.sh && chmod +x /var/www/html/docker_startup.sh && chmod +x /var/www/html/docker_prod_cleanup.sh && chmod +x /root/docker_php_startup_scripts.sh
-
-RUN mkdir -p /run/nginx
 
 # Prevents certain composer packages from exceeding memory limit and failing to build
 ENV COMPOSER_MEMORY_LIMIT=-1
