@@ -43,7 +43,8 @@ RUN apk add wget \
   zip \
   libzip-dev \
   php8-zip \
-  nfs-utils 
+  nfs-utils \
+  nginx
 
 RUN set -xe && ln -s /usr/lib /usr/local/lib64 \
     && apk add --virtual .build-deps \
