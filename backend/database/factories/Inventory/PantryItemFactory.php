@@ -39,12 +39,13 @@ class PantryItemFactory extends Factory
 	public function configure()
 	{
 		return $this->afterCreating(function (PantryItem $model) {
-			$faker = \Faker\Factory::create();
-			$faker->addProvider(new FakerImageProvider($faker));
-			$image = $faker->image('/tmp', 1280, 720);
-			$model->addMedia($image)
-				->toMediaCollection('images');
+			if(config('seeding.test-data.images')){
+				$faker = \Faker\Factory::create();
+					$faker->addProvider(new FakerImageProvider($faker));
+				$image = $faker->image('/tmp', 1280, 720);
+				$model->addMedia($image)
+					->toMediaCollection('images');
+			}
 		});
 	}
-
 }

@@ -60,7 +60,7 @@ return [
 			'key' => env('MEDIA_ACCESS_KEY_ID'),
 			'secret' => env('MEDIA_SECRET_ACCESS_KEY'),
 			'region' => env('MEDIA_DEFAULT_REGION', 'us-east-1'),
-			'bucket' => env('MEDIA_BUCKET', 'media'),
+			'bucket' => env('MEDIA_BUCKET', 'openstead'),
 			'url' => env('MEDIA_URL'),
 			'endpoint' => env('MEDIA_ENDPOINT', 'https://minio:9000'),
 			'use_path_style_endpoint' => env('MEDIA_USE_PATH_STYLE_ENDPOINT', true),
