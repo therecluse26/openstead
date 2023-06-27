@@ -107,7 +107,7 @@ class DataTableService
 
 	public static function getModelField($model, $field)
 	{
-		return ($model::factory()->make())->getAttribute($field);
+		return ($model)->$field()->getModel();
 	}
 
 	public static function getFieldName(?string $fieldName): array
