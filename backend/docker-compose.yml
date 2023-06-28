@@ -42,8 +42,8 @@ services:
   minio:
     image: minio/minio
     ports:
-      - 9000:9000
-      - 9001:9001
+      - 9009:9000
+      - 9011:9001
     volumes:
       - openstead-minio:/data
     command: server --console-address ":9001" /data
