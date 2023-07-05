@@ -1,5 +1,5 @@
 module.exports = {
-    productionBrowserSourceMaps: true,
+    productionBrowserSourceMaps: false,
     reactStrictMode: true,
     images: {
         domains: ['minio', 'openstead.app'],
