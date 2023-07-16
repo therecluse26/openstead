@@ -57,17 +57,6 @@ class EquipmentRepository extends InventoryRepository
 			->get();
 	}
 
-	public function countAllEquipmentTypes(): Collection
-	{
-		return $this->model
-			->select('type', DB::raw('count(id) as count'))
-			->groupBy('type')
-			->orderBy('type')
-			->get()
-			->map
-			->only('type', 'count');
-	}
-
 	public function create(array $data, ?array $images): Equipment
 	{
 		$equipment = $this->model->create($data);

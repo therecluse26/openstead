@@ -12,7 +12,6 @@ use App\Models\Variety;
 use App\Traits\AddMedia;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 class SeedRepository extends InventoryRepository
 {
@@ -24,19 +23,6 @@ class SeedRepository extends InventoryRepository
 	{
 		$this->model = new Seed();
 		parent::__construct($this->model);
-	}
-
-
-	public function countAllSeedTypes(): Collection
-	{
-		return $this->model
-			->select('type', DB::raw('count(id) as count'))
-			->groupBy('type')
-			->get()
-			->map(function ($e) {
-				$e->type_formatted = $e->type->toFilter();
-				return $e;
-			});
 	}
 
 	public function find(int $id): Seed

@@ -10,7 +10,6 @@ use App\Models\Variety;
 use App\Traits\AddMedia;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 class LivestockRepository extends InventoryRepository
 {
@@ -23,19 +22,7 @@ class LivestockRepository extends InventoryRepository
 		$this->model = new Livestock();
 		parent::__construct($this->model);
 	}
-
-	public function countAllLivestockTypes(): Collection
-	{
-		return $this->model
-			->select('type', DB::raw('count(id) as count'))
-			->groupBy('type')
-			->get()
-			->map(function ($e) {
-				$e->type_formatted = $e->type->toFilter();
-				return $e;
-			});
-	}
-
+	
 	public function find(int $id): Livestock
 	{
 		return $this->model->findOrFail($id);

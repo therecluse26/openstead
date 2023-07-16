@@ -8,6 +8,7 @@ use App\Contracts\Inventoriable;
 use App\Contracts\Repository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class InventoryRepository implements Repository
 {
@@ -33,6 +34,18 @@ class InventoryRepository implements Repository
 		return $this->model;
 	}
 
+	public function countAllTypes(): Collection
+	{
+		return $this->model
+			->select('type', DB::raw('count(id) as count'))
+			->groupBy('type')
+			->get()
+			->map(function ($e) {
+				$e->type_formatted = $e->type->toFilter();
+				return $e;
+			});
+	}
+		
 	/**
 	 * Proxy methods to underlying model
 	 *
