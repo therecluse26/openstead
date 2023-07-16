@@ -1,9 +1,19 @@
-import InventorySkeleton from '@/components/Inventory/InventorySkeleton'
 import { Card } from 'primereact/card'
 import { Galleria } from 'primereact/galleria'
-import React, { Suspense } from 'react'
+import React, { useEffect, useState } from 'react'
+import Spinner from '@/components/Spinner'
 
 const InventoryDetailCard = ({ data, header, footer, children }) => {
+    const [isImageLoaded, setIsImageLoaded] = useState(false)
+    const [loaded, setLoaded] = useState(false)
+    const handleImageLoad = () => {
+        setIsImageLoaded(true)
+    }
+
+    useEffect(() => {
+        setLoaded(true)
+    }, [])
+
     const responsiveOptions = [
         {
             breakpoint: '1024px',
@@ -26,31 +36,42 @@ const InventoryDetailCard = ({ data, header, footer, children }) => {
                 src={item}
                 alt={'Primary image'}
                 style={{ width: '100%' }}
+                onLoad={handleImageLoad}
             />
         )
     }
     return (
-        <Suspense fallback={InventorySkeleton}>
-            <Card>
-                <div className="grid">{header}</div>
-
-                <div className="grid">
-                    <div className={'col-12 md:col-4'}>
-                        <Galleria
-                            value={[data?.primary_image]}
-                            responsiveOptions={responsiveOptions}
-                            numVisible={1}
-                            style={{ maxWidth: '400px' }}
-                            item={galleryTemplate}
-                            showThumbnails={false}
-                        />
-                    </div>
-                    {children}
+        <>
+            {!loaded ? (
+                <div className="card flex justify-content-center">
+                    <Spinner />
                 </div>
+            ) : (
+                <Card>
+                    <div className="grid">{header}</div>
 
-                {footer}
-            </Card>
-        </Suspense>
+                    <div className="grid">
+                        <div className={'col-12 md:col-4'}>
+                            {!isImageLoaded && <Spinner />}
+                            <Galleria
+                                value={[data?.primary_image]}
+                                responsiveOptions={responsiveOptions}
+                                numVisible={1}
+                                item={galleryTemplate}
+                                showThumbnails={false}
+                                style={{
+                                    display: isImageLoaded ? 'block' : 'none',
+                                    maxWidth: '400px',
+                                }}
+                            />
+                        </div>
+                        {children}
+                    </div>
+
+                    {footer}
+                </Card>
+            )}
+        </>
     )
 }
 
