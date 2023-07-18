@@ -13,11 +13,12 @@ return new class extends Migration
     public function up(): void
     { 
 Schema::dropIfExists('projects');
-        Schema::create('project_statuses', function (Blueprint $table) {
+        Schema::create('project_item_statuses', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name', 50);
             $table->string('description', 255)->nullable();
             $table->string('color', 7)->default('#CCCCCC');
+            $table->softDeletes();
             $table->timestamps();
 
             $table->index('name');
@@ -39,6 +40,7 @@ Schema::dropIfExists('projects');
             $table->uuid('id')->primary();
             $table->char('project_id', 36);
             $table->unsignedBigInteger('user_id');
+            $table->string('role', 50);
             $table->boolean('is_owner')->default(false);
             $table->timestamps();
 
@@ -59,13 +61,13 @@ Schema::dropIfExists('projects');
             $table->id();
             $table->char('project_id', 36);
             $table->string('title', 150);
-            $table->char('status_id', 36);
+            $table->char('project_item_status_id', 36);
             $table->unsignedInteger('order');
             $table->softDeletes();
             $table->timestamps();
 
             $table->index('project_id');
-            $table->index('status_id');
+            $table->index('project_item_status_id');
         });
 
         Schema::create('project_items', function (Blueprint $table) {
@@ -73,20 +75,23 @@ Schema::dropIfExists('projects');
             $table->char('project_id', 36);
             $table->string('title', 150);
             $table->string('description', 15000)->nullable();
-            $table->char('status_id', 36);
+            $table->char('project_item_status_id', 36);
+            $table->dateTime('due_date')->nullable();
+            $table->dateTime('completed_at')->nullable();
+            $table->unsignedBigInteger('completed_by')->nullable();
             $table->unsignedBigInteger('creator_id');
             $table->unsignedBigInteger('assignee_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
 
             $table->index('project_id');
-            $table->index('status_id');
+            $table->index('project_item_status_id');
             $table->index('creator_id');
             $table->index('assignee_id');
         });
 
         // Seed project status table
-        DB::table('project_statuses')->insert([
+        DB::table('project_item_statuses')->insert([
             ['id' => '5abe9c2c-c4e4-4a01-b82c-e164d3431fb8', 'name' => 'Backlog', 'description' => 'The backlog contains a prioritized list of all the work that the team needs to do.'],
             ['id' => '1887b4e1-c69d-452b-8e3d-cce8b380a9fa', 'name' => 'To Do', 'description' => 'The to do column contains a prioritized list of all the work that the team needs to do.'],
             ['id' => 'ccccb6b5-00f2-4f7e-bba3-1c4a0749af07', 'name' => 'In Progress', 'description' => 'The in progress column contains a prioritized list of all the work that the team needs to do.'],
@@ -116,7 +121,7 @@ Schema::dropIfExists('projects');
     {
         Schema::dropIfExists('projects');
         Schema::dropIfExists('project_users');
-        Schema::dropIfExists('project_statuses');
+        Schema::dropIfExists('project_item_statuses');
         Schema::dropIfExists('project_workflows');
         Schema::dropIfExists('project_columns');
         Schema::dropIfExists('project_items');

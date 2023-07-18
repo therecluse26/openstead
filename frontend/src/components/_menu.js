@@ -32,6 +32,11 @@ const menu = [
                     },
                 ],
             },
+            {
+                label: 'Projects',
+                icon: 'ti ti-bulldozer',
+                to: '/projects',
+            },
         ],
     },
 ]

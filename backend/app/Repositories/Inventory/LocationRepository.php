@@ -6,7 +6,7 @@ use App\Contracts\Inventoriable;
 use App\Contracts\Repository;
 use App\Models\Location;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection;
 
 class LocationRepository implements Repository
 {
@@ -35,6 +35,11 @@ class LocationRepository implements Repository
 	public function __call(string $method, array $arguments): mixed
 	{
 		return $this->model->$method(...$arguments);
+	}
+
+	public function getById(string|int $id): ?Model
+	{
+		return $this->model->find($id);
 	}
 
 	public function getLocation($location_id): ?Model
@@ -80,6 +85,6 @@ class LocationRepository implements Repository
 
 	public function getModel(): Model|Inventoriable
 	{
-		// TODO: Implement getModel() method.
+		return $this->model;
 	}
 }
