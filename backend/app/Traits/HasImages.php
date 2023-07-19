@@ -8,7 +8,7 @@ use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-trait InventoryImageTrait
+trait HasImages
 {
 	use InteractsWithMedia;
 

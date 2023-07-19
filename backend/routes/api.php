@@ -7,6 +7,7 @@ use App\Http\Controllers\Inventory\LivestockController;
 use App\Http\Controllers\Inventory\PantryController;
 use App\Http\Controllers\Inventory\SeedController;
 use App\Http\Controllers\Inventory\ServiceLogController;
+use App\Http\Controllers\Projects\ProjectController;
 use App\Http\Controllers\ServiceController;
 use App\Services\RouteBuilderService;
 use Illuminate\Http\Request;
@@ -28,6 +29,13 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
+
+	Route::prefix('/projects')
+	->group(function () {
+		Route::apiResource('/', ProjectController::class);
+		Route::get('/filters', [InventoryController::class, 'getFilters']);
+		Route::get('/base/types', [InventoryController::class, 'getTypes']);
+	});
 
 	Route::prefix('/inventory')
 		->group(function () {

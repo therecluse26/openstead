@@ -29,7 +29,7 @@ Schema::dropIfExists('projects');
             $table->string('slug', 100)->unique();
             $table->string('description', 255)->nullable();
             $table->boolean('active')->default(true);
-            $table->char('project_workflow_id', 36)->nullable();
+            $table->uuid('project_workflow_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
 
@@ -38,7 +38,7 @@ Schema::dropIfExists('projects');
 
         Schema::create('project_users', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->char('project_id', 36);
+            $table->uuid('project_id');
             $table->unsignedBigInteger('user_id');
             $table->string('role', 50);
             $table->boolean('is_owner')->default(false);
@@ -59,9 +59,9 @@ Schema::dropIfExists('projects');
 
         Schema::create('project_columns', function (Blueprint $table) {
             $table->id();
-            $table->char('project_id', 36);
+            $table->uuid('project_id');
             $table->string('title', 150);
-            $table->char('project_item_status_id', 36);
+            $table->uuid('project_item_status_id');
             $table->unsignedInteger('order');
             $table->softDeletes();
             $table->timestamps();
@@ -72,10 +72,10 @@ Schema::dropIfExists('projects');
 
         Schema::create('project_items', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->char('project_id', 36);
+            $table->uuid('project_id');
             $table->string('title', 150);
             $table->string('description', 15000)->nullable();
-            $table->char('project_item_status_id', 36);
+            $table->uuid('project_item_status_id');
             $table->dateTime('due_date')->nullable();
             $table->dateTime('completed_at')->nullable();
             $table->unsignedBigInteger('completed_by')->nullable();

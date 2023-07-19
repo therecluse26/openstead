@@ -16,11 +16,11 @@ class ProjectProjector extends Projector
 
     public function onUpdated(ProjectUpdated $event)
     {
-        Project::uuid($event->attributes['id'])->writeable()->update($event->attributes);
+        Project::find($event->attributes['id'])->writeable()->update($event->attributes);
     }
 
     public function onDeleted(ProjectDeleted $event)
     {
-        Project::uuid($event->attributes['id'])->writeable()->delete();
+        Project::find($event->attributes['id'])->writeable()->delete();
     }
 }

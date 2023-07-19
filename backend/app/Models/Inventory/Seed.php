@@ -2,6 +2,7 @@
 
 namespace App\Models\Inventory;
 
+use App\Contracts\DataTablePaginatable;
 use App\Contracts\FrontendFilterable;
 use App\Contracts\Inventoriable;
 use App\Contracts\Notable;
@@ -16,20 +17,20 @@ use App\Resources\Inventory\List\SeedResource as SeedListResource;
 use App\Traits\HasInventory;
 use App\Traits\HasNotes;
 use App\Traits\HasVariety;
-use App\Traits\InventoryImageTrait;
+use App\Traits\HasImages;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 use Spatie\MediaLibrary\HasMedia;
 
-class Seed extends Model implements Inventoriable, VarietyContract, FrontendFilterable, HasMedia, Notable
+class Seed extends Model implements DataTablePaginatable, Inventoriable, VarietyContract, FrontendFilterable, HasMedia, Notable
 {
 	use HasFactory;
 	use HasInventory;
 	use HasVariety;
 	use HasNotes;
-	use InventoryImageTrait;
+	use HasImages;
 
 	protected $table = 'seeds';
 

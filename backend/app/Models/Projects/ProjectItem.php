@@ -5,17 +5,20 @@ namespace App\Models\Projects;
 use App\Events\Projects\ProjectItemCreated;
 use App\Events\Projects\ProjectItemDeleted;
 use App\Events\Projects\ProjectItemUpdated;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Ramsey\Uuid\Uuid;
+use Spatie\EventSourcing\Projections\Projection;
 
-class ProjectItem extends Model {
+class ProjectItem extends Projection {
 
-    use HasFactory, SoftDeletes;
+    use HasUuids, HasFactory, SoftDeletes;
     
     protected $table = 'project_items';
+
+    protected $primaryKey = 'id';
 
     protected $fillable = [
         'title',
@@ -38,13 +41,9 @@ class ProjectItem extends Model {
     ];
 
     protected $casts = [
-        'id' => 'integer',
-        'project_id' => 'integer',
-        'project_item_status_id' => 'integer',
         'due_date' => 'date',
         'completed_at' => 'datetime',
         'completed_by' => 'integer',
-    
     ];
 
     public function project(): BelongsTo
@@ -57,6 +56,9 @@ class ProjectItem extends Model {
         return $this->belongsTo(ProjectItemStatus::class);
     }
 
+    /**
+     * Event-Sourcing Methods
+     */
     public function eventCreate(array $attributes){
         $attributes['uuid'] = (string) Uuid::uuid4();
     
@@ -72,7 +74,6 @@ class ProjectItem extends Model {
     }
 
     public function eventDelete(){
-    
         event(new ProjectItemDeleted($this->toArray()));
 
         return true;

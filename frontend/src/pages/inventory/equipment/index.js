@@ -4,7 +4,7 @@ import EquipmentService from '@/services/inventory/EquipmentService'
 import Link from 'next/link'
 import QuantityFilterTemplate from '@/pages/inventory/templates/QuantityFilterTemplate'
 import TypeFilterElement from '@/components/Custom/Inventory/TypeFilterElement'
-import InventoryList from '@/components/Custom/Inventory/InventoryList'
+import FilterableDataTable from '@/components/Custom/DataTable/FilterableDataTable'
 
 const Equipment = () => {
     const [types, setTypes] = useState([])
@@ -63,9 +63,9 @@ const Equipment = () => {
 
     return (
         <Suspense fallback={`Loading...`}>
-            <InventoryList
+            <FilterableDataTable
                 title={'Equipment'}
-                inventoryType={'equipment'}
+                basePath={'equipment'}
                 service={EquipmentService}
                 filters={filters}
                 setLazyParamsCallack={lazyParamsCallback}>
@@ -139,7 +139,7 @@ const Equipment = () => {
                     filterPlaceholder="Search"
                     style={{ minWidth: '300px' }}
                 />
-            </InventoryList>
+            </Filterable>
         </Suspense>
     )
 }

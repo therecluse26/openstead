@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
-import InventoryList from '@/components/Custom/Inventory/InventoryList'
 import { Column } from 'primereact/column'
 import LivestockService from '@/services/inventory/LivestockService'
 import Link from 'next/link'
 import QuantityFilterTemplate from '@/pages/inventory/templates/QuantityFilterTemplate'
 import TypeFilterElement from '@/components/Custom/Inventory/TypeFilterElement'
 import TypeBodyTemplateElement from '@/components/Custom/Inventory/TypeBodyTemplateElement'
+import FilterableDataTable from '@/components/Custom/DataTable/FilterableDataTable'
 
 const Livestock = () => {
     const [types, setTypes] = useState([])
@@ -60,9 +60,9 @@ const Livestock = () => {
     }
 
     return (
-        <InventoryList
+        <FilterableDataTable
             title={'Livestock'}
-            inventoryType={'livestock'}
+            basePath={'livestock'}
             service={LivestockService}
             filters={filters}
             setLazyParamsCallack={lazyParamsCallback}>
@@ -145,7 +145,7 @@ const Livestock = () => {
                 showClear
                 style={{ minWidth: '160px', maxWidth: '200px' }}
             />
-        </InventoryList>
+        </Filterable>
     )
 }
 

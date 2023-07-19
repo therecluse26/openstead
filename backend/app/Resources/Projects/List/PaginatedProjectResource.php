@@ -1,23 +1,14 @@
 <?php
-
-namespace App\Resources\Inventory\List;
+namespace App\Resources\Projects\List;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class PaginatedInventoryResource extends ResourceCollection
+class PaginatedProjectResource extends ResourceCollection 
 {
-	protected $collectionType;
-
-	public function __construct($resource, $collectionType)
-	{
-		$this->collectionType = $collectionType;
-		parent::__construct($resource);
-	}
-
-	public function toArray($request)
+    	public function toArray($request)
 	{
 		return [
-			'data' => $this->collectionType::collection($this->collection),
+			'data' => ProjectListResource::collection($this->collection),
 			'current_page' => $this->currentPage(),
 			'first_page_url' => $this->url(1),
 			'from' => $this->firstItem(),
