@@ -5,18 +5,18 @@ use App\Contracts\DataTablePaginatable;
 use App\Events\Projects\ProjectCreated;
 use App\Events\Projects\ProjectDeleted;
 use App\Events\Projects\ProjectUpdated;
-use App\Models\Users\User;
-use App\Models\Workflows\Workflow;
+use App\Models\User;
+use App\Models\Projects\ProjectWorkflow;
 use App\Resources\Projects\Detail\ProjectDetailResource;
 use App\Resources\Projects\List\ProjectListResource;
 use App\Traits\HasImages;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
@@ -52,9 +52,11 @@ class Project extends Projection implements DataTablePaginatable
         return ['id'];
     }
 
-    public function workflow(): BelongsTo
+    public function workflow(): HasOne
     {
-        return $this->belongsTo(Workflow::class, 'project_workflow_id');
+        return $this->hasOne(ProjectWorkflow::class, 'id', 'project_workflow_id')->withDefault(function(){
+            return ProjectWorkflow::default();
+        });;
     }
 
     public function users(): BelongsToMany

@@ -32,9 +32,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 	Route::prefix('/projects')
 	->group(function () {
-		Route::apiResource('/', ProjectController::class);
-		Route::get('/filters', [InventoryController::class, 'getFilters']);
-		Route::get('/base/types', [InventoryController::class, 'getTypes']);
+		Route::get('/', [ProjectController::class, 'index']);
+		Route::post('/', [ProjectController::class, 'store']);
+		Route::get('/{slug}', [ProjectController::class, 'show']);
 	});
 
 	Route::prefix('/inventory')

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Projects;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Inventory\ListInventoryRequest;
+use App\Http\Requests\Projects\ListProjectRequest;
 use App\Http\Requests\Projects\StoreProjectRequest;
 use App\Http\Requests\Projects\UpdateProjectRequest;
 use App\Models\Projects\Project;
@@ -27,7 +28,7 @@ final class ProjectController extends Controller
      * @throws JsonException
      * @throws ReflectionException
      */
-	public function index(ListInventoryRequest $request, ProjectService $service): Response
+	public function index(ListProjectRequest $request, ProjectService $service): Response
 	{
 		return response(
 			PaginatedProjectResource::make(
@@ -44,10 +45,10 @@ final class ProjectController extends Controller
      * @param int $project
      * @return Response
      */
-    public function show(ProjectRepository $epository, int $project): Response
+    public function show(ProjectRepository $repository, string $slug): Response
 	{
 		return response(
-			$epository->find($project)->getDetailResource()
+			$repository->getBySlug($slug)->getDetailResource()
 		);
 	}
 

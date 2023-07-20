@@ -9,8 +9,6 @@ const Projects = () => {
     const [filters, setFilters] = useState({
         name: { value: '', matchMode: 'contains' },
         description: { value: '', matchMode: 'contains' },
-        quantity: { value: null, matchMode: 'equals' },
-        type: { value: '', matchMode: 'equals' },
     })
 
     const lazyParamsCallback = lazyParams => {
@@ -18,22 +16,13 @@ const Projects = () => {
             ...lazyParams,
             filters: {
                 ...filters,
-                type: {
-                    ...filters.type,
-                    value: filters.type.value,
-                },
             },
         }
     }
 
     useEffect(() => {
         isMounted.current = true
-        loadFilters()
     }, [])
-
-    const loadFilters = async () => {
-        await ProjectService.getFilters()
-    }
 
     return (
         <Suspense fallback={`Loading...`}>
@@ -55,7 +44,7 @@ const Projects = () => {
                     sortable
                     body={(rowData, elem) => {
                         return (
-                            <Link href={`/projects/${rowData.id}`}>
+                            <Link href={`/projects/${rowData.slug}`}>
                                 {rowData[elem.field]}
                             </Link>
                         )

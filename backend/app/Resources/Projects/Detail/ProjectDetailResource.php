@@ -1,6 +1,7 @@
 <?php
 namespace App\Resources\Projects\Detail;
 
+use App\Models\Projects\ProjectWorkflow;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProjectDetailResource extends JsonResource 
@@ -12,7 +13,7 @@ class ProjectDetailResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'active' => $this->active,
-            'workflow' => $this->workflow, 
+            'workflow' => ProjectWorkflowResource::make($this->workflow), 
 		];
 	}
 }

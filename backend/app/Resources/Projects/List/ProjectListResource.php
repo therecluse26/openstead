@@ -10,9 +10,9 @@ class ProjectListResource extends JsonResource
 		return [
 			'id' => $this->id,
             'name' => $this->name,
+            'slug' => $this->slug,
             'description' => $this->description,
             'active' => $this->active,
-            'workflow' => $this->workflow, 
 		];
 	}
 }

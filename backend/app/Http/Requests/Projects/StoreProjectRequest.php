@@ -31,7 +31,7 @@ class StoreProjectRequest extends FormRequest
 			'name' => 'required',
             'slug' => 'required',
 			'images' => ['array'],
-			'description' => ['string'],
+			'description' => ['string', 'max:255'],
 			'images.*' => ['string', 'max:1361920', new Contains('data:image/')],
             'project_workflow_id' => 'nullable|integer',
 		];

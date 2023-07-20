@@ -37,14 +37,9 @@ const deleteItem = async id => {
     })
 }
 
-const getFilters = async () => {
-    return await axios.get('/api/projects/filters').then(res => res.data)
-}
-
 export default {
     getItem,
     getList,
     createOrUpdate,
     deleteItem,
-    getFilters,
 }

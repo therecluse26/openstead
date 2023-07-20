@@ -14,6 +14,7 @@ const FilterableDataTable = ({
     filters,
     basePath,
     setLazyParamsCallack,
+    selectionMode,
 }) => {
     const isMounted = useRef(false)
     const toast = useRef(null)
@@ -196,7 +197,7 @@ const FilterableDataTable = ({
                 loading={loading}
                 loadingIcon={'loading-spinner'}
                 selection={selected}
-                selectionMode={'checkbox'}
+                selectionMode={selectionMode}
                 responsiveLayout="stack"
                 onSelectionChange={onSelectionChange}>
                 {children}

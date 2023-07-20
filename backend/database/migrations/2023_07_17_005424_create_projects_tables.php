@@ -52,6 +52,7 @@ Schema::dropIfExists('projects');
             $table->uuid('id')->primary();
             $table->json('order');
             $table->boolean('default')->default(false);
+            $table->softDeletes();
             $table->timestamps();
 
             $table->index('default');

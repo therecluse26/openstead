@@ -40,9 +40,15 @@ class ProjectRepository implements Repository
         return $this->model->find($id);
     }
     
+    public function getBySlug($slug): Model
+    {
+        return $this->model->where('slug', $slug)->first();
+    }
+
     public function create(array $attributes)
     {
-        return $this->model->eventCreate($attributes);
+        $this->model->eventCreate($attributes);
+        return $this->model->where('slug', $attributes['slug'])->first();
     }
     
     public function update($id, array $attributes)

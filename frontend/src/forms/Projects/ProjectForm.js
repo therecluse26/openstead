@@ -65,7 +65,7 @@ const ProjectForm = ({ mode = 'create' }) => {
         await csrf()
         ProjectService.createOrUpdate(id, data, images)
             .then(r => {
-                router.push('/projects/' + r.data?.id)
+                router.push('/projects/' + r.data?.slug)
             })
             .catch(error => {
                 AddErrorToasts(toast, error)
@@ -103,7 +103,11 @@ const ProjectForm = ({ mode = 'create' }) => {
                                     name={'name'}
                                     label={'Name'}
                                     rules={{
-                                        required: 'Name is required.',
+                                        maxLength: {
+                                            value: 80,
+                                            message: 'Max length is 80',
+                                        },
+                                        required: 'Name is required',
                                     }}
                                 />
                                 {getFormErrorMessage('name')}
@@ -119,7 +123,11 @@ const ProjectForm = ({ mode = 'create' }) => {
                                     name={'description'}
                                     label={'Description'}
                                     rules={{
-                                        required: 'Description is required.',
+                                        maxLength: {
+                                            value: 255,
+                                            message: 'Max length is 255',
+                                        },
+                                        required: 'Description is required',
                                     }}
                                 />
                                 {getFormErrorMessage('description')}
