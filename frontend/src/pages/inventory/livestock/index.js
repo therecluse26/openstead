@@ -145,7 +145,7 @@ const Livestock = () => {
                 showClear
                 style={{ minWidth: '160px', maxWidth: '200px' }}
             />
-        </Filterable>
+        </FilterableDataTable>
     )
 }
 

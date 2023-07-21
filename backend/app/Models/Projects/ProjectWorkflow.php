@@ -23,7 +23,7 @@ class ProjectWorkflow extends Model
     ];
 
     protected $casts = [
-        'order' => 'json',
+        'order' => 'array',
         'default' => 'boolean'
     ];
 
@@ -36,7 +36,7 @@ class ProjectWorkflow extends Model
     {
         return Attribute::make(
             get: fn() => collect($this->order)->map(function ($item) {
-                $item['status'] = ProjectItemStatus::where('id', $item['id'])->first();
+                $item['status'] = ProjectItemStatus::where('id', (string)$item['id'])->first();
                 return $item;
             }));
     }

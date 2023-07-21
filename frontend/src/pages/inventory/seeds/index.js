@@ -246,7 +246,7 @@ const Seeds = () => {
                 body={rowData => formatDate(rowData.acquired_at)}
                 style={{ minWidth: '160px', width: '200px' }}
             />
-        </Filterable>
+        </FilterableDataTable>
     )
 }
 

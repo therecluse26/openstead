@@ -13,7 +13,6 @@ use App\Traits\HasImages;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -29,6 +28,11 @@ class Project extends Projection implements DataTablePaginatable
     protected $table = 'projects';
 
     protected $primaryKey = 'id';
+    
+    public function getKeyName()
+    {
+        return 'id';
+    }
 
     protected $fillable = [
         'name',

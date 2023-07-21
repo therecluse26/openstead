@@ -7,7 +7,9 @@ import { formatDate } from '@/utils/FormatDate'
 import { Button } from 'primereact/button'
 import InventoryDetailCard from '@/components/Custom/Inventory/InventoryDetailCard'
 import Spinner from '@/components/Spinner'
+import { Card } from 'primereact/card'
 import ProjectService from '@/services/Projects/ProjectService'
+import ProjectColumn from '@/components/Custom/Projects/ProjectColumn'
 
 const ProjectDetail = () => {
     const isMounted = useRef(false)
@@ -53,26 +55,23 @@ const ProjectDetail = () => {
                     <Spinner />
                 </div>
             ) : (
-                <>
-                    <div className="flex flex-row flex-wrap align-items-center justify-content-center gap-4 h-24">
-                        {data?.workflow?.columns
-                            ?.sort((a, b) => {
-                                return a.order - b.order
-                            })
-                            .map((column, index) => {
-                                return (
-                                    <div className="card h-24" key={index}>
-                                        <div className="card-header">
-                                            <h5>{column?.status?.name}</h5>
-                                        </div>
-                                        <div className="card-body">
-                                            <div className="p-grid">Task</div>
-                                        </div>
-                                    </div>
-                                )
-                            })}
-                    </div>
-                </>
+                <div className="flex gap-4 min-h-full overflow-y-scroll">
+                    {data?.workflow?.columns
+                        ?.sort((a, b) => {
+                            return a.order - b.order
+                        })
+                        .map((column, index) => {
+                            return (
+                                <ProjectColumn
+                                    key={index}
+                                    columnData={column}
+                                    items={data.items}
+                                    title={column?.status?.name}
+                                    statusId={column.status.id}
+                                />
+                            )
+                        })}
+                </div>
             )}
         </>
     )

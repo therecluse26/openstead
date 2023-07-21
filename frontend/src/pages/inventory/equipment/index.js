@@ -139,7 +139,7 @@ const Equipment = () => {
                     filterPlaceholder="Search"
                     style={{ minWidth: '300px' }}
                 />
-            </Filterable>
+            </FilterableDataTable>
         </Suspense>
     )
 }

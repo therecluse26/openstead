@@ -19,8 +19,14 @@ class ProjectItem extends Projection {
     protected $table = 'project_items';
 
     protected $primaryKey = 'id';
+    
+    public function getKeyName()
+    {
+        return 'id';
+    }
 
     protected $fillable = [
+        'id',
         'title',
         'description',
         'project_id',
@@ -53,24 +59,24 @@ class ProjectItem extends Projection {
 
     public function status(): BelongsTo
     {
-        return $this->belongsTo(ProjectItemStatus::class);
+        return $this->belongsTo(ProjectItemStatus::class, 'project_item_status_id');
     }
 
     /**
      * Event-Sourcing Methods
      */
     public function eventCreate(array $attributes){
-        $attributes['uuid'] = (string) Uuid::uuid4();
+        $attributes['id'] ??= (string) Uuid::uuid4();
     
         event(new ProjectItemCreated($attributes));
 
-        return static::uuid($attributes['id']);
+        return static::find($attributes['id']);
     }
 
     public function eventUpdate(array $attributes){    
         event(new ProjectItemUpdated($attributes));
 
-        return static::uuid($attributes['id']);
+        return static::find($attributes['id']);
     }
 
     public function eventDelete(){

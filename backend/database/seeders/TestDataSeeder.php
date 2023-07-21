@@ -8,9 +8,12 @@ use App\Models\Inventory\LivestockParent;
 use App\Models\Inventory\PantryItem;
 use App\Models\Inventory\Seed;
 use App\Models\Location;
+use App\Models\Projects\Project;
+use App\Models\Projects\ProjectItem;
 use App\Models\Service;
 use App\Models\User;
 use App\Models\Variety;
+use Database\Factories\Projects\ProjectFactory;
 use Exception;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
@@ -66,5 +69,22 @@ class TestDataSeeder extends Seeder
 		LivestockParent::factory()
 			->count(100)
 			->create();
+
+		Project::factory()
+			->times(10)
+			->make()
+			->each(function($project) {
+				(new Project)->eventCreate($project->toArray());
+			});
+
+		ProjectItem::factory()
+			->times(80)
+			->make()
+			->each(function($item) {
+				$item->project_id = Project::inRandomOrder()->first()?->id ?? 1;
+				(new ProjectItem)->eventCreate($item->toArray());
+				
+		});
+		
 	}
 }

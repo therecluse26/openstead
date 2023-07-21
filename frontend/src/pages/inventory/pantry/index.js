@@ -166,7 +166,7 @@ const PantryItems = () => {
                 body={rowData => formatDate(rowData.expiration_date)}
                 style={{ minWidth: '160px', width: '200px' }}
             />
-        </FilterableDa>
+        </FilterableDataTable>
     )
 }
 
