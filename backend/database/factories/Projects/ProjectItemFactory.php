@@ -21,7 +21,7 @@ class ProjectItemFactory extends Factory
         $status = ProjectItemStatus::inRandomOrder()->first();
 		return [
             'id' => fake()->uuid(),
-			'title' => fake()->words(3, true),
+			'title' => fake()->words(fake()->numberBetween(2, 15), true),
 			'description' => fake()->paragraph(2),
 			'project_item_status_id' => (string)$status->id,
             'creator_id' => User::inRandomOrder()->first()?->id ?? 1,

@@ -1,19 +1,22 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/router'
-import LinkButton from '@/components/LinkButton'
-import { Rating } from 'primereact/rating'
-import ScalableTag from '@/components/ScalableTag'
-import { formatDate } from '@/utils/FormatDate'
-import { Button } from 'primereact/button'
-import InventoryDetailCard from '@/components/Custom/Inventory/InventoryDetailCard'
 import Spinner from '@/components/Spinner'
-import { Card } from 'primereact/card'
 import ProjectService from '@/services/Projects/ProjectService'
 import ProjectColumn from '@/components/Custom/Projects/ProjectColumn'
+import { DndContext } from '@dnd-kit/core'
+import { atom, Provider, useAtom } from 'jotai'
+import { Toast } from 'primereact/toast'
+import { debounce } from 'lodash'
+const baseProjectAtom = atom()
+const projectAtom = atom(
+    get => get(baseProjectAtom),
+    (get, set, update) => set(baseProjectAtom, update),
+)
 
 const ProjectDetail = () => {
     const isMounted = useRef(false)
-    const [data, setData] = useState()
+    const [project, setProject] = useAtom(projectAtom)
+    const toast = useRef(null)
     const router = useRouter()
     const { query, isReady } = useRouter()
     const { id } = query
@@ -24,21 +27,83 @@ const ProjectDetail = () => {
         }
         ProjectService.getItem(id)
             .then(data => {
-                setData(data)
+                setProject(data)
             })
             .catch(e => {
                 alert(e)
             })
     }
 
-    const deleteProject = async () => {
-        await ProjectService.deleteItem(id)
+    const updateProjectItems = async updatedProject => {
+        await ProjectService.updateItems(id, updatedProject?.items)
+            .then(() => {
+                toast.current.show({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: 'Item(s) updated',
+                })
+            })
+            .catch(e => {
+                toast.current.show({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: e.response?.data?.message ?? 'Unknown error',
+                })
+            })
     }
 
-    const confirmDelete = () => {
-        if (confirm('Are you sure you want to delete this item?')) {
-            deleteProject()
-            router.push('/projects')
+    const debouncedUpdateItems = useCallback(
+        debounce(updateProjectItems, 2000),
+        [project],
+    )
+
+    // const confirmDelete = () => {
+    //     if (confirm('Are you sure you want to delete this item?')) {
+    //         deleteProject()
+    //         router.push('/projects')
+    //     }
+    // }
+    //
+    // const deleteProject = async () => {
+    //     await ProjectService.deleteItem(id)
+    // }
+
+    // Get column data including grouped items by status
+    const getColumns = () => {
+        return project?.workflow?.columns
+            ?.sort((a, b) => {
+                return a.order - b.order
+            })
+            .reduce(
+                (result, obj) => ({
+                    ...result,
+                    [obj.status.id]: obj,
+                }),
+                {},
+            )
+    }
+
+    // Get items by status
+    const getColumnItems = statusId => {
+        return project?.items.filter(item => {
+            return item.status.id === statusId
+        })
+    }
+
+    const handleDragEnd = event => {
+        const { active, over } = event
+        if (over && active.id !== over.id) {
+            setProject({
+                ...project,
+                items: project.items.map(item => {
+                    if (item.id === active.id) {
+                        item.status.id = over.id
+                    }
+                    return item
+                }),
+            })
+
+            debouncedUpdateItems(project)
         }
     }
 
@@ -49,31 +114,34 @@ const ProjectDetail = () => {
     }, [id])
 
     return (
-        <>
-            {!data?.id ? (
-                <div className="card flex justify-content-center">
-                    <Spinner />
-                </div>
-            ) : (
-                <div className="flex gap-4 min-h-full overflow-y-scroll">
-                    {data?.workflow?.columns
-                        ?.sort((a, b) => {
-                            return a.order - b.order
-                        })
-                        .map((column, index) => {
-                            return (
-                                <ProjectColumn
-                                    key={index}
-                                    columnData={column}
-                                    items={data.items}
-                                    title={column?.status?.name}
-                                    statusId={column.status.id}
-                                />
-                            )
-                        })}
-                </div>
-            )}
-        </>
+        <Provider>
+            <DndContext onDragEnd={handleDragEnd}>
+                <Toast ref={toast} />
+
+                {!project?.id ? (
+                    <div className="card flex justify-content-center">
+                        <Spinner />
+                    </div>
+                ) : (
+                    <div className="flex gap-4 min-h-full overflow-y-scroll">
+                        {Object.entries(getColumns()).map(
+                            (columnData, index) => {
+                                const items = getColumnItems(columnData[0])
+                                return (
+                                    <ProjectColumn
+                                        key={index}
+                                        columnData={columnData[1]}
+                                        items={items}
+                                        title={columnData[1].status.name}
+                                        statusId={columnData[0]}
+                                    />
+                                )
+                            },
+                        )}
+                    </div>
+                )}
+            </DndContext>
+        </Provider>
     )
 }
 

@@ -1,23 +1,23 @@
 import { Card } from 'primereact/card'
+import { useDroppable } from '@dnd-kit/core'
+import ProjectColumnItem from './ProjectColumnItem'
 
-export default function ProjectColumn({ title, statusId, columnData, items }) {
+export default function ProjectColumn({ title, statusId, items }) {
+    const { setNodeRef } = useDroppable({
+        id: statusId,
+    })
+    const style = {}
+
     return (
         <Card
-            className="w-28rem h-full"
-            rounded
+            className="w-28rem h-full border-round-xl surface-card"
             title={title}
-            subTitle={<div>+ Add new</div>}>
-            {items
-                .filter(item => {
-                    return item.status.id === statusId
-                })
-                .map((item, index) => (
-                    <Card
-                        className="bg-primary-900 my-2"
-                        key={statusId + '_' + index}>
-                        {item.title}
-                    </Card>
-                ))}
+            subTitle={<div>+ Add New</div>}
+            ref={setNodeRef}
+            style={style}>
+            {items?.map((item, index) => (
+                <ProjectColumnItem key={statusId + '_' + index} item={item} />
+            ))}
         </Card>
     )
 }

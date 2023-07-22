@@ -30,25 +30,61 @@ export const TopBar = props => {
             },
         },
         {
-            label: 'Arya (Blue)',
+            label: 'Arya',
             command: () => {
                 theme.setTheme('arya-blue')
             },
         },
         {
-            label: 'Lara Dark (Blue)',
+            label: 'Lara Dark',
             command: () => {
                 theme.setTheme('lara-dark-blue')
             },
         },
         {
-            label: 'Vela (Blue)',
+            label: 'Vela',
             command: () => {
                 theme.setTheme('vela-blue')
             },
         },
         {
-            label: 'Material Dark (Indigo)',
+            label: 'Tailwind',
+            command: () => {
+                theme.setTheme('vela-blue')
+            },
+        },
+        {
+            label: 'Saga',
+            command: () => {
+                theme.setTheme('saga-blue')
+            },
+        },
+        {
+            label: 'Bootstrap (light)',
+            command: () => {
+                theme.setTheme('bootstrap4-light-blue')
+            },
+        },
+        {
+            label: 'Bootstrap (Dark)',
+            command: () => {
+                theme.setTheme('bootstrap4-dark-blue')
+            },
+        },
+        {
+            label: 'Luna',
+            command: () => {
+                theme.setTheme('luna-blue')
+            },
+        },
+        {
+            label: 'Rhea',
+            command: () => {
+                theme.setTheme('rhea')
+            },
+        },
+        {
+            label: 'Material Dark',
             command: () => {
                 theme.setTheme('md-dark-indigo')
             },
@@ -56,7 +92,9 @@ export const TopBar = props => {
     ]
     return (
         <div className="layout-topbar">
-            <ResponsiveNavLink href="/">Openstead</ResponsiveNavLink>
+            <ResponsiveNavLink color="primary-600" href="/">
+                <span className="text-lg">Openstead</span>
+            </ResponsiveNavLink>
 
             <button
                 type="button"

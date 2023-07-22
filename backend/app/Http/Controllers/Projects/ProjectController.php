@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Inventory\ListInventoryRequest;
 use App\Http\Requests\Projects\ListProjectRequest;
 use App\Http\Requests\Projects\StoreProjectRequest;
+use App\Http\Requests\Projects\UpdateProjectItemsRequest;
 use App\Http\Requests\Projects\UpdateProjectRequest;
 use App\Models\Projects\Project;
 use App\Repositories\Project\ProjectRepository;
@@ -81,6 +82,16 @@ final class ProjectController extends Controller
 			$request->only((new Project())->getFillable()),
 			$request->get('images')), 200);
 	}
+
+    public function updateItems(UpdateProjectItemsRequest $request, string $slug, ProjectRepository $repository): Response
+    {
+        return response(
+            $repository->updateItems(
+                $repository->getBySlug($slug),
+                $request->only(['items'])
+            ), 
+        200);
+    }
 
     /**
      * Remove the specified resource from storage.

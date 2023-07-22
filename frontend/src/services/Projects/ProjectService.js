@@ -19,6 +19,17 @@ const getItem = async id => {
     return await axios.get('/api/projects/' + id).then(res => res.data)
 }
 
+const updateItems = async (id, items) => {
+    return await axios.put(`/api/projects/${id}/items`, {
+        items: items.map(item => {
+            return {
+                id: item.id,
+                project_item_status_id: item.status.id,
+            }
+        }),
+    })
+}
+
 const createOrUpdate = async (id, data, images = []) => {
     const url =
         typeof id === 'undefined' ? `/api/projects` : `/api/projects/${id}`
@@ -41,5 +52,6 @@ export default {
     getItem,
     getList,
     createOrUpdate,
+    updateItems,
     deleteItem,
 }
