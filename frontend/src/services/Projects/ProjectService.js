@@ -15,7 +15,7 @@ const getList = async params => {
     return await axios.get('/api/projects?' + queryParams).then(res => res.data)
 }
 
-const getItem = async id => {
+const getProject = async id => {
     return await axios.get('/api/projects/' + id).then(res => res.data)
 }
 
@@ -49,7 +49,7 @@ const deleteItem = async id => {
 }
 
 export default {
-    getItem,
+    getProject,
     getList,
     createOrUpdate,
     updateItems,
