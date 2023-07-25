@@ -27,7 +27,7 @@ class StoreServiceLogRequest extends FormRequest
 	{
 		return [
 			'serviceable_type' => ['required', 'string'],
-			'serviceable_id' => ['required', 'integer'],
+			'serviceable_id' => ['required', 'string'],
 			'type' => ['required', new Enum(ServiceType::class)],
 			'notes' => ['string', 'max:2000'],
 			'service_date' => ['date']

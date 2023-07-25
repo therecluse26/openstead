@@ -3,26 +3,22 @@
 namespace App\Models\Projects;
 
 use App\Resources\Projects\Detail\ProjectItemDetailResource;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\User;
+use App\Traits\HasNotes;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 
 class ProjectItem extends Model {
 
-    use HasUuids, HasFactory, SoftDeletes;
+    use HasUlids, HasNotes, HasFactory, SoftDeletes;
     
     protected $table = 'project_items';
 
     protected $primaryKey = 'id';
-    
-    public function getKeyName()
-    {
-        return 'id';
-    }
 
     protected $fillable = [
         'id',
@@ -31,9 +27,9 @@ class ProjectItem extends Model {
         'project_id',
         'project_item_status_id',
         'due_date',
+        'assignee_id',
         'completed_at',
         'completed_by',
-    
     ];
 
     protected $dates = [
@@ -42,7 +38,6 @@ class ProjectItem extends Model {
         'created_at',
         'updated_at',
         'deleted_at',
-    
     ];
 
     protected $casts = [

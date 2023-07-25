@@ -25,7 +25,7 @@ class NoteRepository
 		$this->model = new Note();
 	}
 
-	public function list(string $notableModelName, int $notableModelId): Collection
+	public function list(string $notableModelName, string $notableModelId): Collection
 	{
 		return $this->findPolymorphicModel($notableModelName, $notableModelId)
 			->notes()
@@ -33,7 +33,7 @@ class NoteRepository
 			->get();
 	}
 
-	public function find(int $id)
+	public function find(string $id)
 	{
 		return Note::findOrFail($id);
 	}
@@ -49,14 +49,14 @@ class NoteRepository
 		throw new NotFoundResourceException("Notable Model $notableType not found");
 	}
 
-	public function update(int $note, Request $request): Note
+	public function update(string $note, Request $request): Note
 	{
 		return $this->find($note)->update(
 			$request->only($this->model->getFillable())
 		);
 	}
 
-	public function delete(int $note): bool
+	public function delete(string $note): bool
 	{
 		return $this->model->destroy($note);
 	}

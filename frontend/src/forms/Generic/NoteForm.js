@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { Card } from 'primereact/card'
 import { Button } from 'primereact/button'
-import { useRouter } from 'next/router'
 import { csrf } from '@/hooks/auth'
 import AddErrorToasts from '@/utils/AddErrorToasts'
 import ToastContext, { useToastContext } from '@/context/ToastContext'
@@ -12,13 +11,12 @@ import EditorInput from '@/components/HookFormInputs/EditorInput'
 const NoteForm = ({
     inline = false,
     notableType,
+    parentId,
     onComplete = () => {},
     onClose = () => {},
 }) => {
     const isMounted = useRef(false)
     const toast = useToastContext(ToastContext)
-    const { query, isReady } = useRouter()
-    const { id } = query
 
     const {
         control,
@@ -30,16 +28,16 @@ const NoteForm = ({
     })
 
     useEffect(() => {
-        if (!isReady || !id) {
+        if (!parentId) {
             return
         }
         isMounted.current = true
-    }, [id])
+    }, [parentId])
 
     const onSubmit = async data => {
         await csrf()
         data['notable_type'] = notableType
-        NoteService.addNote(id, data)
+        NoteService.addNote(parentId, data)
             .then(() => {
                 if (inline) {
                     onComplete()

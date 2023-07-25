@@ -1,8 +1,11 @@
 import { Dialog } from 'primereact/dialog'
 import { useProjectStore } from './projectStore'
-import { Divider } from 'primereact/divider'
 import { Button } from 'primereact/button'
+
 import { formatDateTime } from '@/utils/FormatDate'
+import { Panel } from 'primereact/panel'
+import CollapsiblePanelTemplate from '../Templates/CollapsiblePanelTemplate'
+import Notes from '../Notes'
 
 export default function ProjectItemDialog() {
     const modalVisible = useProjectStore(state => state.modalVisible)
@@ -14,55 +17,79 @@ export default function ProjectItemDialog() {
     return (
         <Dialog
             visible={modalVisible}
+            style={{ width: '70vw' }}
             onHide={() => {
                 setModalVisibility(false)
             }}
-            style={{ width: '50vw' }}
             header={<h2>{selectedItem?.title}</h2>}>
-            <div>
-                <div className="grid">
-                    <div className="col-2">Status</div>
-                    <div className="col-10">
-                        {selectedItem?.status?.name ?? 'Unknown'}
-                    </div>
-                    <div className="col-2">Description</div>
-
+            <div className="grid">
+                <div className="lg:col-8 md:col-6">
                     <div>{selectedItem?.description}</div>
-                </div>
-                <Divider layout="vertical" className="my-2" />
 
-                <div className="grid">
-                    <div className="col-2">Assigned To</div>
-                    <div className="col-10">
-                        {selectedItem?.assigned_to?.name ?? 'Unknown'}
-                    </div>
-
-                    <div className="col-2">Created At</div>
-                    <div className="col-10">
-                        {formatDateTime(selectedItem?.created_at) ?? 'Unknown'}
-                    </div>
-
-                    <div className="col-2">Updated At</div>
-                    <div className="col-10">
-                        {formatDateTime(selectedItem?.updated_at) ?? 'Unknown'}
-                    </div>
-
-                    <div className="col-2">Created By</div>
-                    <div className="col-10">
-                        {selectedItem?.creator?.name ?? 'Unknown'}
-                    </div>
-                    <div className="col-2">Updated By</div>
-                    <div className="col-10">
-                        {selectedItem?.updated_by?.name ?? 'Unknown'}
-                    </div>
-
-                    <div className="col-12">
-                        <Button
-                            onClick={() => setModalVisibility(false)}
-                            label="Mark as Closed"
-                            link
+                    {selectedItem?.id && (
+                        <Notes
+                            parentId={selectedItem?.id}
+                            parentType={'project_item'}
                         />
-                    </div>
+                    )}
+                </div>
+
+                <div className="lg:col-4 md:col-6">
+                    <Panel
+                        toggleable
+                        headerTemplate={options => {
+                            return CollapsiblePanelTemplate(
+                                options,
+                                'More Info',
+                            )
+                        }}>
+                        <div className="grid">
+                            <div className="col-5">Status</div>
+                            <div className="col-7">
+                                {selectedItem?.status?.name ?? 'Unknown'}
+                            </div>
+                            <div className="col-5">Assigned To</div>
+                            <div className="col-7">
+                                {selectedItem?.assigned_to?.name ?? 'Unknown'}
+                            </div>
+
+                            <div className="col-5">Created At</div>
+                            <div className="col-7">
+                                {formatDateTime(selectedItem?.created_at) ??
+                                    'Unknown'}
+                            </div>
+
+                            <div className="col-5">Updated At</div>
+                            <div className="col-7">
+                                {formatDateTime(selectedItem?.updated_at) ??
+                                    'Unknown'}
+                            </div>
+
+                            <div className="col-5">Created By</div>
+                            <div className="col-7">
+                                {selectedItem?.creator?.name ?? 'Unknown'}
+                            </div>
+
+                            {selectedItem?.updated_by && (
+                                <div>
+                                    <div className="col-5">Updated By</div>
+                                    <div className="col-7">
+                                        {selectedItem?.updated_by?.name ??
+                                            'Unknown'}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </Panel>
+                    {!selectedItem?.deleted_at && (
+                        <div className="col-12">
+                            <Button
+                                onClick={() => setModalVisibility(false)}
+                                label="Mark as Closed"
+                                link
+                            />
+                        </div>
+                    )}
                 </div>
             </div>
         </Dialog>

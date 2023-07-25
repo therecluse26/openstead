@@ -76,7 +76,7 @@ const addVariety = async (id, data) => {
 
 const getSimilarItems = id => {
     return axios
-        .get('/api/inventory/pantry/' + id + '/similar')
+        .get('/api/inventory/seeds/' + id + '/similar')
         .then(res => res.data)
 }
 

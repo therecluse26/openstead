@@ -40,10 +40,10 @@ final class ServiceLogController extends Controller implements HasAppendableSele
 	 *
 	 * @param ServiceLogRepository $repository
 	 * @param string $modelName
-	 * @param int $modelId
+	 * @param string $modelId
 	 * @return Response
 	 */
-	public function index(ServiceLogRepository $repository, string $modelName, int $modelId): Response
+	public function index(ServiceLogRepository $repository, string $modelName, string $modelId): Response
 	{
 		return response(
 			ServiceLogResource::collection(
@@ -86,11 +86,11 @@ final class ServiceLogController extends Controller implements HasAppendableSele
 	 * Update the specified resource in storage.
 	 *
 	 * @param UpdateServiceLogRequest $request
-	 * @param ServiceLog $serviceLog
+	 * @param string $serviceLog
 	 * @param ServiceLogRepository $serviceLogRepository
 	 * @return Response
 	 */
-	public function update(UpdateServiceLogRequest $request, ServiceLog $serviceLog, ServiceLogRepository $serviceLogRepository): Response
+	public function update(UpdateServiceLogRequest $request, string $serviceLog, ServiceLogRepository $serviceLogRepository): Response
 	{
 		return response($serviceLogRepository->update($serviceLog, $request), 200);
 	}
@@ -99,10 +99,10 @@ final class ServiceLogController extends Controller implements HasAppendableSele
 	 * Remove the specified resource from storage.
 	 *
 	 * @param ServiceLogRepository $repository
-	 * @param int $id
+	 * @param string $id
 	 * @return Response
 	 */
-	public function destroy(ServiceLogRepository $repository, int $id): Response
+	public function destroy(ServiceLogRepository $repository, string $id): Response
 	{
 		return response($repository->delete($id));
 	}

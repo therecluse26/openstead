@@ -13,7 +13,6 @@ use App\Models\Projects\ProjectItem;
 use App\Models\Service;
 use App\Models\User;
 use App\Models\Variety;
-use Database\Factories\Projects\ProjectFactory;
 use Exception;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
@@ -29,6 +28,10 @@ class TestDataSeeder extends Seeder
 	public function run()
 	{
 		Artisan::call('media-library:clear --force');
+
+		User::factory()
+			->count(10)
+			->create();
 
 		Location::factory()
 			->count(1)

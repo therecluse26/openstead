@@ -1,15 +1,15 @@
 <?php
 namespace App\Models\Projects;
 
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class ProjectItemStatus extends Model
 {
-    use HasFactory, SoftDeletes, HasUuids;
+    use HasUlids, HasFactory, SoftDeletes;
 
     protected $table = 'project_item_statuses';
     

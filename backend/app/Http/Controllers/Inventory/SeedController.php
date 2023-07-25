@@ -95,10 +95,10 @@ final class SeedController extends Controller implements HasAppendableSelect
 	 * Display the specified resource.
 	 *
 	 * @param SeedRepository $repository
-	 * @param int $id
+	 * @param string $id
 	 * @return Response
 	 */
-	public function show(SeedRepository $repository, int $id): Response
+	public function show(SeedRepository $repository, string $id): Response
 	{
 		return response($repository->find($id)->getDetailResource());
 	}
@@ -108,9 +108,10 @@ final class SeedController extends Controller implements HasAppendableSelect
 	 *
 	 * @param UpdateSeedRequest $request
 	 * @param SeedRepository $repository
+	 * @param string $id
 	 * @return Response
 	 */
-	public function update(UpdateSeedRequest $request, SeedRepository $repository, int $id): Response
+	public function update(UpdateSeedRequest $request, SeedRepository $repository, string $id): Response
 	{
 		return response($repository->update(
 			$repository->find($id),
@@ -134,10 +135,10 @@ final class SeedController extends Controller implements HasAppendableSelect
 	 * Gets similar item by type
 	 *
 	 * @param SeedRepository $repository
-	 * @param int $id
+	 * @param string $id
 	 * @return Response
 	 */
-	public function getSimilar(SeedRepository $repository, int $id)
+	public function getSimilar(SeedRepository $repository, string $id)
 	{
 		return response(SeedResource::collection(
 			$repository->getSimilar(

@@ -15,5 +15,5 @@ interface Repository
 
 	public function all(): Collection;
 
-	public function getById(string|int $id): ?Model;
+	public function getById(string $id): ?Model;
 }

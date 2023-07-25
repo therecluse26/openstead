@@ -3,6 +3,7 @@ namespace App\Models\Projects;
 
 use App\Models\Projects\Project;
 use App\Models\Projects\ProjectItem;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class ProjectColumn extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasUlids, HasFactory, SoftDeletes;
 
     protected $table = 'project_columns';
 

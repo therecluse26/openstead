@@ -35,12 +35,12 @@ class ProjectRepository implements Repository
         return $this->model->all();
     }
 
-    public function getById($id): Project
+    public function getById(string $id): Project
     {
         return $this->model->find($id);
     }
     
-    public function getBySlug($slug): Project
+    public function getBySlug(string $slug): Project
     {
         return $this->model->where('slug', $slug)->first();
     }
@@ -50,7 +50,7 @@ class ProjectRepository implements Repository
         return $this->model->create($attributes);
     }
     
-    public function update($id, array $attributes): bool
+    public function update(string $id, array $attributes): bool
     {
         return $this->model->find($id)->update($attributes);
     }

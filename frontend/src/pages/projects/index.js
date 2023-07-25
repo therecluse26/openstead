@@ -39,7 +39,7 @@ const Projects = () => {
                     sortable
                     body={(rowData, elem) => {
                         return (
-                            <Link href={`/projects/${rowData.slug}`}>
+                            <Link href={`/projects/${rowData.id}`}>
                                 {rowData[elem.field]}
                             </Link>
                         )

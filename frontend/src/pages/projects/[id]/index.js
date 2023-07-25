@@ -22,13 +22,13 @@ const ProjectDetail = () => {
 
     const toast = useRef(null)
     const { query, isReady } = useRouter()
-    const { slug } = query
+    const { id } = query
 
     const loadData = () => {
         if (!isReady) {
             return
         }
-        ProjectService.getProject(slug)
+        ProjectService.getProject(id)
             .then(data => {
                 setProject(data)
             })
@@ -38,7 +38,7 @@ const ProjectDetail = () => {
     }
 
     const updateProjectItems = async updatedProject => {
-        await ProjectService.updateItems(slug, updatedProject?.items)
+        await ProjectService.updateItems(id, updatedProject?.items)
             .then(() => {
                 toast.current.show({
                     severity: 'success',
@@ -122,7 +122,7 @@ const ProjectDetail = () => {
     useEffect(() => {
         isMounted.current = true
         loadData()
-    }, [slug])
+    }, [id])
 
     return (
         <>

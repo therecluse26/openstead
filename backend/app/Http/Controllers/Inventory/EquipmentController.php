@@ -66,10 +66,10 @@ final class EquipmentController extends Controller
 	 * Display the specified resource.
 	 *
 	 * @param EquipmentRepository $equipmentRepository
-	 * @param int $equipment
+	 * @param string $equipment
 	 * @return Response
 	 */
-	public function show(EquipmentRepository $equipmentRepository, int $equipment): Response
+	public function show(EquipmentRepository $equipmentRepository, string $equipment): Response
 	{
 		return response(
 			$equipmentRepository->find($equipment)->getDetailResource()
@@ -80,10 +80,10 @@ final class EquipmentController extends Controller
 	 * Display the specified resource.
 	 *
 	 * @param EquipmentRepository $equipmentRepository
-	 * @param int $equipment
+	 * @param string $equipment
 	 * @return Response
 	 */
-	public function getSimilar(EquipmentRepository $equipmentRepository, int $equipment): Response
+	public function getSimilar(EquipmentRepository $equipmentRepository, string $equipment): Response
 	{
 		return response(EquipmentListResource::collection(
 			$equipmentRepository->getSimilar($equipment)

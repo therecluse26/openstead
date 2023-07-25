@@ -37,7 +37,7 @@ class LocationRepository implements Repository
 		return $this->model->$method(...$arguments);
 	}
 
-	public function getById(string|int $id): ?Model
+	public function getById(string $id): ?Model
 	{
 		return $this->model->find($id);
 	}
@@ -75,10 +75,10 @@ class LocationRepository implements Repository
 	/**
 	 * Finds model by ID
 	 *
-	 * @param string|int $id
+	 * @param string $id
 	 * @return Model
 	 */
-	public function find(string|int $id): Model
+	public function find(string $id): Model
 	{
 		return $this->model->findOrFail($id);
 	}

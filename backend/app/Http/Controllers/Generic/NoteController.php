@@ -12,7 +12,7 @@ use Illuminate\Http\Response;
 final class NoteController extends Controller
 {
 
-	public function index(NoteRepository $repository, string $modelName, int $modelId): Response
+	public function index(NoteRepository $repository, string $modelName, string $modelId): Response
 	{
 		return response(
 			NoteResource::collection(
@@ -41,11 +41,11 @@ final class NoteController extends Controller
 	 * Update the specified resource in storage.
 	 *
 	 * @param UpdateNoteRequest $request
-	 * @param int $note
+	 * @param string $note
 	 * @param NoteRepository $repository
 	 * @return Response
 	 */
-	public function update(UpdateNoteRequest $request, int $note, NoteRepository $repository): Response
+	public function update(UpdateNoteRequest $request, string $note, NoteRepository $repository): Response
 	{
 		return response($repository->update($note, $request), 200);
 	}
@@ -54,10 +54,10 @@ final class NoteController extends Controller
 	 * Remove the specified resource from storage.
 	 *
 	 * @param NoteRepository $repository
-	 * @param int $id
+	 * @param string $id
 	 * @return Response
 	 */
-	public function destroy(NoteRepository $repository, int $id): Response
+	public function destroy(NoteRepository $repository, string $id): Response
 	{
 		return response($repository->delete($id));
 	}

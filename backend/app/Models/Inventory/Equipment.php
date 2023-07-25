@@ -16,6 +16,7 @@ use App\Traits\HasInventory;
 use App\Traits\HasNotes;
 use App\Traits\HasServiceLogs;
 use App\Traits\HasImages;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -24,6 +25,7 @@ use Spatie\MediaLibrary\HasMedia;
 
 class Equipment extends Model implements DataTablePaginatable, Inventoriable, FrontendFilterable, HasMedia, Serviceable, Notable
 {
+	use HasUlids;
 	use HasFactory;
 	use HasInventory;
 	use HasServiceLogs;

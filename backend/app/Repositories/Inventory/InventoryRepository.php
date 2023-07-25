@@ -82,10 +82,10 @@ class InventoryRepository implements Repository
 	/**
 	 * Finds model by ID
 	 *
-	 * @param string|int $id
+	 * @param string $id
 	 * @return Model
 	 */
-	public function getById(string|int $id): Model
+	public function getById(string $id): Model
 	{
 		return $this->model->findOrFail($id);
 	}

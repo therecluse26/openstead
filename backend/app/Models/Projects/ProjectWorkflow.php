@@ -2,18 +2,17 @@
 namespace App\Models\Projects;
 
 use App\Models\Projects\Project;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Projects\ProjectItemStatus;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 
 class ProjectWorkflow extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasUlids, HasFactory, SoftDeletes;
 
     protected $table = 'project_workflows';
 

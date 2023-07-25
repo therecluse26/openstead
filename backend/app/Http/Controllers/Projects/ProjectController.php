@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Projects;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Inventory\ListInventoryRequest;
 use App\Http\Requests\Projects\ListProjectRequest;
 use App\Http\Requests\Projects\StoreProjectRequest;
 use App\Http\Requests\Projects\UpdateProjectItemsRequest;
@@ -43,13 +42,13 @@ final class ProjectController extends Controller
      * Display the specified resource.
      * 
      * @param ProjectRepository $epository
-     * @param int $project
+     * @param string $id
      * @return Response
      */
-    public function show(ProjectRepository $repository, string $slug): Response
+    public function show(ProjectRepository $repository, string $id): Response
 	{
 		return response(
-			$repository->getBySlug($slug)->getDetailResource()
+			$repository->getById($id)->getDetailResource()
 		);
 	}
 
@@ -72,22 +71,22 @@ final class ProjectController extends Controller
      * Update the specified resource in storage.
      *
      * @param UpdateProjectRequest $request
-     * @param Project $project
+     * @param string $project
      * @param ProjectRepository $repository
      * @return Response
      */
-	public function update(UpdateProjectRequest $request, Project $project, ProjectRepository $repository): Response
+	public function update(UpdateProjectRequest $request, string $project, ProjectRepository $repository): Response
 	{
 		return response($repository->update($project,
 			$request->only((new Project())->getFillable()),
 			$request->get('images')), 200);
 	}
 
-    public function updateItems(UpdateProjectItemsRequest $request, string $slug, ProjectRepository $repository): Response
+    public function updateItems(UpdateProjectItemsRequest $request, string $id, ProjectRepository $repository): Response
     {
         return response(
             $repository->updateItems(
-                $repository->getBySlug($slug),
+                $repository->getById($id),
                 $request->only(['items'])
             ), 
         200);
@@ -96,11 +95,11 @@ final class ProjectController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Project $project
+     * @param string $project
      * @param ProjectRepository $repository
      * @return Response
      */
-	public function destroy(Project $project, ProjectRepository $repository): Response
+	public function destroy(string $project, ProjectRepository $repository): Response
 	{
 		return response($repository->delete($project), 200);
 	}

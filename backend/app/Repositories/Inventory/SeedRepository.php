@@ -25,7 +25,7 @@ class SeedRepository extends InventoryRepository
 		parent::__construct($this->model);
 	}
 
-	public function find(int $id): Seed
+	public function find(string $id): Seed
 	{
 		return $this->model->findOrFail($id);
 	}
@@ -111,9 +111,12 @@ class SeedRepository extends InventoryRepository
 		]));
 	}
 
-	public function getSimilar(int $id): Collection
+	public function getSimilar(string $id): Collection
 	{
 		$result = $this->find($id);
+
+		if(!$result) return collect([]);
+
 		return $this->model->whereNot('id', $id)
 			->where('variety_id', $result->variety_id)
 			->inRandomOrder()

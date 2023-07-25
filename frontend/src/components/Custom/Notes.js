@@ -55,6 +55,7 @@ const Notes = ({ parentType, parentId }) => {
                     }}>
                     {editing === true ? (
                         <NoteForm
+                            parentId={parentId}
                             inline={true}
                             notableType={parentType}
                             onClose={() => {

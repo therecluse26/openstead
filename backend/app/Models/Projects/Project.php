@@ -7,7 +7,7 @@ use App\Models\Projects\ProjectWorkflow;
 use App\Resources\Projects\Detail\ProjectDetailResource;
 use App\Resources\Projects\List\ProjectListResource;
 use App\Traits\HasImages;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -16,20 +16,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
-use Spatie\EventSourcing\Projections\Projection;
 
 class Project extends Model implements DataTablePaginatable
 {
-    use HasUuids, HasFactory, HasImages, SoftDeletes;
+    use HasUlids, HasFactory, HasImages, SoftDeletes;
 
     protected $table = 'projects';
 
     protected $primaryKey = 'id';
-    
-    public function getKeyName()
-    {
-        return 'id';
-    }
 
     protected $fillable = [
         'name',
@@ -43,16 +37,6 @@ class Project extends Model implements DataTablePaginatable
         'active' => 'boolean'
     ];
     
-    /**
-     * Get the columns that should receive a unique identifier.
-     *
-     * @return array<int, string>
-     */
-    public function uniqueIds(): array
-    {
-        return ['id'];
-    }
-
     public function workflow(): HasOne
     {
         return $this->hasOne(ProjectWorkflow::class, 'id', 'project_workflow_id')->withDefault(function(){

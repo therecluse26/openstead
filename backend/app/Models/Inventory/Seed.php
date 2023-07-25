@@ -18,6 +18,7 @@ use App\Traits\HasInventory;
 use App\Traits\HasNotes;
 use App\Traits\HasVariety;
 use App\Traits\HasImages;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -26,6 +27,7 @@ use Spatie\MediaLibrary\HasMedia;
 
 class Seed extends Model implements DataTablePaginatable, Inventoriable, VarietyContract, FrontendFilterable, HasMedia, Notable
 {
+	use HasUlids;
 	use HasFactory;
 	use HasInventory;
 	use HasVariety;

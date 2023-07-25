@@ -20,6 +20,7 @@ use App\Traits\HasServiceLogs;
 use App\Traits\HasVariety;
 use App\Traits\HasImages;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -29,6 +30,7 @@ use Spatie\MediaLibrary\HasMedia;
 
 class Livestock extends Model implements DataTablePaginatable, Inventoriable, VarietyContract, FrontendFilterable, HasMedia, Serviceable, Notable
 {
+	use HasUlids;
 	use HasFactory;
 	use HasInventory;
 	use HasServiceLogs;

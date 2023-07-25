@@ -80,10 +80,10 @@ final class PantryController extends Controller implements HasAppendableSelect
 	 * Display the specified resource.
 	 *
 	 * @param PantryRepository $repository
-	 * @param int $id
+	 * @param string $id
 	 * @return Response
 	 */
-	public function show(PantryRepository $repository, int $id): Response
+	public function show(PantryRepository $repository, string $id): Response
 	{
 		return response($repository->find($id)->getDetailResource());
 	}
@@ -93,10 +93,10 @@ final class PantryController extends Controller implements HasAppendableSelect
 	 *
 	 * @param UpdatePantryItemRequest $request
 	 * @param PantryRepository $repository
-	 * @param int $id
+	 * @param string $id
 	 * @return Response
 	 */
-	public function update(UpdatePantryItemRequest $request, PantryRepository $repository, int $id): Response
+	public function update(UpdatePantryItemRequest $request, PantryRepository $repository, string $id): Response
 	{
 		return response($repository->update(
 			$repository->find($id),
@@ -120,10 +120,10 @@ final class PantryController extends Controller implements HasAppendableSelect
 	 * Gets similar item by type
 	 *
 	 * @param PantryRepository $repository
-	 * @param int $id
+	 * @param string $id
 	 * @return Response
 	 */
-	public function getSimilar(PantryRepository $repository, int $id)
+	public function getSimilar(PantryRepository $repository, string $id)
 	{
 		return response(PantryItemResource::collection(
 			$repository->getSimilar(

@@ -35,10 +35,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
 	->group(function () {
 		Route::get('/', [ProjectController::class, 'index']);
 		Route::post('/', [ProjectController::class, 'store']);
-		Route::put('/{slug}', [ProjectController::class, 'update']);
-		Route::put('/{slug}/items', [ProjectController::class, 'updateItems']);
-		Route::get('/{project}/items/{item}', [ProjectItemController::class, 'show']);
-		Route::get('/{slug}', [ProjectController::class, 'show']);
+		Route::put('/{id}', [ProjectController::class, 'update']);
+		Route::put('/{id}/items', [ProjectController::class, 'updateItems']);
+		Route::get('/{project_id}/items/{item_id}', [ProjectItemController::class, 'show']);
+		Route::get('/{id}', [ProjectController::class, 'show']);
 	});
 
 	Route::prefix('/inventory')

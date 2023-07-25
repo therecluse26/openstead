@@ -35,7 +35,7 @@ class ProjectItemRepository implements Repository
         return $this->model->all();
     }
 
-    public function getById($id): ProjectItem
+    public function getById(string $id): ProjectItem
     {
         return $this->model->find($id);
     }
