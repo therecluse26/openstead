@@ -3,8 +3,10 @@ import { Card } from 'primereact/card'
 import { useDraggable } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
 import { useProjectStore } from '@/components/Custom/Projects/projectStore'
+import ProjectService from '@/services/Projects/ProjectService'
 
 const ProjectColumnItem = ({ item }) => {
+    const project = useProjectStore(state => state.project)
     const setSelectedProjectItem = useProjectStore(
         state => state.setSelectedItem,
     )
@@ -20,12 +22,19 @@ const ProjectColumnItem = ({ item }) => {
         transform: CSS.Translate.toString(transform),
     }
 
-    const handleCardClick = i => {
+    const handleCardClick = async i => {
+        const itemDetail = await ProjectService.getProjectItem(project.id, i.id)
+
         setSelectedProjectItem({
-            id: i.id,
-            title: i.title,
-            status: i.status,
-            description: i.description,
+            id: itemDetail.id,
+            title: itemDetail.title,
+            description: itemDetail.description,
+            status: itemDetail.status,
+            assignee: itemDetail.assignee,
+            creator: itemDetail.creator,
+            due_date: itemDetail.due_date,
+            created_at: itemDetail.created_at,
+            updated_at: itemDetail.updated_at,
         })
         setModalVisibility(true)
     }

@@ -98,8 +98,6 @@ const Seeds = () => {
             service={SeedService}
             filters={filters}
             setLazyParamsCallack={lazyParamsCallback}>
-            <Column selectionMode="multiple" headerStyle={{ width: '3em' }} />
-
             <Column
                 field="variety"
                 sortField="variety.variety_name"

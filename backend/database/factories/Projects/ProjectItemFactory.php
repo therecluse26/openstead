@@ -27,6 +27,7 @@ class ProjectItemFactory extends Factory
             'creator_id' => User::inRandomOrder()->first()?->id ?? 1,
             'due_date' => fake()->dateTimeBetween('+0 days', '+4 years'),
             'completed_at' => $status->name === 'Done' ? fake()->dateTimeBetween('-4 years', '-0 days') : null,
+			'completed_by_id' => $status->name === 'Done' ? User::inRandomOrder()->first()?->id ?? 1 : null,
         ];
 	}
 }

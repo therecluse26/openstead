@@ -70,11 +70,6 @@ const Equipment = () => {
                 filters={filters}
                 setLazyParamsCallack={lazyParamsCallback}>
                 <Column
-                    selectionMode="multiple"
-                    headerStyle={{ width: '3em' }}
-                />
-
-                <Column
                     field="name"
                     header="Name"
                     sortable

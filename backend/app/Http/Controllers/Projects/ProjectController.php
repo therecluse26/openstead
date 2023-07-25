@@ -23,7 +23,7 @@ final class ProjectController extends Controller
     /**
      * Display a listing of the resource.
      * 
-     * @param ListInventoryRequest $request
+     * @param ListProjectRequest $request
      * @param ProjectService $service
      * @return Response
      * @throws JsonException

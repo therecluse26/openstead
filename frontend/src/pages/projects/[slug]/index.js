@@ -11,7 +11,6 @@ import {
     useSensors,
 } from '@dnd-kit/core'
 import { Toast } from 'primereact/toast'
-import { Dialog } from 'primereact/dialog'
 import { useProjectStore } from '@/components/Custom/Projects/projectStore'
 import ProjectItemDialog from '@/components/Custom/Projects/ProjectItemDialog'
 

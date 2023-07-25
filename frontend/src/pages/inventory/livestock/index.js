@@ -66,8 +66,6 @@ const Livestock = () => {
             service={LivestockService}
             filters={filters}
             setLazyParamsCallack={lazyParamsCallback}>
-            <Column selectionMode="multiple" headerStyle={{ width: '3em' }} />
-
             <Column
                 field="name"
                 header="Name"

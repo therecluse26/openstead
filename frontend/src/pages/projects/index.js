@@ -34,11 +34,6 @@ const Projects = () => {
                 setFilters={setFilters}
                 setLazyParamsCallack={lazyParamsCallback}>
                 <Column
-                    selectionMode="multiple"
-                    headerStyle={{ width: '3em' }}
-                />
-
-                <Column
                     field="name"
                     header="Name"
                     sortable

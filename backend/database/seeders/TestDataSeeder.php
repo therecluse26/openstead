@@ -74,7 +74,7 @@ class TestDataSeeder extends Seeder
 			->times(10)
 			->make()
 			->each(function($project) {
-				(new Project)->eventCreate($project->toArray());
+				(new Project)->create($project->toArray());
 			});
 
 		ProjectItem::factory()
@@ -82,7 +82,7 @@ class TestDataSeeder extends Seeder
 			->make()
 			->each(function($item) {
 				$item->project_id = Project::inRandomOrder()->first()?->id ?? 1;
-				(new ProjectItem)->eventCreate($item->toArray());
+				(new ProjectItem)->create($item->toArray());
 				
 		});
 		

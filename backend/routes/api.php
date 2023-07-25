@@ -8,6 +8,7 @@ use App\Http\Controllers\Inventory\PantryController;
 use App\Http\Controllers\Inventory\SeedController;
 use App\Http\Controllers\Inventory\ServiceLogController;
 use App\Http\Controllers\Projects\ProjectController;
+use App\Http\Controllers\Projects\ProjectItemController;
 use App\Http\Controllers\ServiceController;
 use App\Services\RouteBuilderService;
 use Illuminate\Http\Request;
@@ -36,6 +37,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 		Route::post('/', [ProjectController::class, 'store']);
 		Route::put('/{slug}', [ProjectController::class, 'update']);
 		Route::put('/{slug}/items', [ProjectController::class, 'updateItems']);
+		Route::get('/{project}/items/{item}', [ProjectItemController::class, 'show']);
 		Route::get('/{slug}', [ProjectController::class, 'show']);
 	});
 

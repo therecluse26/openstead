@@ -19,6 +19,12 @@ const getProject = async id => {
     return await axios.get('/api/projects/' + id).then(res => res.data)
 }
 
+const getProjectItem = async (projectId, itemId) => {
+    return await axios
+        .get(`/api/projects/${projectId}/items/${itemId}`)
+        .then(res => res.data)
+}
+
 const updateItems = async (id, items) => {
     return await axios.put(`/api/projects/${id}/items`, {
         items: items.map(item => {
@@ -50,6 +56,7 @@ const deleteItem = async id => {
 
 export default {
     getProject,
+    getProjectItem,
     getList,
     createOrUpdate,
     updateItems,

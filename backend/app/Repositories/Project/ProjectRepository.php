@@ -3,7 +3,6 @@ namespace App\Repositories\Project;
 
 use App\Contracts\Repository;
 use App\Models\Projects\Project;
-use App\Models\Projects\ProjectItem;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
@@ -36,25 +35,24 @@ class ProjectRepository implements Repository
         return $this->model->all();
     }
 
-    public function getById($id): Model
+    public function getById($id): Project
     {
         return $this->model->find($id);
     }
     
-    public function getBySlug($slug): Model
+    public function getBySlug($slug): Project
     {
         return $this->model->where('slug', $slug)->first();
     }
 
-    public function create(array $attributes)
+    public function create(array $attributes): Project
     {
-        $this->model->eventCreate($attributes);
-        return $this->model->where('slug', $attributes['slug'])->first();
+        return $this->model->create($attributes);
     }
     
-    public function update($id, array $attributes)
+    public function update($id, array $attributes): bool
     {
-        return $this->model->find($id)->eventUpdate($attributes);
+        return $this->model->find($id)->update($attributes);
     }
 
     /**
@@ -62,9 +60,9 @@ class ProjectRepository implements Repository
      *
      * @param Project $project
      * @param array $attributes
-     * @return void
+     * @return iterable
      */
-    public function updateItems(Project $project, array $attributes)
+    public function updateItems(Project $project, array $attributes): iterable
     {
         $itemsChanged = collect();
 
@@ -82,7 +80,7 @@ class ProjectRepository implements Repository
                     }
 
                     if ($changed){
-                        $item->eventUpdate($itemUpdate);
+                        $item->update($itemUpdate);
                     }
                 }
             }
@@ -90,9 +88,9 @@ class ProjectRepository implements Repository
         return $itemsChanged;
     }
 
-    public function delete($id)
+    public function delete($id): bool
     {
-        return $this->model->find($id)->eventDelete();
+        return $this->model->find($id)->delete();
     }
    
 }

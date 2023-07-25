@@ -2,17 +2,16 @@
 
 namespace App\Models\Projects;
 
-use App\Events\Projects\ProjectItemCreated;
-use App\Events\Projects\ProjectItemDeleted;
-use App\Events\Projects\ProjectItemUpdated;
+use App\Resources\Projects\Detail\ProjectItemDetailResource;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Ramsey\Uuid\Uuid;
-use Spatie\EventSourcing\Projections\Projection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Resources\Json\JsonResource;
+use App\Models\User;
 
-class ProjectItem extends Projection {
+class ProjectItem extends Model {
 
     use HasUuids, HasFactory, SoftDeletes;
     
@@ -49,7 +48,6 @@ class ProjectItem extends Projection {
     protected $casts = [
         'due_date' => 'date',
         'completed_at' => 'datetime',
-        'completed_by' => 'integer',
     ];
 
     public function project(): BelongsTo
@@ -62,27 +60,24 @@ class ProjectItem extends Projection {
         return $this->belongsTo(ProjectItemStatus::class, 'project_item_status_id');
     }
 
-    /**
-     * Event-Sourcing Methods
-     */
-    public function eventCreate(array $attributes){
-        $attributes['id'] ??= (string) Uuid::uuid4();
-    
-        event(new ProjectItemCreated($attributes));
-
-        return static::find($attributes['id']);
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'creator_id');
     }
 
-    public function eventUpdate(array $attributes){    
-        event(new ProjectItemUpdated($attributes));
-
-        return static::find($attributes['id']);
+    public function assignee(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'assignee_id');
     }
 
-    public function eventDelete(){
-        event(new ProjectItemDeleted($this->toArray()));
+    public function completedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'completed_by_id');
+    }
 
-        return true;
+    public function getDetailResource(): JsonResource
+    {
+        return ProjectItemDetailResource::make($this);
     }
 
 }
