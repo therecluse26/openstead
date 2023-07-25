@@ -85,7 +85,13 @@ const Notes = ({ parentType, parentId }) => {
                             <div key={`outer-div-note-${note.id}`}>
                                 <Fieldset
                                     className={'mb-2'}
-                                    legend={formatDateTime(note.timestamp)}
+                                    legend={
+                                        <>
+                                            {formatDateTime(note.timestamp)}{' '}
+                                            {note.creator &&
+                                                ' - ' + note.creator.name}{' '}
+                                        </>
+                                    }
                                     toggleable>
                                     <div className={'grid'}>
                                         <div

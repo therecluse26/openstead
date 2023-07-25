@@ -8,6 +8,7 @@ use App\Models\Inventory\LivestockParent;
 use App\Models\Inventory\PantryItem;
 use App\Models\Inventory\Seed;
 use App\Models\Location;
+use App\Models\Note;
 use App\Models\Projects\Project;
 use App\Models\Projects\ProjectItem;
 use App\Models\Service;
@@ -87,6 +88,7 @@ class TestDataSeeder extends Seeder
 				$item->project_id = Project::inRandomOrder()->first()?->id ?? 1;
 				(new ProjectItem)->create($item->toArray());
 				
+				$item->notes()->saveMany(Note::factory()->count(random_int(0, 3))->make());
 		});
 		
 	}

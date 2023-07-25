@@ -32,7 +32,7 @@ final class NoteController extends Controller
 		return response($repository->create(
 			collect(
 				$request->all()
-			)),
+			), $request->user()),
 			200
 		);
 	}

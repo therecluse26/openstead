@@ -6,6 +6,7 @@ import { formatDateTime } from '@/utils/FormatDate'
 import { Panel } from 'primereact/panel'
 import CollapsiblePanelTemplate from '../Templates/CollapsiblePanelTemplate'
 import Notes from '../Notes'
+import EditableText from '../EditableText'
 
 export default function ProjectItemDialog() {
     const modalVisible = useProjectStore(state => state.modalVisible)
@@ -21,10 +22,24 @@ export default function ProjectItemDialog() {
             onHide={() => {
                 setModalVisibility(false)
             }}
-            header={<h2>{selectedItem?.title}</h2>}>
+            header={
+                <h2>
+                    <EditableText
+                        text={selectedItem?.title}
+                        model="project_item"
+                        field="title"
+                    />
+                </h2>
+            }>
             <div className="grid">
                 <div className="lg:col-8 md:col-6">
-                    <div>{selectedItem?.description}</div>
+                    <div>
+                        <EditableText
+                            text={selectedItem?.description}
+                            model="project_item"
+                            field="description"
+                        />
+                    </div>
 
                     {selectedItem?.id && (
                         <Notes
@@ -50,7 +65,7 @@ export default function ProjectItemDialog() {
                             </div>
                             <div className="col-5">Assigned To</div>
                             <div className="col-7">
-                                {selectedItem?.assigned_to?.name ?? 'Unknown'}
+                                {selectedItem?.assigned_to?.name ?? 'None'}
                             </div>
 
                             <div className="col-5">Created At</div>
@@ -59,25 +74,30 @@ export default function ProjectItemDialog() {
                                     'Unknown'}
                             </div>
 
-                            <div className="col-5">Updated At</div>
-                            <div className="col-7">
-                                {formatDateTime(selectedItem?.updated_at) ??
-                                    'Unknown'}
-                            </div>
-
                             <div className="col-5">Created By</div>
                             <div className="col-7">
-                                {selectedItem?.creator?.name ?? 'Unknown'}
+                                {selectedItem?.creator?.name}
                             </div>
 
+                            {selectedItem?.updated_at && (
+                                <>
+                                    <div className="col-5">Updated At</div>
+                                    <div className="col-7">
+                                        {formatDateTime(
+                                            selectedItem?.updated_at,
+                                        )}
+                                    </div>
+                                </>
+                            )}
+
                             {selectedItem?.updated_by && (
-                                <div>
+                                <>
                                     <div className="col-5">Updated By</div>
                                     <div className="col-7">
                                         {selectedItem?.updated_by?.name ??
                                             'Unknown'}
                                     </div>
-                                </div>
+                                </>
                             )}
                         </div>
                     </Panel>

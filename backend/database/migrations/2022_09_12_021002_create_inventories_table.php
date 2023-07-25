@@ -150,6 +150,7 @@ return new class extends Migration {
 		Schema::create('notes', function (Blueprint $table) {
 			$table->ulid('id')->primary();
 			$table->ulidMorphs('notable');
+			$table->ulid('creator_id');
 			$table->string('note', 5000);
 			$table->timestamps();
 		});

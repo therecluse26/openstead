@@ -1,7 +1,7 @@
 <?php
 namespace App\Resources\Projects\Detail;
 
-use App\Resources\Projects\List\ProjectItemListResource;
+use App\Resources\Generic\Detail\NoteResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProjectItemDetailResource extends JsonResource 
@@ -13,15 +13,15 @@ class ProjectItemDetailResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
 			'status' => $this->status,
-			'assignee' => $this->assignee,
+			'assignee' => ProjectUserResource::make($this->assignee),
 			'created_at' => $this->created_at,
-			'creator' => $this->creator,
+			'creator' => ProjectUserResource::make($this->creator),
 			'updated_at' => $this->updated_at,
 			'due_date' => $this->due_date,
 			'deleted_at' => $this->deleted_at,
 			'completed_at' => $this->completed_at,
-			'completed_by' => $this->completed_by,
-			'notes' => $this->notes,
+			'completed_by' => ProjectUserResource::make($this->completed_by),
+			'notes' => NoteResource::collection($this->notes),
 		];
 	}
 }

@@ -3,6 +3,7 @@
 namespace App\Repositories\Generic;
 
 use App\Models\Note;
+use App\Models\User;
 use App\Traits\PolymorphicRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -38,12 +39,16 @@ class NoteRepository
 		return Note::findOrFail($id);
 	}
 
-	public function create(Collection $data): Note
+	public function create(Collection $data, User $user): Note
 	{
 		$notableType = $data->get('notable_type');
+		
+		$insertData = $data->only($this->model->getFillable())->toArray();
+		$insertData['creator_id'] = $user->id;
+
 		if ($model = $this->findPolymorphicModel($notableType, $data->get('notable_id'))) {
 			return $model->notes()->create(
-				$data->only($this->model->getFillable())->toArray()
+				$insertData
 			);
 		}
 		throw new NotFoundResourceException("Notable Model $notableType not found");
