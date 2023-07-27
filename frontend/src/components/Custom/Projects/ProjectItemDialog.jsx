@@ -34,15 +34,13 @@ export default function ProjectItemDialog() {
             }>
             <div className="grid">
                 <div className="lg:col-8 md:col-6">
-                    <div className="flex">
-                        <EditableText
-                            text={selectedItem?.description}
-                            model="project_item"
-                            modelId={selectedItem?.id}
-                            field="description"
-                            richText
-                        />
-                    </div>
+                    <EditableText
+                        text={selectedItem?.description}
+                        model="project_item"
+                        modelId={selectedItem?.id}
+                        field="description"
+                        richText
+                    />
 
                     {selectedItem?.id && (
                         <Notes
