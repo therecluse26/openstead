@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Generic\EditableFieldController;
 use App\Http\Controllers\Generic\NoteController;
 use App\Http\Controllers\Inventory\EquipmentController;
 use App\Http\Controllers\Inventory\InventoryController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\Inventory\LivestockController;
 use App\Http\Controllers\Inventory\PantryController;
 use App\Http\Controllers\Inventory\SeedController;
 use App\Http\Controllers\Inventory\ServiceLogController;
+use App\Http\Controllers\Media\ImageController;
 use App\Http\Controllers\Projects\ProjectController;
 use App\Http\Controllers\Projects\ProjectItemController;
 use App\Http\Controllers\ServiceController;
@@ -24,12 +26,18 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::get('/images/{imageId}', [ImageController::class, 'showImage'])->name('image.show');
+
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 	return $request->user();
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
+
+	Route::put('/editable-field/{modelName}/{modelId}', [EditableFieldController::class, 'update']);
+
+	Route::post('/images/base64', [ImageController::class, 'uploadBase64']);
 
 	Route::prefix('/projects')
 	->group(function () {

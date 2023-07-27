@@ -2,6 +2,7 @@
 
 namespace App\Models\Inventory;
 
+use App\Contracts\AddsMedia;
 use App\Contracts\DataTablePaginatable;
 use App\Contracts\FrontendFilterable;
 use App\Contracts\Inventoriable;
@@ -23,7 +24,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 use Spatie\MediaLibrary\HasMedia;
 
-class Equipment extends Model implements DataTablePaginatable, Inventoriable, FrontendFilterable, HasMedia, Serviceable, Notable
+class Equipment extends Model implements DataTablePaginatable, Inventoriable, FrontendFilterable, HasMedia, AddsMedia, Serviceable, Notable
 {
 	use HasUlids;
 	use HasFactory;

@@ -35,6 +35,7 @@ const PantryForm = ({ mode = 'create' }) => {
         expiration_date: new Date(
             new Date().setFullYear(new Date().getFullYear() + 1),
         ),
+        images: [],
     }
     const {
         control,
@@ -295,6 +296,7 @@ const PantryForm = ({ mode = 'create' }) => {
                                     accept={'image/*'}
                                     multiple={false}
                                     maxFileSize={1000000}
+                                    control={control}
                                     chooseLabel={'Add Image'}
                                     onRemove={onRemoveImage}
                                     emptyTemplate={

@@ -151,7 +151,7 @@ return new class extends Migration {
 			$table->ulid('id')->primary();
 			$table->ulidMorphs('notable');
 			$table->ulid('creator_id');
-			$table->string('note', 5000);
+			$table->text('note');
 			$table->timestamps();
 		});
 	}

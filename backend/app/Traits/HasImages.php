@@ -12,6 +12,11 @@ trait HasImages
 {
 	use InteractsWithMedia;
 
+	public function images(): \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection
+	{
+		return $this->getMedia('images');
+	}
+
 	public function primaryImage(): Attribute
 	{
 		return Attribute::make(

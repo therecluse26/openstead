@@ -2,6 +2,7 @@
 
 namespace App\Models\Inventory;
 
+use App\Contracts\AddsMedia;
 use App\Contracts\DataTablePaginatable;
 use App\Contracts\FrontendFilterable;
 use App\Contracts\Inventoriable;
@@ -24,7 +25,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 use Spatie\MediaLibrary\HasMedia;
 
-class PantryItem extends Model implements DataTablePaginatable, Inventoriable, VarietyContract, FrontendFilterable, HasMedia, Notable
+class PantryItem extends Model implements DataTablePaginatable, Inventoriable, VarietyContract, FrontendFilterable, HasMedia, AddsMedia, Notable
 {
 	use HasUlids;
 	use HasFactory;

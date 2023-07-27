@@ -2,6 +2,7 @@
 
 namespace App\Models\Projects;
 
+use App\Contracts\AddsMedia;
 use App\Resources\Projects\Detail\ProjectItemDetailResource;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,12 +10,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\User;
+use App\Traits\HasImages;
 use App\Traits\HasNotes;
+use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 
-class ProjectItem extends Model {
+class ProjectItem extends Model implements AddsMedia, HasMedia {
 
-    use HasUlids, HasNotes, HasFactory, SoftDeletes;
+    use HasUlids, HasNotes, HasFactory, HasImages, SoftDeletes;
     
     protected $table = 'project_items';
 
@@ -74,5 +77,6 @@ class ProjectItem extends Model {
     {
         return ProjectItemDetailResource::make($this);
     }
+
 
 }

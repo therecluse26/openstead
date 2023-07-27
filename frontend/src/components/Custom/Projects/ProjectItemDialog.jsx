@@ -27,17 +27,20 @@ export default function ProjectItemDialog() {
                     <EditableText
                         text={selectedItem?.title}
                         model="project_item"
+                        modelId={selectedItem?.id}
                         field="title"
                     />
                 </h2>
             }>
             <div className="grid">
                 <div className="lg:col-8 md:col-6">
-                    <div>
+                    <div className="flex">
                         <EditableText
                             text={selectedItem?.description}
                             model="project_item"
+                            modelId={selectedItem?.id}
                             field="description"
+                            richText
                         />
                     </div>
 
@@ -106,7 +109,6 @@ export default function ProjectItemDialog() {
                             <Button
                                 onClick={() => setModalVisibility(false)}
                                 label="Mark as Closed"
-                                link
                             />
                         </div>
                     )}

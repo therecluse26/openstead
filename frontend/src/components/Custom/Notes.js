@@ -9,7 +9,7 @@ import { formatDateTime } from '@/utils/FormatDate'
 import NoteService from '@/services/Generic/NoteService'
 import Spinner from '@/components/Spinner'
 
-const Notes = ({ parentType, parentId }) => {
+const Notes = ({ parentType, parentId, onLoaded = () => {} }) => {
     const [editing, setEditing] = useState(false)
     const [notes, setNotes] = useState(null)
     const [loaded, setLoaded] = useState(false)
@@ -27,6 +27,7 @@ const Notes = ({ parentType, parentId }) => {
                 })
                 .finally(() => {
                     setLoaded(true)
+                    onLoaded()
                 })
         }
     }

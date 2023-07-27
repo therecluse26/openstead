@@ -42,8 +42,8 @@ services:
   minio:
     image: minio/minio
     ports:
-      - 9009:9000
-      - 9011:9001
+      - 9000:9000
+      - 9001:9001
     volumes:
       - openstead-minio:/data
     command: server --console-address ":9001" /data
@@ -57,8 +57,8 @@ services:
     entrypoint: >
       /bin/sh -c "
       /usr/bin/mc alias set osminio http://minio:9000 ${MINIO_USER:-minio} ${MINIO_PASSWORD:-Password123};
-      /usr/bin/mc mb osminio/media;
-      /usr/bin/mc policy set public osminio/media;
+      /usr/bin/mc mb osminio/${MEDIA_BUCKET:-media};
+      /usr/bin/mc policy set public osminio/${MEDIA_BUCKET:-media};
       exit 0;
       "
 
