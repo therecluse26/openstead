@@ -80,6 +80,9 @@ const EditableText = ({ text, model, modelId, field, richText = false }) => {
                                         modelId={modelId}
                                         text={value}
                                         onTextChange={e => setValue(e)}
+                                        imageUpdateEndpoint={
+                                            '/api/images/base64'
+                                        }
                                     />
                                 ) : (
                                     <InputTextarea

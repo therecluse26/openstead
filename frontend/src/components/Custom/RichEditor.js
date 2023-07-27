@@ -7,15 +7,17 @@ export default function RichEditor({
     modelId,
     text,
     onTextChange = () => {},
+    imageUpdateEndpoint,
 }) {
     const [value, setValue] = useState(text)
 
     const editorRef = useRef(null)
 
     async function imageHandler(imageDataUrl) {
+        if (!imageUpdateEndpoint) return
         // Post the image to the server and return the image URL
         const url = await axios
-            .post('/api/images/base64', {
+            .post(imageUpdateEndpoint, {
                 image: imageDataUrl,
                 model_name: model,
                 model_id: modelId,
@@ -30,7 +32,7 @@ export default function RichEditor({
     }
 
     async function imageUploadHandler(clicked) {
-        if (clicked) {
+        if (imageUpdateEndpoint && clicked) {
             let fileInput = this.container.querySelector(
                 'input.ql-image[type=file]',
             )
@@ -64,8 +66,13 @@ export default function RichEditor({
     }
 
     const extendQuill = () => {
-        const quill = editorRef.current.getQuill()
-        quill.getModule('toolbar').addHandler('image', imageUploadHandler)
+        // Add a custom image handler if we have an endpoint to upload to
+        // Otherwise, this falls back to the default image handler
+        // which inserts a base64 encoded image into the text field
+        if (imageUpdateEndpoint) {
+            const quill = editorRef.current.getQuill()
+            quill.getModule('toolbar').addHandler('image', imageUploadHandler)
+        }
     }
 
     return (
