@@ -14,6 +14,25 @@ const EditableText = ({ text, model, modelId, field, richText = false }) => {
     const [isEditing, setIsEditing] = useState(false)
     const toast = useRef(null)
 
+    const handleTextOnMouseMove = e => {
+        if (e.target.tagName === 'A') {
+            e.target.style.cursor = 'pointer'
+        }
+    }
+
+    const handleTextOnclick = e => {
+        if (e.target.tagName.toLowerCase() === 'a') {
+            // Horrible hack to get around the fact that Quill isn't adding the Href attribute to the anchor tag
+            window.open(
+                e.target.href !== '' ? e.target.href : e.target.innerText,
+                '_blank',
+            )
+            return
+        }
+
+        setIsEditing(true)
+    }
+
     const updateValue = async () => {
         setLoading(true)
         try {
@@ -97,7 +116,8 @@ const EditableText = ({ text, model, modelId, field, richText = false }) => {
                                 objectFit: 'contain',
                                 width: '100%',
                             }}
-                            onClick={() => setIsEditing(true)}
+                            onMouseMove={handleTextOnMouseMove}
+                            onClick={handleTextOnclick}
                             dangerouslySetInnerHTML={{ __html: displayedValue }}
                         />
                     )}
