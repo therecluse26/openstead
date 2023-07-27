@@ -92,6 +92,11 @@ const EditableText = ({ text, model, modelId, field, richText = false }) => {
                         </div>
                     ) : (
                         <div
+                            className="editable-text-container"
+                            style={{
+                                objectFit: 'contain',
+                                width: '100%',
+                            }}
                             onClick={() => setIsEditing(true)}
                             dangerouslySetInnerHTML={{ __html: displayedValue }}
                         />
