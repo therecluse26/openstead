@@ -73,7 +73,22 @@ export default function ProjectItemDialog({ projectId }) {
                                 <div className="col-5">Status</div>
                                 <div className="col-7">
                                     <EditableDropdown
-                                        value={selectedItem?.status}
+                                        value={
+                                            selectedItem?.status
+                                                ? {
+                                                      key:
+                                                          selectedItem?.status
+                                                              ?.key ??
+                                                          selectedItem?.status
+                                                              ?.id,
+                                                      label:
+                                                          selectedItem?.status
+                                                              ?.label ??
+                                                          selectedItem?.status
+                                                              ?.name,
+                                                  }
+                                                : null
+                                        } // this is awful
                                         optionsUrl={`/api/projects/${projectId}/statuses`}
                                         optionLabel="label"
                                         optionValue="key"
