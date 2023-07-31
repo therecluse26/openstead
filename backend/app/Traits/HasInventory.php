@@ -6,7 +6,7 @@ use Illuminate\Support\Collection;
 
 trait HasInventory
 {
-	public static function getFilters(): Collection
+	public function getFilters(): Collection
 	{
 		return collect();
 	}

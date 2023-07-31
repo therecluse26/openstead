@@ -35,9 +35,9 @@ final class PantryController extends Controller implements HasAppendableSelect
 		);
 	}
 
-	public function getFilters(): Collection
+	public function getFilters(PantryRepository $repository): Collection
 	{
-		return PantryRepository::getFilters();
+		return $repository->getFilters();
 	}
 
 	public function storeTypeValue(PantryRepository $repository, StorePantryItemVarietyRequest $request): Response

@@ -31,7 +31,8 @@ class ProjectWorkflow extends Model
         return $this->where('default', true)->first();
     }
 
-    public function columns(): Attribute
+
+    public function statuses(): Attribute
     {
         return Attribute::make(
             get: fn() => collect($this->order)->map(function ($item) {
@@ -39,6 +40,12 @@ class ProjectWorkflow extends Model
                 return $item;
             }));
     }
+
+    public function columns(): Attribute
+    {
+        return $this->statuses();
+    }
+
 
     public function project(): BelongsToMany
     {

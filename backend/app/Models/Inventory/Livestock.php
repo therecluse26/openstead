@@ -123,7 +123,7 @@ class Livestock extends Model implements DataTablePaginatable, Inventoriable, Va
 	}
 
 	// Other methods
-	public static function getFilters(): Collection
+	public function getFilters(): Collection
 	{
 		return collect(['types' => FormattedFilter::collection(AnimalType::cases())]);
 	}

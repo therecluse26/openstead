@@ -47,6 +47,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 		Route::put('/{id}/items', [ProjectController::class, 'updateItems']);
 		Route::get('/{project_id}/items/{item_id}', [ProjectItemController::class, 'show']);
 		Route::get('/{id}', [ProjectController::class, 'show']);
+		Route::get('/{id}/statuses', [ProjectController::class, 'getStatuses']);
 	});
 
 	Route::prefix('/inventory')

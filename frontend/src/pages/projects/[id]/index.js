@@ -126,7 +126,7 @@ const ProjectDetail = () => {
 
     return (
         <>
-            <ProjectItemDialog />
+            {project?.id && <ProjectItemDialog projectId={project.id} />}
 
             <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
                 <Toast ref={toast} />

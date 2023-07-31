@@ -2,10 +2,13 @@ import { Controller } from 'react-hook-form'
 import { classNames } from 'primereact/utils'
 import React, { useEffect, useState } from 'react'
 import { Dropdown } from 'primereact/dropdown'
-import axios from '@/lib/axios'
+import { getOptionsFromUrl } from '../Custom/Services/EditableFieldService'
 
 const SelectInput = ({
     optionLabel = 'label',
+    optionValue = 'value',
+    dataLabelKey = 'label',
+    dataValueKey = 'value',
     options,
     optionsEndpoint = false,
     control,
@@ -17,48 +20,20 @@ const SelectInput = ({
 }) => {
     const [selectOptions, setSelectOptions] = useState(options)
 
-    const getOptions = async () => {
-        if (optionsEndpoint) {
-            return await axios
-                .get(optionsEndpoint)
-                .then(res => res.data)
-                .then(data => {
-                    if (typeof data !== 'undefined') {
-                        if (
-                            Object.prototype.hasOwnProperty.call(data, 'data')
-                        ) {
-                            setSelectOptions(
-                                data?.data?.map(t => {
-                                    return {
-                                        label: t[optionLabel],
-                                        value: t.key,
-                                        group: t.group,
-                                    }
-                                }),
-                            )
-                        } else {
-                            setSelectOptions(
-                                data?.map(t => {
-                                    return {
-                                        label: t[optionLabel],
-                                        value: t.key,
-                                        group: t.group,
-                                    }
-                                }),
-                            )
-                        }
-                    }
-                })
-        }
-    }
-
     const findGroup = value => {
         return selectOptions?.find(o => o.value === value)?.group
     }
 
     useEffect(() => {
         if (optionsEndpoint) {
-            getOptions()
+            getOptionsFromUrl(
+                optionsEndpoint,
+                optionLabel,
+                optionValue,
+                setSelectOptions,
+                dataLabelKey,
+                dataValueKey,
+            )
         }
     }, [optionsEndpoint, invalidateOnChange])
 
@@ -72,10 +47,12 @@ const SelectInput = ({
                     <Dropdown
                         id={name}
                         value={value}
+                        optionLabel={optionLabel}
+                        optionValue={optionValue}
                         options={selectOptions?.map(o => {
                             return {
-                                label: o.label,
-                                value: o.value,
+                                [dataLabelKey]: o[optionLabel],
+                                [dataValueKey]: o[optionValue],
                             }
                         })}
                         className={classNames({

@@ -2,10 +2,10 @@ import axios from '@/lib/axios'
 import { Button } from 'primereact/button'
 import { InputTextarea } from 'primereact/inputtextarea'
 import { useEffect, useRef, useState } from 'react'
-import Spinner from '../Spinner'
+import Spinner from '../../Spinner'
 import { Toast } from 'primereact/toast'
 import sanitizeHtml from '@/utils/sanitizeHtml'
-import RichEditor from './RichEditor'
+import RichEditor from '../RichEditor'
 
 const EditableText = ({ text, model, modelId, field, richText = false }) => {
     const [loading, setLoading] = useState(false)

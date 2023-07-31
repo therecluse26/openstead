@@ -5,6 +5,7 @@ use App\Contracts\Repository;
 use App\Models\Projects\Project;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection as SupportCollection;
 
 class ProjectRepository implements Repository
 {
@@ -91,6 +92,11 @@ class ProjectRepository implements Repository
     public function delete($id): bool
     {
         return $this->model->find($id)->delete();
+    }
+
+    public function getStatuses(string $id): SupportCollection
+    {
+        return $this->getById($id)?->statuses;
     }
    
 }

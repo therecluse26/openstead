@@ -2,11 +2,14 @@
 namespace App\Models\Projects;
 
 use App\Contracts\DataTablePaginatable;
+use App\Contracts\FrontendFilterable;
 use App\Models\User;
 use App\Models\Projects\ProjectWorkflow;
+use App\Resources\FormattedFilter;
 use App\Resources\Projects\Detail\ProjectDetailResource;
 use App\Resources\Projects\List\ProjectListResource;
 use App\Traits\HasImages;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -54,11 +57,6 @@ class Project extends Model implements DataTablePaginatable
         return $this->hasMany(ProjectItem::class);
     }
 
-    public static function getFilters(): Collection
-    {
-        return collect();
-    }
-
 	public function getDetailResource(): JsonResource
     {
         return ProjectDetailResource::make($this);
@@ -69,4 +67,15 @@ class Project extends Model implements DataTablePaginatable
         return ProjectListResource::make($this);
     }
 
+    public function statuses(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->workflow->statuses
+        );
+    }
+
+    public function getFilters(): Collection
+	{
+		return collect(['statuses' => FormattedFilter::collection($this->statuses)]);
+	}
 }

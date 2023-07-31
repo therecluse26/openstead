@@ -9,6 +9,7 @@ use App\Http\Requests\Projects\UpdateProjectItemsRequest;
 use App\Http\Requests\Projects\UpdateProjectRequest;
 use App\Models\Projects\Project;
 use App\Repositories\Project\ProjectRepository;
+use App\Resources\Projects\Detail\ProjectItemStatusResource;
 use App\Resources\Projects\List\PaginatedProjectResource;
 use App\Resources\Projects\List\ProjectListResource;
 use App\Services\Projects\ProjectService;
@@ -103,5 +104,13 @@ final class ProjectController extends Controller
 	{
 		return response($repository->delete($project), 200);
 	}
+
+
+    public function getStatuses(string $id, ProjectRepository $repository): Response
+    {
+        return response(
+            ProjectItemStatusResource::collection($repository->getStatuses($id))
+        , 200);
+    }
 
 }

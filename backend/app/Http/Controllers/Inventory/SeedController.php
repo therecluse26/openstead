@@ -50,9 +50,9 @@ final class SeedController extends Controller implements HasAppendableSelect
 		return SeedRepository::getHardinessZones();
 	}
 
-	public function getFilters(): Collection
+	public function getFilters(SeedRepository $repository): Collection
 	{
-		return SeedRepository::getFilters();
+		return $repository->getFilters();
 	}
 
 	public function storeTypeValue(SeedRepository $repository, StoreSeedVarietyRequest $request): Response

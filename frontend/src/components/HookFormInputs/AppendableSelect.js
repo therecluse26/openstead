@@ -22,6 +22,10 @@ const AppendableSelect = ({
     id,
     className,
     supergroup,
+    optionLabel = 'label',
+    optionValue = 'value',
+    dataLabelKey = 'label',
+    dataValueKey = 'value',
 }) => {
     const [newServiceId, setNewServiceId] = useState(null)
     const [addSupertypeFormVisible, setAddSupertypeFormVisible] = useState(
@@ -88,6 +92,10 @@ const AppendableSelect = ({
                             required: `${label ?? supertype} is required.`,
                         }}
                         invalidateOnChange={newServiceId}
+                        optionLabel={optionLabel}
+                        optionValue={optionValue}
+                        dataLabelKey={dataLabelKey}
+                        dataValueKey={dataValueKey}
                     />{' '}
                     <Button
                         className={'w-2'}

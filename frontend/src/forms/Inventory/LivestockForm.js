@@ -239,6 +239,10 @@ const LivestockForm = ({ mode = 'create' }) => {
                                 toast={toast}
                                 watch={watch}
                                 id={id}
+                                optionLabel="label"
+                                optionValue="key"
+                                dataLabelKey="label"
+                                dataValueKey="key"
                             />
                             <div className="field">
                                 <NumberInput

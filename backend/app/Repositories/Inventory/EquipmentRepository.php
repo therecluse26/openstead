@@ -88,7 +88,7 @@ class EquipmentRepository extends InventoryRepository
 		});
 	}
 
-	public static function getFilters(): Collection
+	public function getFilters(): Collection
 	{
 		return collect([
 			'types' => collect(EquipmentType::cases())->map(function ($type) {

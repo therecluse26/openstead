@@ -70,7 +70,7 @@ class Seed extends Model implements DataTablePaginatable, Inventoriable, Variety
 		return SeedListResource::make($this);
 	}
 
-	public static function getFilters(): Collection
+	public function getFilters(): Collection
 	{
 		return collect(['types' => FormattedFilter::collection(PlantType::cases())]);
 	}

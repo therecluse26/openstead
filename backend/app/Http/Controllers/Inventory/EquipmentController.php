@@ -23,9 +23,9 @@ final class EquipmentController extends Controller
 		return EquipmentRepository::getFormattedTypes();
 	}
 
-	public function getFilters(): Collection
+	public function getFilters(EquipmentRepository $repository): Collection
 	{
-		return EquipmentRepository::getFilters();
+		return $repository->getFilters();
 	}
 
 	/**

@@ -15,6 +15,10 @@ const SubtypeSelect = ({
     label,
     id,
     className,
+    optionLabel = 'label',
+    optionValue = 'value',
+    dataLabelKey = 'label',
+    dataValueKey = 'value',
 }) => {
     const [group, setGroup] = useState(null)
     const watchType = watch('type')
@@ -41,6 +45,10 @@ const SubtypeSelect = ({
                         required: 'Type is required.',
                     }}
                     groupSetter={setGroup}
+                    optionLabel={optionLabel}
+                    optionValue={optionValue}
+                    dataLabelKey={dataLabelKey}
+                    dataValueKey={dataValueKey}
                 />
                 {getFormErrorMessage('type')}
             </div>
@@ -60,6 +68,10 @@ const SubtypeSelect = ({
                     watch={watch}
                     id={id}
                     supergroup={group}
+                    optionLabel={optionLabel}
+                    optionValue={optionValue}
+                    dataLabelKey={dataLabelKey}
+                    dataValueKey={dataValueKey}
                 />
             )}
         </>

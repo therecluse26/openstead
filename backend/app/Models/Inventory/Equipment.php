@@ -77,7 +77,7 @@ class Equipment extends Model implements DataTablePaginatable, Inventoriable, Fr
 		return EquipmentListResource::make($this);
 	}
 
-	public static function getFilters(): Collection
+	public function getFilters(): Collection
 	{
 		return collect(['types' => FormattedFilter::collection(EquipmentType::cases())]);
 	}

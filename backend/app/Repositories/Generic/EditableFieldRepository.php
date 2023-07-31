@@ -15,7 +15,7 @@ class EditableFieldRepository
         $this->modelName = ModelName::from($modelName)->class();
     }
 
-    public function updateField(string $modelId, string $field, string $value)
+    public function updateField(string $modelId, string $field, string $value, bool $sanitizeHtml = false)
     {
         $model = $this->modelName::find($modelId);
 
@@ -23,7 +23,7 @@ class EditableFieldRepository
 
         if(!in_array($field, $model->getFillable())) throw new \Exception('Field not found');
 
-        $model->$field = StringHelpers::sanitizeHtml($value);
+        $model->$field = $sanitizeHtml ? StringHelpers::sanitizeHtml($value) : $value;
         $model->save();
 
         return $model->$field;

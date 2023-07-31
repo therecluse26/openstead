@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 
 interface DataTablePaginatable
 {
-	public static function getFilters(): Collection;
+	public function getFilters(): Collection;
 
 	public function getDetailResource(): JsonResource;
 

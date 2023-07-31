@@ -65,7 +65,7 @@ class PantryItem extends Model implements DataTablePaginatable, Inventoriable, V
 		return PantryItemListResource::make($this);
 	}
 
-	public static function getFilters(): Collection
+	public function getFilters(): Collection
 	{
 		return collect(['types' => FormattedFilter::collection(EdibleCompositeEnum::cases())]);
 	}
