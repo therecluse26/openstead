@@ -187,6 +187,10 @@ const PantryForm = ({ mode = 'create' }) => {
                                 watch={watch}
                                 id={id}
                                 className={'mt-2'}
+                                optionLabel="label"
+                                optionValue="key"
+                                dataLabelKey="label"
+                                dataValueKey="key"
                             />
 
                             <div className="field">
