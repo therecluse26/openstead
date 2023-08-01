@@ -19,22 +19,35 @@ Schema::dropIfExists('projects');
             $table->string('name', 50);
             $table->string('description', 255)->nullable();
             $table->string('color', 7)->default('#CCCCCC');
+            $table->boolean('default')->default(false);
+            $table->tinyInteger('default_order')->nullable();
             $table->softDeletes();
             $table->timestamps();
 
             $table->index('name');
         });
-        Schema::create('projects', function (Blueprint $table) {
+
+        $backlogId = Str::ulid();
+        $todoId = Str::ulid();
+        $inProgressId = Str::ulid();
+        $doneId = Str::ulid();
+
+        // Seed project status table
+        DB::table('project_item_statuses')->insert([
+            ['id' => $backlogId, 'default' => true, 'default_order' => 1, 'name' => 'Backlog', 'description' => 'The backlog contains a prioritized list of all the work that the team needs to do.'],
+            ['id' => $todoId, 'default' => true, 'default_order' => 2, 'name' => 'To Do', 'description' => 'The to do column contains a prioritized list of all the work that the team needs to do.'],
+            ['id' => $inProgressId, 'default' => true, 'default_order' => 3, 'name' => 'In Progress', 'description' => 'The in progress column contains a prioritized list of all the work that the team needs to do.'],
+            ['id' => $doneId, 'default' => true, 'default_order' => 4, 'name' => 'Done', 'description' => 'The done column contains a prioritized list of all the work that the team needs to do.'],
+        ]);
+
+        Schema::create('projects', function (Blueprint $table) use ($backlogId, $todoId, $inProgressId, $doneId) {
             $table->ulid('id')->primary();
             $table->string('name', 80);
-            $table->string('slug', 100)->unique();
             $table->text('description')->nullable();
+            $table->json('workflow_statuses');
             $table->boolean('active')->default(true);
-            $table->ulid('project_workflow_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
-
-            $table->index('project_workflow_id');
         });
 
         Schema::create('project_users', function (Blueprint $table) {
@@ -47,16 +60,6 @@ Schema::dropIfExists('projects');
 
             $table->index('project_id');
             $table->index('user_id');
-        });
-
-        Schema::create('project_workflows', function (Blueprint $table) {
-            $table->ulid('id')->primary();
-            $table->json('order');
-            $table->boolean('default')->default(false);
-            $table->softDeletes();
-            $table->timestamps();
-
-            $table->index('default');
         });
 
         Schema::create('project_columns', function (Blueprint $table) {
@@ -91,34 +94,6 @@ Schema::dropIfExists('projects');
             $table->index('creator_id');
             $table->index('assignee_id');
         });
-
-        $backlogId = Str::ulid();
-        $todoId = Str::ulid();
-        $inProgressId = Str::ulid();
-        $doneId = Str::ulid();
-
-        // Seed project status table
-        DB::table('project_item_statuses')->insert([
-            ['id' => $backlogId, 'name' => 'Backlog', 'description' => 'The backlog contains a prioritized list of all the work that the team needs to do.'],
-            ['id' => $todoId, 'name' => 'To Do', 'description' => 'The to do column contains a prioritized list of all the work that the team needs to do.'],
-            ['id' => $inProgressId, 'name' => 'In Progress', 'description' => 'The in progress column contains a prioritized list of all the work that the team needs to do.'],
-            ['id' => $doneId, 'name' => 'Done', 'description' => 'The done column contains a prioritized list of all the work that the team needs to do.'],
-        ]);
-
-        // Seed project workflow table
-        DB::table('project_workflows')->insert([
-            [            
-                'id' => Str::ulid(),
-                'order' => json_encode(
-                    [
-                        ['id'=> $backlogId, 'order' => 1, 'initial' => true], 
-                        ['id'=> $todoId, 'order' => 2], 
-                        ['id'=> $inProgressId, 'order' => 3], 
-                        ['id'=> $doneId, 'order' => 4, 'complete' => true]
-                    ]
-                ), 'default' => true
-            ],
-        ]);
     }
 
     /**
@@ -129,9 +104,7 @@ Schema::dropIfExists('projects');
         Schema::dropIfExists('projects');
         Schema::dropIfExists('project_users');
         Schema::dropIfExists('project_item_statuses');
-        Schema::dropIfExists('project_workflows');
         Schema::dropIfExists('project_columns');
         Schema::dropIfExists('project_items');
-
     }
 };

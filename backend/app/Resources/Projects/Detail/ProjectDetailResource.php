@@ -14,7 +14,7 @@ class ProjectDetailResource extends JsonResource
             'description' => $this->description,
             'active' => $this->active,
 			'items' => ProjectItemListResource::collection($this->items),
-            'workflow' => ProjectWorkflowResource::make($this->workflow), 
+            'workflow' => $this->workflow, 
 		];
 	}
 }

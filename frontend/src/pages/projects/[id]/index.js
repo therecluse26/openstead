@@ -13,16 +13,49 @@ import {
 import { Toast } from 'primereact/toast'
 import { useProjectStore } from '@/components/Custom/Projects/projectStore'
 import ProjectItemDialog from '@/components/Custom/Projects/ProjectItemDialog'
+import { Menubar } from 'primereact/menubar'
 
 const ProjectDetail = () => {
+    const router = useRouter()
     const isMounted = useRef(false)
-
     const project = useProjectStore(state => state.project)
     const setProject = useProjectStore(state => state.setProject)
-
     const toast = useRef(null)
     const { query, isReady } = useRouter()
     const { id } = query
+
+    const projectMenuItems = [
+        {
+            label: 'Add Item',
+            icon: 'ti ti-plus',
+            command: () => {},
+        },
+
+        {
+            label: 'Edit Project',
+            icon: 'ti ti-pencil',
+            command: () => {
+                router.push(`/projects/${id}/edit`)
+            },
+        },
+        {
+            label: 'Manage Users',
+            icon: 'ti ti-user',
+            command: () => {},
+        },
+        {
+            label: 'Delete Project',
+            icon: 'ti ti-trash',
+            command: () => {
+                toast.current.show({
+                    severity: 'warn',
+                    summary: 'Delete',
+                    detail: 'Data Deleted',
+                    life: 3000,
+                })
+            },
+        },
+    ]
 
     const loadData = () => {
         if (!isReady) {
@@ -55,17 +88,9 @@ const ProjectDetail = () => {
     }
     // Get column data including grouped items by status
     const getColumns = () => {
-        return project?.workflow?.columns
-            ?.sort((a, b) => {
-                return a.order - b.order
-            })
-            .reduce(
-                (result, obj) => ({
-                    ...result,
-                    [obj.status.id]: obj,
-                }),
-                {},
-            )
+        return project?.workflow?.sort((a, b) => {
+            return a.order - b.order
+        })
     }
 
     // Get items by status
@@ -131,26 +156,30 @@ const ProjectDetail = () => {
             <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
                 <Toast ref={toast} />
 
+                <Menubar
+                    model={projectMenuItems}
+                    className="mb-4 p-3"
+                    start={<div className="text-3xl mr-2">{project?.name}</div>}
+                />
+
                 {!project?.id ? (
                     <div className="card flex justify-content-center">
                         <Spinner />
                     </div>
                 ) : (
                     <div className="flex gap-4 min-h-full overflow-y-scroll">
-                        {Object.entries(getColumns()).map(
-                            (columnData, index) => {
-                                const items = getColumnItems(columnData[0])
-                                return (
-                                    <ProjectColumn
-                                        key={index}
-                                        columnData={columnData[1]}
-                                        items={items}
-                                        title={columnData[1].status.name}
-                                        statusId={columnData[0]}
-                                    />
-                                )
-                            },
-                        )}
+                        {getColumns().map((columnData, index) => {
+                            const items = getColumnItems(columnData?.status?.id)
+                            return (
+                                <ProjectColumn
+                                    key={index}
+                                    columnData={columnData}
+                                    items={items}
+                                    title={columnData?.status?.name}
+                                    statusId={columnData?.status?.id}
+                                />
+                            )
+                        })}
                     </div>
                 )}
             </DndContext>

@@ -27,7 +27,7 @@ services:
       - redis
       - minio
   mysql:
-    image: mysql:8.0
+    image: mysql:8.0.34
     volumes:
       - openstead-mysql:/var/lib/mysql
     environment:

@@ -1,22 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { Card } from 'primereact/card'
 import { Button } from 'primereact/button'
 import TextInput from '@/components/HookFormInputs/TextInput'
 import { useRouter } from 'next/router'
-import { FileUpload } from 'primereact/fileupload'
-import { convertUploadedFilesToBase64 } from '@/utils/file-utils'
 import { csrf } from '@/hooks/auth'
 import ProjectService from '@/services/Projects/ProjectService'
 import ToastContext, { useToastContext } from '@/context/ToastContext'
 import AddErrorToasts from '@/utils/AddErrorToasts'
 import TextAreaInput from '@/components/HookFormInputs/TextAreaInput'
-import { slugify } from '@/utils/string-utils'
 
 const ProjectForm = ({ mode = 'create' }) => {
     const isMounted = useRef(false)
     const router = useRouter()
-    const [images, setImages] = useState([])
     const toast = useToastContext(ToastContext)
     const { query, isReady } = useRouter()
     const { id } = query
@@ -53,7 +49,6 @@ const ProjectForm = ({ mode = 'create' }) => {
         ProjectService.getItem(id)
             .then(data => {
                 setValue('name', data?.name)
-                setValue('slug', data?.type?.key)
                 setValue('description', data?.description)
             })
             .catch(e => {
@@ -63,22 +58,13 @@ const ProjectForm = ({ mode = 'create' }) => {
 
     const onSubmit = async data => {
         await csrf()
-        ProjectService.createOrUpdate(id, data, images)
+        ProjectService.createOrUpdate(id, data)
             .then(r => {
-                router.push('/projects/' + r.data?.slug)
+                router.push('/projects/' + r.data?.id)
             })
             .catch(error => {
                 AddErrorToasts(toast, error)
             })
-    }
-
-    const onUploadImage = async data => {
-        setImages([])
-        setImages(await convertUploadedFilesToBase64(data))
-    }
-
-    const onRemoveImage = () => {
-        setImages([])
     }
 
     return (
@@ -114,10 +100,6 @@ const ProjectForm = ({ mode = 'create' }) => {
                             </div>
 
                             <div className="field">
-                                Slug: {slugify(watch('name'))}
-                            </div>
-
-                            <div className="field">
                                 <TextAreaInput
                                     control={control}
                                     name={'description'}
@@ -131,26 +113,6 @@ const ProjectForm = ({ mode = 'create' }) => {
                                     }}
                                 />
                                 {getFormErrorMessage('description')}
-                            </div>
-                            <div className="field">
-                                <FileUpload
-                                    name="images[]"
-                                    customUpload={true}
-                                    auto={true}
-                                    uploadHandler={onUploadImage}
-                                    accept={'image/*'}
-                                    multiple={false}
-                                    maxFileSize={1000000}
-                                    chooseLabel={'Add Image'}
-                                    onRemove={onRemoveImage}
-                                    emptyTemplate={
-                                        <p className="m-0">
-                                            {mode === 'edit'
-                                                ? 'Drag and drop image here to replace existing image.'
-                                                : 'Drag and drop image to here to upload.'}
-                                        </p>
-                                    }
-                                />
                             </div>
                         </Card>
                     </div>

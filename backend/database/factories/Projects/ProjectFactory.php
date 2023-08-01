@@ -23,7 +23,6 @@ class ProjectFactory extends Factory
 		return [
             'id' => $id,
 			'name' => $name,
-			'slug' => Str::slug($name, '-'),
 			'description' => fake()->paragraph(2),
 			'active' => fake()->boolean(),
         ];

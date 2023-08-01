@@ -2,11 +2,7 @@
 
 namespace App\Http\Requests\Projects;
 
-use App\Enums\EquipmentCondition;
-use App\Enums\EquipmentType;
-use App\Rules\Contains;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Enum;
 
 class StoreProjectRequest extends FormRequest
 {
@@ -29,18 +25,9 @@ class StoreProjectRequest extends FormRequest
 	{
 		return [
 			'name' => 'required',
-            'slug' => 'required',
-			'images' => ['array'],
 			'description' => ['string', 'max:255'],
-			'images.*' => ['string', 'max:1361920', new Contains('data:image/')],
-            'project_workflow_id' => 'nullable|integer',
+			'workflow_order' => 'nullable|json',
 		];
 	}
 
-	public function messages()
-	{
-		return [
-			'images.*.max' => 'Maximum image upload size is 1MB',
-		];
-	}
 }

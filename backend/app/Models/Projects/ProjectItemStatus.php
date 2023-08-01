@@ -23,6 +23,8 @@ class ProjectItemStatus extends Model
     protected $fillable = [
         'id',
         'name',
+        'default',
+        'default_order',
         'description',
         'color'
     ];
@@ -30,6 +32,11 @@ class ProjectItemStatus extends Model
     protected $casts = [
         'color' => 'string'
     ];
+
+    public function scopeDefault($query)
+    {
+        return $query->where('default', true)->first();
+    }
     
     public function items(): BelongsToMany
     {

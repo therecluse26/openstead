@@ -40,20 +40,17 @@ class ProjectRepository implements Repository
     {
         return $this->model->find($id);
     }
-    
-    public function getBySlug(string $slug): Project
-    {
-        return $this->model->where('slug', $slug)->first();
-    }
 
     public function create(array $attributes): Project
     {
         return $this->model->create($attributes);
     }
     
-    public function update(string $id, array $attributes): bool
+    public function update(string $id, array $attributes): Project
     {
-        return $this->model->find($id)->update($attributes);
+         $project = $this->model->find($id);
+         $project->update($attributes);
+         return $project;
     }
 
     /**

@@ -1,7 +1,6 @@
 <?php
 namespace App\Resources\Projects\List;
 
-use App\Models\Projects\ProjectWorkflow;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProjectItemListResource extends JsonResource 

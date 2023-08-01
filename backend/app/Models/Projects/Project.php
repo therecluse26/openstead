@@ -2,13 +2,10 @@
 namespace App\Models\Projects;
 
 use App\Contracts\DataTablePaginatable;
-use App\Contracts\FrontendFilterable;
 use App\Models\User;
-use App\Models\Projects\ProjectWorkflow;
 use App\Resources\FormattedFilter;
 use App\Resources\Projects\Detail\ProjectDetailResource;
 use App\Resources\Projects\List\ProjectListResource;
-use App\Traits\HasImages;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,13 +13,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 
 class Project extends Model implements DataTablePaginatable
 {
-    use HasUlids, HasFactory, HasImages, SoftDeletes;
+    use HasUlids, HasFactory, SoftDeletes;
 
     protected $table = 'projects';
 
@@ -30,21 +26,38 @@ class Project extends Model implements DataTablePaginatable
 
     protected $fillable = [
         'name',
-        'slug',
         'description',
+        'workflow_statuses',
         'active',
-        'project_workflow_id'
     ];
 
     protected $casts = [
-        'active' => 'boolean'
+        'active' => 'boolean',
+        'workflow_statuses' => 'array'
     ];
     
-    public function workflow(): HasOne
+    protected static function booted(): void
     {
-        return $this->hasOne(ProjectWorkflow::class, 'id', 'project_workflow_id')->withDefault(function(){
-            return ProjectWorkflow::default();
-        });;
+        static::creating(function ($project) {
+            $statuses = ProjectItemStatus::default()->get();
+            $project->workflow_statuses = $statuses->map(function ($status) {
+                return  ['id'=> $status->id, 'order' => $status->default_order];
+            })->toArray();
+        });
+    }
+
+    public function workflow(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => collect($this->workflow_statuses)->map(function ($item) {
+                $item['status'] = ProjectItemStatus::where('id', (string)$item['id'])->first();
+                return $item;
+            }));
+    }
+
+    public function statuses(): Attribute
+    {
+        return $this->workflow();
     }
 
     public function users(): BelongsToMany
@@ -67,12 +80,8 @@ class Project extends Model implements DataTablePaginatable
         return ProjectListResource::make($this);
     }
 
-    public function statuses(): Attribute
-    {
-        return Attribute::make(
-            get: fn() => $this->workflow->statuses
-        );
-    }
+
+
 
     public function getFilters(): Collection
 	{

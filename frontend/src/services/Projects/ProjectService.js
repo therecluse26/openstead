@@ -1,5 +1,4 @@
 import axios from '@/lib/axios'
-import { slugify } from '@/utils/string-utils'
 
 const getList = async params => {
     const queryParams = params
@@ -13,6 +12,10 @@ const getList = async params => {
               .join('&')
         : ''
     return await axios.get('/api/projects?' + queryParams).then(res => res.data)
+}
+
+const getItem = async id => {
+    return await axios.get('/api/projects/' + id).then(res => res.data)
 }
 
 const getProject = async id => {
@@ -36,15 +39,14 @@ const updateItems = async (id, items) => {
     })
 }
 
-const createOrUpdate = async (id, data, images = []) => {
+const createOrUpdate = async (id, data) => {
     const url =
         typeof id === 'undefined' ? `/api/projects` : `/api/projects/${id}`
+
     return await axios.post(url, {
         name: data.name,
-        slug: slugify(data.name),
         description: data.description,
         _method: typeof id === 'undefined' ? 'POST' : 'PUT',
-        images: images,
     })
 }
 
@@ -58,6 +60,7 @@ export default {
     getProject,
     getProjectItem,
     getList,
+    getItem,
     createOrUpdate,
     updateItems,
     deleteItem,

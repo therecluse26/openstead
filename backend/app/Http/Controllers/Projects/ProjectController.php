@@ -13,6 +13,7 @@ use App\Resources\Projects\Detail\ProjectItemStatusResource;
 use App\Resources\Projects\List\PaginatedProjectResource;
 use App\Resources\Projects\List\ProjectListResource;
 use App\Services\Projects\ProjectService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use JsonException;
 use ReflectionException;
@@ -60,12 +61,13 @@ final class ProjectController extends Controller
      * @param ProjectRepository $repository
      * @return Response
      */
-	public function store(StoreProjectRequest $request, ProjectRepository $repository): Response
+	public function store(StoreProjectRequest $request, ProjectRepository $repository): JsonResponse
 	{
-		return response(
-			$repository->create($request->only((new Project())->getFillable()),
-				$request->get('images')
-			), 200);
+		return response()->json(
+			$repository->create(
+                $request->only((new Project())->getFillable())			
+            ), 
+        200);
 	}
 
     /**
@@ -78,9 +80,12 @@ final class ProjectController extends Controller
      */
 	public function update(UpdateProjectRequest $request, string $project, ProjectRepository $repository): Response
 	{
-		return response($repository->update($project,
-			$request->only((new Project())->getFillable()),
-			$request->get('images')), 200);
+		return response(
+            $repository->update(
+                $project,
+                $request->only((new Project())->getFillable())
+            )
+        );
 	}
 
     public function updateItems(UpdateProjectItemsRequest $request, string $id, ProjectRepository $repository): Response
