@@ -44,10 +44,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
 		Route::get('/', [ProjectController::class, 'index']);
 		Route::post('/', [ProjectController::class, 'store']);
 		Route::put('/{id}', [ProjectController::class, 'update']);
+		Route::post('/{id}/items', [ProjectController::class, 'createItem']);
 		Route::put('/{id}/items', [ProjectController::class, 'updateItems']);
 		Route::get('/{project_id}/items/{item_id}', [ProjectItemController::class, 'show']);
 		Route::get('/{id}', [ProjectController::class, 'show']);
 		Route::get('/{id}/statuses', [ProjectController::class, 'getStatuses']);
+		Route::get('/{id}/users', [ProjectController::class, 'getUsers']);
 	});
 
 	Route::prefix('/inventory')

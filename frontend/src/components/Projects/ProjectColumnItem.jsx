@@ -2,8 +2,8 @@ import { IconGripVertical } from '@tabler/icons'
 import { Card } from 'primereact/card'
 import { useDraggable } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
-import { useProjectStore } from '@/components/Custom/Projects/projectStore'
-import ProjectService from '@/services/Projects/ProjectService'
+import { useProjectStore } from '@/state/ProjectStore'
+import ProjectService from '../../services/Projects/ProjectService'
 
 const ProjectColumnItem = ({ item }) => {
     const project = useProjectStore(state => state.project)

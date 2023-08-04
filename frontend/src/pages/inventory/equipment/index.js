@@ -1,10 +1,10 @@
 import React, { Suspense, useEffect, useRef, useState } from 'react'
 import { Column } from 'primereact/column'
-import EquipmentService from '@/services/inventory/EquipmentService'
+import EquipmentService from '@/services/Inventory/EquipmentService'
 import Link from 'next/link'
 import QuantityFilterTemplate from '@/pages/inventory/templates/QuantityFilterTemplate'
-import TypeFilterElement from '@/components/Custom/Inventory/TypeFilterElement'
-import FilterableDataTable from '@/components/Custom/DataTable/FilterableDataTable'
+import TypeFilterElement from '@/components/Inventory/TypeFilterElement'
+import FilterableDataTable from '@/components/DataTable/FilterableDataTable'
 
 const Equipment = () => {
     const [types, setTypes] = useState([])

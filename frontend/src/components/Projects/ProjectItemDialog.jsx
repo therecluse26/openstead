@@ -1,5 +1,5 @@
 import { Dialog } from 'primereact/dialog'
-import { useProjectStore } from './projectStore'
+import { useProjectStore } from '../../state/ProjectStore'
 import { Button } from 'primereact/button'
 
 import { formatDateTime } from '@/utils/FormatDate'
@@ -10,6 +10,7 @@ import EditableText from '../EditableFields/EditableText'
 import EditableDropdown from '../EditableFields/EditableDropdown'
 import { useRef } from 'react'
 import { Toast } from 'primereact/toast'
+import { IconEdit } from '@tabler/icons'
 
 export default function ProjectItemDialog({ projectId }) {
     const modalVisible = useProjectStore(state => state.modalVisible)
@@ -35,6 +36,11 @@ export default function ProjectItemDialog({ projectId }) {
                 header={
                     <h2>
                         <EditableText
+                            placeholder={
+                                <div>
+                                    Item Title <IconEdit />
+                                </div>
+                            }
                             text={selectedItem?.title}
                             model="project_item"
                             modelId={selectedItem?.id}
@@ -45,6 +51,11 @@ export default function ProjectItemDialog({ projectId }) {
                 <div className="grid">
                     <div className="lg:col-8 md:col-6">
                         <EditableText
+                            placeholder={
+                                <h4>
+                                    Item Description <IconEdit />
+                                </h4>
+                            }
                             text={selectedItem?.description}
                             model="project_item"
                             modelId={selectedItem?.id}
@@ -132,9 +143,18 @@ export default function ProjectItemDialog({ projectId }) {
                                     />
                                 </div>
                                 <div className="col-5">Assigned To</div>
-                                <div className="col-7">
-                                    {selectedItem?.assigned_to?.name ?? 'None'}
-                                </div>
+                                {selectedItem?.assignee?.name ? (
+                                    <div className="col-7 flex vertical-align-middle">
+                                        <img
+                                            className="w-2rem h-2rem border-circle rounded-full mr-2"
+                                            src={selectedItem.assignee.avatar}
+                                            alt={selectedItem.assignee.name}
+                                        />
+                                        <div>{selectedItem.assignee.name}</div>
+                                    </div>
+                                ) : (
+                                    <div className="col-7">None</div>
+                                )}
 
                                 <div className="col-5">Created At</div>
                                 <div className="col-7">
@@ -143,9 +163,18 @@ export default function ProjectItemDialog({ projectId }) {
                                 </div>
 
                                 <div className="col-5">Created By</div>
-                                <div className="col-7">
-                                    {selectedItem?.creator?.name}
-                                </div>
+                                {selectedItem?.creator?.name ? (
+                                    <div className="col-7 flex vertical-align-middle">
+                                        <img
+                                            className="w-2rem h-2rem border-circle rounded-full mr-2"
+                                            src={selectedItem.creator.avatar}
+                                            alt={selectedItem.creator.name}
+                                        />
+                                        {selectedItem.creator.name}
+                                    </div>
+                                ) : (
+                                    <div className="col-7">None</div>
+                                )}
 
                                 {selectedItem?.updated_at && (
                                     <>

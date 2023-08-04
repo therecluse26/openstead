@@ -1,6 +1,6 @@
 import React from 'react'
 import { Panel } from 'primereact/panel'
-import CollapsiblePanelTemplate from '@/components/Custom/Templates/CollapsiblePanelTemplate'
+import CollapsiblePanelTemplate from '@/components/Templates/CollapsiblePanelTemplate'
 import { OrganizationChart } from 'primereact/organizationchart'
 import Link from 'next/link'
 

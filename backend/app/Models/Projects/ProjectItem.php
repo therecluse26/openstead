@@ -33,6 +33,7 @@ class ProjectItem extends Model implements AddsMedia, HasMedia {
         'assignee_id',
         'completed_at',
         'completed_by',
+        'creator_id'
     ];
 
     protected $dates = [

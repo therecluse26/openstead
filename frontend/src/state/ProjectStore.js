@@ -5,6 +5,10 @@ export const useProjectStore = create(set => ({
     project: null,
     setProject: project => set({ project: project }),
 
+    // Project Users
+    projectUsers: [],
+    setProjectUsers: projectUsers => set({ projectUsers: projectUsers }),
+
     // Selected item
     selectedItem: { id: null, name: null, description: null, status: null },
     modalVisible: false,

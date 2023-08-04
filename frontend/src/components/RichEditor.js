@@ -9,7 +9,7 @@ export default function RichEditor({
     onTextChange = () => {},
     imageUpdateEndpoint,
 }) {
-    const [value, setValue] = useState(text)
+    const [val, setVal] = useState(text)
 
     const editorRef = useRef(null)
 
@@ -79,10 +79,10 @@ export default function RichEditor({
         <Editor
             className="w-full"
             ref={editorRef}
-            value={value}
+            value={val}
             onLoad={extendQuill}
             onTextChange={e => {
-                setValue(e.htmlValue)
+                setVal(e.htmlValue)
                 onTextChange(e.htmlValue)
             }}
         />

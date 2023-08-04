@@ -2,7 +2,7 @@ import { Controller } from 'react-hook-form'
 import { classNames } from 'primereact/utils'
 import React, { useEffect, useState } from 'react'
 import { Dropdown } from 'primereact/dropdown'
-import { getOptionsFromUrl } from '../Custom/Services/EditableFieldService'
+import { getOptionsFromUrl } from '@/components/EditableFields/EditableFieldService'
 
 const SelectInput = ({
     optionLabel = 'label',
@@ -17,6 +17,7 @@ const SelectInput = ({
     label,
     invalidateOnChange,
     groupSetter,
+    selected = null,
 }) => {
     const [selectOptions, setSelectOptions] = useState(options)
 
@@ -44,27 +45,29 @@ const SelectInput = ({
                 control={control}
                 rules={rules}
                 render={({ field: { onChange, value, name }, fieldState }) => (
-                    <Dropdown
-                        id={name}
-                        value={value}
-                        optionLabel={optionLabel}
-                        optionValue={optionValue}
-                        options={selectOptions?.map(o => {
-                            return {
-                                [dataLabelKey]: o[optionLabel],
-                                [dataValueKey]: o[optionValue],
-                            }
-                        })}
-                        className={classNames({
-                            'p-invalid': fieldState.invalid,
-                        })}
-                        onChange={({ value }) => {
-                            onChange(value)
-                            if (groupSetter) {
-                                groupSetter(findGroup(value))
-                            }
-                        }}
-                    />
+                    <>
+                        <Dropdown
+                            id={name}
+                            value={selected ? selected : value}
+                            optionLabel={optionLabel}
+                            optionValue={optionValue}
+                            options={selectOptions?.map(o => {
+                                return {
+                                    [dataLabelKey]: o[optionLabel],
+                                    [dataValueKey]: o[optionValue],
+                                }
+                            })}
+                            className={classNames({
+                                'p-invalid': fieldState.invalid,
+                            })}
+                            onChange={({ value }) => {
+                                onChange(value)
+                                if (groupSetter) {
+                                    groupSetter(findGroup(value))
+                                }
+                            }}
+                        />
+                    </>
                 )}
             />
             <label htmlFor={name}>{label}</label>

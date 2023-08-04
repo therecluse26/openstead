@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Column } from 'primereact/column'
-import LivestockService from '@/services/inventory/LivestockService'
+import LivestockService from '@/services/Inventory/LivestockService'
 import Link from 'next/link'
 import QuantityFilterTemplate from '@/pages/inventory/templates/QuantityFilterTemplate'
-import TypeFilterElement from '@/components/Custom/Inventory/TypeFilterElement'
-import TypeBodyTemplateElement from '@/components/Custom/Inventory/TypeBodyTemplateElement'
-import FilterableDataTable from '@/components/Custom/DataTable/FilterableDataTable'
+import TypeFilterElement from '@/components/Inventory/TypeFilterElement'
+import TypeBodyTemplateElement from '@/components/Inventory/TypeBodyTemplateElement'
+import FilterableDataTable from '@/components/DataTable/FilterableDataTable'
 
 const Livestock = () => {
     const [types, setTypes] = useState([])

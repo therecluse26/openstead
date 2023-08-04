@@ -26,7 +26,6 @@ const ProjectForm = ({ mode = 'create' }) => {
         formState: { errors },
         handleSubmit,
         setValue,
-        watch,
     } = useForm({ defaultValues })
 
     useEffect(() => {

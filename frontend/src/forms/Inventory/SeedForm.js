@@ -11,7 +11,7 @@ import ToastContext, { useToastContext } from '@/context/ToastContext'
 import AddErrorToasts from '@/utils/AddErrorToasts'
 import SubtypeSelect from '@/components/HookFormInputs/SubtypeSelect'
 import NumberInput from '@/components/HookFormInputs/NumberInput'
-import SeedService from '@/services/inventory/SeedService'
+import SeedService from '@/services/Inventory/SeedService'
 import SelectInput from '@/components/HookFormInputs/SelectInput'
 import TextInput from '@/components/HookFormInputs/TextInput'
 

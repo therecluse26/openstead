@@ -8,8 +8,6 @@ use Illuminate\Http\Response;
 
 final class ProjectItemController extends Controller
 {
-	
-    
     /**
      * Display the specified resource.
      * 

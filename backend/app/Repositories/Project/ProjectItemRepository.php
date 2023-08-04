@@ -37,7 +37,7 @@ class ProjectItemRepository implements Repository
 
     public function getById(string $id): ProjectItem
     {
-        return $this->model->find($id);
+        return $this->model->findOrFail($id);
     }
 
     public function create(array $attributes): ProjectItem
@@ -47,12 +47,12 @@ class ProjectItemRepository implements Repository
     
     public function update($id, array $attributes): bool
     {
-        return $this->model->find($id)->update($attributes);
+        return $this->getById($id)->update($attributes);
     }
     
     public function delete($id): bool
     {
-        return $this->model->find($id)->delete();
+        return $this->getById($id)->delete();
     }
    
 }

@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Projects;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Projects\CreateProjectItemRequest;
 use App\Http\Requests\Projects\ListProjectRequest;
 use App\Http\Requests\Projects\StoreProjectRequest;
 use App\Http\Requests\Projects\UpdateProjectItemsRequest;
 use App\Http\Requests\Projects\UpdateProjectRequest;
 use App\Models\Projects\Project;
+use App\Models\Projects\ProjectItem;
 use App\Repositories\Project\ProjectRepository;
 use App\Resources\Projects\Detail\ProjectItemStatusResource;
 use App\Resources\Projects\List\PaginatedProjectResource;
@@ -88,6 +90,16 @@ final class ProjectController extends Controller
         );
 	}
 
+    public function createItem(CreateProjectItemRequest $request, string $id, ProjectRepository $repository): Response
+    {
+        return response(
+            $repository->createItem(
+                $repository->getById($id),
+                $request->only((new ProjectItem())->getfillable())
+            ), 
+        200);
+    }
+
     public function updateItems(UpdateProjectItemsRequest $request, string $id, ProjectRepository $repository): Response
     {
         return response(
@@ -115,6 +127,13 @@ final class ProjectController extends Controller
     {
         return response(
             ProjectItemStatusResource::collection($repository->getStatuses($id))
+        , 200);
+    }
+
+    public function getUsers(string $id, ProjectRepository $repository): Response
+    {
+        return response(
+            $repository->getUsers($id)
         , 200);
     }
 

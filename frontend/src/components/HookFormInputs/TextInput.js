@@ -3,7 +3,14 @@ import { InputText } from 'primereact/inputtext'
 import { classNames } from 'primereact/utils'
 import React from 'react'
 
-const TextInput = ({ control, name, rules, label, defaultValue }) => {
+const TextInput = ({
+    control,
+    name,
+    rules,
+    label,
+    defaultValue,
+    hidden = false,
+}) => {
     return (
         <span className="p-float-label">
             <Controller
@@ -19,6 +26,7 @@ const TextInput = ({ control, name, rules, label, defaultValue }) => {
                             'p-invalid': fieldState.error,
                         })}
                         onChange={onChange}
+                        hidden={hidden}
                     />
                 )}
             />

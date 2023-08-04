@@ -2,7 +2,7 @@ import React from 'react'
 import LinkButton from '@/components/LinkButton'
 import ProjectForm from '@/forms/Projects/ProjectForm'
 
-const CreateEquipment = () => {
+const CreateProject = () => {
     return (
         <>
             {' '}
@@ -11,4 +11,4 @@ const CreateEquipment = () => {
     )
 }
 
-export default React.memo(CreateEquipment)
+export default React.memo(CreateProject)

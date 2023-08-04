@@ -50,6 +50,20 @@ const createOrUpdate = async (id, data) => {
     })
 }
 
+const createItem = async (projectId, data) => {
+    const url = `/api/projects/${projectId}/items`
+
+    return await axios.post(url, {
+        title: data.title,
+        description: data.description,
+        project_item_status_id: data.project_item_status_id,
+        due_date: data.due_date,
+        creator_id: data.creator_id,
+        assignee_id: data.assignee_id,
+        _method: 'POST',
+    })
+}
+
 const deleteItem = async id => {
     return await axios.post(`/api/projects/${id}`, {
         _method: 'DELETE',
@@ -62,6 +76,7 @@ export default {
     getList,
     getItem,
     createOrUpdate,
+    createItem,
     updateItems,
     deleteItem,
 }

@@ -2,7 +2,7 @@ import React, { Suspense, useEffect, useRef, useState } from 'react'
 import { Column } from 'primereact/column'
 import Link from 'next/link'
 import ProjectService from '@/services/Projects/ProjectService'
-import FilterableDataTable from '@/components/Custom/DataTable/FilterableDataTable'
+import FilterableDataTable from '@/components/DataTable/FilterableDataTable'
 
 const Projects = () => {
     const isMounted = useRef(false)

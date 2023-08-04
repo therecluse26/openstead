@@ -2,7 +2,8 @@ import React, { useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
 import Spinner from '@/components/Spinner'
 import ProjectService from '@/services/Projects/ProjectService'
-import ProjectColumn from '@/components/Custom/Projects/ProjectColumn'
+import ProjectColumn from '@/components/Projects/ProjectColumn'
+import ProjectItemDialog from '@/components/Projects/ProjectItemDialog'
 import {
     DndContext,
     useSensor,
@@ -11,15 +12,42 @@ import {
     useSensors,
 } from '@dnd-kit/core'
 import { Toast } from 'primereact/toast'
-import { useProjectStore } from '@/components/Custom/Projects/projectStore'
-import ProjectItemDialog from '@/components/Custom/Projects/ProjectItemDialog'
+import { useProjectStore } from '@/state/ProjectStore'
 import { Menubar } from 'primereact/menubar'
+import { Tooltip } from 'primereact/tooltip'
+import { Button } from 'primereact/button'
+
+const AvatarList = ({ users }) => {
+    return (
+        <div className="hidden lg:flex justify-content-end">
+            {users?.map(user => {
+                return (
+                    <>
+                        <Tooltip
+                            target={'#avatar_' + user?.id}
+                            content={user?.name}
+                            position="bottom"
+                        />
+                        <img
+                            key={'avatar_' + user?.id}
+                            id={'avatar_' + user?.id}
+                            src={user?.avatar}
+                            alt={user?.name}
+                            className="-ml-3 border-circle w-3rem h-3rem"
+                        />
+                    </>
+                )
+            })}
+        </div>
+    )
+}
 
 const ProjectDetail = () => {
     const router = useRouter()
     const isMounted = useRef(false)
     const project = useProjectStore(state => state.project)
     const setProject = useProjectStore(state => state.setProject)
+
     const toast = useRef(null)
     const { query, isReady } = useRouter()
     const { id } = query
@@ -28,20 +56,16 @@ const ProjectDetail = () => {
         {
             label: 'Add Item',
             icon: 'ti ti-plus',
-            command: () => {},
+            command: () => {
+                router.push(`/projects/${id}/items/add`)
+            },
         },
-
         {
             label: 'Edit Project',
             icon: 'ti ti-pencil',
             command: () => {
                 router.push(`/projects/${id}/edit`)
             },
-        },
-        {
-            label: 'Manage Users',
-            icon: 'ti ti-user',
-            command: () => {},
         },
         {
             label: 'Delete Project',
@@ -160,6 +184,17 @@ const ProjectDetail = () => {
                     model={projectMenuItems}
                     className="mb-4 p-3"
                     start={<div className="text-3xl mr-2">{project?.name}</div>}
+                    end={
+                        <div className="flex">
+                            <AvatarList users={project?.users} />
+                            <Button
+                                label="Manage Users"
+                                className="p-button-text mr-4 flex justify-content-end"
+                                icon="pi pi-user"
+                                onClick={() => {}}
+                            />
+                        </div>
+                    }
                 />
 
                 {!project?.id ? (
@@ -167,7 +202,7 @@ const ProjectDetail = () => {
                         <Spinner />
                     </div>
                 ) : (
-                    <div className="flex gap-4 min-h-full overflow-y-scroll">
+                    <div className="md:flex gap-4 min-h-full overflow-y-scroll">
                         {getColumns().map((columnData, index) => {
                             const items = getColumnItems(columnData?.status?.id)
                             return (

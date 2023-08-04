@@ -1,6 +1,6 @@
 import '@/style/style.scss'
 import { useRouter } from 'next/router'
-import AppLayout from '@/components/Layouts/AppLayout'
+import AppLayout from '@/components/AppBase/Layouts/AppLayout'
 import Head from 'next/head'
 import React, { Suspense, useEffect, useState } from 'react'
 import { ThemeContextProvider } from '@/context/ThemeContext'

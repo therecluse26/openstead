@@ -36,6 +36,12 @@ class Project extends Model implements DataTablePaginatable
         'workflow_statuses' => 'array'
     ];
     
+    /**
+     * Set the default workflow statuses for a new project
+     * Necessary because the database does not support default values for JSON columns
+     *
+     * @return void
+     */
     protected static function booted(): void
     {
         static::creating(function ($project) {

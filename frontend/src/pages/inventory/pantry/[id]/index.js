@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
-import InventoryDetailCard from '@/components/Custom/Inventory/InventoryDetailCard'
+import InventoryDetailCard from '@/components/Inventory/InventoryDetailCard'
 import LinkButton from '@/components/LinkButton'
 import { formatDate } from '@/utils/FormatDate'
-import Notes from '@/components/Custom/Notes'
+import Notes from '@/components/Notes'
 import SimilarItems from '@/components/Inventory/SimilarItems'
-import PantryService from '../../../../services/inventory/PantryService'
+import PantryService from '../../../../services/Inventory/PantryService'
 
 const PantryDetail = () => {
     const isMounted = useRef(false)

@@ -9,7 +9,7 @@ import { csrf } from '@/hooks/auth'
 import AddErrorToasts from '@/utils/AddErrorToasts'
 import ToastContext, { useToastContext } from '@/context/ToastContext'
 import SubtypeSelect from '@/components/HookFormInputs/SubtypeSelect'
-import ServiceLogService from '@/services/inventory/ServiceLogService'
+import ServiceLogService from '@/services/Inventory/ServiceLogService'
 
 const ServiceLogForm = ({
     inline = false,

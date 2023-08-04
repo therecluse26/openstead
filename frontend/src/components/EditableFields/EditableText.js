@@ -1,13 +1,19 @@
-import axios from '@/lib/axios'
 import { Button } from 'primereact/button'
 import { InputTextarea } from 'primereact/inputtextarea'
 import { useEffect, useRef, useState } from 'react'
-import Spinner from '../../Spinner'
+import Spinner from '../Spinner'
 import { Toast } from 'primereact/toast'
-import sanitizeHtml from '@/utils/sanitizeHtml'
 import RichEditor from '../RichEditor'
+import { updateField } from './EditableFieldService'
 
-const EditableText = ({ text, model, modelId, field, richText = false }) => {
+const EditableText = ({
+    text,
+    model,
+    modelId,
+    field,
+    placeholder = 'Click to edit',
+    richText = false,
+}) => {
     const [loading, setLoading] = useState(false)
     const [value, setValue] = useState(text)
     const [displayedValue, setDisplayedValue] = useState(text)
@@ -36,12 +42,13 @@ const EditableText = ({ text, model, modelId, field, richText = false }) => {
     const updateValue = async () => {
         setLoading(true)
         try {
-            const updatedValue = await axios
-                .put(`/api/editable-field/${model}/${modelId}`, {
-                    value: sanitizeHtml(value),
-                    field_name: field,
-                })
-                .then(res => res.data)
+            const updatedValue = await updateField(
+                model,
+                modelId,
+                field,
+                value,
+                true,
+            )
 
             setDisplayedValue(updatedValue)
         } catch (e) {
@@ -113,16 +120,33 @@ const EditableText = ({ text, model, modelId, field, richText = false }) => {
                             </div>
                         </div>
                     ) : (
-                        <div
-                            className="editable-text-container"
-                            style={{
-                                objectFit: 'contain',
-                                width: '100%',
-                            }}
-                            onMouseMove={handleTextOnMouseMove}
-                            onClick={handleTextOnclick}
-                            dangerouslySetInnerHTML={{ __html: displayedValue }}
-                        />
+                        <>
+                            {displayedValue ? (
+                                <div
+                                    className="editable-text-container"
+                                    style={{
+                                        objectFit: 'contain',
+                                        width: '100%',
+                                    }}
+                                    onMouseMove={handleTextOnMouseMove}
+                                    onClick={handleTextOnclick}
+                                    dangerouslySetInnerHTML={{
+                                        __html: displayedValue,
+                                    }}
+                                />
+                            ) : (
+                                <div
+                                    className="editable-text-container"
+                                    style={{
+                                        objectFit: 'contain',
+                                        width: '100%',
+                                    }}
+                                    onMouseMove={handleTextOnMouseMove}
+                                    onClick={handleTextOnclick}>
+                                    {placeholder}
+                                </div>
+                            )}
+                        </>
                     )}
                 </>
             )}

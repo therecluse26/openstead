@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react'
-import Spinner from '../../Spinner'
+import Spinner from '../Spinner'
 import { Dropdown } from 'primereact/dropdown'
-import {
-    getOptionsFromUrl,
-    updateField,
-} from '../Services/EditableFieldService'
+import { getOptionsFromUrl, updateField } from './EditableFieldService'
 
 export default function EditableDropdown({
     value, // The value of the field

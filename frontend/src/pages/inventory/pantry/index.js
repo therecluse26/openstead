@@ -2,10 +2,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Column } from 'primereact/column'
 import Link from 'next/link'
 import QuantityFilterTemplate from '@/pages/inventory/templates/QuantityFilterTemplate'
-import PantryService from '@/services/inventory/PantryService'
-import TypeFilterElement from '@/components/Custom/Inventory/TypeFilterElement'
-import TypeBodyTemplateElement from '@/components/Custom/Inventory/TypeBodyTemplateElement'
-import FilterableDataTable from '@/components/Custom/DataTable/FilterableDataTable'
+import PantryService from '@/services/Inventory/PantryService'
+import TypeFilterElement from '@/components/Inventory/TypeFilterElement'
+import TypeBodyTemplateElement from '@/components/Inventory/TypeBodyTemplateElement'
+import FilterableDataTable from '@/components/DataTable/FilterableDataTable'
 
 const PantryItems = () => {
     const [types, setTypes] = useState([])

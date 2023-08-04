@@ -1,5 +1,5 @@
-import { AppMenu } from '@/components/AppMenu'
-import menu from '@/components/_menu'
+import { AppMenu } from '@/components/AppBase/AppMenu'
+import menu from '@/components/AppBase/_menu'
 import React from 'react'
 
 const SidebarMenu = ({

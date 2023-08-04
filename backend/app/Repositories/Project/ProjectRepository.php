@@ -38,7 +38,7 @@ class ProjectRepository implements Repository
 
     public function getById(string $id): Project
     {
-        return $this->model->find($id);
+        return $this->model->findOrFail($id);
     }
 
     public function create(array $attributes): Project
@@ -48,9 +48,15 @@ class ProjectRepository implements Repository
     
     public function update(string $id, array $attributes): Project
     {
-         $project = $this->model->find($id);
+         $project = $this->getById($id);
          $project->update($attributes);
          return $project;
+    }
+
+    public function createItem(Project $project, array $attributes): Project
+    {
+        $project->items()->create($attributes);
+        return $project;
     }
 
     /**
@@ -88,7 +94,7 @@ class ProjectRepository implements Repository
 
     public function delete($id): bool
     {
-        return $this->model->find($id)->delete();
+        return $this->getById($id)->delete();
     }
 
     public function getStatuses(string $id): SupportCollection
@@ -96,4 +102,10 @@ class ProjectRepository implements Repository
         return $this->getById($id)?->statuses;
     }
    
+
+    public function getUsers(string $id): SupportCollection
+    {
+        return $this->getById($id)?->users;
+    }
+
 }

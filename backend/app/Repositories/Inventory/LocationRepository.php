@@ -37,14 +37,14 @@ class LocationRepository implements Repository
 		return $this->model->$method(...$arguments);
 	}
 
-	public function getById(string $id): ?Model
+	public function getById(string $id): Location
 	{
-		return $this->model->find($id);
+		return $this->model->findOrFail($id);
 	}
 
-	public function getLocation($location_id): ?Model
+	public function getLocation($location_id): Location
 	{
-		return $this->model->find($location_id);
+		return $this->getById($location_id);
 	}
 
 	public function getInventory($location_id): Collection
@@ -80,7 +80,7 @@ class LocationRepository implements Repository
 	 */
 	public function find(string $id): Model
 	{
-		return $this->model->findOrFail($id);
+		return $this->getById($id);
 	}
 
 	public function getModel(): Model|Inventoriable

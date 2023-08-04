@@ -7,8 +7,8 @@ import ServiceLogForm from '@/forms/Inventory/ServiceLogForm'
 import { Button } from 'primereact/button'
 import axios from '@/lib/axios'
 import { Panel } from 'primereact/panel'
-import CollapsiblePanelTemplate from '@/components/Custom/Templates/CollapsiblePanelTemplate'
-import ServiceLogService from '@/services/inventory/ServiceLogService'
+import CollapsiblePanelTemplate from '@/components/Templates/CollapsiblePanelTemplate'
+import ServiceLogService from '@/services/Inventory/ServiceLogService'
 import Spinner from '@/components/Spinner'
 
 const ServiceLogsTimeline = ({ parentType, parentId }) => {
