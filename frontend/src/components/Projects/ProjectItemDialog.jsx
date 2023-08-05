@@ -21,6 +21,7 @@ export default function ProjectItemDialog({ projectId }) {
     const setSelectedItem = useProjectStore(state => state.setSelectedItem)
     const project = useProjectStore(state => state.project)
     const setProject = useProjectStore(state => state.setProject)
+    const projectUsers = useProjectStore(state => state.projectUsers)
 
     const toast = useRef(null)
 
@@ -34,19 +35,21 @@ export default function ProjectItemDialog({ projectId }) {
                     setModalVisibility(false)
                 }}
                 header={
-                    <h2>
-                        <EditableText
-                            placeholder={
-                                <div>
-                                    Item Title <IconEdit />
-                                </div>
-                            }
-                            text={selectedItem?.title}
-                            model="project_item"
-                            modelId={selectedItem?.id}
-                            field="title"
-                        />
-                    </h2>
+                    <div className="w-11">
+                        <h2>
+                            <EditableText
+                                placeholder={
+                                    <div>
+                                        Item Title <IconEdit />
+                                    </div>
+                                }
+                                text={selectedItem?.title}
+                                model="project_item"
+                                modelId={selectedItem?.id}
+                                field="title"
+                            />
+                        </h2>
+                    </div>
                 }>
                 <div className="grid">
                     <div className="lg:col-8 md:col-6">
@@ -59,6 +62,7 @@ export default function ProjectItemDialog({ projectId }) {
                             text={selectedItem?.description}
                             model="project_item"
                             modelId={selectedItem?.id}
+                            setProjectUsers
                             field="description"
                             richText
                         />
@@ -84,6 +88,7 @@ export default function ProjectItemDialog({ projectId }) {
                                 <div className="col-5">Status</div>
                                 <div className="col-7">
                                     <EditableDropdown
+                                        placeholder="Select a Status"
                                         value={
                                             selectedItem?.status
                                                 ? {
@@ -143,18 +148,71 @@ export default function ProjectItemDialog({ projectId }) {
                                     />
                                 </div>
                                 <div className="col-5">Assigned To</div>
-                                {selectedItem?.assignee?.name ? (
-                                    <div className="col-7 flex vertical-align-middle">
-                                        <img
-                                            className="w-2rem h-2rem border-circle rounded-full mr-2"
-                                            src={selectedItem.assignee.avatar}
-                                            alt={selectedItem.assignee.name}
-                                        />
-                                        <div>{selectedItem.assignee.name}</div>
-                                    </div>
-                                ) : (
-                                    <div className="col-7">None</div>
-                                )}
+
+                                <div className="col-7">
+                                    <EditableDropdown
+                                        value={selectedItem?.assignee}
+                                        placeholder="Select an Asssignee"
+                                        options={projectUsers}
+                                        optionLabel="name"
+                                        optionValue="id"
+                                        dataLabel="name"
+                                        dataValue="id"
+                                        model={'project_item'}
+                                        modelId={selectedItem.id}
+                                        field={'assignee_id'}
+                                        before={
+                                            <>
+                                                {selectedItem?.assignee && (
+                                                    <img
+                                                        className="w-1rem h-1rem border-circle rounded-full mr-2"
+                                                        src={
+                                                            selectedItem
+                                                                ?.assignee
+                                                                ?.avatar
+                                                        }
+                                                        alt={
+                                                            selectedItem
+                                                                ?.assignee?.name
+                                                        }
+                                                    />
+                                                )}
+                                            </>
+                                        }
+                                        onChange={value => {
+                                            setProject({
+                                                ...project,
+                                                items: project.items.map(
+                                                    item => {
+                                                        if (
+                                                            item.id ===
+                                                            selectedItem.id
+                                                        ) {
+                                                            item.assignee.id =
+                                                                value.id
+                                                            item.assignee.name =
+                                                                value.name
+                                                        }
+                                                        return item
+                                                    },
+                                                ),
+                                            })
+                                            setSelectedItem({
+                                                ...selectedItem,
+                                                assignee: value,
+                                            })
+                                        }}
+                                        onError={e => {
+                                            toast.current.show({
+                                                severity: 'error',
+                                                summary: 'Error',
+                                                detail:
+                                                    e.response?.data?.message ??
+                                                    'Unknown error',
+                                            })
+                                        }}
+                                    />
+                                </div>
 
                                 <div className="col-5">Created At</div>
                                 <div className="col-7">
@@ -166,7 +224,7 @@ export default function ProjectItemDialog({ projectId }) {
                                 {selectedItem?.creator?.name ? (
                                     <div className="col-7 flex vertical-align-middle">
                                         <img
-                                            className="w-2rem h-2rem border-circle rounded-full mr-2"
+                                            className="w-1rem h-1rem border-circle rounded-full mr-2"
                                             src={selectedItem.creator.avatar}
                                             alt={selectedItem.creator.name}
                                         />
@@ -199,10 +257,13 @@ export default function ProjectItemDialog({ projectId }) {
                             </div>
                         </Panel>
                         {!selectedItem?.deleted_at && (
-                            <div className="col-12">
+                            <div className="flex justify-content-end col-12 mt-4">
                                 <Button
+                                    className={
+                                        'p-button-danger justify-content-center'
+                                    }
                                     onClick={() => setModalVisibility(false)}
-                                    label="Mark as Closed"
+                                    label="Delete item"
                                 />
                             </div>
                         )}

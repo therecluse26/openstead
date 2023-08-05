@@ -5,6 +5,7 @@ import Spinner from '../Spinner'
 import { Toast } from 'primereact/toast'
 import RichEditor from '../RichEditor'
 import { updateField } from './EditableFieldService'
+import { IconEdit } from '@tabler/icons'
 
 const EditableText = ({
     text,
@@ -13,6 +14,7 @@ const EditableText = ({
     field,
     placeholder = 'Click to edit',
     richText = false,
+    icon = <IconEdit size={12} />,
 }) => {
     const [loading, setLoading] = useState(false)
     const [value, setValue] = useState(text)
@@ -122,18 +124,21 @@ const EditableText = ({
                     ) : (
                         <>
                             {displayedValue ? (
-                                <div
-                                    className="editable-text-container"
-                                    style={{
-                                        objectFit: 'contain',
-                                        width: '100%',
-                                    }}
-                                    onMouseMove={handleTextOnMouseMove}
-                                    onClick={handleTextOnclick}
-                                    dangerouslySetInnerHTML={{
-                                        __html: displayedValue,
-                                    }}
-                                />
+                                <div className="flex">
+                                    <div
+                                        className="editable-text-container"
+                                        style={{
+                                            objectFit: 'contain',
+                                            width: '100%',
+                                        }}
+                                        onMouseMove={handleTextOnMouseMove}
+                                        onClick={handleTextOnclick}
+                                        dangerouslySetInnerHTML={{
+                                            __html: displayedValue,
+                                        }}
+                                    />
+                                    {icon}
+                                </div>
                             ) : (
                                 <div
                                     className="editable-text-container"

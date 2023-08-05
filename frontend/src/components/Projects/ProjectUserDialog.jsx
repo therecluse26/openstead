@@ -1,1 +1,3 @@
-export default function ProjectUserDialog() {}
+export default function ProjectUserDialog({ projectId }) {
+    return <></>
+}

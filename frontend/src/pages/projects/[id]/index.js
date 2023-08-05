@@ -16,6 +16,7 @@ import { useProjectStore } from '@/state/ProjectStore'
 import { Menubar } from 'primereact/menubar'
 import { Tooltip } from 'primereact/tooltip'
 import { Button } from 'primereact/button'
+import ProjectUserDialog from '../../../components/Projects/ProjectUserDialog'
 
 const AvatarList = ({ users }) => {
     return (
@@ -47,6 +48,8 @@ const ProjectDetail = () => {
     const isMounted = useRef(false)
     const project = useProjectStore(state => state.project)
     const setProject = useProjectStore(state => state.setProject)
+    const setProjectUsers = useProjectStore(state => state.setProjectUsers)
+    const projectUsers = useProjectStore(state => state.projectUsers)
 
     const toast = useRef(null)
     const { query, isReady } = useRouter()
@@ -87,6 +90,8 @@ const ProjectDetail = () => {
         }
         ProjectService.getProject(id)
             .then(data => {
+                setProjectUsers(data?.users)
+                delete data?.users
                 setProject(data)
             })
             .catch(e => {
@@ -177,6 +182,8 @@ const ProjectDetail = () => {
         <>
             {project?.id && <ProjectItemDialog projectId={project.id} />}
 
+            {project?.users && <ProjectUserDialog projectId={project.id} />}
+
             <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
                 <Toast ref={toast} />
 
@@ -186,10 +193,10 @@ const ProjectDetail = () => {
                     start={<div className="text-3xl mr-2">{project?.name}</div>}
                     end={
                         <div className="flex">
-                            <AvatarList users={project?.users} />
+                            <AvatarList users={projectUsers} />
                             <Button
                                 label="Manage Users"
-                                className="p-button-text mr-4 flex justify-content-end"
+                                className="p-button-text ml-2 flex justify-content-end"
                                 icon="pi pi-user"
                                 onClick={() => {}}
                             />

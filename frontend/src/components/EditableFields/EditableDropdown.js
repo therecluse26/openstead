@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import Spinner from '../Spinner'
 import { Dropdown } from 'primereact/dropdown'
 import { getOptionsFromUrl, updateField } from './EditableFieldService'
+import { IconEdit } from '@tabler/icons'
 
 export default function EditableDropdown({
     value, // The value of the field
@@ -14,6 +15,9 @@ export default function EditableDropdown({
     model, // The model to update
     modelId, // The ID of the model to update
     field, // The field of the matched model to to update
+    before = <div />, // The component to display before the value
+    after = <IconEdit size={12} />, // The icon to display when not editing
+    placeholder = 'Select an option', // The placeholder to display when editing
     onChange = () => {}, // The function to call when the value is updated
     onError = () => {}, // The function to call when an error occurs
 }) {
@@ -51,7 +55,7 @@ export default function EditableDropdown({
 
     const updateValue = async newValue => {
         // If the value hasn't changed, don't do anything
-        if (newValue === localValue[optionValue]) {
+        if (localValue && newValue === localValue[optionValue]) {
             return
         }
         setLoading(true)
@@ -100,20 +104,22 @@ export default function EditableDropdown({
                                     }}
                                     optionValue={optionValue}
                                     optionLabel={optionLabel}
+                                    placeholder={placeholder}
                                     autoFocus
                                     width={'100%'}
                                 />
                             </div>
                         </div>
                     ) : (
-                        <>
-                            <div
-                                className="editable-select-container hover:text-primary cursor-pointer"
-                                onClick={handleOnclick}>
-                                {displayedValue} &nbsp;{' '}
-                                <i className="ti ti-edit" />
-                            </div>
-                        </>
+                        <div
+                            className="editable-select-container hover:text-primary cursor-pointer"
+                            onClick={handleOnclick}>
+                            {before} &nbsp;
+                            {displayedValue.trim() !== ''
+                                ? displayedValue.trim()
+                                : 'Unknown'}{' '}
+                            &nbsp; {after}
+                        </div>
                     )}
                 </>
             )}

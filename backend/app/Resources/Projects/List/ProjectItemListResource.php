@@ -11,6 +11,7 @@ class ProjectItemListResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'status' => $this->status,
+            'assignee' => $this->assignee,
         ];
     }
 }

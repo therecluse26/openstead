@@ -1,6 +1,6 @@
 module.exports = {
     root: true,
-    parser: 'babel-eslint',
+    parser: '@typescript-eslint/parser',
     env: {
         node: true,
         browser: true,
@@ -37,6 +37,7 @@ module.exports = {
         'react/require-default-props': 0,
         'react/react-in-jsx-scope': 0,
         'linebreak-style': ['error', 'unix'],
+        'no-unused-vars': 'off',
         semi: ['error', 'never'],
         'prettier/prettier': [
             'error',
