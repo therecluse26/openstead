@@ -2,10 +2,10 @@ import { Button } from 'primereact/button'
 import { InputTextarea } from 'primereact/inputtextarea'
 import { useEffect, useRef, useState } from 'react'
 import Spinner from '../Spinner'
-import { Toast } from 'primereact/toast'
 import RichEditor from '../RichEditor'
 import { updateField } from './EditableFieldService'
 import { IconEdit } from '@tabler/icons'
+import { useToast } from '../../context/ToastContext'
 
 const EditableText = ({
     text,
@@ -20,7 +20,7 @@ const EditableText = ({
     const [value, setValue] = useState(text)
     const [displayedValue, setDisplayedValue] = useState(text)
     const [isEditing, setIsEditing] = useState(false)
-    const toast = useRef(null)
+    const { showToast } = useToast()
 
     const handleTextOnMouseMove = e => {
         if (e.target.tagName === 'A') {
@@ -54,11 +54,7 @@ const EditableText = ({
 
             setDisplayedValue(updatedValue)
         } catch (e) {
-            toast.current.show({
-                severity: 'error',
-                summary: 'Error',
-                detail: e.response?.data?.message ?? 'Unknown error',
-            })
+            showToast(e.response?.data?.message ?? 'Unknown error', 'error')
         }
         setIsEditing(false)
         setLoading(false)
@@ -70,8 +66,6 @@ const EditableText = ({
 
     return (
         <>
-            <Toast ref={toast} />
-
             {loading ? (
                 <div className="p-d-flex p-jc-center">
                     <div className="p-m-2">

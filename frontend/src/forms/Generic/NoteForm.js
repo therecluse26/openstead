@@ -3,8 +3,7 @@ import { useForm } from 'react-hook-form'
 import { Card } from 'primereact/card'
 import { Button } from 'primereact/button'
 import { csrf } from '@/hooks/auth'
-import AddErrorToasts from '@/utils/AddErrorToasts'
-import ToastContext, { useToastContext } from '@/context/ToastContext'
+import { useToast } from '../../context/ToastContext'
 import NoteService from '@/services/Generic/NoteService'
 import EditorInput from '@/components/HookFormInputs/EditorInput'
 
@@ -16,7 +15,7 @@ const NoteForm = ({
     onClose = () => {},
 }) => {
     const isMounted = useRef(false)
-    const toast = useToastContext(ToastContext)
+    const { showToast } = useToast()
 
     const {
         control,
@@ -44,7 +43,10 @@ const NoteForm = ({
                 }
             })
             .catch(error => {
-                AddErrorToasts(toast, error)
+                showToast(
+                    error.response.data.message ?? 'Error adding note',
+                    'error',
+                )
             })
     }
 

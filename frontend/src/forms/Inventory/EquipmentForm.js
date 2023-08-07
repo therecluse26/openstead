@@ -11,8 +11,7 @@ import { FileUpload } from 'primereact/fileupload'
 import { convertUploadedFilesToBase64 } from '@/utils/file-utils'
 import { csrf } from '@/hooks/auth'
 import EquipmentService from '@/services/Inventory/EquipmentService'
-import ToastContext, { useToastContext } from '@/context/ToastContext'
-import AddErrorToasts from '@/utils/AddErrorToasts'
+import { useToast } from '@/context/ToastContext'
 import RatingInput from '@/components/HookFormInputs/RatingInput'
 import TextAreaInput from '@/components/HookFormInputs/TextAreaInput'
 
@@ -20,7 +19,7 @@ const EquipmentForm = ({ mode = 'create' }) => {
     const isMounted = useRef(false)
     const router = useRouter()
     const [images, setImages] = useState([])
-    const toast = useToastContext(ToastContext)
+    const { showToast } = useToast()
     const { query, isReady } = useRouter()
     const { id } = query
     const defaultValues = {
@@ -84,7 +83,10 @@ const EquipmentForm = ({ mode = 'create' }) => {
                 router.push('/inventory/equipment/' + r.data?.id)
             })
             .catch(error => {
-                AddErrorToasts(toast, error)
+                showToast(
+                    error?.response?.data?.message ?? 'Unknown error',
+                    'error',
+                )
             })
     }
 

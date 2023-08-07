@@ -8,9 +8,8 @@ import CollapsiblePanelTemplate from '../Templates/CollapsiblePanelTemplate'
 import Notes from '../Notes'
 import EditableText from '../EditableFields/EditableText'
 import EditableDropdown from '../EditableFields/EditableDropdown'
-import { useRef } from 'react'
-import { Toast } from 'primereact/toast'
 import { IconEdit } from '@tabler/icons'
+import { useToast } from '../../context/ToastContext'
 
 export default function ProjectItemDialog({ projectId }) {
     const modalVisible = useProjectStore(state => state.modalVisible)
@@ -22,12 +21,10 @@ export default function ProjectItemDialog({ projectId }) {
     const project = useProjectStore(state => state.project)
     const setProject = useProjectStore(state => state.setProject)
     const projectUsers = useProjectStore(state => state.projectUsers)
-
-    const toast = useRef(null)
+    const { showToast } = useToast()
 
     return (
         <>
-            <Toast ref={toast} />
             <Dialog
                 visible={modalVisible}
                 style={{ width: '70vw' }}
@@ -136,15 +133,13 @@ export default function ProjectItemDialog({ projectId }) {
                                                 status: value,
                                             })
                                         }}
-                                        onError={e => {
-                                            toast.current.show({
-                                                severity: 'error',
-                                                summary: 'Error',
-                                                detail:
-                                                    e.response?.data?.message ??
+                                        onError={e =>
+                                            showToast(
+                                                e.response?.data?.message ??
                                                     'Unknown error',
-                                            })
-                                        }}
+                                                'error',
+                                            )
+                                        }
                                     />
                                 </div>
                                 <div className="col-5">Assigned To</div>
@@ -188,6 +183,12 @@ export default function ProjectItemDialog({ projectId }) {
                                                             item.id ===
                                                             selectedItem.id
                                                         ) {
+                                                            if (
+                                                                !item?.assignee
+                                                            ) {
+                                                                item.assignee = {}
+                                                            }
+
                                                             item.assignee.id =
                                                                 value.id
                                                             item.assignee.name =
@@ -203,13 +204,11 @@ export default function ProjectItemDialog({ projectId }) {
                                             })
                                         }}
                                         onError={e => {
-                                            toast.current.show({
-                                                severity: 'error',
-                                                summary: 'Error',
-                                                detail:
-                                                    e.response?.data?.message ??
+                                            showToast(
+                                                e.response?.data?.message ??
                                                     'Unknown error',
-                                            })
+                                                'error',
+                                            )
                                         }}
                                     />
                                 </div>

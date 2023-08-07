@@ -27,7 +27,6 @@ module.exports = {
         'no-unused-expressions': ['error', { allowTernary: true }],
         camelcase: 0,
         'react/self-closing-comp': 1,
-        'react/jsx-filename-extension': [1, { extensions: ['.js', 'jsx'] }],
         'react/prop-types': 0,
         'react/destructuring-assignment': 0,
         'react/jsx-no-comment-textnodes': 0,
@@ -38,6 +37,10 @@ module.exports = {
         'react/react-in-jsx-scope': 0,
         'linebreak-style': ['error', 'unix'],
         'no-unused-vars': 'off',
+        'react/jsx-filename-extension': [
+            2,
+            { extensions: ['.js', '.jsx', '.ts', '.tsx'] },
+        ],
         semi: ['error', 'never'],
         'prettier/prettier': [
             'error',

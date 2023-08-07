@@ -6,18 +6,17 @@ import TextInput from '@/components/HookFormInputs/TextInput'
 import { useRouter } from 'next/router'
 import { csrf } from '@/hooks/auth'
 import ProjectService from '@/services/Projects/ProjectService'
-import ToastContext, { useToastContext } from '@/context/ToastContext'
-import AddErrorToasts from '@/utils/AddErrorToasts'
 import SelectInput from '../../components/HookFormInputs/SelectInput'
 import CalendarInput from '@/components/HookFormInputs/CalendarInput'
 import { useAuth } from '@/hooks/auth'
 import RichTextInput from '../../components/HookFormInputs/RichTextInput'
+import { useToast } from '../../context/ToastContext'
 
 const ProjectItemForm = ({ projectId, status = null }) => {
     const isMounted = useRef(false)
     const router = useRouter()
     const { user } = useAuth({ middleware: 'auth' })
-    const toast = useToastContext(ToastContext)
+    const { showToast } = useToast()
     const defaultValues = {
         title: null,
         description: null,
@@ -60,7 +59,10 @@ const ProjectItemForm = ({ projectId, status = null }) => {
                 router.push('/projects/' + r.data?.id)
             })
             .catch(error => {
-                AddErrorToasts(toast, error)
+                showToast(
+                    error?.response?.data?.message ?? 'Unknown error',
+                    'error',
+                )
             })
     }
 
@@ -133,9 +135,6 @@ const ProjectItemForm = ({ projectId, status = null }) => {
                                     control={control}
                                     name={'due_date'}
                                     label={'Due Date'}
-                                    rules={{
-                                        required: 'Due Date is required',
-                                    }}
                                 />
                                 {getFormErrorMessage('due_date')}
                             </div>

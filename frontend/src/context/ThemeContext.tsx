@@ -1,7 +1,13 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, {
+    Context,
+    createContext,
+    useContext,
+    useEffect,
+    useState,
+} from 'react'
 import { useLocalStorage } from 'primereact/hooks'
 
-const ThemeContext = createContext()
+const ThemeContext: Context<any> = createContext(null)
 
 export default ThemeContext
 

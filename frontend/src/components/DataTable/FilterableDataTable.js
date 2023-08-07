@@ -5,7 +5,7 @@ import { Ripple } from 'primereact/ripple'
 import { classNames } from 'primereact/utils'
 import { Dropdown } from 'primereact/dropdown'
 import Link from 'next/link'
-import { Toast } from 'primereact/toast'
+import { useToast } from '../../context/ToastContext'
 
 const FilterableDataTable = ({
     title,
@@ -17,7 +17,6 @@ const FilterableDataTable = ({
     selectionMode,
 }) => {
     const isMounted = useRef(false)
-    const toast = useRef(null)
     const [selected, setSelected] = useState([])
     const [perPage, setPerPage] = useState(10)
     const [loading, setLoading] = useState(false)
@@ -31,6 +30,8 @@ const FilterableDataTable = ({
         sortOrder: null,
         filters: filters,
     })
+
+    const { showToast } = useToast()
 
     const onPage = event => {
         setLazyParams(event)
@@ -57,11 +58,10 @@ const FilterableDataTable = ({
                 setPerPage(data.per_page)
             })
             .catch(e =>
-                toast.current.show({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.response?.data?.message ?? 'Unknown error',
-                }),
+                showToast(
+                    e.response?.data?.message ?? 'Unknown error',
+                    'error',
+                ),
             )
             .finally(() => {
                 setLoading(false)
@@ -175,8 +175,6 @@ const FilterableDataTable = ({
 
     return (
         <Card>
-            <Toast ref={toast} />
-
             <DataTable
                 value={inventory}
                 lazy

@@ -11,20 +11,28 @@ import {
     TouchSensor,
     useSensors,
 } from '@dnd-kit/core'
-import { Toast } from 'primereact/toast'
 import { useProjectStore } from '@/state/ProjectStore'
 import { Menubar } from 'primereact/menubar'
 import { Tooltip } from 'primereact/tooltip'
 import { Button } from 'primereact/button'
 import ProjectUserDialog from '../../../components/Projects/ProjectUserDialog'
+import { useToast } from '../../../context/ToastContext'
 
-const AvatarList = ({ users }) => {
+const AvatarList = ({ users, maxUsersToDisplay = 3 }) => {
+    const count = users?.length
+    const exceedsMaxUsers = count > maxUsersToDisplay
+
+    if (count === 0) {
+        return null
+    }
+
     return (
-        <div className="hidden lg:flex justify-content-end">
-            {users?.map(user => {
+        <span className="hidden lg:flex justify-content-end">
+            {users?.slice(0, maxUsersToDisplay)?.map(user => {
                 return (
-                    <>
+                    <span key={'icon_' + user?.id}>
                         <Tooltip
+                            key={'tooltip_' + user?.id}
                             target={'#avatar_' + user?.id}
                             content={user?.name}
                             position="bottom"
@@ -36,10 +44,15 @@ const AvatarList = ({ users }) => {
                             alt={user?.name}
                             className="-ml-3 border-circle w-3rem h-3rem"
                         />
-                    </>
+                    </span>
                 )
             })}
-        </div>
+            {exceedsMaxUsers && (
+                <span className="text-lg ml-2">
+                    +{count - maxUsersToDisplay}
+                </span>
+            )}
+        </span>
     )
 }
 
@@ -50,8 +63,7 @@ const ProjectDetail = () => {
     const setProject = useProjectStore(state => state.setProject)
     const setProjectUsers = useProjectStore(state => state.setProjectUsers)
     const projectUsers = useProjectStore(state => state.projectUsers)
-
-    const toast = useRef(null)
+    const { showToast } = useToast()
     const { query, isReady } = useRouter()
     const { id } = query
 
@@ -74,12 +86,7 @@ const ProjectDetail = () => {
             label: 'Delete Project',
             icon: 'ti ti-trash',
             command: () => {
-                toast.current.show({
-                    severity: 'warn',
-                    summary: 'Delete',
-                    detail: 'Data Deleted',
-                    life: 3000,
-                })
+                showToast('Project deleted', 'warn', 'Deleted')
             },
         },
     ]
@@ -101,19 +108,13 @@ const ProjectDetail = () => {
 
     const updateProjectItems = async updatedProject => {
         await ProjectService.updateItems(id, updatedProject?.items)
-            .then(() => {
-                toast.current.show({
-                    severity: 'success',
-                    summary: 'Updated',
-                })
-            })
-            .catch(e => {
-                toast.current.show({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.response?.data?.message ?? 'Unknown error',
-                })
-            })
+            .then(() => showToast('Project items updated', 'success'))
+            .catch(e =>
+                showToast(
+                    e.response?.data?.message ?? 'Unknown error',
+                    'error',
+                ),
+            )
     }
     // Get column data including grouped items by status
     const getColumns = () => {
@@ -185,8 +186,6 @@ const ProjectDetail = () => {
             {project?.users && <ProjectUserDialog projectId={project.id} />}
 
             <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
-                <Toast ref={toast} />
-
                 <Menubar
                     model={projectMenuItems}
                     className="mb-4 p-3"
@@ -196,7 +195,7 @@ const ProjectDetail = () => {
                             <AvatarList users={projectUsers} />
                             <Button
                                 label="Manage Users"
-                                className="p-button-text ml-2 flex justify-content-end"
+                                className="p-button-text ml-3 flex justify-content-end"
                                 icon="pi pi-user"
                                 onClick={() => {}}
                             />
@@ -209,7 +208,7 @@ const ProjectDetail = () => {
                         <Spinner />
                     </div>
                 ) : (
-                    <div className="md:flex gap-4 min-h-full overflow-y-scroll">
+                    <section className="md:flex gap-4 min-h-full overflow-y-scroll">
                         {getColumns().map((columnData, index) => {
                             const items = getColumnItems(columnData?.status?.id)
                             return (
@@ -222,7 +221,7 @@ const ProjectDetail = () => {
                                 />
                             )
                         })}
-                    </div>
+                    </section>
                 )}
             </DndContext>
         </>

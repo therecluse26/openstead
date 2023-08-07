@@ -10,7 +10,6 @@ const SubtypeSelect = ({
     setValue,
     fieldId,
     errors,
-    toast,
     watch,
     label,
     id,
@@ -63,7 +62,6 @@ const SubtypeSelect = ({
                     setValue={setValue}
                     fieldId={fieldId}
                     errors={errors}
-                    toast={toast}
                     selectedType={watchType}
                     watch={watch}
                     id={id}

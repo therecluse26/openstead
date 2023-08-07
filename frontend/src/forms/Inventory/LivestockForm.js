@@ -8,21 +8,20 @@ import CalendarInput from '@/components/HookFormInputs/CalendarInput'
 import { FileUpload } from 'primereact/fileupload'
 import { convertUploadedFilesToBase64 } from '@/utils/file-utils'
 import { csrf } from '@/hooks/auth'
-import ToastContext, { useToastContext } from '@/context/ToastContext'
-import AddErrorToasts from '@/utils/AddErrorToasts'
 import LivestockService from '@/services/Inventory/LivestockService'
 import SubtypeSelect from '@/components/HookFormInputs/SubtypeSelect'
 import ListboxInput from '@/components/HookFormInputs/ListboxInput'
 import NumberInput from '@/components/HookFormInputs/NumberInput'
 import TextAreaInput from '@/components/HookFormInputs/TextAreaInput'
 import SelectButtonInput from '@/components/HookFormInputs/SelectButtonInput'
+import { useToast, useToastContext } from '../../context/ToastContext'
 
 const LivestockForm = ({ mode = 'create' }) => {
     const isMounted = useRef(false)
     const router = useRouter()
     const [images, setImages] = useState([])
     const [initialType, setInitialType] = useState(null)
-    const toast = useToastContext(ToastContext)
+    const { showToast } = useToast()
     const { query, isReady } = useRouter()
     const { id } = query
     const defaultValues = {
@@ -128,7 +127,10 @@ const LivestockForm = ({ mode = 'create' }) => {
                 router.push('/inventory/livestock/' + r.data?.id)
             })
             .catch(error => {
-                AddErrorToasts(toast, error)
+                showToast(
+                    error?.response?.data?.message ?? 'Unknown error',
+                    'error',
+                )
             })
     }
 
@@ -141,22 +143,32 @@ const LivestockForm = ({ mode = 'create' }) => {
         setImages([])
     }
 
-    const parentsOnChange = (e, callback) => {
+    const parentsOnChange = (e, callback, opts) => {
         // Prevents adding more than 2 parents
         if (e.value.length > 2) {
-            AddErrorToasts(toast, new Error('Only 2 parents are allowed'))
+            showToast('Only 2 parents are allowed', 'error')
             return
         }
+
+        // Prevent adding same-sex parents
+        if (e.value.length === 2) {
+            const parent1 = opts.find(element => element.value === e.value[0])
+            const parent2 = opts.find(element => element.value === e.value[1])
+
+            if (parent1?.sex === parent2?.sex) {
+                showToast('Cannot add 2 parents of the same sex', 'error')
+                return
+            }
+        }
+
         // Prevent adding same member as both parent and child
         const matches = e.value.filter(element =>
             watchChildren?.includes(element),
         )
         if (matches.length > 0) {
-            AddErrorToasts(
-                toast,
-                new Error(
-                    'Cannot add the same member as both parent and child',
-                ),
+            showToast(
+                'Cannot add the same member as both parent and child',
+                'error',
             )
 
             return
@@ -171,12 +183,11 @@ const LivestockForm = ({ mode = 'create' }) => {
             watchParents?.includes(element),
         )
         if (matches.length > 0) {
-            AddErrorToasts(
-                toast,
-                new Error(
-                    'Cannot add the same member as both parent and child',
-                ),
+            showToast(
+                'Cannot add the same member as both parent and child',
+                'error',
             )
+
             return
         }
         callback(e)
@@ -236,7 +247,6 @@ const LivestockForm = ({ mode = 'create' }) => {
                                 errors={errors}
                                 supertypeValueUrl={`/api/inventory/livestock/types`}
                                 fieldId={'variety_id'}
-                                toast={toast}
                                 watch={watch}
                                 id={id}
                                 optionLabel="label"

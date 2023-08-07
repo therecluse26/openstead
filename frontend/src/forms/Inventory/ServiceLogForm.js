@@ -6,10 +6,9 @@ import TextAreaInput from '@/components/HookFormInputs/TextAreaInput'
 import CalendarInput from '@/components/HookFormInputs/CalendarInput'
 import { useRouter } from 'next/router'
 import { csrf } from '@/hooks/auth'
-import AddErrorToasts from '@/utils/AddErrorToasts'
-import ToastContext, { useToastContext } from '@/context/ToastContext'
 import SubtypeSelect from '@/components/HookFormInputs/SubtypeSelect'
 import ServiceLogService from '@/services/Inventory/ServiceLogService'
+import { useToast } from '../../context/ToastContext'
 
 const ServiceLogForm = ({
     inline = false,
@@ -19,7 +18,7 @@ const ServiceLogForm = ({
 }) => {
     const isMounted = useRef(false)
     const router = useRouter()
-    const toast = useToastContext(ToastContext)
+    const { showToast } = useToast()
     const { query, isReady } = useRouter()
     const { id } = query
 
@@ -63,7 +62,10 @@ const ServiceLogForm = ({
                 router.push(`/inventory/${serviceable_type}/${id}`)
             })
             .catch(error => {
-                AddErrorToasts(toast, error)
+                showToast(
+                    error.response.data.message ?? 'Error adding service log',
+                    'error',
+                )
             })
     }
 
@@ -103,7 +105,6 @@ const ServiceLogForm = ({
                                 setValue={setValue}
                                 errors={errors}
                                 fieldId={'service_id'}
-                                toast={toast}
                                 watch={watch}
                                 id={id}
                             />

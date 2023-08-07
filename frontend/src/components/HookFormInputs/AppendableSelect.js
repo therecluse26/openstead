@@ -2,11 +2,11 @@ import SelectInput from '@/components/HookFormInputs/SelectInput'
 import { Button } from 'primereact/button'
 import React, { useState } from 'react'
 import { csrf } from '@/hooks/auth'
-import AddErrorToasts from '@/utils/AddErrorToasts'
 import { Controller, useForm } from 'react-hook-form'
 import TextInput from '@/components/HookFormInputs/TextInput'
 import { Dialog } from 'primereact/dialog'
 import { upperCaseFirstLetters } from '@/utils/string-utils'
+import { useToast } from '../../context/ToastContext'
 
 const AppendableSelect = ({
     valueAddRequest,
@@ -16,7 +16,6 @@ const AppendableSelect = ({
     setValue,
     fieldId,
     errors,
-    toast,
     label,
     selectedType,
     id,
@@ -31,6 +30,8 @@ const AppendableSelect = ({
     const [addSupertypeFormVisible, setAddSupertypeFormVisible] = useState(
         false,
     )
+
+    const { showToast } = useToast()
 
     const formattedSuperType = upperCaseFirstLetters(label ?? supertype)
 
@@ -76,7 +77,10 @@ const AppendableSelect = ({
                 supertypeFormReset()
             })
             .catch(error => {
-                AddErrorToasts(toast, error)
+                showToast(
+                    error.response?.data?.message ?? 'Unknown error',
+                    'error',
+                )
             })
     }
     return (

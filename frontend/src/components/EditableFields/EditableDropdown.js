@@ -68,7 +68,11 @@ export default function EditableDropdown({
                 field,
                 newValue,
             )
-            onChange(dropdownOptions.find(o => o[optionValue] === updatedValue))
+            onChange(
+                dropdownOptions.find(o => {
+                    return o[optionValue] === updatedValue
+                }),
+            )
         } catch (e) {
             onError(e)
         }

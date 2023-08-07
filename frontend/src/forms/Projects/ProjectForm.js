@@ -6,14 +6,13 @@ import TextInput from '@/components/HookFormInputs/TextInput'
 import { useRouter } from 'next/router'
 import { csrf } from '@/hooks/auth'
 import ProjectService from '@/services/Projects/ProjectService'
-import ToastContext, { useToastContext } from '@/context/ToastContext'
-import AddErrorToasts from '@/utils/AddErrorToasts'
 import TextAreaInput from '@/components/HookFormInputs/TextAreaInput'
+import { useToast } from '../../context/ToastContext'
 
 const ProjectForm = ({ mode = 'create' }) => {
     const isMounted = useRef(false)
     const router = useRouter()
-    const toast = useToastContext(ToastContext)
+    const { showToast } = useToast()
     const { query, isReady } = useRouter()
     const { id } = query
     const defaultValues = {
@@ -62,7 +61,10 @@ const ProjectForm = ({ mode = 'create' }) => {
                 router.push('/projects/' + r.data?.id)
             })
             .catch(error => {
-                AddErrorToasts(toast, error)
+                showToast(
+                    error.response.data.message ?? 'Unknown error',
+                    'error',
+                )
             })
     }
 
