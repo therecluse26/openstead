@@ -135,6 +135,10 @@ const EquipmentForm = ({ mode = 'create' }) => {
                                         '/api/inventory/equipment/types'
                                     }
                                     control={control}
+                                    optionValue={'key'}
+                                    dataValueKey={'key'}
+                                    optionLabel={'label'}
+                                    dataLabelKey={'label'}
                                     name={'type'}
                                     label={'Type'}
                                     rules={{

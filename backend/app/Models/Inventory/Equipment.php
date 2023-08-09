@@ -35,6 +35,8 @@ class Equipment extends Model implements DataTablePaginatable, Inventoriable, Fr
 
 	protected $table = 'equipment';
 
+	protected $primaryKey = 'id';
+
 	protected $fillable = [
 		'name',
 		'type',

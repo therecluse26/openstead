@@ -123,11 +123,13 @@ final class SeedController extends Controller implements HasAppendableSelect
 	/**
 	 * Remove the specified resource from storage.
 	 *
-	 * @param Seed $model
+	 * @param SeedRepository $repository
+	 * @param string $id
 	 * @return Response
 	 */
-	public function destroy(Seed $model)
+	public function destroy(string $id, SeedRepository $repository)
 	{
+		$model = $repository->find($id);
 		$model->delete();
 	}
 

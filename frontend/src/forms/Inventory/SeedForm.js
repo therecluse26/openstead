@@ -202,6 +202,10 @@ const SeedForm = ({ mode = 'create' }) => {
                                     control={control}
                                     name={'light_requirement'}
                                     label={'Light Requirement'}
+                                    optionValue={'key'}
+                                    dataValueKey={'key'}
+                                    optionLabel={'label'}
+                                    dataLabelKey={'label'}
                                 />
                                 {getFormErrorMessage('light_requirement')}
                             </div>
@@ -261,6 +265,10 @@ const SeedForm = ({ mode = 'create' }) => {
                                     control={control}
                                     name={'life_cycle'}
                                     label={'Life Cycle'}
+                                    optionValue={'key'}
+                                    dataValueKey={'key'}
+                                    optionLabel={'label'}
+                                    dataLabelKey={'label'}
                                 />
                                 {getFormErrorMessage('life_cycle')}
                             </div>
@@ -273,6 +281,10 @@ const SeedForm = ({ mode = 'create' }) => {
                                     control={control}
                                     name={'zone_lower'}
                                     label={'Grow Zone (Minimum)'}
+                                    optionValue={'key'}
+                                    dataValueKey={'key'}
+                                    optionLabel={'label'}
+                                    dataLabelKey={'label'}
                                 />
                                 {getFormErrorMessage('zone_lower')}
                             </div>
@@ -285,6 +297,10 @@ const SeedForm = ({ mode = 'create' }) => {
                                     control={control}
                                     name={'zone_upper'}
                                     label={'Grow Zone (Maximum)'}
+                                    optionValue={'key'}
+                                    dataValueKey={'key'}
+                                    optionLabel={'label'}
+                                    dataLabelKey={'label'}
                                 />
                                 {getFormErrorMessage('zone_upper')}
                             </div>

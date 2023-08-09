@@ -78,6 +78,7 @@ class EquipmentRepository extends InventoryRepository
 			$this->addOrReplaceImagesBase64($equipment, $images);
 		}
 
+
 		return $equipment;
 	}
 

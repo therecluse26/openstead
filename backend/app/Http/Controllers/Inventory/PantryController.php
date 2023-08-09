@@ -108,11 +108,13 @@ final class PantryController extends Controller implements HasAppendableSelect
 	/**
 	 * Remove the specified resource from storage.
 	 *
-	 * @param PantryItem $model
+	 * @param string $id
+	 * @param PantryRepository $repository
 	 * @return Response
 	 */
-	public function destroy(PantryItem $model)
+	public function destroy(string $id, PantryRepository $repository)
 	{
+		$model = $repository->find($id);
 		$model->delete();
 	}
 

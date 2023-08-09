@@ -6,8 +6,8 @@ use App\Http\Controllers\Inventory\LivestockController;
 
 RouteBuilderService::buildTypeFilterRoute(LivestockController::class);
 Route::get('/filters', [LivestockController::class, 'getFilters']);
-Route::get('/{livestock}/similar', [LivestockController::class, 'getSimilar']);
-Route::post('/{livestock}/deceased', [LivestockController::class, 'markDeceased']);
+Route::get('/{id}/similar', [LivestockController::class, 'getSimilar']);
+Route::post('/{id}/deceased', [LivestockController::class, 'markDeceased']);
 Route::get('/types/{type}/members', [LivestockController::class, 'getTypeMembers']);
 
 Route::prefix('')->name('livestock.')->group(static function () {

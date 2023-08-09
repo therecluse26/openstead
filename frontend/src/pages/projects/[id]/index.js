@@ -187,7 +187,7 @@ const ProjectDetail = () => {
                         <div className="flex">
                             <AvatarList
                                 users={projectUsers}
-                                maxUsersToDisplay={10}
+                                maxUsersToDisplay={5}
                             />
                         </div>
                     }

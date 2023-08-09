@@ -30,7 +30,6 @@ const ProjectForm = ({ mode = 'create' }) => {
         formState: { errors },
         handleSubmit,
         setValue,
-        getValues,
     } = useForm({ defaultValues })
 
     useEffect(() => {
@@ -65,8 +64,11 @@ const ProjectForm = ({ mode = 'create' }) => {
             .then(data => {
                 setValue('name', data?.name)
                 setValue('description', data?.description)
-                setValue('users', data?.users)
-                setSelectedUsers(data?.users)
+                setValue(
+                    'users',
+                    data?.users?.map(u => u.id),
+                )
+                setSelectedUsers(data?.users?.map(u => u.id))
             })
             .catch(e => {
                 alert(e)
@@ -167,6 +169,39 @@ const ProjectForm = ({ mode = 'create' }) => {
 
                     <div className={'col-10'}>
                         <Button type="submit" label="Save" className="mt-2" />
+                    </div>
+
+                    <div className="col-10 mt-4">
+                        <Card className={'min-h-full'}>
+                            <h5 className="flex justify-content-center">
+                                Danger Zone
+                            </h5>
+
+                            <Button
+                                type="button"
+                                label="Delete Project"
+                                className="p-button-danger mt-4"
+                                onClick={() => {
+                                    if (
+                                        confirm(
+                                            'Are you sure you want to delete this project?',
+                                        )
+                                    ) {
+                                        ProjectService.delete(id)
+                                            .then(() => {
+                                                router.push('/projects')
+                                            })
+                                            .catch(e => {
+                                                showToast(
+                                                    e.response.data.message ??
+                                                        'Unknown error',
+                                                    'error',
+                                                )
+                                            })
+                                    }
+                                }}
+                            />
+                        </Card>
                     </div>
                 </div>
             </form>

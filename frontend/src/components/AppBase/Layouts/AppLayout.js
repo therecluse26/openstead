@@ -131,6 +131,7 @@ const AppLayout = ({ children }) => {
                 {/* Page Content */}
                 <div className="layout-main-container">
                     <div className="layout-main">{children}</div>
+
                     <AppFooter layoutColorMode={layoutColorMode} />
                 </div>
 

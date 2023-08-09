@@ -4,7 +4,7 @@ use App\Http\Controllers\Inventory\EquipmentController;
 
 Route::get('/types', [EquipmentController::class, 'getTypes']);
 Route::get('/filters', [EquipmentController::class, 'getFilters']);
-Route::get('/{equipment}/similar', [EquipmentController::class, 'getSimilar']);
+Route::get('/{id}/similar', [EquipmentController::class, 'getSimilar']);
 
 Route::prefix('')->name('equipment.')->group(static function () {
     Route::get('/', [EquipmentController::class, 'index']);

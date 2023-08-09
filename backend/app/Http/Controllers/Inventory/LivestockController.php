@@ -91,10 +91,10 @@ final class LivestockController extends Controller implements HasAppendableSelec
 	 * @param string $livestock_id
 	 * @return Response
 	 */
-	public function show(LivestockRepository $livestockRepository, string $livestock_id): Response
+	public function show(LivestockRepository $livestockRepository, string $id): Response
 	{
 		return response(
-			$livestockRepository->findUnscoped($livestock_id)->getDetailResource()
+			$livestockRepository->findUnscoped($id)->getDetailResource()
 		);
 	}
 
@@ -106,11 +106,11 @@ final class LivestockController extends Controller implements HasAppendableSelec
 	 * @param string $livestock
 	 * @return Response
 	 */
-	public function update(LivestockRepository $livestockRepository, UpdateLivestockRequest $request, string $livestock): Response
+	public function update(LivestockRepository $livestockRepository, UpdateLivestockRequest $request, string $id): Response
 	{
 		return response(
 			$livestockRepository->update(
-				$livestockRepository->findUnscoped($livestock),
+				$livestockRepository->findUnscoped($id),
 				$request->only((new Livestock())->getFillable()),
 				$request->get('images'),
 				$request->get('parents'),
@@ -125,11 +125,11 @@ final class LivestockController extends Controller implements HasAppendableSelec
 	 * @param LivestockRepository $livestockRepository
 	 * @return Response
 	 */
-	public function destroy(string $livestock, LivestockRepository $livestockRepository): Response
+	public function destroy(string $id, LivestockRepository $livestockRepository): Response
 	{
 		return response(
 			$livestockRepository->delete(
-				$livestockRepository->findUnscoped($livestock)
+				$livestockRepository->findUnscoped($id)
 			),
 			200);
 	}
@@ -155,11 +155,11 @@ final class LivestockController extends Controller implements HasAppendableSelec
 	 * @param LivestockRepository $livestockRepository
 	 * @return Response
 	 */
-	public function markDeceased(string $livestock, LivestockRepository $livestockRepository): Response
+	public function markDeceased(string $id, LivestockRepository $livestockRepository): Response
 	{
 		return response(
 			$livestockRepository->markDeceased(
-				$livestockRepository->findUnscoped($livestock),
+				$livestockRepository->findUnscoped($id),
 				true),
 			200);
 	}
@@ -170,11 +170,11 @@ final class LivestockController extends Controller implements HasAppendableSelec
 	 * @param string $livestock
 	 * @return Response
 	 */
-	public function getSimilar(LivestockRepository $livestockRepository, string $livestock)
+	public function getSimilar(LivestockRepository $livestockRepository, string $id)
 	{
 		return response(LivestockResource::collection(
 			$livestockRepository->getSimilar(
-				$livestock
+				$id
 			)
 		));
 	}
