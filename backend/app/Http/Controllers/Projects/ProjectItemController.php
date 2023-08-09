@@ -19,8 +19,14 @@ final class ProjectItemController extends Controller
     public function show(ProjectItemRepository $repository, string $project_id, string $item_id): Response
 	{
 		return response(
-			$repository->getById($item_id)->getDetailResource()
+			$repository->getProjectItem($project_id, $item_id)->getDetailResource()
 		);
 	}
 
+    public function destroy(ProjectItemRepository $repository, string $project_id, string $item_id): Response
+    {
+        return response(
+            $repository->delete($project_id, $item_id)
+        );
+    }
 }

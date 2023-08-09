@@ -71,6 +71,12 @@ const deleteItem = async id => {
     })
 }
 
+const deleteProject = async id => {
+    return await axios.post(`/api/projects/${id}`, {
+        _method: 'DELETE',
+    })
+}
+
 export default {
     getProject,
     getProjectItem,
@@ -80,4 +86,5 @@ export default {
     createItem,
     updateItems,
     deleteItem,
+    deleteProject,
 }

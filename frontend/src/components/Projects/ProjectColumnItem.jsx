@@ -47,7 +47,30 @@ const ProjectColumnItem = ({ item }) => {
                 style={style}
                 {...listeners}
                 {...attributes}
-                onClick={() => handleCardClick(item)}>
+                onClick={() => handleCardClick(item)}
+                footer={
+                    <>
+                        {item.assignee ? (
+                            <small className="text-muted flex justify-content-center">
+                                {item.assignee?.avatar_url ? (
+                                    <img
+                                        src={item.assignee?.avatar_url}
+                                        alt={item.assignee?.name}
+                                        className="w-1rem border-circle mr-2"
+                                    />
+                                ) : (
+                                    <div className="w-1rem border-circle bg-gray-300 mr-2" />
+                                )}
+                                {item.assignee?.name}
+                            </small>
+                        ) : (
+                            <small className="text-muted flex justify-content-center">
+                                <div className="w-1rem border-circle bg-gray-300 mr-2" />
+                                Unassigned
+                            </small>
+                        )}
+                    </>
+                }>
                 <div className="grid grid-cols-2 align-items-center">
                     <div className="col-2 align-items-center ">
                         <div className="w-2rem">
@@ -58,6 +81,7 @@ const ProjectColumnItem = ({ item }) => {
                     </div>
                     <div className="col-10 align-items-center">
                         {item.title}
+                        <br />
                     </div>
                 </div>
             </Card>

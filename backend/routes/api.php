@@ -37,11 +37,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 	Route::put('/editable-field/{modelName}/{modelId}', [EditableFieldController::class, 'update']);
 	Route::post('/images/base64', [ImageController::class, 'uploadBase64']);
 
-	// Route::prefix('/users')->group(static function() {
-	// 	Route::get('/', [UserController::class, 'index']);
-	// });
-
-
 	Route::prefix('/projects')
 	->group(static function () {
 		Route::get('/', [ProjectController::class, 'index']);
@@ -53,6 +48,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 		Route::get('/{id}', [ProjectController::class, 'show']);
 		Route::get('/{id}/statuses', [ProjectController::class, 'getStatuses']);
 		Route::get('/{id}/users', [ProjectController::class, 'getUsers']);
+		Route::delete('/{id}', [ProjectController::class, 'destroy']);
+		Route::delete('/{project_id}/items/{item_id}', [ProjectItemController::class, 'destroy']);
 	});
 
 	Route::prefix('/inventory')

@@ -117,7 +117,6 @@ class ProjectRepository implements Repository
     {
         return $this->getById($id)?->statuses;
     }
-   
 
     public function getUsers(string $id): SupportCollection
     {

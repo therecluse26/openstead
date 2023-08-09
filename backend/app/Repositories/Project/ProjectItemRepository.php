@@ -40,19 +40,28 @@ class ProjectItemRepository implements Repository
         return $this->model->findOrFail($id);
     }
 
+    public function getProjectItem(string $project_id, string $id): ProjectItem
+    {
+        $item = $this->getById($id);
+        if($item->project_id !== $project_id) {
+            throw new \Exception('Item does not belong to project');
+        }
+        return $item;    
+    }
+
     public function create(array $attributes): ProjectItem
     {
         return $this->model->create($attributes);
     }
     
-    public function update($id, array $attributes): bool
+    public function update(string $project_id, string $id, array $attributes): bool
     {
-        return $this->getById($id)->update($attributes);
+        return $this->getProjectItem($project_id, $id)->update($attributes);
     }
     
-    public function delete($id): bool
+    public function delete(string $project_id, string $id): bool
     {
-        return $this->getById($id)->delete();
+        return $this->getProjectItem($project_id, $id)->delete();
     }
-   
+
 }

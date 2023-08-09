@@ -10,6 +10,7 @@ import TextAreaInput from '@/components/HookFormInputs/TextAreaInput'
 import { useToast } from '../../context/ToastContext'
 import { getUsers } from '../../services/Generic/UserService'
 import MultiselectInput from '../../components/HookFormInputs/MultiselectInput'
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog' // For <ConfirmDialog /> component
 
 const ProjectForm = ({ mode = 'create' }) => {
     const isMounted = useRef(false)
@@ -182,29 +183,32 @@ const ProjectForm = ({ mode = 'create' }) => {
                                 label="Delete Project"
                                 className="p-button-danger mt-4"
                                 onClick={() => {
-                                    if (
-                                        confirm(
+                                    confirmDialog({
+                                        header: 'Delete Project',
+                                        message:
                                             'Are you sure you want to delete this project?',
-                                        )
-                                    ) {
-                                        ProjectService.delete(id)
-                                            .then(() => {
-                                                router.push('/projects')
-                                            })
-                                            .catch(e => {
-                                                showToast(
-                                                    e.response.data.message ??
-                                                        'Unknown error',
-                                                    'error',
-                                                )
-                                            })
-                                    }
+                                        accept: () => {
+                                            ProjectService.deleteProject(id)
+                                                .then(() => {
+                                                    router.push('/projects')
+                                                })
+                                                .catch(e => {
+                                                    showToast(
+                                                        e.response.data
+                                                            .message ??
+                                                            'Unknown error',
+                                                        'error',
+                                                    )
+                                                })
+                                        },
+                                    })
                                 }}
                             />
                         </Card>
                     </div>
                 </div>
             </form>
+            <ConfirmDialog />
         </>
     )
 }
