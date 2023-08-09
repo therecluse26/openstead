@@ -118,7 +118,7 @@ const EditableText = ({
                     ) : (
                         <>
                             {displayedValue ? (
-                                <div className="flex">
+                                <div className="inline-flex">
                                     <div
                                         className="editable-text-container"
                                         style={{
@@ -131,6 +131,7 @@ const EditableText = ({
                                             __html: displayedValue,
                                         }}
                                     />
+                                    <span className="ml-2" />
                                     {icon}
                                 </div>
                             ) : (

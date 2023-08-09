@@ -1,7 +1,6 @@
 <?php
 namespace App\Models\Projects;
 
-use App\Enums\ProjectRole;
 use App\Models\Users\User;
 use App\Models\Projects\Project;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -15,14 +14,11 @@ class ProjectUser extends Pivot
 
     protected $table = 'project_users';
 
+    protected $primaryKey = 'id';
+
     protected $fillable = [
         'project_id',
         'user_id',
-        'role'
-    ];
-
-    protected $casts = [
-        'role' => ProjectRole::class
     ];
 
     public function project(): BelongsTo

@@ -18,10 +18,6 @@ export function ToastContextProvider({ children }) {
     )
 }
 
-export function useToastContext() {
-    return useContext(ToastContext)
-}
-
 export function useToast() {
     const toast = useContext(ToastContext)
     const showToast = (

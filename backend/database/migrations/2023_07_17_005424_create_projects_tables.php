@@ -54,7 +54,6 @@ Schema::dropIfExists('projects');
             $table->ulid('id')->primary();
             $table->ulid('project_id');
             $table->ulid('user_id');
-            $table->string('role', 50);
             $table->boolean('is_owner')->default(false);
             $table->timestamps();
 

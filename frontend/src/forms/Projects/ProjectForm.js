@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Card } from 'primereact/card'
 import { Button } from 'primereact/button'
@@ -8,6 +8,8 @@ import { csrf } from '@/hooks/auth'
 import ProjectService from '@/services/Projects/ProjectService'
 import TextAreaInput from '@/components/HookFormInputs/TextAreaInput'
 import { useToast } from '../../context/ToastContext'
+import { getUsers } from '../../services/Generic/UserService'
+import MultiselectInput from '../../components/HookFormInputs/MultiselectInput'
 
 const ProjectForm = ({ mode = 'create' }) => {
     const isMounted = useRef(false)
@@ -19,15 +21,30 @@ const ProjectForm = ({ mode = 'create' }) => {
         name: null,
         description: null,
         images: [],
+        users: [],
     }
+    const [availableUsers, setAvailableUsers] = useState([])
+    const [selectedUsers, setSelectedUsers] = useState([])
     const {
         control,
         formState: { errors },
         handleSubmit,
         setValue,
+        getValues,
     } = useForm({ defaultValues })
 
     useEffect(() => {
+        getUsers()
+            .then(r => {
+                setAvailableUsers(r.data)
+            })
+            .catch(e => {
+                showToast(
+                    e.response.data.message ?? 'Error getting users',
+                    'error',
+                )
+            })
+
         if (!isReady || !id) {
             return
         }
@@ -48,6 +65,8 @@ const ProjectForm = ({ mode = 'create' }) => {
             .then(data => {
                 setValue('name', data?.name)
                 setValue('description', data?.description)
+                setValue('users', data?.users)
+                setSelectedUsers(data?.users)
             })
             .catch(e => {
                 alert(e)
@@ -114,6 +133,34 @@ const ProjectForm = ({ mode = 'create' }) => {
                                     }}
                                 />
                                 {getFormErrorMessage('description')}
+                            </div>
+
+                            <div className="field">
+                                <MultiselectInput
+                                    name="users"
+                                    label="Users"
+                                    control={control}
+                                    options={availableUsers}
+                                    optionValue="id"
+                                    optionLabel="name"
+                                    filter={true}
+                                    value={selectedUsers}
+                                    itemTemplate={item => (
+                                        <div className="flex">
+                                            <img
+                                                className="mr-2"
+                                                width={20}
+                                                src={item?.avatar}
+                                                alt={item.name}
+                                            />
+                                            {item.name}
+                                        </div>
+                                    )}
+                                    onChange={e => {
+                                        setSelectedUsers(e.value)
+                                        setValue('users', e.value)
+                                    }}
+                                />
                             </div>
                         </Card>
                     </div>

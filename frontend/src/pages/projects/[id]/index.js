@@ -76,17 +76,10 @@ const ProjectDetail = () => {
             },
         },
         {
-            label: 'Edit Project',
-            icon: 'ti ti-pencil',
+            label: 'Project Settings',
+            icon: 'ti ti-settings',
             command: () => {
                 router.push(`/projects/${id}/edit`)
-            },
-        },
-        {
-            label: 'Delete Project',
-            icon: 'ti ti-trash',
-            command: () => {
-                showToast('Project deleted', 'warn', 'Deleted')
             },
         },
     ]
@@ -192,12 +185,9 @@ const ProjectDetail = () => {
                     start={<div className="text-3xl mr-2">{project?.name}</div>}
                     end={
                         <div className="flex">
-                            <AvatarList users={projectUsers} />
-                            <Button
-                                label="Manage Users"
-                                className="p-button-text ml-3 flex justify-content-end"
-                                icon="pi pi-user"
-                                onClick={() => {}}
+                            <AvatarList
+                                users={projectUsers}
+                                maxUsersToDisplay={10}
                             />
                         </div>
                     }

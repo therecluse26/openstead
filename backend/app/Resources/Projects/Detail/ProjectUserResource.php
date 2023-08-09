@@ -10,6 +10,7 @@ class ProjectUserResource extends JsonResource
 		return [
 			'id' => $this->id,
             'name' => $this->name,
+			'email' => $this->email,
 			'avatar' => $this->avatar,
 		];
 	}

@@ -26,6 +26,7 @@ class StoreProjectRequest extends FormRequest
 		return [
 			'name' => 'required',
 			'description' => ['string', 'max:255'],
+			'users' => 'nullable|array',
 			'workflow_order' => 'nullable|json',
 		];
 	}

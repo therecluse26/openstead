@@ -41,16 +41,32 @@ class ProjectRepository implements Repository
         return $this->model->findOrFail($id);
     }
 
-    public function create(array $attributes): Project
+    public function create(array $attributes, array $users = null): Project
     {
-        return $this->model->create($attributes);
+        $project = $this->model->create($attributes);
+
+        if($users) {
+            $project->users()->sync($users);
+        }
+
+        return $project;
     }
     
-    public function update(string $id, array $attributes): Project
+    public function update(string $id, array $attributes, array $users = []): Project
     {
-         $project = $this->getById($id);
-         $project->update($attributes);
-         return $project;
+        $project = $this->getById($id);
+        $project->update($attributes);
+
+        $project->users()->sync($users);
+
+        return $project;
+    }
+
+    public function updateUsers(string $id, array $users): Project
+    {
+        $project = $this->getById($id);
+        $project->users()->sync($users);
+        return $project;
     }
 
     public function createItem(Project $project, array $attributes): Project

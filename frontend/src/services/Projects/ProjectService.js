@@ -46,6 +46,7 @@ const createOrUpdate = async (id, data) => {
     return await axios.post(url, {
         name: data.name,
         description: data.description,
+        users: data.users,
         _method: typeof id === 'undefined' ? 'POST' : 'PUT',
     })
 }

@@ -26,6 +26,8 @@ class UpdateProjectRequest extends FormRequest
 		return [
 			'name' => 'required',
 			'description' => ['string'],
+			'users' => 'nullable|array',
+			'users.*' => 'exists:users,id',
             'workflow_order' => 'nullable|json',
 		];
 	}

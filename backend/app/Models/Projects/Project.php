@@ -5,6 +5,7 @@ use App\Contracts\DataTablePaginatable;
 use App\Models\User;
 use App\Resources\FormattedFilter;
 use App\Resources\Projects\Detail\ProjectDetailResource;
+use App\Resources\Projects\Detail\ProjectUserResource;
 use App\Resources\Projects\List\ProjectListResource;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -68,7 +69,8 @@ class Project extends Model implements DataTablePaginatable
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'project_users', 'project_id', 'user_id');
+        return $this->belongsToMany(User::class, 'project_users', 'project_id', 'user_id')
+            ->using(ProjectUser::class);
     }
 
     public function items(): HasMany
@@ -85,9 +87,6 @@ class Project extends Model implements DataTablePaginatable
     {
         return ProjectListResource::make($this);
     }
-
-
-
 
     public function getFilters(): Collection
 	{

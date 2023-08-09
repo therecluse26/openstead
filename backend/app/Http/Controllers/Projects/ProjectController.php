@@ -67,7 +67,8 @@ final class ProjectController extends Controller
 	{
 		return response()->json(
 			$repository->create(
-                $request->only((new Project())->getFillable())			
+                $request->only((new Project())->getFillable()),
+                $request->input('users')
             ), 
         200);
 	}
@@ -85,7 +86,8 @@ final class ProjectController extends Controller
 		return response(
             $repository->update(
                 $project,
-                $request->only((new Project())->getFillable())
+                $request->only((new Project())->getFillable()),
+                $request->input('users')
             )
         );
 	}
