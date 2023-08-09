@@ -156,6 +156,8 @@ export default function ProjectItemDialog({ projectId }) {
                                         model={'project_item'}
                                         modelId={selectedItem.id}
                                         field={'assignee_id'}
+                                        noValueLabel="Unassigned"
+                                        showEmptyValue={true}
                                         before={
                                             <>
                                                 {selectedItem?.assignee && (
@@ -183,6 +185,10 @@ export default function ProjectItemDialog({ projectId }) {
                                                             item.id ===
                                                             selectedItem.id
                                                         ) {
+                                                            if (!value) {
+                                                                item.assignee = {}
+                                                                return item
+                                                            }
                                                             if (
                                                                 !item?.assignee
                                                             ) {

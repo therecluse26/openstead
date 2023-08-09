@@ -12,7 +12,6 @@ export default function ProjectColumn({ title, statusId, items }) {
         <Card
             className="mb-4 md:mb-0 w-full md:w-28rem h-full border-round-xl surface-card"
             title={title}
-            subTitle={<div>+ Add New</div>}
             ref={setNodeRef}
             style={style}>
             {items?.map((item, index) => (

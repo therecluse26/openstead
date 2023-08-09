@@ -28,25 +28,28 @@ const AvatarList = ({ users, maxUsersToDisplay = 3 }) => {
 
     return (
         <span className="hidden lg:flex justify-content-end">
-            {users?.slice(0, maxUsersToDisplay)?.map(user => {
-                return (
-                    <span key={'icon_' + user?.id}>
-                        <Tooltip
-                            key={'tooltip_' + user?.id}
-                            target={'#avatar_' + user?.id}
-                            content={user?.name}
-                            position="bottom"
-                        />
-                        <img
-                            key={'avatar_' + user?.id}
-                            id={'avatar_' + user?.id}
-                            src={user?.avatar}
-                            alt={user?.name}
-                            className="-ml-3 border-circle w-3rem h-3rem"
-                        />
-                    </span>
-                )
-            })}
+            {users
+                ?.filter(i => i?.id !== null)
+                .slice(0, maxUsersToDisplay)
+                ?.map(user => {
+                    return (
+                        <span key={'icon_' + user?.id}>
+                            <Tooltip
+                                key={'tooltip_' + user?.id}
+                                target={'#avatar_' + user?.id}
+                                content={user?.name}
+                                position="bottom"
+                            />
+                            <img
+                                key={'avatar_' + user?.id}
+                                id={'avatar_' + user?.id}
+                                src={user?.avatar}
+                                alt={user?.name}
+                                className="-ml-3 border-circle w-3rem h-3rem"
+                            />
+                        </span>
+                    )
+                })}
             {exceedsMaxUsers && (
                 <span className="text-lg ml-2">
                     +{count - maxUsersToDisplay}

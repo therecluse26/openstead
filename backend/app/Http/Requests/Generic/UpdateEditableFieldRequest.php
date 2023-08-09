@@ -25,7 +25,7 @@ class UpdateEditableFieldRequest extends FormRequest
 	{
 		return [
 			'field_name' => ['required', 'string'],
-			'value' => ['required', 'string'],
+			'value' => ['nullable', 'string'],
 		];
 	}
 

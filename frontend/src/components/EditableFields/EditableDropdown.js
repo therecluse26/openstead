@@ -20,12 +20,16 @@ export default function EditableDropdown({
     placeholder = 'Select an option', // The placeholder to display when editing
     onChange = () => {}, // The function to call when the value is updated
     onError = () => {}, // The function to call when an error occurs
+    noValueLabel = 'Unknown', // The label to display when there is no value
+    showEmptyValue = false, // Whether or not to show an empty value
+    emptyLabel = 'None', // The label to display when there is no value
 }) {
     const [loading, setLoading] = useState(false)
     const [localValue, setLocalValue] = useState(value)
     const [displayedValue, setDisplayedValue] = useState(
         value ? value[optionLabel] : '',
     )
+    const [optionsFinishedLoading, setOptionsFinishedLoading] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
 
     const [dropdownOptions, setDropdownOptions] = useState(options)
@@ -45,9 +49,27 @@ export default function EditableDropdown({
 
     useEffect(() => {
         if (optionsUrl) {
-            getOptions()
+            getOptions(showEmptyValue)
         }
     }, [optionsUrl])
+
+    useEffect(() => {
+        if (
+            dropdownOptions?.length > 0 &&
+            showEmptyValue &&
+            dropdownOptions[0][dataValue] !== null
+        ) {
+            let opts = dropdownOptions
+
+            opts.unshift({
+                [dataLabel]: emptyLabel,
+                [dataValue]: null,
+                group: null,
+            })
+
+            setDropdownOptions(opts)
+        }
+    }, [dropdownOptions])
 
     const handleOnclick = () => {
         setIsEditing(true)
@@ -55,10 +77,9 @@ export default function EditableDropdown({
 
     const updateValue = async newValue => {
         // If the value hasn't changed, don't do anything
-        if (localValue && newValue === localValue[optionValue]) {
+        if (localValue && localValue[optionValue] === newValue) {
             return
         }
-        setLoading(true)
 
         // Update the value in the database
         try {
@@ -69,9 +90,11 @@ export default function EditableDropdown({
                 newValue,
             )
             onChange(
-                dropdownOptions.find(o => {
-                    return o[optionValue] === updatedValue
-                }),
+                updatedValue
+                    ? dropdownOptions.find(o => {
+                          return o[optionValue] === updatedValue
+                      })
+                    : null,
             )
         } catch (e) {
             onError(e)
@@ -121,7 +144,7 @@ export default function EditableDropdown({
                             {before} &nbsp;
                             {displayedValue.trim() !== ''
                                 ? displayedValue.trim()
-                                : 'Unknown'}{' '}
+                                : noValueLabel}{' '}
                             &nbsp; {after}
                         </div>
                     )}

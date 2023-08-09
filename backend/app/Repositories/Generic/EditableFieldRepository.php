@@ -15,7 +15,7 @@ class EditableFieldRepository
         $this->modelName = ModelName::from($modelName)->class();
     }
 
-    public function updateField(string $modelId, string $field, string $value, bool $sanitizeHtml = false)
+    public function updateField(string $modelId, string $field, ?string $value = null, bool $sanitizeHtml = false)
     {
         $model = $this->modelName::find($modelId);
 
