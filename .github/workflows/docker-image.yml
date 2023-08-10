@@ -30,6 +30,6 @@ jobs:
           file: ./backend/Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
-          tags: '${{ secrets.REGISTRY_URL }}/openstead/backend:latest'
-          cache-from: 'type=registry,ref=${{ secrets.REGISTRY_URL }}/openstead/backend:buildcache'
-          cache-to: 'type=registry,ref=${{ secrets.REGISTRY_URL }}/openstead/backend:buildcache,mode=max'
+          tags: '${{ secrets.REGISTRY_URL }}/openstead-backend:latest'
+          cache-from: 'type=registry,ref=${{ secrets.REGISTRY_URL }}/openstead-backend:buildcache'
+          cache-to: 'type=registry,ref=${{ secrets.REGISTRY_URL }}/openstead-backend:buildcache,mode=max'
