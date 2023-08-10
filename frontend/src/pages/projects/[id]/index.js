@@ -17,6 +17,46 @@ import { Tooltip } from 'primereact/tooltip'
 import { Button } from 'primereact/button'
 import ProjectUserDialog from '../../../components/Projects/ProjectUserDialog'
 import { useToast } from '../../../context/ToastContext'
+import { ProgressBar } from 'primereact/progressbar'
+
+const ProjectProgress = ({ project }) => {
+    const totalItems = project?.items?.length
+    const orderedStatuses = project?.workflow?.sort((a, b) => {
+        return a.order - b.order
+    })
+    const statusPercentages = orderedStatuses?.map(status => {
+        const count = project?.items?.filter(item => {
+            return item.status.id === status.id
+        })?.length
+        return {
+            statusId: status.id,
+            percentage: (count / totalItems) * 100,
+        }
+    })
+
+    return (
+        <div className="flex flex-col">
+            {statusPercentages?.map(status => {
+                return (
+                    <div
+                        key={'status_' + status.statusId}
+                        className="flex justify-between items-center mb-2">
+                        <span className="text-sm">
+                            {
+                                orderedStatuses?.find(
+                                    i => i.id === status.statusId,
+                                )?.name
+                            }
+                        </span>
+                        <span className="text-sm">
+                            {status?.percentage?.toFixed(0)}%
+                        </span>
+                    </div>
+                )
+            })}
+        </div>
+    )
+}
 
 const AvatarList = ({ users, maxUsersToDisplay = 3 }) => {
     const count = users?.length
@@ -104,7 +144,9 @@ const ProjectDetail = () => {
 
     const updateProjectItems = async updatedProject => {
         await ProjectService.updateItems(id, updatedProject?.items)
-            .then(() => showToast('Project items updated', 'success'))
+            .then(() =>
+                showToast('Project items updated', 'success', null, 1000),
+            )
             .catch(e =>
                 showToast(
                     e.response?.data?.message ?? 'Unknown error',
@@ -169,6 +211,26 @@ const ProjectDetail = () => {
         }),
     )
 
+    const calculateProgressPercentage = project => {
+        // Get the total points earned by summing the points for each status
+        const totalPointsEarned = project?.items?.reduce((a, b) => {
+            // Get the order of the status in the workflow (base 0 indexed for calculations)
+            const workflowOrder =
+                project?.workflow?.find(status => {
+                    return status.id === b?.status?.id
+                })?.order - 1
+
+            // Calculate the percentage of the workflow that has been completed
+            // The first status in the workflow is 0% and the last is 100%, distribute the points evenly
+            return a + workflowOrder / (project?.workflow?.length - 1)
+        }, 0)
+
+        const percentage = (totalPointsEarned / project?.items?.length) * 100
+
+        // round to the nearest whole number
+        return Math.round(percentage)
+    }
+
     // Load initial data
     useEffect(() => {
         isMounted.current = true
@@ -194,6 +256,11 @@ const ProjectDetail = () => {
                             />
                         </div>
                     }
+                />
+
+                <ProgressBar
+                    className="mb-4"
+                    value={calculateProgressPercentage(project)}
                 />
 
                 {!project?.id ? (

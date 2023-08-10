@@ -24,6 +24,7 @@ export function useToast() {
         detailValue: string,
         severityValue: severity = 'info',
         summaryValue: string | null = null,
+        life: number = 3000,
     ) => {
         toast.current.show({
             severity: severityValue,
@@ -31,6 +32,7 @@ export function useToast() {
                 summaryValue ??
                 severityValue.charAt(0).toUpperCase() + severityValue.slice(1),
             detail: detailValue,
+            life: life,
         })
     }
 

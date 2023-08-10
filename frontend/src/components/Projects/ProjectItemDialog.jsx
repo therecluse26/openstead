@@ -23,6 +23,15 @@ export default function ProjectItemDialog({ projectId }) {
     const projectUsers = useProjectStore(state => state.projectUsers)
     const { showToast } = useToast()
 
+    const deleteItem = item => {
+        setProject({
+            ...project,
+            items: project.items.filter(i => i.id !== item.id),
+        })
+        setSelectedItem(null)
+        setModalVisibility(false)
+    }
+
     return (
         <>
             <Dialog
@@ -267,7 +276,7 @@ export default function ProjectItemDialog({ projectId }) {
                                     className={
                                         'p-button-danger justify-content-center'
                                     }
-                                    onClick={() => setModalVisibility(false)}
+                                    onClick={() => deleteItem(selectedItem)}
                                     label="Delete item"
                                 />
                             </div>
