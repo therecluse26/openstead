@@ -2,6 +2,8 @@
 
 namespace App\Models\Inventory;
 
+use App\Contracts\AddsMedia;
+use App\Contracts\DataTablePaginatable;
 use App\Contracts\FrontendFilterable;
 use App\Contracts\Inventoriable;
 use App\Contracts\Notable;
@@ -15,20 +17,22 @@ use App\Resources\Inventory\List\PantryItemResource as PantryItemListResource;
 use App\Traits\HasInventory;
 use App\Traits\HasNotes;
 use App\Traits\HasVariety;
-use App\Traits\InventoryImageTrait;
+use App\Traits\HasImages;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 use Spatie\MediaLibrary\HasMedia;
 
-class PantryItem extends Model implements Inventoriable, VarietyContract, FrontendFilterable, HasMedia, Notable
+class PantryItem extends Model implements DataTablePaginatable, Inventoriable, VarietyContract, FrontendFilterable, HasMedia, AddsMedia, Notable
 {
+	use HasUlids;
 	use HasFactory;
 	use HasInventory;
 	use HasVariety;
 	use HasNotes;
-	use InventoryImageTrait;
+	use HasImages;
 
 	protected $table = 'pantry_items';
 
@@ -61,7 +65,7 @@ class PantryItem extends Model implements Inventoriable, VarietyContract, Fronte
 		return PantryItemListResource::make($this);
 	}
 
-	public static function getFilters(): Collection
+	public function getFilters(): Collection
 	{
 		return collect(['types' => FormattedFilter::collection(EdibleCompositeEnum::cases())]);
 	}

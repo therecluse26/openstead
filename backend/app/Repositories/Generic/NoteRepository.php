@@ -3,6 +3,7 @@
 namespace App\Repositories\Generic;
 
 use App\Models\Note;
+use App\Models\User;
 use App\Traits\PolymorphicRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -25,7 +26,7 @@ class NoteRepository
 		$this->model = new Note();
 	}
 
-	public function list(string $notableModelName, int $notableModelId): Collection
+	public function list(string $notableModelName, string $notableModelId): Collection
 	{
 		return $this->findPolymorphicModel($notableModelName, $notableModelId)
 			->notes()
@@ -33,30 +34,34 @@ class NoteRepository
 			->get();
 	}
 
-	public function find(int $id)
+	public function find(string $id)
 	{
 		return Note::findOrFail($id);
 	}
 
-	public function create(Collection $data): Note
+	public function create(Collection $data, User $user): Note
 	{
 		$notableType = $data->get('notable_type');
+		
+		$insertData = $data->only($this->model->getFillable())->toArray();
+		$insertData['creator_id'] = $user->id;
+
 		if ($model = $this->findPolymorphicModel($notableType, $data->get('notable_id'))) {
 			return $model->notes()->create(
-				$data->only($this->model->getFillable())->toArray()
+				$insertData
 			);
 		}
 		throw new NotFoundResourceException("Notable Model $notableType not found");
 	}
 
-	public function update(int $note, Request $request): Note
+	public function update(string $note, Request $request): Note
 	{
 		return $this->find($note)->update(
 			$request->only($this->model->getFillable())
 		);
 	}
 
-	public function delete(int $note): bool
+	public function delete(string $note): bool
 	{
 		return $this->model->destroy($note);
 	}

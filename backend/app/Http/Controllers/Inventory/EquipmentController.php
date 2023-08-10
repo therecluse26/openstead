@@ -23,9 +23,9 @@ final class EquipmentController extends Controller
 		return EquipmentRepository::getFormattedTypes();
 	}
 
-	public function getFilters(): Collection
+	public function getFilters(EquipmentRepository $repository): Collection
 	{
-		return EquipmentRepository::getFilters();
+		return $repository->getFilters();
 	}
 
 	/**
@@ -66,13 +66,13 @@ final class EquipmentController extends Controller
 	 * Display the specified resource.
 	 *
 	 * @param EquipmentRepository $equipmentRepository
-	 * @param int $equipment
+	 * @param string $equipment
 	 * @return Response
 	 */
-	public function show(EquipmentRepository $equipmentRepository, int $equipment): Response
+	public function show(EquipmentRepository $equipmentRepository, string $id): Response
 	{
 		return response(
-			$equipmentRepository->find($equipment)->getDetailResource()
+			$equipmentRepository->find($id)->getDetailResource()
 		);
 	}
 
@@ -80,13 +80,13 @@ final class EquipmentController extends Controller
 	 * Display the specified resource.
 	 *
 	 * @param EquipmentRepository $equipmentRepository
-	 * @param int $equipment
+	 * @param string $equipment
 	 * @return Response
 	 */
-	public function getSimilar(EquipmentRepository $equipmentRepository, int $equipment): Response
+	public function getSimilar(EquipmentRepository $equipmentRepository, string $id): Response
 	{
 		return response(EquipmentListResource::collection(
-			$equipmentRepository->getSimilar($equipment)
+			$equipmentRepository->getSimilar($id)
 		));
 	}
 
@@ -94,27 +94,31 @@ final class EquipmentController extends Controller
 	 * Update the specified resource in storage.
 	 *
 	 * @param UpdateEquipmentRequest $request
-	 * @param Equipment $equipment
+	 * @param string $id
 	 * @param EquipmentRepository $equipmentRepository
 	 * @return Response
 	 */
-	public function update(UpdateEquipmentRequest $request, Equipment $equipment, EquipmentRepository $equipmentRepository): Response
+	public function update(UpdateEquipmentRequest $request, string $id, EquipmentRepository $equipmentRepository): Response
 	{
-		return response($equipmentRepository->update($equipment,
+		return response($equipmentRepository->update(
+			$equipmentRepository->find($id),
 			$request->only((new Equipment())->getFillable()),
-			$request->get('images')), 200);
+			$request->get('images')), 
+		200);
 	}
 
 	/**
 	 * Remove the specified resource from storage.
 	 *
-	 * @param Equipment $equipment
+	 * @param string $id
 	 * @param EquipmentRepository $equipmentRepository
 	 * @return Response
 	 */
-	public function destroy(Equipment $equipment, EquipmentRepository $equipmentRepository): Response
+	public function destroy(string $id, EquipmentRepository $equipmentRepository): Response
 	{
-		return response($equipmentRepository->delete($equipment), 200);
+		return response($equipmentRepository->delete(
+			$equipmentRepository->find($id)
+		), 200);
 	}
 
 }

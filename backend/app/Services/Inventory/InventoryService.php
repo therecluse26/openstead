@@ -20,13 +20,13 @@ class InventoryService
 		return InventoryType::cases();
 	}
 
-	public static function getFilters(): Collection
+	public function getFilters(): Collection
 	{
 		$filters = collect();
 		foreach (InventoryType::cases() as $type) {
-			$typeFilters = $type->value::getFilters();
+			$typeFilters = (new $type->value)->getFilters();
 			if (!$typeFilters->isEmpty()) {
-				$filters->push([$type->name => $type->value::getFilters()]);
+				$filters->push([$type->name => (new $type->value)->getFilters()]);
 			}
 		}
 		return $filters;

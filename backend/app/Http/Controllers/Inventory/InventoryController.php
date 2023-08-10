@@ -17,9 +17,9 @@ final class InventoryController extends Controller
 		return InventoryService::getTypes();
 	}
 
-	public function getFilters()
+	public function getFilters(InventoryService $service)
 	{
-		return InventoryService::getFilters();
+		return $service->getFilters();
 	}
 
 	/**

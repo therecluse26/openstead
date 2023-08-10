@@ -2,6 +2,8 @@
 
 namespace App\Models\Inventory;
 
+use App\Contracts\AddsMedia;
+use App\Contracts\DataTablePaginatable;
 use App\Contracts\FrontendFilterable;
 use App\Contracts\Inventoriable;
 use App\Contracts\Notable;
@@ -14,22 +16,26 @@ use App\Resources\Inventory\List\EquipmentResource as EquipmentListResource;
 use App\Traits\HasInventory;
 use App\Traits\HasNotes;
 use App\Traits\HasServiceLogs;
-use App\Traits\InventoryImageTrait;
+use App\Traits\HasImages;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 use Spatie\MediaLibrary\HasMedia;
 
-class Equipment extends Model implements Inventoriable, FrontendFilterable, HasMedia, Serviceable, Notable
+class Equipment extends Model implements DataTablePaginatable, Inventoriable, FrontendFilterable, HasMedia, AddsMedia, Serviceable, Notable
 {
+	use HasUlids;
 	use HasFactory;
 	use HasInventory;
 	use HasServiceLogs;
 	use HasNotes;
-	use InventoryImageTrait;
+	use HasImages;
 
 	protected $table = 'equipment';
+
+	protected $primaryKey = 'id';
 
 	protected $fillable = [
 		'name',
@@ -73,7 +79,7 @@ class Equipment extends Model implements Inventoriable, FrontendFilterable, HasM
 		return EquipmentListResource::make($this);
 	}
 
-	public static function getFilters(): Collection
+	public function getFilters(): Collection
 	{
 		return collect(['types' => FormattedFilter::collection(EquipmentType::cases())]);
 	}

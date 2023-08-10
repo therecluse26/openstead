@@ -6,6 +6,8 @@ use App\Models\Inventory\Equipment;
 use App\Models\Inventory\Livestock;
 use App\Models\Inventory\Seed;
 use App\Models\Inventory\PantryItem;
+use App\Models\Projects\Project;
+use App\Models\Projects\ProjectItem;
 use App\Models\Note;
 use App\Traits\FilterableEnum;
 
@@ -18,6 +20,8 @@ enum ModelName: string
 	case Seed = 'seed';
 	case Note = 'note';
 	case PantryItem = 'pantry_item';
+	case Project = 'project';
+	case ProjectItem = 'project_item';
 
 	public function class(): string
 	{
@@ -26,7 +30,9 @@ enum ModelName: string
 			self::Livestock => Livestock::class,
 			self::Seed => Seed::class,
 			self::Note => Note::class,
-			self::PantryItem => PantryItem::class
+			self::PantryItem => PantryItem::class,
+			self::Project => Project::class,
+			self::ProjectItem => ProjectItem::class,
 		};
 	}
 }

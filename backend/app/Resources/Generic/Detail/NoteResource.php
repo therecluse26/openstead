@@ -11,6 +11,7 @@ class NoteResource extends JsonResource
 		return [
 			'id' => $this->id,
 			'note' => $this->note,
+			'creator' => NoteCreatorResource::make($this->creator),
 			'timestamp' => $this->updated_at
 		];
 	}

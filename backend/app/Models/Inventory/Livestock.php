@@ -2,6 +2,8 @@
 
 namespace App\Models\Inventory;
 
+use App\Contracts\AddsMedia;
+use App\Contracts\DataTablePaginatable;
 use App\Contracts\FrontendFilterable;
 use App\Contracts\Inventoriable;
 use App\Contracts\Notable;
@@ -17,8 +19,9 @@ use App\Traits\HasInventory;
 use App\Traits\HasNotes;
 use App\Traits\HasServiceLogs;
 use App\Traits\HasVariety;
-use App\Traits\InventoryImageTrait;
+use App\Traits\HasImages;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -26,14 +29,15 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 use Spatie\MediaLibrary\HasMedia;
 
-class Livestock extends Model implements Inventoriable, VarietyContract, FrontendFilterable, HasMedia, Serviceable, Notable
+class Livestock extends Model implements DataTablePaginatable, Inventoriable, VarietyContract, FrontendFilterable, HasMedia, AddsMedia, Serviceable, Notable
 {
+	use HasUlids;
 	use HasFactory;
 	use HasInventory;
 	use HasServiceLogs;
 	use HasVariety;
 	use HasNotes;
-	use InventoryImageTrait;
+	use HasImages;
 
 	protected $table = 'livestock';
 
@@ -119,7 +123,7 @@ class Livestock extends Model implements Inventoriable, VarietyContract, Fronten
 	}
 
 	// Other methods
-	public static function getFilters(): Collection
+	public function getFilters(): Collection
 	{
 		return collect(['types' => FormattedFilter::collection(AnimalType::cases())]);
 	}

@@ -6,5 +6,5 @@ use Illuminate\Support\Collection;
 
 interface FrontendFilterable
 {
-	public static function getFilters(): Collection;
+	public function getFilters(): Collection;
 }

@@ -4,13 +4,14 @@ namespace App\Models;
 
 use App\Models\Inventory\Livestock;
 use App\Models\Inventory\Seed;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Location extends Model
 {
-	use HasFactory;
+	use HasUlids, HasFactory;
 
 	protected $table = 'locations';
 

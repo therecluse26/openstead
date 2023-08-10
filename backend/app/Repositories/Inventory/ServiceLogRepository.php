@@ -26,12 +26,12 @@ class ServiceLogRepository
 		$this->model = new ServiceLog();
 	}
 
-	public function find(int $id)
+	public function find(string $id)
 	{
 		return ServiceLog::findOrFail($id);
 	}
 
-	public function list(string $serviceableModelName, int $serviceableModelId)
+	public function list(string $serviceableModelName, string $serviceableModelId)
 	{
 		return $this->findPolymorphicModel($serviceableModelName, $serviceableModelId)
 			->serviceLogs()
@@ -50,14 +50,14 @@ class ServiceLogRepository
 		throw new NotFoundResourceException("Serviceable Model $serviceableType not found");
 	}
 
-	public function update(int $serviceLog, Request $request): ServiceLog
+	public function update(string $serviceLog, Request $request): ServiceLog
 	{
 		return $this->find($serviceLog)->update(
 			$request->only($this->model->getFillable())
 		);
 	}
 
-	public function delete(int $serviceLog): bool
+	public function delete(string $serviceLog): bool
 	{
 		return $this->model->destroy($serviceLog);
 	}

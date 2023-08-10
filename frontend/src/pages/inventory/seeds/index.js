@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
-import InventoryList from '@/components/Custom/Inventory/InventoryList'
 import { Column } from 'primereact/column'
 import Link from 'next/link'
 import QuantityFilterTemplate from '@/pages/inventory/templates/QuantityFilterTemplate'
-import SeedService from '@/services/inventory/SeedService'
-import TypeFilterElement from '@/components/Custom/Inventory/TypeFilterElement'
-import TypeBodyTemplateElement from '@/components/Custom/Inventory/TypeBodyTemplateElement'
+import SeedService from '@/services/Inventory/SeedService'
+import TypeFilterElement from '@/components/Inventory/TypeFilterElement'
+import TypeBodyTemplateElement from '@/components/Inventory/TypeBodyTemplateElement'
 import { Dropdown } from 'primereact/dropdown'
+import FilterableDataTable from '@/components/DataTable/FilterableDataTable'
 
 const Seeds = () => {
     const [types, setTypes] = useState([])
@@ -92,14 +92,12 @@ const Seeds = () => {
     }
 
     return (
-        <InventoryList
+        <FilterableDataTable
             title={'Seeds'}
-            inventoryType={'seeds'}
+            basePath={'seeds'}
             service={SeedService}
             filters={filters}
             setLazyParamsCallack={lazyParamsCallback}>
-            <Column selectionMode="multiple" headerStyle={{ width: '3em' }} />
-
             <Column
                 field="variety"
                 sortField="variety.variety_name"
@@ -246,7 +244,7 @@ const Seeds = () => {
                 body={rowData => formatDate(rowData.acquired_at)}
                 style={{ minWidth: '160px', width: '200px' }}
             />
-        </InventoryList>
+        </FilterableDataTable>
     )
 }
 

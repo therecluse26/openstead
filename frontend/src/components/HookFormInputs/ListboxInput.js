@@ -32,13 +32,21 @@ const ListboxInput = ({
                         ) {
                             setSelectOptions(
                                 data?.data?.map(t => {
-                                    return { label: t.label, value: t.key }
+                                    return {
+                                        ...t,
+                                        label: t.label,
+                                        value: t.key,
+                                    }
                                 }),
                             )
                         } else {
                             setSelectOptions(
                                 data?.map(t => {
-                                    return { label: t.label, value: t.key }
+                                    return {
+                                        ...t,
+                                        label: t.label,
+                                        value: t.key,
+                                    }
                                 }),
                             )
                         }
@@ -69,7 +77,7 @@ const ListboxInput = ({
                             dataKey={'key'}
                             onChange={e => {
                                 customOnChange
-                                    ? customOnChange(e, onChange)
+                                    ? customOnChange(e, onChange, selectOptions)
                                     : onChange(e)
                             }}
                             multiple={multiple}

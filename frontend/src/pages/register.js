@@ -5,7 +5,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { classNames } from 'primereact/utils'
 import { Password } from 'primereact/password'
 import { useAuth } from '@/hooks/auth'
-import GuestLayout from '@/components/Layouts/GuestLayout'
+import GuestLayout from '@/components/AppBase/Layouts/GuestLayout'
 import Link from 'next/link'
 
 const Register = () => {

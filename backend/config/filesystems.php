@@ -51,7 +51,7 @@ return [
 			'region' => env('AWS_DEFAULT_REGION'),
 			'bucket' => env('AWS_BUCKET'),
 			'url' => env('AWS_URL'),
-			'endpoint' => env('AWS_ENDPOINT', 'https://minio:9000'),
+			'endpoint' => env('AWS_ENDPOINT', 'http://minio:9000'),
 			'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
 			'throw' => false,
 		],
@@ -62,7 +62,7 @@ return [
 			'region' => env('MEDIA_DEFAULT_REGION', 'us-east-1'),
 			'bucket' => env('MEDIA_BUCKET', 'openstead'),
 			'url' => env('MEDIA_URL'),
-			'endpoint' => env('MEDIA_ENDPOINT', 'https://minio:9000'),
+			'endpoint' => env('MEDIA_ENDPOINT', 'http://minio:9000'),
 			'use_path_style_endpoint' => env('MEDIA_USE_PATH_STYLE_ENDPOINT', true),
 			'throw' => false,
 		]

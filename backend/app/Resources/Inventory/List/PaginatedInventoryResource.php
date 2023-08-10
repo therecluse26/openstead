@@ -18,7 +18,6 @@ class PaginatedInventoryResource extends ResourceCollection
 	{
 		return [
 			'data' => $this->collectionType::collection($this->collection),
-
 			'current_page' => $this->currentPage(),
 			'first_page_url' => $this->url(1),
 			'from' => $this->firstItem(),

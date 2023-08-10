@@ -23,12 +23,12 @@ class LivestockRepository extends InventoryRepository
 		parent::__construct($this->model);
 	}
 	
-	public function find(int $id): Livestock
+	public function find(string $id): Livestock
 	{
 		return $this->model->findOrFail($id);
 	}
 
-	public function findUnscoped(int $id): Livestock
+	public function findUnscoped(string $id): Livestock
 	{
 		return $this->model->withoutGlobalScope(AliveScope::class)->findOrFail($id);
 	}
@@ -103,7 +103,7 @@ class LivestockRepository extends InventoryRepository
 		]));
 	}
 
-	public static function getFilters(): Collection
+	public function getFilters(): Collection
 	{
 		return collect([
 			'types' => collect(AnimalType::cases())
@@ -118,9 +118,12 @@ class LivestockRepository extends InventoryRepository
 		return collect(Variety::where('group', 'animal')->where('group_type', $type)->get());
 	}
 
-	public function getSimilar(int $livestock_id): Collection
+	public function getSimilar(string $livestock_id): Collection
 	{
 		$livestock = $this->findUnscoped($livestock_id);
+
+		if(!$livestock) return collect([]);
+
 		return Livestock::whereNot('id', $livestock_id)
 			->where('variety_id', $livestock->variety_id)
 			->inRandomOrder()

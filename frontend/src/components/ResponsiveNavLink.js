@@ -1,9 +1,14 @@
 import Link from 'next/link'
 
-const ResponsiveNavLink = ({ active = false, children, ...props }) => (
+const ResponsiveNavLink = ({
+    color = 'primary',
+    active = false,
+    children,
+    ...props
+}) => (
     <Link
         {...props}
-        className={`text-white ${
+        className={`text-${color} ${
             active
                 ? ' bg-indigo-50 focus:text-gray-200'
                 : 'border-transparent text-gray-600 hover:text-gray-200 hover:border-gray-300'

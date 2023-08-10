@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\ServiceLog;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,6 +20,7 @@ class NoteFactory extends Factory
 	{
 		return [
 			'note' => fake()->paragraphs(random_int(1, 4), true),
+			'creator_id' => User::inRandomOrder()->first()?->id,
 		];
 	}
 }

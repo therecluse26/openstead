@@ -7,21 +7,20 @@ import CalendarInput from '@/components/HookFormInputs/CalendarInput'
 import { FileUpload } from 'primereact/fileupload'
 import { convertUploadedFilesToBase64 } from '@/utils/file-utils'
 import { csrf } from '@/hooks/auth'
-import ToastContext, { useToastContext } from '@/context/ToastContext'
-import AddErrorToasts from '@/utils/AddErrorToasts'
 import SubtypeSelect from '@/components/HookFormInputs/SubtypeSelect'
 import NumberInput from '@/components/HookFormInputs/NumberInput'
-import PantryService from '@/services/inventory/PantryService'
+import PantryService from '@/services/Inventory/PantryService'
 import SelectInput from '../../components/HookFormInputs/SelectInput'
 import TextInput from '../../components/HookFormInputs/TextInput'
 import TextAreaInput from '../../components/HookFormInputs/TextAreaInput'
+import { useToast } from '../../context/ToastContext'
 
 const PantryForm = ({ mode = 'create' }) => {
     const isMounted = useRef(false)
     const router = useRouter()
     const [images, setImages] = useState([])
     const [initialType, setInitialType] = useState(null)
-    const toast = useToastContext(ToastContext)
+    const { showToast } = useToast()
     const { query, isReady } = useRouter()
     const { id } = query
     const defaultValues = {
@@ -35,6 +34,7 @@ const PantryForm = ({ mode = 'create' }) => {
         expiration_date: new Date(
             new Date().setFullYear(new Date().getFullYear() + 1),
         ),
+        images: [],
     }
     const {
         control,
@@ -109,7 +109,10 @@ const PantryForm = ({ mode = 'create' }) => {
                 router.push('/inventory/pantry/' + r.data?.id)
             })
             .catch(error => {
-                AddErrorToasts(toast, error)
+                showToast(
+                    error?.response?.data?.message ?? 'Unknown error',
+                    'error',
+                )
             })
     }
 
@@ -182,10 +185,13 @@ const PantryForm = ({ mode = 'create' }) => {
                                 errors={errors}
                                 supertypeValueUrl={`/api/inventory/pantry/types`}
                                 fieldId={'variety_id'}
-                                toast={toast}
                                 watch={watch}
                                 id={id}
                                 className={'mt-2'}
+                                optionLabel="label"
+                                optionValue="key"
+                                dataLabelKey="label"
+                                dataValueKey="key"
                             />
 
                             <div className="field">
@@ -295,6 +301,7 @@ const PantryForm = ({ mode = 'create' }) => {
                                     accept={'image/*'}
                                     multiple={false}
                                     maxFileSize={1000000}
+                                    control={control}
                                     chooseLabel={'Add Image'}
                                     onRemove={onRemoveImage}
                                     emptyTemplate={

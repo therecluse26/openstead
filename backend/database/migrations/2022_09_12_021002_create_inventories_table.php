@@ -18,7 +18,7 @@ return new class extends Migration {
 	public function up()
 	{
 		Schema::create('locations', function (Blueprint $table) {
-			$table->id();
+			$table->ulid('id')->primary();
 			$table->boolean('primary')->default(false);
 			$table->string('name', 100);
 			$table->string('description', 255)->nullable();
@@ -32,7 +32,7 @@ return new class extends Migration {
 		});
 
 		Schema::create('varieties', function (Blueprint $table) {
-			$table->id();
+			$table->ulid('id')->primary();
 			$table->enum('group', ['plant', 'animal', 'edible']);
 			$table->string('group_type', 50);
 			$table->string('variety_name', 50);
@@ -43,14 +43,14 @@ return new class extends Migration {
 		});
 
 		Schema::create('livestock', function (Blueprint $table) {
-			$table->id();
+			$table->ulid('id')->primary();
 			$table->string('name', 255);
 			$table->string('description', 1000)->nullable();
 			$table->enum('sex', ['male', 'female'])->nullable();
 			$table->dateTime('date_of_birth')->nullable();
 			$table->dateTime('date_of_death')->nullable();
-			$table->unsignedBigInteger('variety_id');
-			$table->unsignedInteger('quantity')->default(1);
+			$table->ulid('variety_id');
+			$table->ulid('quantity')->default(1);
 			$table->dateTime('acquired_at')->nullable();
 			$table->timestamps();
 
@@ -59,14 +59,14 @@ return new class extends Migration {
 		});
 
 		Schema::create('livestock_parents', function (Blueprint $table) {
-			$table->id();
-			$table->unsignedBigInteger('livestock_id');
-			$table->unsignedBigInteger('parent_id');
+            $table->ulid('id')->primary();
+			$table->ulid('livestock_id');
+			$table->ulid('parent_id');
 		});
 
 		Schema::create('seeds', function (Blueprint $table) {
-			$table->id();
-			$table->unsignedBigInteger('variety_id');
+			$table->ulid('id')->primary();
+			$table->ulid('variety_id');
 			$table->unsignedInteger('quantity')->default(1);
 			$table->enum('life_cycle', collect(PlantLifeCycle::cases())->map(function ($case) {
 				return $case->value;
@@ -92,7 +92,7 @@ return new class extends Migration {
 		});
 
 		Schema::create('equipment', function (Blueprint $table) {
-			$table->id();
+			$table->ulid('id')->primary();
 			$table->string('name', 255);
 			$table->string('type', 50);
 			$table->unsignedTinyInteger('condition')->nullable();
@@ -107,13 +107,13 @@ return new class extends Migration {
 		});
 
 		Schema::create('pantry_items', function (Blueprint $table) {
-			$table->id();
+			$table->ulid('id')->primary();
 			$table->string('name', 255);
 			$table->string('description', 1000)->nullable();
 			$table->enum('storage_type', collect(PantryStorageType::cases())->map(function ($case) {
 				return $case->value;
 			})->toArray())->nullable();
-			$table->unsignedBigInteger('variety_id');
+			$table->ulid('variety_id');
 			$table->enum('unit', collect(KitchenUnit::cases())->map(function ($case) {
 				return $case->value;
 			})->toArray())->nullable();
@@ -128,7 +128,7 @@ return new class extends Migration {
 		});
 
 		Schema::create('services', function (Blueprint $table) {
-			$table->id();
+			$table->ulid('id')->primary();
 			$table->string('type', 20)->default('other');
 			$table->string('title', 100);
 			$table->string('description', 1000);
@@ -139,18 +139,19 @@ return new class extends Migration {
 		});
 
 		Schema::create('service_logs', function (Blueprint $table) {
-			$table->id();
-			$table->morphs('serviceable');
-			$table->unsignedBigInteger('service_id');
+			$table->ulid('id')->primary();
+			$table->ulidMorphs('serviceable');
+			$table->ulid('service_id');
 			$table->string('notes', 2000);
 			$table->dateTime('service_date');
 			$table->timestamps();
 		});
 
 		Schema::create('notes', function (Blueprint $table) {
-			$table->id();
-			$table->morphs('notable');
-			$table->string('note', 5000);
+			$table->ulid('id')->primary();
+			$table->ulidMorphs('notable');
+			$table->ulid('creator_id');
+			$table->text('note');
 			$table->timestamps();
 		});
 	}

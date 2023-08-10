@@ -8,6 +8,9 @@ use App\Models\Inventory\LivestockParent;
 use App\Models\Inventory\PantryItem;
 use App\Models\Inventory\Seed;
 use App\Models\Location;
+use App\Models\Note;
+use App\Models\Projects\Project;
+use App\Models\Projects\ProjectItem;
 use App\Models\Service;
 use App\Models\User;
 use App\Models\Variety;
@@ -26,6 +29,10 @@ class TestDataSeeder extends Seeder
 	public function run()
 	{
 		Artisan::call('media-library:clear --force');
+
+		User::factory()
+			->count(10)
+			->create();
 
 		Location::factory()
 			->count(1)
@@ -66,5 +73,23 @@ class TestDataSeeder extends Seeder
 		LivestockParent::factory()
 			->count(100)
 			->create();
+
+		Project::factory()
+			->times(10)
+			->make()
+			->each(function($project) {
+				(new Project)->create($project->toArray());
+			});
+
+		ProjectItem::factory()
+			->times(80)
+			->make()
+			->each(function($item) {
+				$item->project_id = Project::inRandomOrder()->first()?->id ?? 1;
+				(new ProjectItem)->create($item->toArray());
+				
+				$item->notes()->saveMany(Note::factory()->count(random_int(0, 3))->make());
+		});
+		
 	}
 }

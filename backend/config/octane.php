@@ -145,8 +145,8 @@ return [
 	*/
 
 	'cache' => [
-		'rows' => 1000,
-		'bytes' => 10000,
+		'rows' => 10000, // 10k rows
+		'bytes' => 1000000, // 1 MB
 	],
 
 	/*
@@ -161,10 +161,10 @@ return [
 	*/
 
 	'tables' => [
-		'example:1000' => [
-			'name' => 'string:1000',
-			'votes' => 'int',
-		],
+		// 'example:1000' => [
+		// 	'name' => 'string:1000',
+		// 	'votes' => 'int',
+		// ],
 	],
 
 	/*
@@ -201,7 +201,7 @@ return [
 	|
 	*/
 
-	'garbage' => 50,
+	'garbage' => 100,
 
 	/*
 	|--------------------------------------------------------------------------
@@ -214,6 +214,6 @@ return [
 	|
 	*/
 
-	'max_execution_time' => 30,
+	'max_execution_time' => 15,
 
 ];

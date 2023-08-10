@@ -25,7 +25,7 @@ class StoreNoteRequest extends FormRequest
 	{
 		return [
 			'notable_type' => ['required', 'string'],
-			'notable_id' => ['required', 'integer'],
+			'notable_id' => ['required', 'string'],
 			'note' => ['required', 'string', 'max:5000'],
 		];
 	}

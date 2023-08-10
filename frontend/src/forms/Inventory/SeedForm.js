@@ -7,20 +7,19 @@ import CalendarInput from '@/components/HookFormInputs/CalendarInput'
 import { FileUpload } from 'primereact/fileupload'
 import { convertUploadedFilesToBase64 } from '@/utils/file-utils'
 import { csrf } from '@/hooks/auth'
-import ToastContext, { useToastContext } from '@/context/ToastContext'
-import AddErrorToasts from '@/utils/AddErrorToasts'
 import SubtypeSelect from '@/components/HookFormInputs/SubtypeSelect'
 import NumberInput from '@/components/HookFormInputs/NumberInput'
-import SeedService from '@/services/inventory/SeedService'
+import SeedService from '@/services/Inventory/SeedService'
 import SelectInput from '@/components/HookFormInputs/SelectInput'
 import TextInput from '@/components/HookFormInputs/TextInput'
+import { useToast } from '../../context/ToastContext'
 
 const SeedForm = ({ mode = 'create' }) => {
     const isMounted = useRef(false)
     const router = useRouter()
     const [images, setImages] = useState([])
     const [initialType, setInitialType] = useState(null)
-    const toast = useToastContext(ToastContext)
+    const { showToast } = useToast()
     const { query, isReady } = useRouter()
     const { id } = query
     const defaultValues = {
@@ -114,7 +113,10 @@ const SeedForm = ({ mode = 'create' }) => {
                 router.push('/inventory/seeds/' + r.data?.id)
             })
             .catch(error => {
-                AddErrorToasts(toast, error)
+                showToast(
+                    error?.response?.data?.message ?? 'Unknown error',
+                    'error',
+                )
             })
     }
 
@@ -169,10 +171,13 @@ const SeedForm = ({ mode = 'create' }) => {
                                 errors={errors}
                                 supertypeValueUrl={`/api/inventory/seeds/types`}
                                 fieldId={'variety_id'}
-                                toast={toast}
                                 watch={watch}
                                 id={id}
                                 className={'mt-2'}
+                                optionLabel="label"
+                                optionValue="key"
+                                dataLabelKey="label"
+                                dataValueKey="key"
                             />
 
                             <div className="field">
@@ -197,6 +202,10 @@ const SeedForm = ({ mode = 'create' }) => {
                                     control={control}
                                     name={'light_requirement'}
                                     label={'Light Requirement'}
+                                    optionValue={'key'}
+                                    dataValueKey={'key'}
+                                    optionLabel={'label'}
+                                    dataLabelKey={'label'}
                                 />
                                 {getFormErrorMessage('light_requirement')}
                             </div>
@@ -256,6 +265,10 @@ const SeedForm = ({ mode = 'create' }) => {
                                     control={control}
                                     name={'life_cycle'}
                                     label={'Life Cycle'}
+                                    optionValue={'key'}
+                                    dataValueKey={'key'}
+                                    optionLabel={'label'}
+                                    dataLabelKey={'label'}
                                 />
                                 {getFormErrorMessage('life_cycle')}
                             </div>
@@ -268,6 +281,10 @@ const SeedForm = ({ mode = 'create' }) => {
                                     control={control}
                                     name={'zone_lower'}
                                     label={'Grow Zone (Minimum)'}
+                                    optionValue={'key'}
+                                    dataValueKey={'key'}
+                                    optionLabel={'label'}
+                                    dataLabelKey={'label'}
                                 />
                                 {getFormErrorMessage('zone_lower')}
                             </div>
@@ -280,6 +297,10 @@ const SeedForm = ({ mode = 'create' }) => {
                                     control={control}
                                     name={'zone_upper'}
                                     label={'Grow Zone (Maximum)'}
+                                    optionValue={'key'}
+                                    dataValueKey={'key'}
+                                    optionLabel={'label'}
+                                    dataLabelKey={'label'}
                                 />
                                 {getFormErrorMessage('zone_upper')}
                             </div>

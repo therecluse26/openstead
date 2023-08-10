@@ -24,7 +24,7 @@ final class LivestockController extends Controller implements HasAppendableSelec
 {
 	public function getTypes(): iterable
 	{
-		return LivestockRepository::getFilters()['types'];
+		return (new LivestockRepository)->getFilters()['types'];
 	}
 
 	public function getTypeValues(string $type): ResourceCollection
@@ -34,9 +34,9 @@ final class LivestockController extends Controller implements HasAppendableSelec
 		);
 	}
 
-	public function getFilters(): iterable
+	public function getFilters(LivestockRepository $respository): iterable
 	{
-		return LivestockRepository::getFilters();
+		return $respository->getFilters();
 	}
 
 	public function storeTypeValue(LivestockRepository $repository, StoreLivestockBreedRequest $request): Response
@@ -87,13 +87,14 @@ final class LivestockController extends Controller implements HasAppendableSelec
 	/**
 	 * Display the specified resource.
 	 *
-	 * @param Livestock $livestock
+	 * @param LivestockRepository $livestockRepository
+	 * @param string $livestock_id
 	 * @return Response
 	 */
-	public function show(LivestockRepository $livestockRepository, int $livestock_id): Response
+	public function show(LivestockRepository $livestockRepository, string $id): Response
 	{
 		return response(
-			$livestockRepository->findUnscoped($livestock_id)->getDetailResource()
+			$livestockRepository->findUnscoped($id)->getDetailResource()
 		);
 	}
 
@@ -102,14 +103,14 @@ final class LivestockController extends Controller implements HasAppendableSelec
 	 *
 	 * @param LivestockRepository $livestockRepository
 	 * @param UpdateLivestockRequest $request
-	 * @param int $livestock
+	 * @param string $livestock
 	 * @return Response
 	 */
-	public function update(LivestockRepository $livestockRepository, UpdateLivestockRequest $request, int $livestock): Response
+	public function update(LivestockRepository $livestockRepository, UpdateLivestockRequest $request, string $id): Response
 	{
 		return response(
 			$livestockRepository->update(
-				$livestockRepository->findUnscoped($livestock),
+				$livestockRepository->findUnscoped($id),
 				$request->only((new Livestock())->getFillable()),
 				$request->get('images'),
 				$request->get('parents'),
@@ -120,15 +121,15 @@ final class LivestockController extends Controller implements HasAppendableSelec
 	/**
 	 * Remove the specified resource from storage.
 	 *
-	 * @param int $livestock
+	 * @param string $livestock
 	 * @param LivestockRepository $livestockRepository
 	 * @return Response
 	 */
-	public function destroy(int $livestock, LivestockRepository $livestockRepository): Response
+	public function destroy(string $id, LivestockRepository $livestockRepository): Response
 	{
 		return response(
 			$livestockRepository->delete(
-				$livestockRepository->findUnscoped($livestock)
+				$livestockRepository->findUnscoped($id)
 			),
 			200);
 	}
@@ -150,15 +151,15 @@ final class LivestockController extends Controller implements HasAppendableSelec
 	/**
 	 * Marks livestock as deceased
 	 *
-	 * @param int $livestock
+	 * @param string $livestock
 	 * @param LivestockRepository $livestockRepository
 	 * @return Response
 	 */
-	public function markDeceased(int $livestock, LivestockRepository $livestockRepository): Response
+	public function markDeceased(string $id, LivestockRepository $livestockRepository): Response
 	{
 		return response(
 			$livestockRepository->markDeceased(
-				$livestockRepository->findUnscoped($livestock),
+				$livestockRepository->findUnscoped($id),
 				true),
 			200);
 	}
@@ -166,14 +167,14 @@ final class LivestockController extends Controller implements HasAppendableSelec
 	/**
 	 * Gets similar livestock by type
 	 *
-	 * @param int $livestock
+	 * @param string $livestock
 	 * @return Response
 	 */
-	public function getSimilar(LivestockRepository $livestockRepository, int $livestock)
+	public function getSimilar(LivestockRepository $livestockRepository, string $id)
 	{
 		return response(LivestockResource::collection(
 			$livestockRepository->getSimilar(
-				$livestock
+				$id
 			)
 		));
 	}

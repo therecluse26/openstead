@@ -33,7 +33,7 @@ class EquipmentRepository extends InventoryRepository
 		parent::__construct($this->model);
 	}
 
-	public function find(int $id): Equipment
+	public function find(string $id): Equipment
 	{
 		return $this->model->findOrFail($id);
 	}
@@ -78,6 +78,7 @@ class EquipmentRepository extends InventoryRepository
 			$this->addOrReplaceImagesBase64($equipment, $images);
 		}
 
+
 		return $equipment;
 	}
 
@@ -88,7 +89,7 @@ class EquipmentRepository extends InventoryRepository
 		});
 	}
 
-	public static function getFilters(): Collection
+	public function getFilters(): Collection
 	{
 		return collect([
 			'types' => collect(EquipmentType::cases())->map(function ($type) {
@@ -97,9 +98,12 @@ class EquipmentRepository extends InventoryRepository
 		]);
 	}
 
-	public function getSimilar(int $id): Collection
+	public function getSimilar(string $id): Collection
 	{
 		$equipment = $this->find($id);
+
+		if(!$equipment) return collect([]);
+
 		return Equipment::whereNot('id', $equipment->id)
 			->where('type', $equipment->type)
 			->inRandomOrder()

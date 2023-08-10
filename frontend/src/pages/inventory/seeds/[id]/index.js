@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
-import SeedService from '@/services/inventory/SeedService'
-import InventoryDetailCard from '@/components/Custom/Inventory/InventoryDetailCard'
+import SeedService from '@/services/Inventory/SeedService'
+import InventoryDetailCard from '@/components/Inventory/InventoryDetailCard'
 import LinkButton from '@/components/LinkButton'
 import { formatDate } from '@/utils/FormatDate'
 import ScalableTag from '@/components/ScalableTag'
-import Notes from '@/components/Custom/Notes'
+import Notes from '@/components/Notes'
 import SimilarItems from '@/components/Inventory/SimilarItems'
 
 const SeedDetail = () => {

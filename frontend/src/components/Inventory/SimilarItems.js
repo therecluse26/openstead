@@ -14,18 +14,16 @@ const SimilarItems = ({ type, id, getItemsCallback, titleField = 'name' }) => {
         if (!isReady) {
             return
         }
-        if (similarItems.length === 0) {
-            getItemsCallback(id)
-                .then(data => {
-                    setSimilarItems(data)
-                })
-                .catch(e => {
-                    alert(e)
-                })
-                .finally(() => {
-                    setLoaded(true)
-                })
-        }
+        getItemsCallback(id)
+            .then(data => {
+                setSimilarItems(data)
+            })
+            .catch(e => {
+                alert(e)
+            })
+            .finally(() => {
+                setLoaded(true)
+            })
     }
 
     // Load initial data
@@ -94,4 +92,4 @@ const SimilarItems = ({ type, id, getItemsCallback, titleField = 'name' }) => {
     )
 }
 
-export default React.memo(SimilarItems)
+export default SimilarItems

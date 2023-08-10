@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
-import InventoryList from '@/components/Custom/Inventory/InventoryList'
 import { Column } from 'primereact/column'
 import Link from 'next/link'
 import QuantityFilterTemplate from '@/pages/inventory/templates/QuantityFilterTemplate'
-import PantryService from '@/services/inventory/PantryService'
-import TypeFilterElement from '@/components/Custom/Inventory/TypeFilterElement'
-import TypeBodyTemplateElement from '@/components/Custom/Inventory/TypeBodyTemplateElement'
+import PantryService from '@/services/Inventory/PantryService'
+import TypeFilterElement from '@/components/Inventory/TypeFilterElement'
+import TypeBodyTemplateElement from '@/components/Inventory/TypeBodyTemplateElement'
+import FilterableDataTable from '@/components/DataTable/FilterableDataTable'
 
 const PantryItems = () => {
     const [types, setTypes] = useState([])
@@ -70,14 +70,12 @@ const PantryItems = () => {
     }
 
     return (
-        <InventoryList
+        <FilterableDataTable
             title={'Pantry Items'}
-            inventoryType={'pantry'}
+            basePath={'pantry'}
             service={PantryService}
             filters={filters}
             setLazyParamsCallack={lazyParamsCallback}>
-            <Column selectionMode="multiple" headerStyle={{ width: '3em' }} />
-
             <Column
                 field="name"
                 header="Name"
@@ -166,7 +164,7 @@ const PantryItems = () => {
                 body={rowData => formatDate(rowData.expiration_date)}
                 style={{ minWidth: '160px', width: '200px' }}
             />
-        </InventoryList>
+        </FilterableDataTable>
     )
 }
 

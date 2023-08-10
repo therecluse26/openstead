@@ -2,11 +2,12 @@
 
 namespace App\Traits;
 
-use Spatie\MediaLibrary\HasMedia;
+use App\Contracts\AddsMedia;
+use Illuminate\Database\Eloquent\Collection;
 
 trait AddMedia
 {
-	public function addOrReplaceImagesBase64(HasMedia $model, iterable $images = null): void
+	public function addOrReplaceImagesBase64(AddsMedia $model, array|Collection $images): void
 	{
 		if (is_array($images)) {
 			$images = collect($images);
