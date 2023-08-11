@@ -13,7 +13,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Build Docker image
-      run: docker build --tag ${{ secrets.REGISTRY_URL }}/openstead-api:${{ github.sha }} ./backend
+      run: docker build --tag ${{ secrets.REGISTRY_URL }}/openstead-api:${{ github.sha }} .
       working-directory: ./backend
 
     - name: Login to Docker Registry
