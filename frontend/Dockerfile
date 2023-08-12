@@ -1,6 +1,6 @@
 # Use multi-stage build for smaller final image size
 # Stage 1: Build the NextJS project
-FROM node:14.17.0 AS builder
+FROM node:alpine AS builder
 
 # Set working directory
 WORKDIR .
