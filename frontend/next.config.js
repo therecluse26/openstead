@@ -1,4 +1,6 @@
 module.exports = {
+    output: 'export',
+
     productionBrowserSourceMaps: false,
     reactStrictMode: true,
     images: {

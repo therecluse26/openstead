@@ -24,4 +24,7 @@ jobs:
         password: ${{ secrets.REGISTRY_PASSWORD }}
 
     - name: Push Docker image
-      run: docker push ${{ secrets.REGISTRY_URL }}/openstead-api:${{ github.sha }}
+      run: |
+        docker push ${{ secrets.REGISTRY_URL }}/openstead-api:${{ github.sha }}
+        docker tag ${{ secrets.REGISTRY_URL }}/openstead-api:${{ github.sha }} ${{ secrets.REGISTRY_URL }}/openstead-api:latest
+        docker push ${{ secrets.REGISTRY_URL }}/openstead-api:latest
