@@ -18,6 +18,7 @@ use Laravel\Octane\Listeners\FlushUploadedFiles;
 use Laravel\Octane\Listeners\ReportException;
 use Laravel\Octane\Listeners\StopWorkerIfNecessary;
 use Laravel\Octane\Octane;
+use Spatie\MediaLibrary\MediaLibraryServiceProvider;
 
 return [
 
@@ -130,7 +131,8 @@ return [
 	],
 
 	'flush' => [
-//		ClockworkServiceProvider::class,
+		MediaLibraryServiceProvider::class,
+		Sentry\Laravel\ServiceProvider::class,
 	],
 
 	/*
