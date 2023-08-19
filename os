@@ -33,16 +33,8 @@ if [ -f ./.env ]; then
 fi
 
 # Define environment variables...
-export APP_PORT=${APP_PORT:-80}
-export APP_SERVICE=${APP_SERVICE:-"app.test"}
-export DB_PORT=${DB_PORT:-3306}
-export WWWUSER=${WWWUSER:-$UID}
-export WWWGROUP=${WWWGROUP:-$(id -g)}
-
-export SAIL_SHARE_DASHBOARD=${SAIL_SHARE_DASHBOARD:-4040}
-export SAIL_SHARE_SERVER_HOST=${SAIL_SHARE_SERVER_HOST:-"app.site"}
-export SAIL_SHARE_SERVER_PORT=${SAIL_SHARE_SERVER_PORT:-8080}
-export SAIL_SHARE_SUBDOMAIN=${SAIL_SHARE_SUBDOMAIN:-""}
+export API_SERVICE=${API_SERVICE:-"openstead-api"}
+export FRONTEND_SERVICE=${FRONTEND_SERVICE:-"openstead-frontend"}
 
 if [ $# -gt 0 ]; then
 
@@ -51,7 +43,7 @@ if [ $# -gt 0 ]; then
         shift 1
 
         docker-compose exec \
-            "$APP_SERVICE" \
+            "$API_SERVICE" \
             php "$@"
 
     elif [ "$1" == "up" ]; then
@@ -59,9 +51,9 @@ if [ $# -gt 0 ]; then
         docker-compose up -d
 
     elif [ "$1" == "reload" ]; then
-      ./os down && ./os up
+      ./os down && ./os up        
 
-    elif [ "$1" == "build" ]; then
+    elif [ "$1" == "build-api" ]; then
         ./os docker-login
         docker-compose build
 
@@ -87,37 +79,37 @@ if [ $# -gt 0 ]; then
 
     elif [ "$1" == "telescope:install" ]; then
         shift 1
-        docker exec $(docker ps -aqf "name=$APP_SERVICE") \
+        docker exec $(docker ps -aqf "name=$API_SERVICE") \
             /bin/ash -c "php artisan telescope:install" && ./os telescope:migrate
 
     elif [ "$1" == "telescope:migrate" ]; then
         shift 1
-        docker exec $(docker ps -aqf "name=$APP_SERVICE") \
+        docker exec $(docker ps -aqf "name=$API_SERVICE") \
             /bin/ash -c "php artisan migrate --path=vendor/laravel/telescope/database/migrations/2018_08_08_100000_create_telescope_entries_table.php"
 
 
     elif [ "$1" == "db:migrate" ]; then
         shift 1
 
-        docker exec $(docker ps -aqf "name=$APP_SERVICE") \
+        docker exec $(docker ps -aqf "name=$API_SERVICE") \
             /bin/ash -c "php artisan migrate"
 
     elif [ "$1" == "db:fresh-seed" ]; then
         shift 1
 
-        docker exec $(docker ps -aqf "name=$APP_SERVICE") \
+        docker exec $(docker ps -aqf "name=$API_SERVICE") \
             /bin/ash -c "php artisan migrate:fresh --seed"
 
     elif [ "$1" == "analyze" ]; then
             shift 1
 
-            docker exec $(docker ps -aqf "name=$APP_SERVICE") \
+            docker exec $(docker ps -aqf "name=$API_SERVICE") \
                 /bin/ash -c "vendor/bin/phpstan analyze"
 
     elif [ "$1" == "insights" ]; then
         shift 1
 
-        docker exec $(docker ps -aqf "name=$APP_SERVICE") \
+        docker exec $(docker ps -aqf "name=$API_SERVICE") \
             /bin/ash -c "php artisan insights"
 
     elif [ "$1" == "docker-nuke" ]; then
@@ -147,7 +139,7 @@ if [ $# -gt 0 ]; then
         shift 1
 
         docker-compose exec \
-            "$APP_SERVICE" \
+            "$API_SERVICE" \
             php artisan scribe:generate
 
 
@@ -156,7 +148,7 @@ if [ $# -gt 0 ]; then
         shift 1
 
         docker-compose exec \
-            "$APP_SERVICE" \
+            "$API_SERVICE" \
             ./vendor/bin/"$@"
 
 
@@ -165,7 +157,7 @@ if [ $# -gt 0 ]; then
         shift 1
 
         docker-compose exec \
-            "$APP_SERVICE" \
+            "$API_SERVICE" \
             /usr/local/bin/php /usr/bin/composer.phar "$@"
 
     # Proxy Artisan commands to the "artisan" binary on the application container...
@@ -173,8 +165,16 @@ if [ $# -gt 0 ]; then
         shift 1
 
         docker-compose exec \
-            "$APP_SERVICE" \
+            "$API_SERVICE" \
             php artisan "$@"
+
+    # Proxy NPM commands to the frontend container
+    elif [ "$1" == "npm" ]; then
+        shift 1
+
+        docker-compose exec \
+            "$FRONTEND_SERVICE" \
+            npm "$@"
 
     # Proxy the "debug" command to the "php artisan" binary on the application container with xdebug enabled...
     elif [ "$1" == "debug" ]; then
@@ -182,7 +182,7 @@ if [ $# -gt 0 ]; then
 
         docker-compose exec \
             -e XDEBUG_SESSION=1 \
-            "$APP_SERVICE" \
+            "$API_SERVICE" \
             php artisan "$@"
 
     # Proxy the "test" command to the "php artisan test" Artisan command...
@@ -190,7 +190,7 @@ if [ $# -gt 0 ]; then
         shift 1
 
         docker-compose exec \
-            "$APP_SERVICE" \
+            "$API_SERVICE" \
             php artisan test "$@"
 
     # Proxy the "phpunit" command to "php vendor/bin/phpunit"...
@@ -198,7 +198,7 @@ if [ $# -gt 0 ]; then
         shift 1
 
         docker-compose exec \
-            "$APP_SERVICE" \
+            "$API_SERVICE" \
             php vendor/bin/phpunit "$@"
 
     # Proxy the "dusk" command to the "php artisan dusk" Artisan command...
@@ -208,7 +208,7 @@ if [ $# -gt 0 ]; then
         docker-compose exec \
             -e "APP_URL=http://${APP_SERVICE}" \
             -e "DUSK_DRIVER_URL=http://selenium:4444/wd/hub" \
-            "$APP_SERVICE" \
+            "$API_SERVICE" \
             php artisan dusk "$@"
 
     # Proxy the "dusk:fails" command to the "php artisan dusk:fails" Artisan command...
@@ -218,7 +218,7 @@ if [ $# -gt 0 ]; then
         docker-compose exec \
             -e "APP_URL=http://${APP_SERVICE}" \
             -e "DUSK_DRIVER_URL=http://selenium:4444/wd/hub" \
-            "$APP_SERVICE" \
+            "$API_SERVICE" \
             php artisan dusk:fails "$@"
 
     # Initiate a Laravel Tinker session within the application container...
@@ -226,21 +226,21 @@ if [ $# -gt 0 ]; then
         shift 1
 
         docker-compose exec \
-            "$APP_SERVICE" \
+            "$API_SERVICE" \
             php artisan tinker
 
     # Proxy Node commands to the "node" binary on the application container...
     elif [ "$1" == "node" ]; then
         shift 1
         docker-compose exec \
-            "$APP_SERVICE" \
+            "$API_SERVICE" \
             node "$@"
 
     # Proxy NPM commands to the "npm" binary on the application container...
     elif [ "$1" == "npm" ]; then
         shift 1
         docker-compose exec \
-            "$APP_SERVICE" \
+            "$API_SERVICE" \
             npm "$@"
 
     # Proxy NPX commands to the "npx" binary on the application container...
@@ -248,7 +248,7 @@ if [ $# -gt 0 ]; then
         shift 1
 
         docker-compose exec \
-            "$APP_SERVICE" \
+            "$API_SERVICE" \
             npx "$@"
 
     # Proxy YARN commands to the "yarn" binary on the application container...
@@ -256,7 +256,7 @@ if [ $# -gt 0 ]; then
         shift 1
 
         docker-compose exec \
-            "$APP_SERVICE" \
+            "$API_SERVICE" \
             yarn "$@"
 
     # Initiate a MySQL CLI terminal session within the "mysql" container...
@@ -284,17 +284,23 @@ if [ $# -gt 0 ]; then
             bash -c 'PGPASSWORD=${PGPASSWORD} psql -U ${POSTGRES_USER} ${POSTGRES_DB}'
 
     # Initiate a Ash shell within the application container...
-    elif [ "$1" == "shell" ] || [ "$1" == "ash" ]; then
+    elif [ "$1" == "backend-shell" ] || [ "$1" == "ash" ]; then
         shift 1
 
-        docker exec -it --user www-data $(docker ps -aqf "name=$APP_SERVICE") /bin/ash
+        docker exec -it --user www-data $(docker ps -aqf "name=$API_SERVICE") /bin/ash
+
+    # Initiate a Ash shell within the application container...
+    elif [ "$1" == "frontend-shell" ] || [ "$1" == "ash" ]; then
+        shift 1
+
+        docker exec -it --user www-data $(docker ps -aqf "name=$FRONTEND_SERVICE") /bin/ash
 
     # Initiate a root user Ash shell within the application container...
     elif [ "$1" == "root" ] ; then
         shift 1
 
         docker-compose exec \
-            "$APP_SERVICE" \
+            "$API_SERVICE" \
             /bin/ash "$@"
 
     # Initiate a Redis CLI terminal session within the "redis" container...
@@ -304,17 +310,6 @@ if [ $# -gt 0 ]; then
         docker-compose exec \
             redis \
             redis-cli
-
-    # Share the site...
-    elif [ "$1" == "share" ]; then
-        shift 1
-
-        docker run --init --rm -p $SAIL_SHARE_DASHBOARD:4040 -t beyondcodegmbh/expose-server:latest share http://host.docker.internal:"$APP_PORT" \
-        --server-host="$SAIL_SHARE_SERVER_HOST" \
-        --server-port="$SAIL_SHARE_SERVER_PORT" \
-        --auth="$SAIL_SHARE_TOKEN" \
-        --subdomain="$SAIL_SHARE_SUBDOMAIN" \
-        "$@"
 
     # Pass unknown commands to the "docker-compose" binary...
     else

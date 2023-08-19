@@ -1,9 +1,26 @@
 version: "3.4"
-services:
+services:        
+  openstead-frontend: 
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+      args:
+        - APP_ENV=${APP_ENV:-production}
+        - UID=1000
+        - GID=1000
+    environment:
+      - UID=1000
+      - GID=1000
+    working_dir: /frontend
+    ports: 
+      - 3000:3000
+    depends_on:
+      - openstead-api
+
   openstead-api:
     build:
-      context: ./
-      dockerfile: Dockerfile.local
+      context: ./backend
+      dockerfile: ./Dockerfile.local
       args:
         - APP_ENV=${APP_ENV:-production}
         - UID=1000
@@ -14,7 +31,7 @@ services:
     working_dir: /var/www/html
     volumes:
       - type: bind
-        source: .
+        source: ./backend
         target: /var/www/html
     extra_hosts:
       - "host.docker.internal:host-gateway"
