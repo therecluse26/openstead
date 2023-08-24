@@ -49,24 +49,31 @@ return new class extends Migration {
 			$table->enum('sex', ['male', 'female'])->nullable();
 			$table->dateTime('date_of_birth')->nullable();
 			$table->dateTime('date_of_death')->nullable();
-			$table->ulid('variety_id');
+			$table->ulid('variety_id')->nullable();
 			$table->ulid('quantity')->default(1);
 			$table->dateTime('acquired_at')->nullable();
 			$table->timestamps();
 
 			$table->index('name');
 			$table->index('variety_id');
+
+			$table->foreign('variety_id')->references('id')->on('varieties')->nullOnDelete();
 		});
 
 		Schema::create('livestock_parents', function (Blueprint $table) {
             $table->ulid('id')->primary();
 			$table->ulid('livestock_id');
 			$table->ulid('parent_id');
+
+			$table->index('livestock_id');
+			$table->index('parent_id');
+			$table->foreign('livestock_id')->references('id')->on('livestock')->onDelete('cascade');
+			$table->foreign('parent_id')->references('id')->on('livestock')->onDelete('cascade');
 		});
 
 		Schema::create('seeds', function (Blueprint $table) {
 			$table->ulid('id')->primary();
-			$table->ulid('variety_id');
+			$table->ulid('variety_id')->nullable();
 			$table->unsignedInteger('quantity')->default(1);
 			$table->enum('life_cycle', collect(PlantLifeCycle::cases())->map(function ($case) {
 				return $case->value;
@@ -89,6 +96,7 @@ return new class extends Migration {
 			$table->timestamps();
 
 			$table->index('variety_id');
+			$table->foreign('variety_id')->references('id')->on('varieties')->nullOnDelete();
 		});
 
 		Schema::create('equipment', function (Blueprint $table) {
@@ -103,7 +111,8 @@ return new class extends Migration {
 			$table->dateTime('acquired_at')->nullable();
 			$table->timestamps();
 
-			$table->index(['name', 'type']);
+			$table->index('name');
+			$table->index('type');
 		});
 
 		Schema::create('pantry_items', function (Blueprint $table) {
@@ -113,7 +122,7 @@ return new class extends Migration {
 			$table->enum('storage_type', collect(PantryStorageType::cases())->map(function ($case) {
 				return $case->value;
 			})->toArray())->nullable();
-			$table->ulid('variety_id');
+			$table->ulid('variety_id')->nullable();
 			$table->enum('unit', collect(KitchenUnit::cases())->map(function ($case) {
 				return $case->value;
 			})->toArray())->nullable();
@@ -125,6 +134,7 @@ return new class extends Migration {
 
 			$table->index('name');
 			$table->index('variety_id');
+			$table->foreign('variety_id')->references('id')->on('varieties')->nullOnDelete();
 		});
 
 		Schema::create('services', function (Blueprint $table) {
@@ -141,18 +151,28 @@ return new class extends Migration {
 		Schema::create('service_logs', function (Blueprint $table) {
 			$table->ulid('id')->primary();
 			$table->ulidMorphs('serviceable');
-			$table->ulid('service_id');
+			$table->ulid('service_id')->nullable();
 			$table->string('notes', 2000);
 			$table->dateTime('service_date');
 			$table->timestamps();
+
+			$table->index('service_id');
+			$table->foreign('service_id')->references('id')->on('services')->nullOnDelete();
+			$table->index('serviceable_id');
+			$table->index('serviceable_type');
 		});
 
 		Schema::create('notes', function (Blueprint $table) {
 			$table->ulid('id')->primary();
 			$table->ulidMorphs('notable');
-			$table->ulid('creator_id');
+			$table->ulid('creator_id')->nullable();
 			$table->text('note');
 			$table->timestamps();
+
+			$table->index('creator_id');
+			$table->index('notable_id');
+			$table->index('notable_type');
+			$table->foreign('creator_id')->references('id')->on('users')->nullOnDelete();
 		});
 	}
 

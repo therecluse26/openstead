@@ -48,6 +48,8 @@ Schema::dropIfExists('projects');
             $table->boolean('active')->default(true);
             $table->softDeletes();
             $table->timestamps();
+
+            $table->index('name');
         });
 
         Schema::create('project_users', function (Blueprint $table) {
@@ -59,6 +61,9 @@ Schema::dropIfExists('projects');
 
             $table->index('project_id');
             $table->index('user_id');
+
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
 
         Schema::create('project_columns', function (Blueprint $table) {
@@ -72,6 +77,9 @@ Schema::dropIfExists('projects');
 
             $table->index('project_id');
             $table->index('project_item_status_id');
+
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
+            $table->foreign('project_item_status_id')->references('id')->on('project_item_statuses')->onDelete('cascade');
         });
 
         Schema::create('project_items', function (Blueprint $table) {
@@ -83,7 +91,7 @@ Schema::dropIfExists('projects');
             $table->dateTime('due_date')->nullable();
             $table->dateTime('completed_at')->nullable();
             $table->ulid('completed_by_id')->nullable();
-            $table->ulid('creator_id');
+            $table->ulid('creator_id')->nullable();
             $table->ulid('assignee_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
@@ -92,6 +100,12 @@ Schema::dropIfExists('projects');
             $table->index('project_item_status_id');
             $table->index('creator_id');
             $table->index('assignee_id');
+
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
+            $table->foreign('project_item_status_id')->references('id')->on('project_item_statuses')->onDelete('cascade');
+            $table->foreign('creator_id')->references('id')->on('users')->nullOnDelete();
+            $table->foreign('assignee_id')->references('id')->on('users')->nullOnDelete();
+
         });
     }
 

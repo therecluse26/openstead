@@ -27,6 +27,9 @@ return new class extends Migration
             $table->unsignedInteger('order_column')->nullable()->index();
 
             $table->nullableTimestamps();
+
+            $table->index('model_type');
+            $table->index('model_id');
         });
     }
 };
