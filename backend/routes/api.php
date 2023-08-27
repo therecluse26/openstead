@@ -26,11 +26,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/images/{imageId}', [ImageController::class, 'showImage'])->name('image.show');
 
 
-Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-	return $request->user();
-});
-
-
+Route::middleware(['auth:sanctum'])->get('/user', [UserController::class, 'getAuthenticatedUser']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
 

@@ -1,7 +1,7 @@
-import { useAuth } from '@/hooks/auth'
+import { useAuthorizationStore } from '@/components/Authorization/AuthorizationStore'
 
 const Index = () => {
-    const { user } = useAuth({ middleware: 'guest' })
+    const user = useAuthorizationStore(state => state.user)
 
     return <div>Welcome, {user?.name}!</div>
 }

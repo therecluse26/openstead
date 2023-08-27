@@ -11,6 +11,7 @@ import { useToast } from '../../context/ToastContext'
 import { getUsers } from '../../services/Generic/UserService'
 import MultiselectInput from '../../components/HookFormInputs/MultiselectInput'
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog' // For <ConfirmDialog /> component
+import Restrict from '../../components/Authorization/Restrict'
 
 const ProjectForm = ({ mode = 'create' }) => {
     const isMounted = useRef(false)
@@ -91,7 +92,9 @@ const ProjectForm = ({ mode = 'create' }) => {
     }
 
     return (
-        <>
+        <Restrict
+            permission="project:update"
+            unauthorizedMessage="You are not authorized to access this resource">
             <div className={'justify-content-center align-content-center grid'}>
                 <div className={'col-10'}>
                     <h3 className={'text-center'}>
@@ -172,44 +175,46 @@ const ProjectForm = ({ mode = 'create' }) => {
                         <Button type="submit" label="Save" className="mt-2" />
                     </div>
 
-                    <div className="col-10 mt-4">
-                        <Card className={'min-h-full'}>
-                            <h5 className="flex justify-content-center">
-                                Danger Zone
-                            </h5>
+                    <Restrict permission="project:delete">
+                        <div className="col-10 mt-4">
+                            <Card className={'min-h-full'}>
+                                <h5 className="flex justify-content-center">
+                                    Danger Zone
+                                </h5>
 
-                            <Button
-                                type="button"
-                                label="Delete Project"
-                                className="p-button-danger mt-4"
-                                onClick={() => {
-                                    confirmDialog({
-                                        header: 'Delete Project',
-                                        message:
-                                            'Are you sure you want to delete this project?',
-                                        accept: () => {
-                                            ProjectService.deleteProject(id)
-                                                .then(() => {
-                                                    router.push('/projects')
-                                                })
-                                                .catch(e => {
-                                                    showToast(
-                                                        e.response.data
-                                                            .message ??
-                                                            'Unknown error',
-                                                        'error',
-                                                    )
-                                                })
-                                        },
-                                    })
-                                }}
-                            />
-                        </Card>
-                    </div>
+                                <Button
+                                    type="button"
+                                    label="Delete Project"
+                                    className="p-button-danger mt-4"
+                                    onClick={() => {
+                                        confirmDialog({
+                                            header: 'Delete Project',
+                                            message:
+                                                'Are you sure you want to delete this project?',
+                                            accept: () => {
+                                                ProjectService.deleteProject(id)
+                                                    .then(() => {
+                                                        router.push('/projects')
+                                                    })
+                                                    .catch(e => {
+                                                        showToast(
+                                                            e.response.data
+                                                                .message ??
+                                                                'Unknown error',
+                                                            'error',
+                                                        )
+                                                    })
+                                            },
+                                        })
+                                    }}
+                                />
+                            </Card>
+                        </div>
+                    </Restrict>
                 </div>
             </form>
             <ConfirmDialog />
-        </>
+        </Restrict>
     )
 }
 

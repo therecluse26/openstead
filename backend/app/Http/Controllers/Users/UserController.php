@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Users;
 use App\Http\Controllers\Controller;
 use App\Resources\Users\List\UserListResource;
 use App\Repositories\User\UserRepository;
+use App\Resources\Users\Detail\UserWithPermissions;
 
 class UserController extends Controller
 {
@@ -17,6 +18,13 @@ class UserController extends Controller
         }
 
         return $this->repository;
+    }
+
+    public function getAuthenticatedUser()
+    {
+        return new UserWithPermissions(
+            $this->repository()->getAuthenticatedUser()
+        );
     }
 
     public function index()

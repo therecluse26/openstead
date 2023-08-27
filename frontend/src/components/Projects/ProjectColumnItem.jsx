@@ -4,6 +4,7 @@ import { useDraggable } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
 import { useProjectStore } from '@/state/ProjectStore'
 import ProjectService from '../../services/Projects/ProjectService'
+import { useAuthorizationStore } from '@/components/Authorization/AuthorizationStore'
 
 const ProjectColumnItem = ({ item }) => {
     const project = useProjectStore(state => state.project)
@@ -13,7 +14,7 @@ const ProjectColumnItem = ({ item }) => {
     const setModalVisibility = useProjectStore(
         state => state.setModalVisibility,
     )
-
+    const userCan = useAuthorizationStore(state => state.userCan)
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
         id: item.id,
     })
@@ -42,11 +43,11 @@ const ProjectColumnItem = ({ item }) => {
     return (
         <>
             <Card
-                ref={setNodeRef}
+                ref={userCan('project-item:update') ? setNodeRef : null}
                 className="cursor-pointer select-none my-2 border-round-xl surface-hover"
                 style={style}
-                {...listeners}
-                {...attributes}
+                {...(userCan('project-item:update') && listeners)}
+                {...(userCan('project-item:update') && attributes)}
                 onClick={() => handleCardClick(item)}
                 footer={
                     <>
@@ -71,19 +72,28 @@ const ProjectColumnItem = ({ item }) => {
                         )}
                     </>
                 }>
-                <div className="grid grid-cols-2 align-items-center">
-                    <div className="col-2 align-items-center ">
-                        <div className="w-2rem">
-                            <div className="p-2 align-items-center transition-colors transition-duration-200 border-round-md">
-                                <IconGripVertical size="1rem" />
+                {userCan('project-item:update') ? (
+                    <div className="grid grid-cols-2 align-items-center">
+                        <div className="col-2 align-items-center ">
+                            <div className="w-2rem">
+                                <div className="p-2 align-items-center transition-colors transition-duration-200 border-round-md">
+                                    <IconGripVertical size="1rem" />
+                                </div>
                             </div>
                         </div>
+                        <div className="col-10 align-items-center">
+                            {item.title}
+                            <br />
+                        </div>
                     </div>
-                    <div className="col-10 align-items-center">
-                        {item.title}
-                        <br />
+                ) : (
+                    <div className="grid grid-cols-2 align-items-center">
+                        <div className="col-12 align-items-center">
+                            {item.title}
+                            <br />
+                        </div>
                     </div>
-                </div>
+                )}
             </Card>
         </>
     )

@@ -8,9 +8,14 @@ import { TopBar } from '@/components/AppBase/Layouts/TopBar'
 import SidebarMenu from '@/SidebarMenu'
 import { ScrollTop } from 'primereact/scrolltop'
 import { useLocalStorage } from 'primereact/hooks'
+import { useAuthorizationStore } from '@/components/Authorization/AuthorizationStore'
 
 const AppLayout = ({ children }) => {
-    const { user } = useAuth({ middleware: 'auth' })
+    const { user: authUser } = useAuth({ middleware: 'auth' })
+    const user = useAuthorizationStore(state => state.user)
+    const setUser = useAuthorizationStore(state => state.setUser)
+    const setPermissions = useAuthorizationStore(state => state.setPermissions)
+
     const [layoutMode] = useState('static')
     const [layoutColorMode] = useState('dark')
     const [overlayMenuActive, setOverlayMenuActive] = useState(false)
@@ -41,6 +46,18 @@ const AppLayout = ({ children }) => {
             JSON.parse(localStorage.getItem('sidebarMenuActive')),
         )
     }, [])
+
+    useEffect(() => {
+        // Set authorizationStore based on user data
+        if (authUser) {
+            setUser({
+                id: authUser?.data?.id,
+                name: authUser?.data?.name,
+                email: authUser?.data?.email,
+            })
+            setPermissions(authUser?.data?.allPermissions)
+        }
+    }, [authUser])
 
     useEffect(() => {
         // storing input name
@@ -108,7 +125,6 @@ const AppLayout = ({ children }) => {
                 content="Copied to clipboard"
                 event="focus"
             />
-
             <TopBar
                 onToggleMenuClick={onToggleMenuClick}
                 mobileTopbarMenuActive={mobileTopbarMenuActive}

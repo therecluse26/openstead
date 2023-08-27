@@ -1,5 +1,5 @@
 import ApplicationLogo from '@/components/AppBase/ApplicationLogo'
-import AuthCard from '@/components/Auth/AuthCard'
+import AuthCard from '@/components/Authentication/AuthCard'
 import Button from '@/components/Button'
 import GuestLayout from '@/components/AppBase/Layouts/GuestLayout'
 import Link from 'next/link'

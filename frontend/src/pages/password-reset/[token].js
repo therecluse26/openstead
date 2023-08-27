@@ -1,6 +1,6 @@
 import ApplicationLogo from '@/components/AppBase/ApplicationLogo'
-import AuthCard from '@/components/Auth/AuthCard'
-import AuthSessionStatus from '@/components/Auth/AuthSessionStatus'
+import AuthCard from '@/components/Authentication/AuthCard'
+import AuthSessionStatus from '@/components/Authentication/AuthSessionStatus'
 import Button from '@/components/Button'
 import GuestLayout from '@/components/AppBase/Layouts/GuestLayout'
 

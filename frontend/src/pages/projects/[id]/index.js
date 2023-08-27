@@ -14,49 +14,10 @@ import {
 import { useProjectStore } from '@/state/ProjectStore'
 import { Menubar } from 'primereact/menubar'
 import { Tooltip } from 'primereact/tooltip'
-import { Button } from 'primereact/button'
 import ProjectUserDialog from '../../../components/Projects/ProjectUserDialog'
 import { useToast } from '../../../context/ToastContext'
 import { ProgressBar } from 'primereact/progressbar'
-
-const ProjectProgress = ({ project }) => {
-    const totalItems = project?.items?.length
-    const orderedStatuses = project?.workflow?.sort((a, b) => {
-        return a.order - b.order
-    })
-    const statusPercentages = orderedStatuses?.map(status => {
-        const count = project?.items?.filter(item => {
-            return item.status.id === status.id
-        })?.length
-        return {
-            statusId: status.id,
-            percentage: (count / totalItems) * 100,
-        }
-    })
-
-    return (
-        <div className="flex flex-col">
-            {statusPercentages?.map(status => {
-                return (
-                    <div
-                        key={'status_' + status.statusId}
-                        className="flex justify-between items-center mb-2">
-                        <span className="text-sm">
-                            {
-                                orderedStatuses?.find(
-                                    i => i.id === status.statusId,
-                                )?.name
-                            }
-                        </span>
-                        <span className="text-sm">
-                            {status?.percentage?.toFixed(0)}%
-                        </span>
-                    </div>
-                )
-            })}
-        </div>
-    )
-}
+import { useAuthorizationStore } from '@/components/Authorization/AuthorizationStore'
 
 const AvatarList = ({ users, maxUsersToDisplay = 3 }) => {
     const count = users?.length
@@ -109,16 +70,17 @@ const ProjectDetail = () => {
     const { showToast } = useToast()
     const { query, isReady } = useRouter()
     const { id } = query
+    const userCan = useAuthorizationStore(state => state.userCan)
 
     const projectMenuItems = [
-        {
+        userCan('project-item:create') && {
             label: 'Add Item',
             icon: 'ti ti-plus',
             command: () => {
                 router.push(`/projects/${id}/items/add`)
             },
         },
-        {
+        userCan('project:update') && {
             label: 'Project Settings',
             icon: 'ti ti-settings',
             command: () => {

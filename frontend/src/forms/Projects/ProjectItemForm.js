@@ -8,14 +8,14 @@ import { csrf } from '@/hooks/auth'
 import ProjectService from '@/services/Projects/ProjectService'
 import SelectInput from '../../components/HookFormInputs/SelectInput'
 import CalendarInput from '@/components/HookFormInputs/CalendarInput'
-import { useAuth } from '@/hooks/auth'
 import RichTextInput from '../../components/HookFormInputs/RichTextInput'
 import { useToast } from '../../context/ToastContext'
-
+import { useAuthorizationStore } from '@/components/Authorization/AuthorizationStore'
+import Restrict from '../../components/Authorization/Restrict'
 const ProjectItemForm = ({ projectId, status = null }) => {
     const isMounted = useRef(false)
     const router = useRouter()
-    const { user } = useAuth({ middleware: 'auth' })
+    const user = useAuthorizationStore(state => state.user)
     const { showToast } = useToast()
     const defaultValues = {
         title: null,

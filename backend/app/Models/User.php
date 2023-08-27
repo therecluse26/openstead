@@ -4,6 +4,9 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Casts\PermissionCollection;
+use App\Casts\RoleCollection;
+use App\Casts\RoleEnumCollection;
 use Creativeorange\Gravatar\Facades\Gravatar;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -14,6 +17,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Models\Projects\Project;
 use App\Models\Projects\ProjectUser;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -29,7 +33,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'avatar_url'
+        'avatar_url',
+        'roles',
+        'permissions'
     ];
 
     /**
@@ -49,6 +55,8 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'roles' => RoleCollection::class,
+        'permissions' => PermissionCollection::class,
     ];
 
     public function avatar(): Attribute
@@ -68,5 +76,14 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Project::class, 'project_users', 'user_id', 'project_id')
         ->using(ProjectUser::class);
+    }
+
+    public function getAllPermissionsAttribute(): Collection
+    {
+        $permissions = $this->roles?->map(function($role){
+            return $role->permissions();
+        })->flatten() ?? [];
+
+        return $permissions->merge($this->permissions->flatten());        
     }
 }
