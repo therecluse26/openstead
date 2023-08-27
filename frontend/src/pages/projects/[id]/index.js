@@ -18,6 +18,7 @@ import ProjectUserDialog from '../../../components/Projects/ProjectUserDialog'
 import { useToast } from '../../../context/ToastContext'
 import { ProgressBar } from 'primereact/progressbar'
 import { useAuthorizationStore } from '@/components/Authorization/AuthorizationStore'
+import Restrict from '../../../components/Authorization/Restrict'
 
 const AvatarList = ({ users, maxUsersToDisplay = 3 }) => {
     const count = users?.length
@@ -200,7 +201,7 @@ const ProjectDetail = () => {
     }, [id])
 
     return (
-        <>
+        <Restrict permission="project:read" showMessage>
             {project?.id && <ProjectItemDialog projectId={project.id} />}
 
             {project?.users && <ProjectUserDialog projectId={project.id} />}
@@ -246,7 +247,7 @@ const ProjectDetail = () => {
                     </section>
                 )}
             </DndContext>
-        </>
+        </Restrict>
     )
 }
 

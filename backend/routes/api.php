@@ -35,17 +35,18 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 	Route::prefix('/projects')
 	->group(static function () {
-		Route::get('/', [ProjectController::class, 'index']);
-		Route::post('/', [ProjectController::class, 'store']);
-		Route::put('/{id}', [ProjectController::class, 'update']);
-		Route::post('/{id}/items', [ProjectController::class, 'createItem']);
-		Route::put('/{id}/items', [ProjectController::class, 'updateItems']);
-		Route::get('/{project_id}/items/{item_id}', [ProjectItemController::class, 'show']);
-		Route::get('/{id}', [ProjectController::class, 'show']);
-		Route::get('/{id}/statuses', [ProjectController::class, 'getStatuses']);
-		Route::get('/{id}/users', [ProjectController::class, 'getUsers']);
-		Route::delete('/{id}', [ProjectController::class, 'destroy']);
-		Route::delete('/{project_id}/items/{item_id}', [ProjectItemController::class, 'destroy']);
+		Route::get('/', [ProjectController::class, 'index'])->middleware('user-can:project:list');
+		Route::post('/', [ProjectController::class, 'store'])->middleware('user-can:project:create');
+		Route::put('/{id}', [ProjectController::class, 'update'])->middleware('user-can:project:update');
+		Route::get('/{id}', [ProjectController::class, 'show'])->middleware('user-can:project:read');
+		
+		Route::post('/{id}/items', [ProjectController::class, 'createItem'])->middleware('user-can:project-item:create');
+		Route::put('/{id}/items', [ProjectController::class, 'updateItems'])->middleware('user-can:project-item:update');
+		Route::get('/{project_id}/items/{item_id}', [ProjectItemController::class, 'show'])->middleware('user-can:project-item:read');
+		Route::get('/{id}/statuses', [ProjectController::class, 'getStatuses'])->middleware('user-can:project:read');
+		Route::get('/{id}/users', [ProjectController::class, 'getUsers'])->middleware('user-can:project:read');
+		Route::delete('/{id}', [ProjectController::class, 'destroy'])->middleware('user-can:project:delete');
+		Route::delete('/{project_id}/items/{item_id}', [ProjectItemController::class, 'destroy'])->middleware('user-can:project-item:delete');
 	});
 
 	Route::prefix('/inventory')

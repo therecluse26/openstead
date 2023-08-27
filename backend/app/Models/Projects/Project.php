@@ -5,7 +5,6 @@ use App\Contracts\DataTablePaginatable;
 use App\Models\User;
 use App\Resources\FormattedFilter;
 use App\Resources\Projects\Detail\ProjectDetailResource;
-use App\Resources\Projects\Detail\ProjectUserResource;
 use App\Resources\Projects\List\ProjectListResource;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -76,6 +75,11 @@ class Project extends Model implements DataTablePaginatable
     public function items(): HasMany
     {
         return $this->hasMany(ProjectItem::class);
+    }
+
+    public function owner(): BelongsToMany
+    {
+        return $this->users()->wherePivot('is_owner', true);
     }
 
 	public function getDetailResource(): JsonResource

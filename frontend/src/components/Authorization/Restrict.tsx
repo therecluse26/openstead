@@ -8,10 +8,18 @@ type RestrictProps = {
     message?: string
 }
 
+function isIterable(input) {
+    if (input === null || input === undefined) {
+        return false
+    }
+
+    return typeof input[Symbol.iterator] === 'function'
+}
+
 export default function Restrict({
     permission,
     showMessage = false,
-    message = 'You are not authorized to access resource',
+    message = 'You are not authorized to access this resource',
     children,
 }: RestrictProps) {
     const user = useAuthorizationStore(state => state.user)
@@ -22,7 +30,7 @@ export default function Restrict({
             {user?.id && (
                 <>
                     {userCan(permission) ? (
-                        children
+                        <>{isIterable(children) ? <>{children}</> : children}</>
                     ) : (
                         <>
                             {showMessage && message && (

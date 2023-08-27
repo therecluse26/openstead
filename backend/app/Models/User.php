@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Casts\PermissionCollection;
 use App\Casts\RoleCollection;
 use App\Casts\RoleEnumCollection;
+use App\Enums\Authorization\Permission;
 use Creativeorange\Gravatar\Facades\Gravatar;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -75,7 +76,7 @@ class User extends Authenticatable
     public function projects(): BelongsToMany
     {
         return $this->belongsToMany(Project::class, 'project_users', 'user_id', 'project_id')
-        ->using(ProjectUser::class);
+            ->using(ProjectUser::class);
     }
 
     public function getAllPermissionsAttribute(): Collection
@@ -85,5 +86,10 @@ class User extends Authenticatable
         })->flatten() ?? [];
 
         return $permissions->merge($this->permissions->flatten());        
+    }
+    
+    public function hasPermissionTo(Permission $permission): bool
+    {
+        return $this->allPermissions->contains($permission);
     }
 }
