@@ -29,6 +29,7 @@ const Projects = () => {
             <FilterableDataTable
                 title={'Projects'}
                 basePath={'projects'}
+                createPermission="project:create"
                 service={ProjectService}
                 filters={filters}
                 setFilters={setFilters}

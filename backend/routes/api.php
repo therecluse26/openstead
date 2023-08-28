@@ -62,27 +62,27 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 	Route::prefix('/notes')
 		->group(function () {
-			Route::delete('/{id}', [NoteController::class, 'destroy']);
-			Route::get('/{modelName}/{modelId}', [NoteController::class, 'index']);
-			Route::post('/', [NoteController::class, 'store']);
+			Route::delete('/{id}', [NoteController::class, 'destroy'])->middleware('user-can:note:delete');
+			Route::get('/{modelName}/{modelId}', [NoteController::class, 'index'])->middleware('user-can:note:list');
+			Route::post('/', [NoteController::class, 'store'])->middleware('user-can:note:create');
 		});
 
 	// Services/Service Logs
 	Route::prefix('/services')
 		->group(function () {
-			Route::get('/', [ServiceLogController::class, 'getServices']);
-			Route::post('/', [ServiceController::class, 'store']);
+			Route::get('/', [ServiceLogController::class, 'getServices'])->middleware('user-can:service:list');
+			Route::post('/', [ServiceController::class, 'store'])->middleware('user-can:service:create');
 			RouteBuilderService::buildTypeFilterRoute(ServiceLogController::class);
 			Route::prefix('/logs')
 				->group(function () {
-					Route::delete('/{id}', [ServiceLogController::class, 'destroy']);
-					Route::get('/{modelName}/{modelId}', [ServiceLogController::class, 'index']);
-					Route::post('/', [ServiceLogController::class, 'store']);
+					Route::delete('/{id}', [ServiceLogController::class, 'destroy'])->middleware('user-can:service:delete');
+					Route::get('/{modelName}/{modelId}', [ServiceLogController::class, 'index'])->middleware('user-can:service:read');
+					Route::post('/', [ServiceLogController::class, 'store'])->middleware('user-can:service:create');
 				});
 
 		});
 
-	Route::get('/users', [UserController::class, 'index']);
+	Route::get('/users', [UserController::class, 'index'])->middleware('user-can:user:list');
 
 });
 

@@ -6,6 +6,7 @@ import { classNames } from 'primereact/utils'
 import { Dropdown } from 'primereact/dropdown'
 import Link from 'next/link'
 import { useToast } from '../../context/ToastContext'
+import Restrict from '@/components/Authorization/Restrict'
 
 const FilterableDataTable = ({
     title,
@@ -15,6 +16,7 @@ const FilterableDataTable = ({
     basePath,
     setLazyParamsCallack,
     selectionMode,
+    createPermission = null,
 }) => {
     const isMounted = useRef(false)
     const [selected, setSelected] = useState([])
@@ -164,9 +166,11 @@ const FilterableDataTable = ({
         return (
             <div className="flex justify-content-between align-items-center">
                 <h5 className="m-0">{title}</h5>
-                <span className="p-input-icon-left">
-                    <Link href={`${basePath}/add`}>+ Add</Link>
-                </span>
+                <Restrict permission={createPermission}>
+                    <span className="p-input-icon-left">
+                        <Link href={`${basePath}/add`}>+ Add</Link>
+                    </span>
+                </Restrict>
             </div>
         )
     }

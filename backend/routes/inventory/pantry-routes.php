@@ -5,12 +5,12 @@ use App\Http\Controllers\Inventory\PantryController;
 
 RouteBuilderService::buildTypeFilterRoute(PantryController::class);
 Route::get('/filters', [PantryController::class, 'getFilters']);
-Route::get('/{id}/similar', [PantryController::class, 'getSimilar']);
+Route::get('/{id}/similar', [PantryController::class, 'getSimilar'])->middleware('user-can:inventory:list');
 
 Route::prefix('')->name('pantry.')->group(static function () {
-    Route::get('/', [PantryController::class, 'index']);
-    Route::post('/', [PantryController::class, 'store']);
-    Route::put('/{id}', [PantryController::class, 'update']);
-    Route::get('/{id}', [PantryController::class, 'show']);
-    Route::delete('/{id}', [PantryController::class, 'destroy']);
+    Route::get('/', [PantryController::class, 'index'])->middleware('user-can:inventory:list');
+    Route::post('/', [PantryController::class, 'store'])->middleware('user-can:inventory:create');
+    Route::put('/{id}', [PantryController::class, 'update'])->middleware('user-can:inventory:update');
+    Route::get('/{id}', [PantryController::class, 'show'])->middleware('user-can:inventory:read');
+    Route::delete('/{id}', [PantryController::class, 'destroy'])->middleware('user-can:inventory:delete');
 });

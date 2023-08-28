@@ -73,6 +73,7 @@ const PantryItems = () => {
         <FilterableDataTable
             title={'Pantry Items'}
             basePath={'pantry'}
+            createPermission="inventory:create"
             service={PantryService}
             filters={filters}
             setLazyParamsCallack={lazyParamsCallback}>

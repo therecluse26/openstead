@@ -10,6 +10,20 @@ enum Permission: string
     case InventoryCreate = 'inventory:create';
     case InventoryUpdate = 'inventory:update';
     case InventoryDelete = 'inventory:delete';
+
+    // Note Permissions
+    case NoteList = 'note:list';
+    case NoteRead = 'note:read';
+    case NoteCreate = 'note:create';
+    case NoteUpdate = 'note:update';
+    case NoteDelete = 'note:delete';
+
+    // Service Permissions
+    case ServiceList = 'service:list';
+    case ServiceRead = 'service:read';
+    case ServiceCreate = 'service:create';
+    case ServiceUpdate = 'service:update';
+    case ServiceDelete = 'service:delete';
     
     // Project Permissions
     case ProjectList = 'project:list';

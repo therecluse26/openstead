@@ -14,7 +14,7 @@ return new class extends Migration {
 	public function up()
 	{
 		Schema::table('users', function (Blueprint $table) {
-			$table->json('roles')->after('password')->default(new Expression('(JSON_ARRAY("user"))'));
+			$table->json('roles')->after('password')->default(new Expression('(JSON_ARRAY("viewer"))'));
 			$table->json('permissions')->nullable()->after('roles');
 		});
 	}

@@ -66,6 +66,7 @@ const Equipment = () => {
             <FilterableDataTable
                 title={'Equipment'}
                 basePath={'equipment'}
+                createPermission="inventory:create"
                 service={EquipmentService}
                 filters={filters}
                 setLazyParamsCallack={lazyParamsCallback}>
