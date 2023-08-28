@@ -11,6 +11,7 @@ import Notes from '@/components/Notes'
 import InventoryDetailCard from '@/components/Inventory/InventoryDetailCard'
 import SimilarItems from '@/components/Inventory/SimilarItems'
 import Spinner from '@/components/Spinner'
+import Restrict from '@/components/Authorization/Restrict'
 
 const EquipmentDetail = () => {
     const isMounted = useRef(false)
@@ -76,31 +77,37 @@ const EquipmentDetail = () => {
                             <div
                                 className="col-12 sm:col-fixed"
                                 style={{ width: '200px' }}>
-                                <LinkButton
-                                    href={`/inventory/equipment/${equipmentData?.id}/edit`}
-                                    leftIcon={'ti ti-edit'}
-                                    text={' Edit'}
-                                />
+                                <Restrict permission="inventory:update">
+                                    <LinkButton
+                                        href={`/inventory/equipment/${equipmentData?.id}/edit`}
+                                        leftIcon={'ti ti-edit'}
+                                        text={' Edit'}
+                                    />
+                                </Restrict>
 
-                                <LinkButton
-                                    href={`/inventory/equipment/add`}
-                                    leftIcon={'ti ti-plus'}
-                                    text={' New'}
-                                />
+                                <Restrict permission="inventory:create">
+                                    <LinkButton
+                                        href={`/inventory/equipment/add`}
+                                        leftIcon={'ti ti-plus'}
+                                        text={' New'}
+                                    />
+                                </Restrict>
                             </div>
                         </>
                     }
                     footer={
-                        <div className="col-12 sm:col-fixed text-right">
-                            <Button
-                                className={'p-button-danger'}
-                                onClick={confirmDelete}>
-                                <span>
-                                    <i className={'ti ti-trash'} />
-                                    {' Delete'}
-                                </span>
-                            </Button>
-                        </div>
+                        <Restrict permission="inventory:delete">
+                            <div className="col-12 sm:col-fixed text-right">
+                                <Button
+                                    className={'p-button-danger'}
+                                    onClick={confirmDelete}>
+                                    <span>
+                                        <i className={'ti ti-trash'} />
+                                        {' Delete'}
+                                    </span>
+                                </Button>
+                            </div>
+                        </Restrict>
                     }>
                     <div className={'col-12 md:col-8'}>
                         <div className={'flex align-content-center mb-4'}>

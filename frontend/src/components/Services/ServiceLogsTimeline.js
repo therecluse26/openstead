@@ -10,6 +10,7 @@ import { Panel } from 'primereact/panel'
 import CollapsiblePanelTemplate from '@/components/Templates/CollapsiblePanelTemplate'
 import ServiceLogService from '@/services/Inventory/ServiceLogService'
 import Spinner from '@/components/Spinner'
+import Restrict from '../Authorization/Restrict'
 
 const ServiceLogsTimeline = ({ parentType, parentId }) => {
     const [editing, setEditing] = useState(false)
@@ -64,18 +65,22 @@ const ServiceLogsTimeline = ({ parentType, parentId }) => {
                     subTitle={item?.log?.service_date}
                     className={'shadow-4 surface-overlay'}>
                     <p>{item?.log?.notes}</p>
-                    <div
-                        className={
-                            'w-full flex justify-content-end ml-2 -mb-4'
-                        }>
-                        <Button
-                            className={'p-button-danger justify-content-center'}
-                            onClick={() => {
-                                deleteServiceLog(item?.log?.id)
-                            }}>
-                            <i className={'ti ti-trash'} />
-                        </Button>
-                    </div>
+                    <Restrict permission={'service:delete'}>
+                        <div
+                            className={
+                                'w-full flex justify-content-end ml-2 -mb-4'
+                            }>
+                            <Button
+                                className={
+                                    'p-button-danger justify-content-center'
+                                }
+                                onClick={() => {
+                                    deleteServiceLog(item?.log?.id)
+                                }}>
+                                <i className={'ti ti-trash'} />
+                            </Button>
+                        </div>
+                    </Restrict>
                 </Card>
             </>
         )
@@ -86,56 +91,66 @@ const ServiceLogsTimeline = ({ parentType, parentId }) => {
     }, [parentId])
 
     return (
-        <div className={'my-4'}>
-            {!loaded ? (
-                <div className="card flex justify-content-center">
-                    <Spinner />
-                </div>
-            ) : (
-                <Panel
-                    toggleable
-                    headerTemplate={options => {
-                        return CollapsiblePanelTemplate(options, 'Service Logs')
-                    }}>
-                    {editing === true ? (
-                        <ServiceLogForm
-                            inline={true}
-                            serviceable_type={parentType}
-                            onClose={() => {
-                                setEditing(false)
-                            }}
-                            onComplete={() => {
-                                setEditing(false)
-                                refreshLogs()
-                            }}
+        <Restrict permission={'service:read'}>
+            <div className={'my-4'}>
+                {!loaded ? (
+                    <div className="card flex justify-content-center">
+                        <Spinner />
+                    </div>
+                ) : (
+                    <Panel
+                        toggleable
+                        headerTemplate={options => {
+                            return CollapsiblePanelTemplate(
+                                options,
+                                'Service Logs',
+                            )
+                        }}>
+                        {editing === true ? (
+                            <ServiceLogForm
+                                inline={true}
+                                serviceable_type={parentType}
+                                onClose={() => {
+                                    setEditing(false)
+                                }}
+                                onComplete={() => {
+                                    setEditing(false)
+                                    refreshLogs()
+                                }}
+                            />
+                        ) : (
+                            <Restrict permission={'service:create'}>
+                                <div className={'flex justify-content-center'}>
+                                    <Button
+                                        onClick={() => {
+                                            setEditing(true)
+                                        }}>
+                                        <span>
+                                            <i className={'ti ti-plus'} />
+                                            {' New'}
+                                        </span>
+                                    </Button>
+                                </div>
+                            </Restrict>
+                        )}
+
+                        {logs?.length > 0 && <Divider />}
+
+                        <Timeline
+                            value={logs?.map(log => {
+                                return {
+                                    log: log,
+                                    icon: log?.service?.type?.icon,
+                                }
+                            })}
+                            align="alternate"
+                            marker={customizedTimelineMarker}
+                            content={customizedTimelineContent}
                         />
-                    ) : (
-                        <div className={'flex justify-content-center'}>
-                            <Button
-                                onClick={() => {
-                                    setEditing(true)
-                                }}>
-                                <span>
-                                    <i className={'ti ti-plus'} />
-                                    {' New'}
-                                </span>
-                            </Button>
-                        </div>
-                    )}
-
-                    {logs?.length > 0 && <Divider />}
-
-                    <Timeline
-                        value={logs?.map(log => {
-                            return { log: log, icon: log?.service?.type?.icon }
-                        })}
-                        align="alternate"
-                        marker={customizedTimelineMarker}
-                        content={customizedTimelineContent}
-                    />
-                </Panel>
-            )}
-        </div>
+                    </Panel>
+                )}
+            </div>
+        </Restrict>
     )
 }
 
