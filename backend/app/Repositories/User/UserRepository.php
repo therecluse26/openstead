@@ -3,11 +3,15 @@ namespace App\Repositories\User;
 
 use App\Models\User;
 use App\Contracts\Repository;
+use App\Traits\AddMedia;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Hash;
 
 class UserRepository implements Repository
 {
+
+    use AddMedia;
+
     public function getAuthenticatedUser(): ?User
     {
         return auth()->user();
@@ -25,19 +29,29 @@ class UserRepository implements Repository
 
     public function create(array $attributes): User
     {
-        return User::create([
+        $user = User::create([
             'name' => $attributes['name'],
             'email' => $attributes['email'],
             'password' => Hash::make($attributes['password']),
             'roles' => $attributes['roles'] ?? null,
             'permissions' => $attributes['permissions'] ?? null,
         ]);
+
+        if (isset($attributes['images']) && is_array($attributes['images']) && count($attributes['images']) > 0) {
+			$this->addOrReplaceImagesBase64($user, $attributes['images']);
+		}
+
+        return $user;
     }
 
     public function update(string $id, array $attributes): User
     {
         $user = $this->getById($id);
         $user->update($attributes);
+
+        if (isset($attributes['images']) && is_array($attributes['images']) && count($attributes['images']) > 0) {
+			$this->addOrReplaceImagesBase64($user, $attributes['images']);
+		}
 
         return $user;
     }

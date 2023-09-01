@@ -30,6 +30,6 @@ trait HasImages
 		$this
 			->addMediaConversion('preview')
 			->fit(Manipulations::FIT_CROP, 300, 300)
-			->nonQueued();primaryImage
+			->nonQueued();
 	}
 }
