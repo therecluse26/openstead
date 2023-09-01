@@ -15,6 +15,7 @@ use App\Resources\Inventory\List\PaginatedInventoryResource;
 use App\Resources\LivestockDropdownResource;
 use App\Resources\VarietyDropdownResource;
 use App\Services\Inventory\InventoryService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Response;
@@ -39,9 +40,9 @@ final class LivestockController extends Controller implements HasAppendableSelec
 		return $respository->getFilters();
 	}
 
-	public function storeTypeValue(LivestockRepository $repository, StoreLivestockBreedRequest $request): Response
+	public function storeTypeValue(LivestockRepository $repository, StoreLivestockBreedRequest $request): JsonResponse
 	{
-		return response($repository->createVarietyValue($request), 200);
+		return response()->json($repository->createVarietyValue($request), 200);
 	}
 
 	public function getTypeMembers(LivestockRepository $livestockRepository, AnimalType $type): ResourceCollection
@@ -54,34 +55,35 @@ final class LivestockController extends Controller implements HasAppendableSelec
 	/**
 	 * Display a listing of the resource.
 	 *
-	 * @return Response
+	 * @return JsonResponse
 	 * @throws JsonException
 	 */
-	public function index(Request $request, InventoryService $inventoryService)
+	public function index(Request $request, InventoryService $inventoryService): JsonResponse
 	{
-		return response(
+		return response()->json(
 			PaginatedInventoryResource::make(
 				$inventoryService::buildInventoryTableData(Livestock::class, $request),
 				LivestockResource::class
-			)
-		);
+			), 
+		200);
 	}
 
 	/**
 	 * Store a newly created resource in storage.
 	 *
 	 * @param StoreLivestockRequest $request
-	 * @return Response
+	 * @return JsonResponse
 	 */
-	public function store(StoreLivestockRequest $request, LivestockRepository $livestockRepository)
+	public function store(StoreLivestockRequest $request, LivestockRepository $livestockRepository): JsonResponse
 	{
-		return response(
+		return response()->json(
 			$livestockRepository->create(
 				$request->only((new Livestock())->getFillable()),
 				$request->get('images'),
 				$request->get('parents'),
-				$request->get('children')),
-			200);
+				$request->get('children'),
+			), 
+		201);
 	}
 
 	/**
@@ -89,13 +91,13 @@ final class LivestockController extends Controller implements HasAppendableSelec
 	 *
 	 * @param LivestockRepository $livestockRepository
 	 * @param string $livestock_id
-	 * @return Response
+	 * @return JsonResponse
 	 */
-	public function show(LivestockRepository $livestockRepository, string $id): Response
+	public function show(LivestockRepository $livestockRepository, string $id): JsonResponse
 	{
-		return response(
-			$livestockRepository->findUnscoped($id)->getDetailResource()
-		);
+		return response()->json(			
+			$livestockRepository->findUnscoped($id)->getDetailResource(),
+		200);
 	}
 
 	/**
@@ -104,18 +106,19 @@ final class LivestockController extends Controller implements HasAppendableSelec
 	 * @param LivestockRepository $livestockRepository
 	 * @param UpdateLivestockRequest $request
 	 * @param string $livestock
-	 * @return Response
+	 * @return JsonResponse
 	 */
-	public function update(LivestockRepository $livestockRepository, UpdateLivestockRequest $request, string $id): Response
+	public function update(LivestockRepository $livestockRepository, UpdateLivestockRequest $request, string $id): JsonResponse
 	{
-		return response(
+		return response()->json(
 			$livestockRepository->update(
 				$livestockRepository->findUnscoped($id),
 				$request->only((new Livestock())->getFillable()),
 				$request->get('images'),
 				$request->get('parents'),
-				$request->get('children')),
-			200);
+				$request->get('children')
+			),
+		200);
 	}
 
 	/**
@@ -123,15 +126,15 @@ final class LivestockController extends Controller implements HasAppendableSelec
 	 *
 	 * @param string $livestock
 	 * @param LivestockRepository $livestockRepository
-	 * @return Response
+	 * @return JsonResponse
 	 */
-	public function destroy(string $id, LivestockRepository $livestockRepository): Response
+	public function destroy(string $id, LivestockRepository $livestockRepository): JsonResponse
 	{
-		return response(
+		return response()->json(
 			$livestockRepository->delete(
 				$livestockRepository->findUnscoped($id)
 			),
-			200);
+		204);
 	}
 
 	/**
@@ -139,13 +142,11 @@ final class LivestockController extends Controller implements HasAppendableSelec
 	 *
 	 * @param array $ids
 	 * @param LivestockRepository $livestockRepository
-	 * @return Response
+	 * @return JsonResponse
 	 */
-	public function destroyMultiple(array $ids, LivestockRepository $livestockRepository): Response
+	public function destroyMultiple(array $ids, LivestockRepository $livestockRepository): JsonResponse
 	{
-		return response(
-			$livestockRepository->deleteMultiple($ids),
-			200);
+		return response()->json($livestockRepository->deleteMultiple($ids), 200);
 	}
 
 	/**
@@ -153,29 +154,30 @@ final class LivestockController extends Controller implements HasAppendableSelec
 	 *
 	 * @param string $livestock
 	 * @param LivestockRepository $livestockRepository
-	 * @return Response
+	 * @return JsonResponse
 	 */
-	public function markDeceased(string $id, LivestockRepository $livestockRepository): Response
+	public function markDeceased(string $id, LivestockRepository $livestockRepository): JsonResponse
 	{
-		return response(
+		return response()->json(
 			$livestockRepository->markDeceased(
 				$livestockRepository->findUnscoped($id),
-				true),
-			200);
+				true
+			),
+		200);
 	}
 
 	/**
 	 * Gets similar livestock by type
 	 *
 	 * @param string $livestock
-	 * @return Response
+	 * @return JsonResponse
 	 */
-	public function getSimilar(LivestockRepository $livestockRepository, string $id)
+	public function getSimilar(LivestockRepository $livestockRepository, string $id): JsonResponse
 	{
-		return response(LivestockResource::collection(
+		return response()->json(LivestockResource::collection(
 			$livestockRepository->getSimilar(
 				$id
 			)
-		));
+		), 200);
 	}
 }

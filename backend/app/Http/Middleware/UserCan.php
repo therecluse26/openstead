@@ -36,11 +36,11 @@ class UserCan
         $matchedPermission = Permission::from($permission);
 
         if(is_null($matchedPermission)) {
-            return response()->json(['message'=>'Invalid permission'], 400);
+            return response()->json(['message' => 'Invalid permission'], 400);
         }
 
 		if (!$this->authUser()?->hasPermissionTo($matchedPermission)) {
-			return response()->json(['message'=>'Access denied'], 403);
+			return response()->json(['message' => 'Access denied'], 403);
 		}
 
 		return $next($request);

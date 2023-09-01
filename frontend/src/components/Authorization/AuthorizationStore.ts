@@ -15,7 +15,9 @@ export const useAuthorizationStore = create<AuthorizationState>((set, get) => ({
         name: null,
         email: null,
     },
-    setUser: (user: User) => set({ user: user }),
+    setUser: (user: User) => {
+        set({ user: user })
+    },
     permissions: [],
     setPermissions: (permissions: string[]) =>
         set({ permissions: permissions }),

@@ -12,6 +12,7 @@ use App\Repositories\Inventory\ServiceLogRepository;
 use App\Resources\ServiceDropdownResource;
 use App\Resources\ServiceLogResource;
 use App\Services\Inventory\ServiceLogService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
@@ -41,15 +42,15 @@ final class ServiceLogController extends Controller implements HasAppendableSele
 	 * @param ServiceLogRepository $repository
 	 * @param string $modelName
 	 * @param string $modelId
-	 * @return Response
+	 * @return JsonResponse
 	 */
-	public function index(ServiceLogRepository $repository, string $modelName, string $modelId): Response
+	public function index(ServiceLogRepository $repository, string $modelName, string $modelId): JsonResponse
 	{
-		return response(
+		return response()->json(
 			ServiceLogResource::collection(
 				$repository->list($modelName, $modelId)
-			)
-		);
+			), 
+		200);
 	}
 
 
@@ -58,27 +59,26 @@ final class ServiceLogController extends Controller implements HasAppendableSele
 	 *
 	 * @param StoreServiceLogRequest $request
 	 * @param ServiceLogRepository $serviceLogRepository
-	 * @return Response
+	 * @return JsonResponse
 	 */
-	public function store(StoreServiceLogRequest $request, ServiceLogRepository $serviceLogRepository): Response
+	public function store(StoreServiceLogRequest $request, ServiceLogRepository $serviceLogRepository): JsonResponse
 	{
-		return response($serviceLogRepository->create(
-			collect(
-				$request->all()
-			)),
-			200
-		);
+		return response()->json(
+			$serviceLogRepository->create(
+				$request->all()	
+			),
+		201);
 	}
 
 	/**
 	 * Display the specified resource.
 	 *
 	 * @param ServiceLog $serviceLog
-	 * @return Response
+	 * @return JsonResponse
 	 */
-	public function show(ServiceLog $serviceLog): Response
+	public function show(string $serviceLog, ServiceLogRepository $serviceLogRepository): JsonResponse
 	{
-		return response($serviceLog);
+		return response()->json($serviceLogRepository->find($serviceLog), 200);
 	}
 
 
@@ -88,11 +88,11 @@ final class ServiceLogController extends Controller implements HasAppendableSele
 	 * @param UpdateServiceLogRequest $request
 	 * @param string $serviceLog
 	 * @param ServiceLogRepository $serviceLogRepository
-	 * @return Response
+	 * @return JsonResponse
 	 */
-	public function update(UpdateServiceLogRequest $request, string $serviceLog, ServiceLogRepository $serviceLogRepository): Response
+	public function update(UpdateServiceLogRequest $request, string $serviceLog, ServiceLogRepository $serviceLogRepository): JsonResponse
 	{
-		return response($serviceLogRepository->update($serviceLog, $request), 200);
+		return response()->json($serviceLogRepository->update($serviceLog, $request), 200);
 	}
 
 	/**
@@ -100,10 +100,10 @@ final class ServiceLogController extends Controller implements HasAppendableSele
 	 *
 	 * @param ServiceLogRepository $repository
 	 * @param string $id
-	 * @return Response
+	 * @return JsonResponse
 	 */
-	public function destroy(ServiceLogRepository $repository, string $id): Response
+	public function destroy(ServiceLogRepository $repository, string $id): JsonResponse
 	{
-		return response($repository->delete($id));
+		return response()->json($repository->delete($id), 204);
 	}
 }

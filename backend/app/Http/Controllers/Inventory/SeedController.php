@@ -13,6 +13,7 @@ use App\Resources\Inventory\List\PaginatedInventoryResource;
 use App\Resources\Inventory\List\SeedResource;
 use App\Resources\VarietyDropdownResource;
 use App\Services\Inventory\InventoryService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Response;
@@ -55,25 +56,25 @@ final class SeedController extends Controller implements HasAppendableSelect
 		return $repository->getFilters();
 	}
 
-	public function storeTypeValue(SeedRepository $repository, StoreSeedVarietyRequest $request): Response
+	public function storeTypeValue(SeedRepository $repository, StoreSeedVarietyRequest $request): JsonResponse
 	{
-		return response($repository->createVarietyValue($request), 200);
+		return response()->json($repository->createVarietyValue($request), 200);
 	}
 
 	/**
 	 * Display a listing of the resource.
 	 *
-	 * @return Response
+	 * @return JsonResponse
 	 * @throws JsonException|ReflectionException
 	 */
-	public function index(Request $request, InventoryService $inventoryService)
+	public function index(Request $request, InventoryService $inventoryService): JsonResponse
 	{
-		return response(
+		return response()->json(
 			PaginatedInventoryResource::make(
 				$inventoryService::buildInventoryTableData(Seed::class, $request),
 				SeedResource::class
-			)
-		);
+			), 
+		200);
 	}
 
 	/**
@@ -81,14 +82,16 @@ final class SeedController extends Controller implements HasAppendableSelect
 	 *
 	 * @param StoreSeedRequest $request
 	 * @param SeedRepository $repository
-	 * @return Response
+	 * @return JsonResponse
 	 */
-	public function store(StoreSeedRequest $request, SeedRepository $repository)
+	public function store(StoreSeedRequest $request, SeedRepository $repository): JsonResponse
 	{
-		return response($repository->create(
-			$request->only((new Seed())->getFillable()),
-			$request->get('images'),
-		), 200);
+		return response()->json(
+			$repository->create(
+				$request->only((new Seed())->getFillable()),
+				$request->get('images'),
+			), 
+		200);
 	}
 
 	/**
@@ -96,11 +99,11 @@ final class SeedController extends Controller implements HasAppendableSelect
 	 *
 	 * @param SeedRepository $repository
 	 * @param string $id
-	 * @return Response
+	 * @return JsonResponse
 	 */
-	public function show(SeedRepository $repository, string $id): Response
+	public function show(SeedRepository $repository, string $id): JsonResponse
 	{
-		return response($repository->find($id)->getDetailResource());
+		return response()->json($repository->find($id)->getDetailResource(), 200);
 	}
 
 	/**
@@ -109,15 +112,17 @@ final class SeedController extends Controller implements HasAppendableSelect
 	 * @param UpdateSeedRequest $request
 	 * @param SeedRepository $repository
 	 * @param string $id
-	 * @return Response
+	 * @return JsonResponses
 	 */
-	public function update(UpdateSeedRequest $request, SeedRepository $repository, string $id): Response
+	public function update(UpdateSeedRequest $request, SeedRepository $repository, string $id): JsonResponse
 	{
-		return response($repository->update(
-			$repository->find($id),
-			$request->only((new Seed())->getFillable()),
-			$request->get('images'),
-		), 200);
+		return response()->json(
+			$repository->update(
+				$repository->find($id),
+				$request->only((new Seed())->getFillable()),
+				$request->get('images'),
+			), 
+		200);
 	}
 
 	/**
@@ -125,12 +130,11 @@ final class SeedController extends Controller implements HasAppendableSelect
 	 *
 	 * @param SeedRepository $repository
 	 * @param string $id
-	 * @return Response
+	 * @return JsonResponse
 	 */
-	public function destroy(string $id, SeedRepository $repository)
+	public function destroy(string $id, SeedRepository $repository): JsonResponse
 	{
-		$model = $repository->find($id);
-		$model->delete();
+		return response()->json($repository->delete($id), 204);
 	}
 
 	/**
@@ -138,14 +142,16 @@ final class SeedController extends Controller implements HasAppendableSelect
 	 *
 	 * @param SeedRepository $repository
 	 * @param string $id
-	 * @return Response
+	 * @return JsonResponse
 	 */
-	public function getSimilar(SeedRepository $repository, string $id)
+	public function getSimilar(SeedRepository $repository, string $id): JsonResponse
 	{
-		return response(SeedResource::collection(
-			$repository->getSimilar(
-				$id
-			)
-		));
+		return response()->json(
+			SeedResource::collection(
+				$repository->getSimilar(
+					$id
+				)
+			),
+		200);
 	}
 }

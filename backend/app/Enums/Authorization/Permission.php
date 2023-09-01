@@ -69,7 +69,25 @@ enum Permission: string
             self::UserCreate => 'Create Users',
             self::UserUpdate => 'Update Users',
             self::UserDelete => 'Delete Users',
+            self::NoteList => 'List Notes',
+            self::NoteRead => 'Read Note Details',
+            self::NoteCreate => 'Create Notes',
+            self::NoteUpdate => 'Update Notes',
+            self::NoteDelete => 'Delete Notes',
+            self::ServiceList => 'List Services',
+            self::ServiceRead => 'Read Service Details',
+            self::ServiceCreate => 'Create Services',
+            self::ServiceUpdate => 'Update Services',
+            self::ServiceDelete => 'Delete Services',
             default => $this->value,
         };
+    }
+
+    public function toDisplay(): array
+    {
+        return [
+            'value' => $this->value,
+            'label' => $this->label(),
+        ];
     }
 }

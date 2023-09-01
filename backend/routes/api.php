@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Authorization\AuthorizationController;
 use App\Http\Controllers\Generic\EditableFieldController;
 use App\Http\Controllers\Generic\NoteController;
 use App\Http\Controllers\Inventory\InventoryController;
@@ -10,7 +11,6 @@ use App\Http\Controllers\Projects\ProjectItemController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\Users\UserController;
 use App\Services\RouteBuilderService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,6 +25,8 @@ use Illuminate\Support\Facades\Route;
 */
 Route::get('/images/{imageId}', [ImageController::class, 'showImage'])->name('image.show');
 
+Route::get('/authorization/roles', [AuthorizationController::class, 'allRoles'])->middleware('user-can:user:update');
+Route::get('/authorization/permissions', [AuthorizationController::class, 'allPermissions'])->middleware('user-can:user:update');
 
 Route::middleware(['auth:sanctum'])->get('/user', [UserController::class, 'getAuthenticatedUser']);
 
@@ -82,7 +84,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 		});
 
-	Route::get('/users', [UserController::class, 'index'])->middleware('user-can:user:list');
+		Route::prefix('/users')->group(static function() {
+			Route::get('/paginated', [UserController::class, 'paginated'])->middleware('user-can:user:list');
+			Route::get('/', [UserController::class, 'index'])->middleware('user-can:user:list');
+			Route::get('/{id}', [UserController::class, 'show'])->middleware('user-can:user:read');
+			Route::post('/', [UserController::class, 'store'])->middleware('user-can:user:create');
+			Route::put('/{id}', [UserController::class, 'update'])->middleware('user-can:user:update');
+			Route::delete('/{id}', [UserController::class, 'destroy'])->middleware('user-can:user:delete');
+		});
 
 });
 

@@ -37,6 +37,13 @@ const menu = [
                 icon: 'ti ti-traffic-cone',
                 to: '/projects',
             },
+
+            {
+                label: 'Users',
+                icon: 'ti ti-users',
+                to: '/users',
+                permission: 'user:list',
+            },
         ],
     },
 ]

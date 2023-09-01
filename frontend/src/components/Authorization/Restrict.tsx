@@ -32,11 +32,7 @@ export default function Restrict({
                     {userCan(permission) ? (
                         <>{isIterable(children) ? <>{children}</> : children}</>
                     ) : (
-                        <>
-                            {showMessage && message && (
-                                <span className="text-2xl">{message}</span>
-                            )}
-                        </>
+                        <>{showMessage && message && <span>{message}</span>}</>
                     )}
                 </>
             )}

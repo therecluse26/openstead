@@ -8,7 +8,6 @@ enum Role: string
     case Collaborator = 'collaborator';
     case Manager = 'manager'; 
     case Administrator = 'admin';
-
     case ProjectViewer = 'project-viewer';
     case ProjectManager = 'project-manager';
     case ProjectCollaborator = 'project-collaborator';
@@ -27,7 +26,7 @@ enum Role: string
 
     public function permissions(): array
     {
-        return match ($this) {
+        return array_unique(match ($this) {
 
             //// Grouped Permissions ////
 
@@ -150,8 +149,7 @@ enum Role: string
                 ...self::ServiceCollaborator->permissions(),
                 Permission::ServiceDelete,
             ],
-           
-        };
+        }, SORT_REGULAR);
     }
 
     public function label(): string
@@ -179,28 +177,12 @@ enum Role: string
         };
     }
 
-    public function description(): string 
+
+    public function toDisplay(): array
     {
-        return match($this){
-            self::Viewer => 'Can view all data',
-            self::Collaborator => 'Can view and create data',
-            self::Manager => 'Can view, create, and update data',
-            self::Administrator => 'Can view, create, update, and delete all data',
-            self::ProjectViewer => 'Can view all projects and project items',
-            self::ProjectManager => 'Can view, create, update, and delete projects and project items',
-            self::ProjectCollaborator => 'Can view, create, and update projects and project items',
-            self::InventoryViewer => 'Can view all inventory',
-            self::InventoryManager => 'Can view, create, update, and delete inventory',
-            self::InventoryCollaborator => 'Can view, create, and update inventory',
-            self::NoteViewer => 'Can view all notes',
-            self::NoteManager => 'Can view, create, update, and delete notes',
-            self::NoteCollaborator => 'Can view, create, and update notes',
-            self::ServiceViewer => 'Can view all services',
-            self::ServiceManager => 'Can view, create, update, and delete services',
-            self::ServiceCollaborator => 'Can view, create, and update services',
-            self::UserViewer => 'Can view all users',
-            self::UserManager => 'Can view, create, update, and delete users',
-            self::UserCollaborator => 'Can view, create, and update users',
-        };
+        return [
+            'value' => $this->value,
+            'label' => $this->label(),
+        ];
     }
 }

@@ -8,7 +8,7 @@ import { csrf } from '@/hooks/auth'
 import ProjectService from '@/services/Projects/ProjectService'
 import TextAreaInput from '@/components/HookFormInputs/TextAreaInput'
 import { useToast } from '../../context/ToastContext'
-import { getUsers } from '../../services/Generic/UserService'
+import { getUsers } from '../../services/Users/UserService'
 import MultiselectInput from '../../components/HookFormInputs/MultiselectInput'
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog' // For <ConfirmDialog /> component
 import Restrict from '../../components/Authorization/Restrict'

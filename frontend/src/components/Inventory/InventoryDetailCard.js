@@ -1,45 +1,15 @@
 import { Card } from 'primereact/card'
-import { Galleria } from 'primereact/galleria'
 import React, { useEffect, useState } from 'react'
 import Spinner from '@/components/Spinner'
+import ImageGallery from '../Images/ImageGallery'
 
 const InventoryDetailCard = ({ data, header, footer, children }) => {
-    const [isImageLoaded, setIsImageLoaded] = useState(false)
     const [loaded, setLoaded] = useState(false)
-    const handleImageLoad = () => {
-        setIsImageLoaded(true)
-    }
 
     useEffect(() => {
         setLoaded(true)
     }, [])
 
-    const responsiveOptions = [
-        {
-            breakpoint: '1024px',
-            numVisible: 5,
-        },
-        {
-            breakpoint: '768px',
-            numVisible: 3,
-        },
-        {
-            breakpoint: '560px',
-            numVisible: 1,
-        },
-    ]
-
-    const galleryTemplate = item => {
-        return (
-            <img
-                className={'border-round inventory-primary-image'}
-                src={item}
-                alt={'Primary image'}
-                style={{ width: '100%' }}
-                onLoad={handleImageLoad}
-            />
-        )
-    }
     return (
         <>
             {!loaded ? (
@@ -52,18 +22,7 @@ const InventoryDetailCard = ({ data, header, footer, children }) => {
 
                     <div className="grid">
                         <div className={'col-12 md:col-4'}>
-                            {!isImageLoaded && <Spinner />}
-                            <Galleria
-                                value={[data?.primary_image]}
-                                responsiveOptions={responsiveOptions}
-                                numVisible={1}
-                                item={galleryTemplate}
-                                showThumbnails={false}
-                                style={{
-                                    display: isImageLoaded ? 'block' : 'none',
-                                    maxWidth: '400px',
-                                }}
-                            />
+                            <ImageGallery images={[data?.primary_image]} />
                         </div>
                         {children}
                     </div>
