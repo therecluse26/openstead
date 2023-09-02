@@ -149,32 +149,6 @@ const LivestockForm = ({ mode = 'create' }) => {
             showToast('Only 2 parents are allowed', 'error')
             return
         }
-
-        // Prevent adding same-sex parents
-        if (e.value.length === 2) {
-            const parent1 = opts.find(element => element.value === e.value[0])
-            const parent2 = opts.find(element => element.value === e.value[1])
-
-            if (parent1?.sex === parent2?.sex) {
-                showToast('Cannot add 2 parents of the same sex', 'error')
-                return
-            }
-        }
-
-        // Prevent adding same member as both parent and child
-        const matches = e.value.filter(element =>
-            watchChildren?.includes(element),
-        )
-        if (matches.length > 0) {
-            showToast(
-                'Cannot add the same member as both parent and child',
-                'error',
-            )
-
-            return
-        }
-
-        callback(e)
     }
 
     const childrenOnChange = (e, callback) => {

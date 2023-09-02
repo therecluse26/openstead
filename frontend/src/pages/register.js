@@ -9,6 +9,8 @@ import GuestLayout from '@/components/AppBase/Layouts/GuestLayout'
 import Link from 'next/link'
 
 const Register = () => {
+    const [registering, setRegistering] = React.useState(false)
+
     const defaultValues = {
         name: '',
         email: '',
@@ -29,12 +31,14 @@ const Register = () => {
     })
 
     const onSubmit = data => {
+        setRegistering(true)
         register({
             name: data.name,
             email: data.email,
             password: data.password,
             password_confirmation: data.password_confirmation,
             setError,
+            callback: () => setRegistering(false),
         })
     }
 
@@ -197,13 +201,29 @@ const Register = () => {
                     {getFormErrorMessage('password_confirmation')}
                 </div>
 
-                <div className="field">
-                    <Link href="/login">
-                        Have an Account? Click here to login
-                    </Link>
-                </div>
+                {registering ? (
+                    <>
+                        <Button
+                            type="submit"
+                            icon="loading-spinner"
+                            className="mt-2 w-full"
+                        />
+                    </>
+                ) : (
+                    <>
+                        <div className="field">
+                            <Link href="/login">
+                                Have an Account? Click here to login
+                            </Link>
+                        </div>
 
-                <Button type="submit" label="Register" className="mt-2" />
+                        <Button
+                            type="submit"
+                            label="Register"
+                            className="mt-2"
+                        />
+                    </>
+                )}
             </form>
         </GuestLayout>
     )

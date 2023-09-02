@@ -63,6 +63,7 @@ const Livestock = () => {
         <FilterableDataTable
             title={'Livestock'}
             basePath={'livestock'}
+            createPermission="inventory:create"
             service={LivestockService}
             filters={filters}
             setLazyParamsCallack={lazyParamsCallback}>

@@ -8,8 +8,11 @@ import { Password } from 'primereact/password'
 import { useAuth } from '@/hooks/auth'
 import GuestLayout from '@/components/AppBase/Layouts/GuestLayout'
 import Link from 'next/link'
+import Spinner from '../components/Spinner'
 
 const Login = () => {
+    const [loggingIn, setLoggingIn] = React.useState(false)
+
     const defaultValues = {
         email: '',
         password: '',
@@ -28,11 +31,13 @@ const Login = () => {
     })
 
     const onSubmit = data => {
+        setLoggingIn(true)
         login({
             email: data.email,
             password: data.password,
             remember: data.remember_me,
             setError,
+            callback: () => setLoggingIn(false),
         })
     }
 
@@ -151,11 +156,24 @@ const Login = () => {
                     </div>
                 </div>
 
-                <div className="field">
-                    <Link href="/register">Or Register a New Account</Link>
-                </div>
+                {loggingIn ? (
+                    <>
+                        <Button
+                            icon="loading-spinner"
+                            className="mt-2 w-full"
+                        />
+                    </>
+                ) : (
+                    <>
+                        <div className="field">
+                            <Link href="/register">
+                                Or Register a New Account
+                            </Link>
+                        </div>
 
-                <Button type="submit" label="Login" className="mt-2" />
+                        <Button type="submit" label="Login" className="mt-2" />
+                    </>
+                )}
             </form>
         </GuestLayout>
     )

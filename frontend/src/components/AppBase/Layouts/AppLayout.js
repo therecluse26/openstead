@@ -8,9 +8,15 @@ import { TopBar } from '@/components/AppBase/Layouts/TopBar'
 import SidebarMenu from '@/SidebarMenu'
 import { ScrollTop } from 'primereact/scrolltop'
 import { useLocalStorage } from 'primereact/hooks'
+import { useAuthorizationStore } from '@/components/Authorization/AuthorizationStore'
+import AppSkeleton from '../AppSkeleton'
 
 const AppLayout = ({ children }) => {
-    const { user } = useAuth({ middleware: 'auth' })
+    const { user: authUser } = useAuth({ middleware: 'auth' })
+    const user = useAuthorizationStore(state => state.user)
+    const setUser = useAuthorizationStore(state => state.setUser)
+    const setPermissions = useAuthorizationStore(state => state.setPermissions)
+
     const [layoutMode] = useState('static')
     const [layoutColorMode] = useState('dark')
     const [overlayMenuActive, setOverlayMenuActive] = useState(false)
@@ -46,6 +52,18 @@ const AppLayout = ({ children }) => {
         // storing input name
         localStorage.setItem('sidebarMenuActive', String(sidebarMenuActive))
     }, [sidebarMenuActive])
+
+    useEffect(() => {
+        // Set authorizationStore based on user data
+        if (authUser) {
+            setUser({
+                id: authUser?.id,
+                name: authUser?.name,
+                email: authUser?.email,
+            })
+            setPermissions(authUser?.allPermissions)
+        }
+    }, [authUser])
 
     const isDesktop = () => {
         return window.innerWidth >= 992
@@ -100,49 +118,56 @@ const AppLayout = ({ children }) => {
     }
 
     return (
-        <div className={wrapperClass} onClick={onWrapperClick}>
-            <Tooltip
-                ref={copyTooltipRef}
-                target=".block-action-copy"
-                position="bottom"
-                content="Copied to clipboard"
-                event="focus"
-            />
+        <>
+            {authUser ? (
+                <div className={wrapperClass} onClick={onWrapperClick}>
+                    <Tooltip
+                        ref={copyTooltipRef}
+                        target=".block-action-copy"
+                        position="bottom"
+                        content="Copied to clipboard"
+                        event="focus"
+                    />
+                    <TopBar
+                        onToggleMenuClick={onToggleMenuClick}
+                        mobileTopbarMenuActive={mobileTopbarMenuActive}
+                        onMobileTopbarMenuClick={onMobileTopbarMenuClick}
+                        onMobileSubTopbarMenuClick={onMobileSubTopbarMenuClick}
+                        user={user}
+                    />
 
-            <TopBar
-                onToggleMenuClick={onToggleMenuClick}
-                mobileTopbarMenuActive={mobileTopbarMenuActive}
-                onMobileTopbarMenuClick={onMobileTopbarMenuClick}
-                onMobileSubTopbarMenuClick={onMobileSubTopbarMenuClick}
-                user={user}
-            />
+                    <SidebarMenu
+                        mobileMenuActive={mobileMenuActive}
+                        sidebarMenuActive={sidebarMenuActive}
+                        onToggleMenuClick={onToggleMenuClick}
+                        onSidebarClick={onSidebarClick}
+                        onMenuItemClick={onMenuItemClick}
+                        layoutColorMode={layoutColorMode}
+                    />
 
-            <SidebarMenu
-                mobileMenuActive={mobileMenuActive}
-                sidebarMenuActive={sidebarMenuActive}
-                onToggleMenuClick={onToggleMenuClick}
-                onSidebarClick={onSidebarClick}
-                onMenuItemClick={onMenuItemClick}
-                layoutColorMode={layoutColorMode}
-            />
+                    {/* Page Content */}
+                    <div className="layout-main-container">
+                        <div className="layout-main">{children}</div>
 
-            {/* Page Content */}
-            <div className="layout-main-container">
-                <div className="layout-main">{children}</div>
+                        <AppFooter layoutColorMode={layoutColorMode} />
+                    </div>
 
-                <AppFooter layoutColorMode={layoutColorMode} />
-            </div>
+                    <CSSTransition
+                        classNames="layout-mask"
+                        timeout={{ enter: 200, exit: 200 }}
+                        in={mobileMenuActive}
+                        unmountOnExit>
+                        <div className="layout-mask p-component-overlay" />
+                    </CSSTransition>
 
-            <CSSTransition
-                classNames="layout-mask"
-                timeout={{ enter: 200, exit: 200 }}
-                in={mobileMenuActive}
-                unmountOnExit>
-                <div className="layout-mask p-component-overlay" />
-            </CSSTransition>
-
-            <ScrollTop threshold={200} />
-        </div>
+                    <ScrollTop threshold={200} />
+                </div>
+            ) : (
+                <div>
+                    <AppSkeleton />
+                </div>
+            )}
+        </>
     )
 }
 

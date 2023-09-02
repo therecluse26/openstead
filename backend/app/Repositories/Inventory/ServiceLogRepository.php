@@ -39,8 +39,13 @@ class ServiceLogRepository
 			->get();
 	}
 
-	public function create(Collection $data): ServiceLog
+	public function create(Collection|array $data): ServiceLog
 	{
+		if(is_array($data))
+		{
+			$data = collect($data);
+		}
+		
 		$serviceableType = $data->get('serviceable_type');
 		if ($model = $this->findPolymorphicModel($serviceableType, $data->get('serviceable_id'))) {
 			return $model->serviceLogs()->create(

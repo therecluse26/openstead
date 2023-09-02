@@ -6,13 +6,14 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 trait HasImages
 {
 	use InteractsWithMedia;
 
-	public function images(): \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection
+	public function images(): MediaCollection
 	{
 		return $this->getMedia('images');
 	}

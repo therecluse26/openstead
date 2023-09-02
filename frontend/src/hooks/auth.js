@@ -18,7 +18,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
             }),
     )
 
-    const register = async ({ setError, ...props }) => {
+    const register = async ({ setError, callback, ...props }) => {
         await csrf()
         axios
             .post('/register', props)
@@ -34,9 +34,12 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
                     setError(err, err[0])
                 }
             })
+            .finally(() => {
+                if (callback) callback()
+            })
     }
 
-    const login = async ({ setError, ...props }) => {
+    const login = async ({ setError, callback, ...props }) => {
         await csrf()
         axios
             .post('/login', props)
@@ -52,6 +55,9 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
                 )) {
                     setError(key, { message: value })
                 }
+            })
+            .finally(() => {
+                if (callback) callback()
             })
     }
 

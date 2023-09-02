@@ -13,6 +13,7 @@ use App\Resources\Inventory\List\PaginatedInventoryResource;
 use App\Resources\Inventory\List\PantryItemResource;
 use App\Resources\VarietyDropdownResource;
 use App\Services\Inventory\InventoryService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Response;
@@ -40,25 +41,25 @@ final class PantryController extends Controller implements HasAppendableSelect
 		return $repository->getFilters();
 	}
 
-	public function storeTypeValue(PantryRepository $repository, StorePantryItemVarietyRequest $request): Response
+	public function storeTypeValue(PantryRepository $repository, StorePantryItemVarietyRequest $request): JsonResponse
 	{
-		return response($repository->createVarietyValue($request), 200);
+		return response()->json($repository->createVarietyValue($request), 200);
 	}
 
 	/**
 	 * Display a listing of the resource.
 	 *
-	 * @return Response
+	 * @return JsonResponse
 	 * @throws JsonException|ReflectionException
 	 */
-	public function index(Request $request, InventoryService $inventoryService)
+	public function index(Request $request, InventoryService $inventoryService): JsonResponse
 	{
-		return response(
+		return response()->json(
 			PaginatedInventoryResource::make(
 				$inventoryService::buildInventoryTableData(PantryItem::class, $request),
 				PantryItemResource::class
 			)
-		);
+		, 200);
 	}
 
 	/**
@@ -66,14 +67,16 @@ final class PantryController extends Controller implements HasAppendableSelect
 	 *
 	 * @param StorePantryItemRequest $request
 	 * @param PantryRepository $repository
-	 * @return Response
+	 * @return JsonResponse
 	 */
-	public function store(StorePantryItemRequest $request, PantryRepository $repository)
+	public function store(StorePantryItemRequest $request, PantryRepository $repository): JsonResponse
 	{
-		return response($repository->create(
-			$request->only((new PantryItem())->getFillable()),
-			$request->get('images'),
-		), 200);
+		return response()->json(
+			$repository->create(
+				$request->only((new PantryItem())->getFillable()),
+				$request->get('images'),
+			), 
+		201);
 	}
 
 	/**
@@ -81,11 +84,11 @@ final class PantryController extends Controller implements HasAppendableSelect
 	 *
 	 * @param PantryRepository $repository
 	 * @param string $id
-	 * @return Response
+	 * @return JsonResponse
 	 */
-	public function show(PantryRepository $repository, string $id): Response
+	public function show(PantryRepository $repository, string $id): JsonResponse
 	{
-		return response($repository->find($id)->getDetailResource());
+		return response()->json($repository->find($id)->getDetailResource(), 200);
 	}
 
 	/**
@@ -94,15 +97,17 @@ final class PantryController extends Controller implements HasAppendableSelect
 	 * @param UpdatePantryItemRequest $request
 	 * @param PantryRepository $repository
 	 * @param string $id
-	 * @return Response
+	 * @return JsonResponse
 	 */
-	public function update(UpdatePantryItemRequest $request, PantryRepository $repository, string $id): Response
+	public function update(UpdatePantryItemRequest $request, PantryRepository $repository, string $id): JsonResponse
 	{
-		return response($repository->update(
-			$repository->find($id),
-			$request->only((new PantryItem())->getFillable()),
-			$request->get('images'),
-		), 200);
+		return response()->json(
+			$repository->update(
+				$repository->find($id),
+				$request->only((new PantryItem())->getFillable()),
+				$request->get('images'),
+			), 
+		200);
 	}
 
 	/**
@@ -110,12 +115,11 @@ final class PantryController extends Controller implements HasAppendableSelect
 	 *
 	 * @param string $id
 	 * @param PantryRepository $repository
-	 * @return Response
+	 * @return JsonResponse
 	 */
-	public function destroy(string $id, PantryRepository $repository)
+	public function destroy(string $id, PantryRepository $repository): JsonResponse
 	{
-		$model = $repository->find($id);
-		$model->delete();
+		return response()->json($repository->delete($id), 204);		
 	}
 
 	/**
@@ -123,14 +127,16 @@ final class PantryController extends Controller implements HasAppendableSelect
 	 *
 	 * @param PantryRepository $repository
 	 * @param string $id
-	 * @return Response
+	 * @return JsonResponse
 	 */
-	public function getSimilar(PantryRepository $repository, string $id)
+	public function getSimilar(PantryRepository $repository, string $id): JsonResponse
 	{
-		return response(PantryItemResource::collection(
-			$repository->getSimilar(
-				$id
-			)
-		));
+		return response()->json(
+			PantryItemResource::collection(
+				$repository->getSimilar(
+					$id
+				)
+			), 
+		200);
 	}
 }

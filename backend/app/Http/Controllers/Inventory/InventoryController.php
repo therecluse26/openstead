@@ -6,9 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Inventory\StoreInventoryRequest;
 use App\Repositories\Inventory\InventoryRepository;
 use App\Services\Inventory\InventoryService;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use JsonException;
 
 final class InventoryController extends Controller
 {
@@ -20,17 +18,6 @@ final class InventoryController extends Controller
 	public function getFilters(InventoryService $service)
 	{
 		return $service->getFilters();
-	}
-
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 * @throws JsonException
-	 */
-	public function index(Request $request, InventoryService $inventoryService)
-	{
-		return response($inventoryService::buildBaseInventoryTableData($request));
 	}
 
 	/**

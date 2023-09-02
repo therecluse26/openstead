@@ -1,10 +1,12 @@
 import { Controller } from 'react-hook-form'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     MultiSelect,
     MultiSelectItemTemplateType,
     MultiSelectDisplayType,
 } from 'primereact/multiselect'
+import { getOptionsFromUrl } from '@/components/EditableFields/EditableFieldService'
+import { classNames } from 'primereact/utils'
 
 type MultiSelectProps = {
     control: any
@@ -13,8 +15,11 @@ type MultiSelectProps = {
     label: string
     placeholder?: string
     options?: Array<any>
+    optionsEndpoint?: string
     optionValue?: string
     optionLabel?: string
+    dataLabelKey?: string
+    dataValueKey?: string
     value?: Array<any>
     itemTemplate?: MultiSelectItemTemplateType
     filter?: boolean
@@ -23,9 +28,23 @@ type MultiSelectProps = {
 }
 
 const PicklistInput = (props: MultiSelectProps) => {
+    const [selectOptions, setSelectOptions] = useState(props.options)
     const display = props.display ?? 'chip'
     const optLabel = props.optionLabel ?? 'label'
     const optValue = props.optionValue ?? 'value'
+
+    useEffect(() => {
+        if (props.optionsEndpoint) {
+            getOptionsFromUrl(
+                props.optionsEndpoint,
+                optLabel,
+                optValue,
+                setSelectOptions,
+                props.dataLabelKey,
+                props.dataValueKey,
+            )
+        }
+    }, [props.optionsEndpoint])
 
     return (
         <span className="p-float-label">
@@ -33,18 +52,20 @@ const PicklistInput = (props: MultiSelectProps) => {
                 name={props.name}
                 control={props.control}
                 rules={props.rules}
-                render={() => (
+                render={({ field: { onChange, value, name }, fieldState }) => (
                     <MultiSelect
+                        id={name}
                         placeholder={props.placeholder}
-                        value={props.value}
-                        options={props.options}
+                        value={value ?? props.value ?? []}
+                        options={selectOptions}
                         optionValue={optValue}
                         optionLabel={optLabel}
                         itemTemplate={props.itemTemplate}
                         filter={props.filter}
-                        onChange={e => {
-                            props.onChange(e)
-                        }}
+                        className={classNames({
+                            'p-invalid': fieldState.error,
+                        })}
+                        onChange={onChange}
                         display={display}
                     />
                 )}

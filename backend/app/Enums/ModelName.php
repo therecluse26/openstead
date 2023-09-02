@@ -9,6 +9,7 @@ use App\Models\Inventory\PantryItem;
 use App\Models\Projects\Project;
 use App\Models\Projects\ProjectItem;
 use App\Models\Note;
+use App\Models\User;
 use App\Traits\FilterableEnum;
 
 enum ModelName: string
@@ -22,6 +23,7 @@ enum ModelName: string
 	case PantryItem = 'pantry_item';
 	case Project = 'project';
 	case ProjectItem = 'project_item';
+	case User = 'user';
 
 	public function class(): string
 	{
@@ -33,6 +35,7 @@ enum ModelName: string
 			self::PantryItem => PantryItem::class,
 			self::Project => Project::class,
 			self::ProjectItem => ProjectItem::class,
+			self::User => User::class,
 		};
 	}
 }

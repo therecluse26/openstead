@@ -11,7 +11,7 @@ use App\Repositories\Inventory\EquipmentRepository;
 use App\Resources\Inventory\List\EquipmentResource as EquipmentListResource;
 use App\Resources\Inventory\List\PaginatedInventoryResource;
 use App\Services\Inventory\InventoryService;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use JsonException;
 use ReflectionException;
@@ -33,18 +33,16 @@ final class EquipmentController extends Controller
 	 *
 	 * @param ListInventoryRequest $request
 	 * @param InventoryService $inventoryService
-	 * @return Response
+	 * @return JsonResponse
 	 * @throws JsonException
 	 * @throws ReflectionException
 	 */
-	public function index(ListInventoryRequest $request, InventoryService $inventoryService): Response
+	public function index(ListInventoryRequest $request, InventoryService $inventoryService): JsonResponse
 	{
-		return response(
-			PaginatedInventoryResource::make(
-				$inventoryService::buildInventoryTableData(Equipment::class, $request),
-				EquipmentListResource::class
-			)
-		);
+		return response()->json(PaginatedInventoryResource::make(
+			$inventoryService::buildInventoryTableData(Equipment::class, $request),
+			EquipmentListResource::class
+		), 200);
 	}
 
 	/**
@@ -52,14 +50,13 @@ final class EquipmentController extends Controller
 	 *
 	 * @param StoreEquipmentRequest $request
 	 * @param EquipmentRepository $equipmentRepository
-	 * @return Response
+	 * @return JsonResponse
 	 */
-	public function store(StoreEquipmentRequest $request, EquipmentRepository $equipmentRepository): Response
+	public function store(StoreEquipmentRequest $request, EquipmentRepository $equipmentRepository): JsonResponse
 	{
-		return response(
-			$equipmentRepository->create($request->only((new Equipment())->getFillable()),
-				$request->get('images')
-			), 200);
+		return response()->json($equipmentRepository->create($request->only((new Equipment())->getFillable()),
+			$request->get('images')
+		), 201);
 	}
 
 	/**
@@ -67,13 +64,11 @@ final class EquipmentController extends Controller
 	 *
 	 * @param EquipmentRepository $equipmentRepository
 	 * @param string $equipment
-	 * @return Response
+	 * @return JsonResponse
 	 */
-	public function show(EquipmentRepository $equipmentRepository, string $id): Response
+	public function show(EquipmentRepository $equipmentRepository, string $id): JsonResponse
 	{
-		return response(
-			$equipmentRepository->find($id)->getDetailResource()
-		);
+		return response()->json($equipmentRepository->find($id)->getDetailResource(), 200);
 	}
 
 	/**
@@ -81,13 +76,15 @@ final class EquipmentController extends Controller
 	 *
 	 * @param EquipmentRepository $equipmentRepository
 	 * @param string $equipment
-	 * @return Response
+	 * @return JsonResponse
 	 */
-	public function getSimilar(EquipmentRepository $equipmentRepository, string $id): Response
+	public function getSimilar(EquipmentRepository $equipmentRepository, string $id): JsonResponse
 	{
-		return response(EquipmentListResource::collection(
-			$equipmentRepository->getSimilar($id)
-		));
+		return response()->json(
+			EquipmentListResource::collection(
+				$equipmentRepository->getSimilar($id)
+			), 
+		200);
 	}
 
 	/**
@@ -96,14 +93,16 @@ final class EquipmentController extends Controller
 	 * @param UpdateEquipmentRequest $request
 	 * @param string $id
 	 * @param EquipmentRepository $equipmentRepository
-	 * @return Response
+	 * @return JsonResponse
 	 */
-	public function update(UpdateEquipmentRequest $request, string $id, EquipmentRepository $equipmentRepository): Response
+	public function update(UpdateEquipmentRequest $request, string $id, EquipmentRepository $equipmentRepository): JsonResponse
 	{
-		return response($equipmentRepository->update(
-			$equipmentRepository->find($id),
-			$request->only((new Equipment())->getFillable()),
-			$request->get('images')), 
+		return response()->json(
+			$equipmentRepository->update(
+				$equipmentRepository->find($id),
+				$request->only((new Equipment())->getFillable()),
+				$request->get('images')
+			), 
 		200);
 	}
 
@@ -112,13 +111,15 @@ final class EquipmentController extends Controller
 	 *
 	 * @param string $id
 	 * @param EquipmentRepository $equipmentRepository
-	 * @return Response
+	 * @return JsonResponse
 	 */
-	public function destroy(string $id, EquipmentRepository $equipmentRepository): Response
+	public function destroy(string $id, EquipmentRepository $equipmentRepository): JsonResponse
 	{
-		return response($equipmentRepository->delete(
-			$equipmentRepository->find($id)
-		), 200);
+		return response()->json(
+			$equipmentRepository->delete(
+				$equipmentRepository->find($id)
+			), 
+		204);
 	}
 
 }

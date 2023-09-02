@@ -1,22 +1,5 @@
 version: "3.4"
 services:        
-  openstead-frontend: 
-    build:
-      context: ./frontend
-      dockerfile: ./Dockerfile
-      args:
-        - APP_ENV=${APP_ENV:-production}
-        - UID=1000
-        - GID=1000
-    environment:
-      - UID=1000
-      - GID=1000
-    working_dir: /frontend
-    ports: 
-      - 3000:3000
-    depends_on:
-      - openstead-api
-
   openstead-api:
     build:
       context: ./backend
