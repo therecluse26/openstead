@@ -11,6 +11,7 @@ import TextInput from '../../components/HookFormInputs/TextInput'
 import { useToast } from '../../context/ToastContext'
 import MultiselectInput from '@/components/HookFormInputs/MultiselectInput'
 import PasswordInput from '../../components/HookFormInputs/PasswordInput'
+import { IconEdit, IconX } from '@tabler/icons'
 
 const UserForm = ({ mode = 'create' }) => {
     const { query, isReady } = useRouter()
@@ -21,11 +22,15 @@ const UserForm = ({ mode = 'create' }) => {
     const { showToast } = useToast()
     const [selectedPermissions, setSelectedPermissions] = useState([])
     const [selectedRoles, setSelectedRoles] = useState([])
+    const [saving, setSaving] = useState(false)
+    const [editingPassword, setEditingPassword] = useState(false)
+
     const defaultValues = {
         name: null,
         email: null,
         roles: null,
         permissions: null,
+        current_password: null,
         password: null,
         password_confirmation: null,
         images: [],
@@ -79,9 +84,17 @@ const UserForm = ({ mode = 'create' }) => {
             .then(data => {
                 setValue('name', data?.name)
                 setValue('email', data?.email)
+                setValue(
+                    'roles',
+                    data?.roles?.map(r => r.value),
+                )
+                setValue(
+                    'permissions',
+                    data?.permissions?.map(p => p.value),
+                )
 
-                setSelectedRoles(data?.roles)
-                setSelectedPermissions(data?.permissions)
+                setSelectedRoles(data?.roles?.map(r => r.value))
+                setSelectedPermissions(data?.permissions?.map(p => p.value))
             })
 
             .catch(e => {
@@ -91,6 +104,7 @@ const UserForm = ({ mode = 'create' }) => {
 
     const onSubmit = async data => {
         await csrf()
+        setSaving(true)
         UserService.createOrUpdate(id, data, images)
             .then(r => {
                 router.push('/users/' + r.data?.id)
@@ -100,6 +114,9 @@ const UserForm = ({ mode = 'create' }) => {
                     error?.response?.data?.message ?? 'Unknown error',
                     'error',
                 )
+            })
+            .finally(() => {
+                setSaving(false)
             })
     }
 
@@ -167,51 +184,118 @@ const UserForm = ({ mode = 'create' }) => {
                                 />
                                 {getFormErrorMessage('email')}
                             </div>
+                            {mode === 'edit' && !editingPassword && (
+                                <div className="field">
+                                    <Button
+                                        className="p-button-link"
+                                        onClick={() => {
+                                            setEditingPassword(true)
+                                        }}>
+                                        <>
+                                            <IconEdit className="mr-2" />
+                                            <span>Change Password</span>
+                                        </>
+                                    </Button>
+                                </div>
+                            )}
+                            {editingPassword && (
+                                <>
+                                    <div className="field -mb-4">
+                                        <Button
+                                            className={'p-button-link'}
+                                            onClick={() => {
+                                                setEditingPassword(false)
+                                            }}>
+                                            <>
+                                                <IconX className="mr-2" />
+                                                <span>Cancel</span>
+                                            </>
+                                        </Button>
+                                    </div>
+                                    <div className="field">
+                                        <PasswordInput
+                                            control={control}
+                                            name={'current_password'}
+                                            label={'Current Password'}
+                                            rules={{
+                                                required:
+                                                    'Current password is required.',
+                                            }}
+                                        />
+                                        {getFormErrorMessage(
+                                            'current_password',
+                                        )}
+                                    </div>
+                                </>
+                            )}
 
-                            <div className="field">
-                                <PasswordInput
-                                    control={control}
-                                    name={'password'}
-                                    label={'Password'}
-                                    rules={{
-                                        required: 'Password is required.',
-                                        validate: value => {
-                                            if (!/[A-Z]/.test(value)) {
-                                                return 'Password must contain at least one uppercase letter'
-                                            }
-                                            if (!/[a-z]/.test(value)) {
-                                                return 'Password must contain at least one lowercase letter'
-                                            }
-                                            if (!/[0-9]/.test(value)) {
-                                                return 'Password must contain at least one number'
-                                            }
-                                            if (
-                                                !/[!@#$%^&*(),.?":{}|<>]/.test(
-                                                    value,
-                                                )
-                                            ) {
-                                                return 'Password must contain at least one special character'
-                                            }
-                                        },
-                                    }}
-                                />
-                                {getFormErrorMessage('password')}
-                            </div>
+                            {mode === 'create' ||
+                                (editingPassword && (
+                                    <>
+                                        <div className="field">
+                                            <PasswordInput
+                                                control={control}
+                                                name={'password'}
+                                                label={'Password'}
+                                                rules={{
+                                                    required:
+                                                        'Password is required.',
+                                                    validate: value => {
+                                                        if (
+                                                            !/[A-Z]/.test(value)
+                                                        ) {
+                                                            return 'Password must contain at least one uppercase letter'
+                                                        }
+                                                        if (
+                                                            !/[a-z]/.test(value)
+                                                        ) {
+                                                            return 'Password must contain at least one lowercase letter'
+                                                        }
+                                                        if (
+                                                            !/[0-9]/.test(value)
+                                                        ) {
+                                                            return 'Password must contain at least one number'
+                                                        }
+                                                        if (
+                                                            !/[!@#$%^&*(),.?":{}|<>]/.test(
+                                                                value,
+                                                            )
+                                                        ) {
+                                                            return 'Password must contain at least one special character'
+                                                        }
+                                                    },
+                                                }}
+                                            />
+                                            {getFormErrorMessage('password')}
+                                        </div>
 
-                            <div className="field">
-                                <PasswordInput
-                                    control={control}
-                                    name={'password_confirmation'}
-                                    label={'Password (Confirm)'}
-                                    rules={{
-                                        required:
-                                            'Password confirmation is required.',
-                                        validate: validateConfirmPassword,
-                                    }}
-                                />
-                                {getFormErrorMessage('password_confirmation')}
-                            </div>
-
+                                        {mode === 'create' ||
+                                            (editingPassword && (
+                                                <>
+                                                    {' '}
+                                                    <div className="field">
+                                                        <PasswordInput
+                                                            control={control}
+                                                            name={
+                                                                'password_confirmation'
+                                                            }
+                                                            label={
+                                                                'Password (Confirm)'
+                                                            }
+                                                            rules={{
+                                                                required:
+                                                                    'Password confirmation is required.',
+                                                                validate: validateConfirmPassword,
+                                                            }}
+                                                        />
+                                                        {getFormErrorMessage(
+                                                            'password_confirmation',
+                                                        )}
+                                                    </div>
+                                                </>
+                                            ))}
+                                    </>
+                                ))}
                             <div className="field">
                                 <MultiselectInput
                                     name="roles"
@@ -231,7 +315,6 @@ const UserForm = ({ mode = 'create' }) => {
                                     }}
                                 />
                             </div>
-
                             <div className="field">
                                 <MultiselectInput
                                     name="permissions"
@@ -250,7 +333,6 @@ const UserForm = ({ mode = 'create' }) => {
                                     }}
                                 />
                             </div>
-
                             <div className="field">
                                 <FileUpload
                                     name="images[]"
@@ -282,7 +364,12 @@ const UserForm = ({ mode = 'create' }) => {
                         'justify-content-center align-content-center grid'
                     }>
                     <div className={'col-10'}>
-                        <Button type="submit" label="Save" className="mt-2" />
+                        <Button
+                            type="submit"
+                            label="Save"
+                            className="mt-2"
+                            disabled={saving}
+                        />
                     </div>
                 </div>
             </form>

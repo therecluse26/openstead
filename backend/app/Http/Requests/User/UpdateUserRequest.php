@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests\User;
 
+use App\Repositories\User\UserRepository;
 use App\Rules\Contains;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 
 class UpdateUserRequest extends FormRequest
@@ -16,7 +18,9 @@ class UpdateUserRequest extends FormRequest
 	public function authorize()
 	{
 		if($this->password){
-			return auth()->attempt(['email' => $this->email, 'password' => $this->old_password]);
+			$repo = new UserRepository();
+			$user = $repo->getById($this->route('id'));
+			return Hash::check($this->current_password, $user->password);
 		}
 		
 		return true;
@@ -31,8 +35,8 @@ class UpdateUserRequest extends FormRequest
 	{
 		return [
 			'name' => 'required',
-			'email' => 'required|email|unique:users,email',
-			'old_password' => 'required_with:password',
+			'email' => 'required|email',
+			'current_password' => 'required_with:password',
 			'password' => [
 				'confirmed',
 				Password::min(10)

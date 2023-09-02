@@ -41,6 +41,7 @@ const createOrUpdate = async (id, data, images = []) => {
     }
 
     if (data?.password && data?.password_confirmation) {
+        postData.current_password = data?.current_password
         postData.password = data.password
         postData.password_confirmation = data.password_confirmation
     }

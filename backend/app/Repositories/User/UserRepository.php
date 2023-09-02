@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Hash;
 
 class UserRepository implements Repository
 {
-
     use AddMedia;
 
     public function getAuthenticatedUser(): ?User
@@ -47,8 +46,29 @@ class UserRepository implements Repository
     public function update(string $id, array $attributes): User
     {
         $user = $this->getById($id);
-        $user->update($attributes);
+        if($user->name !== $attributes['name']) {
+            $user->name = $attributes['name'];
+        }
 
+        if($user->email !== $attributes['email']) {
+            $user->email = $attributes['email'];
+        }
+
+        if(isset($attributes['password'])) {
+            $user->password = Hash::make($attributes['password']);
+        }
+
+        if(isset($attributes['roles'])) {
+            $user->roles = $attributes['roles'];
+        }
+
+        if(isset($attributes['permissions'])) {
+            $user->permissions = $attributes['permissions'];
+        }
+
+        $user->save();
+
+        
         if (isset($attributes['images']) && is_array($attributes['images']) && count($attributes['images']) > 0) {
 			$this->addOrReplaceImagesBase64($user, $attributes['images']);
 		}
