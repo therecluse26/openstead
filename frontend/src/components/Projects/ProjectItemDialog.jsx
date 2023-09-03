@@ -1,7 +1,7 @@
 import { Dialog } from 'primereact/dialog'
 import { useProjectStore } from '../../state/ProjectStore'
 import { Button } from 'primereact/button'
-
+import Restrict from '@/components/Authorization/Restrict'
 import { formatDateTime } from '@/utils/FormatDate'
 import { Panel } from 'primereact/panel'
 import CollapsiblePanelTemplate from '../Templates/CollapsiblePanelTemplate'
@@ -10,6 +10,7 @@ import EditableText from '../EditableFields/EditableText'
 import EditableDropdown from '../EditableFields/EditableDropdown'
 import { IconEdit } from '@tabler/icons'
 import { useToast } from '../../context/ToastContext'
+import { useAuthorizationStore } from '../Authorization/AuthorizationStore'
 
 export default function ProjectItemDialog({ projectId }) {
     const modalVisible = useProjectStore(state => state.modalVisible)
@@ -22,6 +23,7 @@ export default function ProjectItemDialog({ projectId }) {
     const setProject = useProjectStore(state => state.setProject)
     const projectUsers = useProjectStore(state => state.projectUsers)
     const { showToast } = useToast()
+    const userCan = useAuthorizationStore(state => state.userCan)
 
     const deleteItem = item => {
         setProject({
@@ -53,6 +55,7 @@ export default function ProjectItemDialog({ projectId }) {
                                 model="project_item"
                                 modelId={selectedItem?.id}
                                 field="title"
+                                readonly={!userCan('project-item:update')}
                             />
                         </h2>
                     </div>
@@ -71,6 +74,7 @@ export default function ProjectItemDialog({ projectId }) {
                             setProjectUsers
                             field="description"
                             richText
+                            readonly={!userCan('project-item:update')}
                         />
 
                         {selectedItem?.id && (
@@ -94,6 +98,9 @@ export default function ProjectItemDialog({ projectId }) {
                                 <div className="col-5">Status</div>
                                 <div className="col-7">
                                     <EditableDropdown
+                                        readonly={
+                                            !userCan('project-item:update')
+                                        }
                                         placeholder="Select a Status"
                                         value={
                                             selectedItem?.status
@@ -156,6 +163,9 @@ export default function ProjectItemDialog({ projectId }) {
                                 <div className="col-7">
                                     <EditableDropdown
                                         value={selectedItem?.assignee}
+                                        readonly={
+                                            !userCan('project-item:update')
+                                        }
                                         placeholder="Select an Asssignee"
                                         options={projectUsers}
                                         optionLabel="name"
@@ -270,17 +280,19 @@ export default function ProjectItemDialog({ projectId }) {
                                 )}
                             </div>
                         </Panel>
-                        {!selectedItem?.deleted_at && (
-                            <div className="flex justify-content-end col-12 mt-4">
-                                <Button
-                                    className={
-                                        'p-button-danger justify-content-center'
-                                    }
-                                    onClick={() => deleteItem(selectedItem)}
-                                    label="Delete item"
-                                />
-                            </div>
-                        )}
+                        <Restrict permission={'project-item:delete'}>
+                            {!selectedItem?.deleted_at && (
+                                <div className="flex justify-content-end col-12 mt-4">
+                                    <Button
+                                        className={
+                                            'p-button-danger justify-content-center'
+                                        }
+                                        onClick={() => deleteItem(selectedItem)}
+                                        label="Delete item"
+                                    />
+                                </div>
+                            )}
+                        </Restrict>
                     </div>
                 </div>
             </Dialog>

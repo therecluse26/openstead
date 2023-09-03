@@ -1,6 +1,7 @@
 import UserForm from '../../../forms/Users/UserForm'
 import LinkButton from '@/components/LinkButton'
 import { useRouter } from 'next/router'
+import Restrict from '@/components/Authorization/Restrict'
 
 export default function EditUser() {
     const { query } = useRouter()
@@ -10,7 +11,9 @@ export default function EditUser() {
     return (
         <>
             <LinkButton href={`/users/${id}`} text={'< Back'} />{' '}
-            <UserForm mode="edit" />
+            <Restrict permission="user:update" showMessage>
+                <UserForm mode="edit" />
+            </Restrict>
         </>
     )
 }

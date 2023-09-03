@@ -2,17 +2,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import UserService from '../../../services/Users/UserService'
 import LinkButton from '@/components/LinkButton'
-import { Rating } from 'primereact/rating'
 import ScalableTag from '@/components/ScalableTag'
-import ServiceLogsTimeline from '@/components/Services/ServiceLogsTimeline'
-import { formatDate } from '@/utils/FormatDate'
-import { Button } from 'primereact/button'
 import Notes from '@/components/Notes'
-import InventoryDetailCard from '@/components/Inventory/InventoryDetailCard'
-import SimilarItems from '@/components/Inventory/SimilarItems'
 import Spinner from '@/components/Spinner'
 import Restrict from '@/components/Authorization/Restrict'
-import { Galleria } from 'primereact/galleria'
 import ImageGallery from '../../../components/Images/ImageGallery'
 import { Card } from 'primereact/card'
 
@@ -76,17 +69,20 @@ export default function UserDetail() {
                             <div
                                 className="col-12 sm:col-fixed"
                                 style={{ width: '200px' }}>
-                                <LinkButton
-                                    href={`/users/${userData?.id}/edit`}
-                                    leftIcon={'ti ti-edit'}
-                                    text={' Edit'}
-                                />
-
-                                <LinkButton
-                                    href={`/users/add`}
-                                    leftIcon={'ti ti-plus'}
-                                    text={' New'}
-                                />
+                                <Restrict permission="user:update">
+                                    <LinkButton
+                                        href={`/users/${userData?.id}/edit`}
+                                        leftIcon={'ti ti-edit'}
+                                        text={' Edit'}
+                                    />
+                                </Restrict>
+                                <Restrict permission="user:create">
+                                    <LinkButton
+                                        href={`/users/add`}
+                                        leftIcon={'ti ti-plus'}
+                                        text={' New'}
+                                    />
+                                </Restrict>
                             </div>
                         </div>
 
@@ -135,7 +131,9 @@ export default function UserDetail() {
                             </div>
                         </div>
                     </Card>
-                    <Notes parentId={id} parentType={'user'} />
+                    <Restrict permission="note:read">
+                        <Notes parentId={id} parentType={'user'} />
+                    </Restrict>
                 </Restrict>
             )}
         </>
