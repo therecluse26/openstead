@@ -23,20 +23,32 @@ services:
     ports:
       - 8000:80
     depends_on:
-      - mysql
+      - pgsql
       - redis
       - minio
-  mysql:
-    image: mysql:8.0.34
-    volumes:
-      - openstead-mysql:/var/lib/mysql
-    environment:
-      - MYSQL_DATABASE=openstead
-      - MYSQL_USER=openstead
-      - MYSQL_PASSWORD=secret
-      - MYSQL_ROOT_PASSWORD=secret
-    ports:
-      - 33062:3306
+  # mysql:
+  #   image: mysql:8.0.34
+  #   volumes:
+  #     - openstead-mysql:/var/lib/mysqlmysql
+  #   environment:
+  #     - MYSQL_DATABASE=openstead
+  #     - MYSQL_USER=openstead
+  #     - MYSQL_PASSWORD=secret
+  #     - MYSQL_ROOT_PASSWORD=secret
+  #   ports:
+  #     - 33062:3306
+  pgsql:
+      image: postgres:13
+      ports:
+          - '5432:5432'
+      environment:
+          PGPASSWORD: '${DB_PASSWORD:-secret}'
+          POSTGRES_DB: '${DB_DATABASE:-openstead}'
+          POSTGRES_USER: '${DB_USERNAME:-postgres}'
+          POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
+          PGDATA: /var/lib/postgresql/data/pgdata
+      volumes:
+          - 'openstead-pgsql:/var/lib/postgresql/data'
   redis:
     image: redis
   minio:
@@ -65,3 +77,4 @@ services:
 volumes:
   openstead-mysql:
   openstead-minio: { }
+  openstead-pgsql:
