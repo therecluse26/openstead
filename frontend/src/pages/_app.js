@@ -11,6 +11,9 @@ const MyApp = ({ Component, pageProps }) => {
     const [hasMounted, setHasMounted] = useState(false)
     const [themeHasLoaded, setThemeHasLoaded] = useState(false)
 
+    // Check if route is /health
+    const isHealthRoute = router.pathname === '/health'
+
     useEffect(() => {
         setHasMounted(true)
     }, [])
@@ -23,23 +26,29 @@ const MyApp = ({ Component, pageProps }) => {
     }
 
     return (
-        <div suppressHydrationWarning>
-            <ThemeContextProvider onLoad={setThemeHasLoaded}>
-                <ToastContextProvider>
-                    {hasMounted && themeHasLoaded ? (
-                        <AppLayout>
-                            <Head>
-                                <title>Openstead</title>
-                            </Head>
+        <>
+            {isHealthRoute ? (
+                <>OK</>
+            ) : (
+                <div suppressHydrationWarning>
+                    <ThemeContextProvider onLoad={setThemeHasLoaded}>
+                        <ToastContextProvider>
+                            {hasMounted && themeHasLoaded ? (
+                                <AppLayout>
+                                    <Head>
+                                        <title>Openstead</title>
+                                    </Head>
 
-                            <Component {...pageProps} />
-                        </AppLayout>
-                    ) : (
-                        <Suspense />
-                    )}
-                </ToastContextProvider>
-            </ThemeContextProvider>
-        </div>
+                                    <Component {...pageProps} />
+                                </AppLayout>
+                            ) : (
+                                <Suspense />
+                            )}
+                        </ToastContextProvider>
+                    </ThemeContextProvider>
+                </div>
+            )}
+        </>
     )
 }
 

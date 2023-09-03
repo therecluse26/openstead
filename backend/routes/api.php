@@ -23,6 +23,13 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::get('/health', static function () {
+	return response()->json([
+		'message' => 'OK'
+	], 200);
+});
+
 Route::get('/images/{imageId}', [ImageController::class, 'showImage'])->name('image.show');
 
 Route::get('/authorization/roles', [AuthorizationController::class, 'allRoles'])->middleware('user-can:user:update');
