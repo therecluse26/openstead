@@ -23,6 +23,7 @@ export default function EditableDropdown({
     noValueLabel = 'Unknown', // The label to display when there is no value
     showEmptyValue = false, // Whether or not to show an empty value
     emptyLabel = 'None', // The label to display when there is no value
+    readonly = false, // Whether or not the field is readonly
 }) {
     const [loading, setLoading] = useState(false)
     const [localValue, setLocalValue] = useState(value)
@@ -72,6 +73,9 @@ export default function EditableDropdown({
     }, [dropdownOptions])
 
     const handleOnclick = () => {
+        if (readonly) {
+            return
+        }
         setIsEditing(true)
     }
 
@@ -145,7 +149,7 @@ export default function EditableDropdown({
                             {displayedValue.trim() !== ''
                                 ? displayedValue.trim()
                                 : noValueLabel}{' '}
-                            &nbsp; {after}
+                            {!readonly && <> {after}</>}
                         </div>
                     )}
                 </>

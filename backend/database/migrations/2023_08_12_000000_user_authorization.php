@@ -15,6 +15,11 @@ return new class extends Migration {
 	public function up()
 	{
 		Schema::table('users', function (Blueprint $table) {
+			if (DB::getDriverName() === 'mysql') {
+				$table->json('roles')->after('password')->default(new Expression('(JSON_ARRAY("viewer"))'));
+				$table->json('permissions')->nullable()->after('roles');
+				return;
+			}
             $table->json('roles')->after('password')->default(DB::raw("'[\"viewer\"]'"));
 			$table->json('permissions')->nullable()->after('roles');
 		});
