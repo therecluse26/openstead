@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 use Spatie\MediaLibrary\HasMedia;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class PantryItem extends Model implements DataTablePaginatable, Inventoriable, VarietyContract, FrontendFilterable, HasMedia, AddsMedia, Notable
 {
@@ -33,10 +34,12 @@ class PantryItem extends Model implements DataTablePaginatable, Inventoriable, V
 	use HasVariety;
 	use HasNotes;
 	use HasImages;
+	use BelongsToTenant;
 
 	protected $table = 'pantry_items';
 
 	protected $fillable = [
+		'tenant_id',
 		'name',
 		'type',
 		'description',

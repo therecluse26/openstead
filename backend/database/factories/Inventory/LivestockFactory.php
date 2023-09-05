@@ -5,6 +5,7 @@ namespace Database\Factories\Inventory;
 use App\Enums\AnimalType;
 use App\Models\Inventory\Equipment;
 use App\Models\Inventory\Livestock;
+use App\Models\Tenant;
 use App\Models\Variety;
 use App\Providers\FakerImageProvider;
 use Faker\Provider\Biased;
@@ -23,6 +24,7 @@ class LivestockFactory extends Factory
 	public function definition()
 	{
 		return [
+			'tenant_id' => Tenant::first()->id,
 			'name' => fake()->name(),
 			'description' => fake()->paragraph(2),
 			'variety_id' => Variety::where('group', 'animal')->whereIn('group_type', AnimalType::cases())->inRandomOrder()->first(),

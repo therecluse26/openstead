@@ -19,6 +19,7 @@ return new class extends Migration {
 	{
 		Schema::create('locations', function (Blueprint $table) {
 			$table->ulid('id')->primary();
+			$table->string('tenant_id')->index();
 			$table->boolean('primary')->default(false);
 			$table->string('name', 100);
 			$table->string('description', 255)->nullable();
@@ -44,6 +45,7 @@ return new class extends Migration {
 
 		Schema::create('livestock', function (Blueprint $table) {
 			$table->ulid('id')->primary();
+			$table->string('tenant_id')->index();
 			$table->string('name', 255);
 			$table->string('description', 1000)->nullable();
 			$table->enum('sex', ['male', 'female'])->nullable();
@@ -58,6 +60,7 @@ return new class extends Migration {
 			$table->index('variety_id');
 
 			$table->foreign('variety_id')->references('id')->on('varieties')->nullOnDelete();
+			$table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
 		});
 
 		Schema::create('livestock_parents', function (Blueprint $table) {
@@ -73,6 +76,7 @@ return new class extends Migration {
 
 		Schema::create('seeds', function (Blueprint $table) {
 			$table->ulid('id')->primary();
+			$table->string('tenant_id')->index();
 			$table->ulid('variety_id')->nullable();
 			$table->unsignedInteger('quantity')->default(1);
 			$table->enum('life_cycle', collect(PlantLifeCycle::cases())->map(function ($case) {
@@ -97,10 +101,12 @@ return new class extends Migration {
 
 			$table->index('variety_id');
 			$table->foreign('variety_id')->references('id')->on('varieties')->nullOnDelete();
+			$table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
 		});
 
 		Schema::create('equipment', function (Blueprint $table) {
 			$table->ulid('id')->primary();
+			$table->string('tenant_id')->index();
 			$table->string('name', 255);
 			$table->string('type', 50);
 			$table->unsignedTinyInteger('condition')->nullable();
@@ -113,10 +119,13 @@ return new class extends Migration {
 
 			$table->index('name');
 			$table->index('type');
+
+			$table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
 		});
 
 		Schema::create('pantry_items', function (Blueprint $table) {
 			$table->ulid('id')->primary();
+			$table->string('tenant_id')->index();
 			$table->string('name', 255);
 			$table->string('description', 1000)->nullable();
 			$table->enum('storage_type', collect(PantryStorageType::cases())->map(function ($case) {
@@ -135,10 +144,12 @@ return new class extends Migration {
 			$table->index('name');
 			$table->index('variety_id');
 			$table->foreign('variety_id')->references('id')->on('varieties')->nullOnDelete();
+			$table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
 		});
 
 		Schema::create('services', function (Blueprint $table) {
 			$table->ulid('id')->primary();
+			$table->string('tenant_id')->index();
 			$table->string('type', 20)->default('other');
 			$table->string('title', 100);
 			$table->string('description', 1000);
@@ -146,10 +157,12 @@ return new class extends Migration {
 
 			$table->index('type');
 			$table->index('title');
+			$table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
 		});
 
 		Schema::create('service_logs', function (Blueprint $table) {
 			$table->ulid('id')->primary();
+			$table->string('tenant_id')->index();
 			$table->ulidMorphs('serviceable');
 			$table->ulid('service_id')->nullable();
 			$table->string('notes', 2000);
@@ -160,10 +173,12 @@ return new class extends Migration {
 			$table->foreign('service_id')->references('id')->on('services')->nullOnDelete();
 			$table->index('serviceable_id');
 			$table->index('serviceable_type');
+			$table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
 		});
 
 		Schema::create('notes', function (Blueprint $table) {
 			$table->ulid('id')->primary();
+			$table->string('tenant_id')->index();
 			$table->ulidMorphs('notable');
 			$table->ulid('creator_id')->nullable();
 			$table->text('note');
@@ -173,6 +188,7 @@ return new class extends Migration {
 			$table->index('notable_id');
 			$table->index('notable_type');
 			$table->foreign('creator_id')->references('id')->on('users')->nullOnDelete();
+			$table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
 		});
 	}
 

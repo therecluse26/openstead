@@ -3,6 +3,7 @@
 namespace Database\Factories\Projects;
 
 use App\Models\Inventory\Equipment;
+use App\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -22,6 +23,7 @@ class ProjectFactory extends Factory
         $id =  strtolower(Str::ulid());
 		return [
             'id' => $id,
+			'tenant_id' => Tenant::first()->id,
 			'name' => $name,
 			'description' => fake()->paragraph(2),
 			'active' => fake()->boolean(),

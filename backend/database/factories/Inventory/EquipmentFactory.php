@@ -5,6 +5,7 @@ namespace Database\Factories\Inventory;
 use App\Enums\EquipmentCondition;
 use App\Enums\EquipmentType;
 use App\Models\Inventory\Equipment;
+use App\Models\Tenant;
 use App\Providers\FakerImageProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -21,6 +22,7 @@ class EquipmentFactory extends Factory
 	public function definition()
 	{
 		return [
+			'tenant_id' => Tenant::first()->id,
 			'name' => fake()->words(3, true),
 			'type' => fake()->randomElement(EquipmentType::cases()),
 			'condition' => fake()->randomElement([...EquipmentCondition::cases(), null]),

@@ -34,12 +34,13 @@ class User extends Authenticatable implements DataTablePaginatable, HasMedia, Ad
 {
     use HasUlids, SoftDeletes, HasApiTokens, HasFactory, Notifiable, HasNotes, HasImages;
 
-    /**
+    /**tenant_users
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
+        'tenant_id',
         'name',
         'email',
         'password',
@@ -69,6 +70,18 @@ class User extends Authenticatable implements DataTablePaginatable, HasMedia, Ad
         'permissions' => PermissionCollection::class,
     ];
 
+    public function tenants(): BelongsToMany
+    {
+        return $this->belongsToMany(Tenant::class, 'tenant_users', 'user_id', 'tenant_id')
+            ->using(TenantUser::class)
+            ->withPivot(['roles', 'permissions']);
+    }
+
+    public function getCurrentTenantAttribute()
+    {
+        return tenant();
+    }
+
     public function avatar(): Attribute
     {
         return Attribute::make(
@@ -88,6 +101,25 @@ class User extends Authenticatable implements DataTablePaginatable, HasMedia, Ad
             ->using(ProjectUser::class);
     }
 
+    public function getRolesAttribute(): Collection
+    {
+        return $this->tenants->filter(function($tenant){
+            return $tenant->id === $this->currentTenant?->id;
+        })->map(function($tenant){
+            return $tenant->pivot->roles;
+        })->flatten();
+    }
+
+    public function getPermissionsAttribute(): Collection
+    {
+        return $this->tenants->filter(function($tenant){
+            return $tenant->id === $this->currentTenant?->id;
+        })->map(function($tenant){
+            return $tenant->pivot->permissions;
+        })->flatten();
+    }
+
+    // Get permissions from related TenantUser pivot model, filtered by current tenant
     public function getAllPermissionsAttribute(): Collection
     {
         $permissions = $this->roles?->map(function($role){
@@ -132,5 +164,7 @@ class User extends Authenticatable implements DataTablePaginatable, HasMedia, Ad
 	{
 		return collect();
 	}
+
+
 
 }

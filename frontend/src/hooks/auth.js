@@ -43,7 +43,17 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
         await csrf()
         axios
             .post('/login', props)
-            .then(() => mutate())
+            .then(data => {
+                const tenantId = data?.data?.tenant_id
+
+                if (!tenantId) {
+                    throw new Error('User is not associated with a tenant')
+                }
+
+                localStorage.setItem('tenantId', tenantId)
+
+                mutate()
+            })
             .catch(error => {
                 if (error.response === undefined) {
                     alert(error)

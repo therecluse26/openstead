@@ -3,6 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Query\Expression;
 
 return new class extends Migration {
 	/**
@@ -24,7 +26,43 @@ return new class extends Migration {
 			$table->softDeletes();
 
 			$table->index('name');
-			$table->index('email');
+			$table->index('email');			
+		});
+
+		Schema::create('tenant_users', function (Blueprint $table) {
+			if (DB::getDriverName() === 'mysql') {
+				$table->ulid('id')->primary();
+				$table->string('tenant_id');
+				$table->ulid('user_id');
+				$table->json('roles')->default(new Expression('(JSON_ARRAY("viewer"))'));
+				$table->json('permissions')->nullable();
+				$table->timestamps();
+				$table->softDeletes();
+
+				$table->index('tenant_id');
+				$table->index('user_id');
+				
+				// Foreign key to tenant
+				$table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
+				$table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+				return;
+			}
+
+			$table->ulid('id')->primary();
+			$table->string('tenant_id');
+			$table->ulid('user_id');
+			$table->json('roles')->default(DB::raw("'[\"viewer\"]'"));
+			$table->json('permissions')->nullable();
+			$table->timestamps();
+			$table->softDeletes();
+
+			$table->index('tenant_id');
+			$table->index('user_id');
+			
+			// Foreign key to tenant
+			$table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
+			$table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+	
 		});
 	}
 
@@ -36,5 +74,6 @@ return new class extends Migration {
 	public function down()
 	{
 		Schema::dropIfExists('users');
+		Schema::dropIfExists('tenant_users');
 	}
 };

@@ -15,16 +15,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class Project extends Model implements DataTablePaginatable
 {
-    use HasUlids, HasFactory, SoftDeletes;
+    use HasUlids, HasFactory, SoftDeletes, BelongsToTenant;
 
     protected $table = 'projects';
 
     protected $primaryKey = 'id';
 
     protected $fillable = [
+        'tenant_id',
         'name',
         'description',
         'workflow_statuses',

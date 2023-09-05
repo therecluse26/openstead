@@ -13,7 +13,12 @@ return new class extends Migration
      */
     public function up(): void
     { 
-Schema::dropIfExists('projects');
+        Schema::dropIfExists('projects');
+        Schema::dropIfExists('project_users');
+        Schema::dropIfExists('project_item_statuses');
+        Schema::dropIfExists('project_columns');
+        Schema::dropIfExists('project_items');
+
         Schema::create('project_item_statuses', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->string('name', 50);
@@ -42,6 +47,7 @@ Schema::dropIfExists('projects');
 
         Schema::create('projects', function (Blueprint $table) use ($backlogId, $todoId, $inProgressId, $doneId) {
             $table->ulid('id')->primary();
+            $table->string('tenant_id')->index();
             $table->string('name', 80);
             $table->text('description')->nullable();
             $table->json('workflow_statuses');
@@ -50,6 +56,8 @@ Schema::dropIfExists('projects');
             $table->timestamps();
 
             $table->index('name');
+
+            $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
         });
 
         Schema::create('project_users', function (Blueprint $table) {
@@ -68,6 +76,7 @@ Schema::dropIfExists('projects');
 
         Schema::create('project_columns', function (Blueprint $table) {
             $table->ulid('id')->primary();
+            $table->string('tenant_id')->index();
             $table->ulid('project_id');
             $table->string('title', 150);
             $table->ulid('project_item_status_id');
@@ -80,10 +89,12 @@ Schema::dropIfExists('projects');
 
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->foreign('project_item_status_id')->references('id')->on('project_item_statuses')->onDelete('cascade');
+            $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
         });
 
         Schema::create('project_items', function (Blueprint $table) {
             $table->ulid('id')->primary();
+            $table->string('tenant_id')->index();
             $table->ulid('project_id');
             $table->string('title', 150);
             $table->text('description')->nullable();            
@@ -105,6 +116,7 @@ Schema::dropIfExists('projects');
             $table->foreign('project_item_status_id')->references('id')->on('project_item_statuses')->onDelete('cascade');
             $table->foreign('creator_id')->references('id')->on('users')->nullOnDelete();
             $table->foreign('assignee_id')->references('id')->on('users')->nullOnDelete();
+            $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
 
         });
     }
