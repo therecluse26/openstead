@@ -101,6 +101,26 @@ class User extends Authenticatable implements DataTablePaginatable, HasMedia, Ad
             ->using(ProjectUser::class);
     }
 
+    public function getDetailResource(): JsonResource
+	{
+		return UserWithPermissions::make($this);
+	}
+
+	public function getListResource(): JsonResource
+	{
+		return UserListResource::make($this);
+	}
+
+	public function getFilters(): Collection
+	{
+		return collect();
+	}
+
+    
+    /**
+     * Authorization methods
+     */
+
     public function getRolesAttribute(): Collection
     {
         return $this->tenants->filter(function($tenant){
@@ -143,28 +163,9 @@ class User extends Authenticatable implements DataTablePaginatable, HasMedia, Ad
         });
     }
     
-    
     public function hasPermissionTo(Permission $permission): bool
     {
         return $this->allPermissions->contains($permission);
     }
     
-
-    public function getDetailResource(): JsonResource
-	{
-		return UserWithPermissions::make($this);
-	}
-
-	public function getListResource(): JsonResource
-	{
-		return UserListResource::make($this);
-	}
-
-	public function getFilters(): Collection
-	{
-		return collect();
-	}
-
-
-
 }
