@@ -32,7 +32,7 @@ class UserController extends Controller
     {
         return response()->json(
             UserWithPermissions::make(
-            $this->repository()->getAuthenticatedUser()
+                $this->repository()->getAuthenticatedUser()
             ), 
         200);
     }

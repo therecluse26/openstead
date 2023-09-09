@@ -4,8 +4,6 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-use App\Casts\PermissionCollection;
-use App\Casts\RoleCollection;
 use App\Contracts\AddsMedia;
 use App\Contracts\DataTablePaginatable;
 use App\Contracts\FrontendFilterable;
@@ -28,25 +26,24 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Traits\HasImages;
 use App\Traits\HasNotes;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Spatie\MediaLibrary\HasMedia;
 
 class User extends Authenticatable implements DataTablePaginatable, HasMedia, AddsMedia, Notable, FrontendFilterable
 {
     use HasUlids, SoftDeletes, HasApiTokens, HasFactory, Notifiable, HasNotes, HasImages;
 
-    /**tenant_users
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'tenant_id',
         'name',
         'email',
         'password',
         'avatar_url',
-        'roles',
-        'permissions'
+        'current_tenant_id'
     ];
 
     /**
@@ -66,20 +63,32 @@ class User extends Authenticatable implements DataTablePaginatable, HasMedia, Ad
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'roles' => RoleCollection::class,
-        'permissions' => PermissionCollection::class,
     ];
 
     public function tenants(): BelongsToMany
     {
         return $this->belongsToMany(Tenant::class, 'tenant_users', 'user_id', 'tenant_id')
             ->using(TenantUser::class)
-            ->withPivot(['roles', 'permissions']);
+            ->withPivot(['tenant_id', 'roles', 'permissions']);
     }
 
-    public function getCurrentTenantAttribute()
+    public function getTenantAttribute(): Tenant
     {
-        return tenant();
+        $tenant = $this->currentTenant;
+
+        if(!$tenant){
+            $tenant = $this->tenants->first();
+            $this->current_tenant_id = $tenant->id;
+            $this->saveQuietly();
+        }
+
+        return $tenant;
+    }
+
+    public function currentTenant(): HasOneThrough
+    {
+        return $this->hasOneThrough(Tenant::class, TenantUser::class, 'user_id', 'id', 'id', 'tenant_id')
+            ->where('tenant_id', $this->current_tenant_id);
     }
 
     public function avatar(): Attribute
@@ -116,7 +125,7 @@ class User extends Authenticatable implements DataTablePaginatable, HasMedia, Ad
 		return collect();
 	}
 
-    
+
     /**
      * Authorization methods
      */

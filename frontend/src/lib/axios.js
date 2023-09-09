@@ -1,5 +1,11 @@
 import Axios from 'axios'
 
+const getTenantId = () => {
+    return typeof localStorage !== 'undefined'
+        ? localStorage.getItem('tenantId')
+        : null
+}
+
 // Check if process.env.NEXT_PUBLIC_BACKEND_URL is defined
 const isBackendUrlDefined = process?.env?.NEXT_PUBLIC_BACKEND_URL
 
@@ -21,20 +27,23 @@ let headers = {
     Vary: 'origin',
 }
 
-// Get Tenant ID from localstorage
-const tenantId =
-    typeof localStorage !== 'undefined'
-        ? localStorage.getItem('tenantId')
-        : null
-
-if (tenantId) {
-    headers['X-Tenant'] = tenantId
-}
-
 const axios = Axios.create({
     baseURL: backendUrl,
     headers: headers,
     withCredentials: true,
 })
+
+axios.interceptors.request.use(
+    function (config) {
+        const tenantId = getTenantId()
+        if (tenantId) {
+            config.headers['X-Tenant'] = tenantId
+        }
+        return config
+    },
+    function (error) {
+        return Promise.reject(error)
+    },
+)
 
 export default axios

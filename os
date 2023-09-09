@@ -168,14 +168,6 @@ if [ $# -gt 0 ]; then
             "$API_SERVICE" \
             php artisan "$@"
 
-    # Proxy NPM commands to the frontend container
-    elif [ "$1" == "npm" ]; then
-        shift 1
-
-        docker-compose exec \
-            "$FRONTEND_SERVICE" \
-            npm "$@"
-
     # Proxy the "debug" command to the "php artisan" binary on the application container with xdebug enabled...
     elif [ "$1" == "debug" ]; then
         shift 1
@@ -229,35 +221,31 @@ if [ $# -gt 0 ]; then
             "$API_SERVICE" \
             php artisan tinker
 
-    # Proxy Node commands to the "node" binary on the application container...
-    elif [ "$1" == "node" ]; then
+     # Proxy NPM commands to the frontend container
+    elif [ "$1" == "dev" ]; then
         shift 1
-        docker-compose exec \
-            "$API_SERVICE" \
-            node "$@"
 
-    # Proxy NPM commands to the "npm" binary on the application container...
+        npm --prefix ./frontend run dev
+
+    # Proxy NPM commands to the frontend container
     elif [ "$1" == "npm" ]; then
         shift 1
-        docker-compose exec \
-            "$API_SERVICE" \
-            npm "$@"
+
+        npm --prefix ./frontend "$@"
 
     # Proxy NPX commands to the "npx" binary on the application container...
     elif [ "$1" == "npx" ]; then
         shift 1
 
         docker-compose exec \
-            "$API_SERVICE" \
-            npx "$@"
+            "$FRONTEND_SERVICE" \
+            npx --prefix ./frontend "$@"
 
     # Proxy YARN commands to the "yarn" binary on the application container...
     elif [ "$1" == "yarn" ]; then
         shift 1
 
-        docker-compose exec \
-            "$API_SERVICE" \
-            yarn "$@"
+        yarn --cwd ./frontend "$@"
 
     # Initiate a MySQL CLI terminal session within the "mysql" container...
     elif [ "$1" == "mysql" ]; then

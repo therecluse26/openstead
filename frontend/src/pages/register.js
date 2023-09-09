@@ -12,6 +12,7 @@ const Register = () => {
     const [registering, setRegistering] = React.useState(false)
 
     const defaultValues = {
+        homestead_name: '',
         name: '',
         email: '',
         password: '',
@@ -33,6 +34,7 @@ const Register = () => {
     const onSubmit = data => {
         setRegistering(true)
         register({
+            homestead_name: data.homestead_name,
             name: data.name,
             email: data.email,
             password: data.password,
@@ -43,17 +45,61 @@ const Register = () => {
     }
 
     const getFormErrorMessage = name => {
-        return (
-            errors[name] && (
+        return errors[name] ? (
+            Array.isArray(errors[name]) ? (
+                <>
+                    {errors[name].map(e => {
+                        return (
+                            <small key={e.message} className="p-error">
+                                {e.message}
+                            </small>
+                        )
+                    })}
+                </>
+            ) : (
                 <small className="p-error">{errors[name].message}</small>
             )
-        )
+        ) : null
     }
 
     return (
         <GuestLayout>
             <h3 className="text-center">Openstead</h3>
             <form onSubmit={handleSubmit(onSubmit)} className="p-fluid">
+                <div className="field">
+                    <span className="p-float-label p-input-icon-right">
+                        <i className="ti ti-user" />
+                        <Controller
+                            name="homestead_name"
+                            control={control}
+                            rules={{
+                                required: 'Homestead name is required.',
+                            }}
+                            render={({
+                                field: { onChange, value, name },
+                                fieldState,
+                            }) => (
+                                <InputText
+                                    id={name}
+                                    value={value}
+                                    className={classNames({
+                                        'p-invalid': fieldState.invalid,
+                                    })}
+                                    onChange={onChange}
+                                />
+                            )}
+                        />
+                        <label
+                            htmlFor="homestead_name"
+                            className={classNames({
+                                'p-error': !!errors.homestead_name,
+                            })}>
+                            Homestead Name
+                        </label>
+                    </span>
+                    {getFormErrorMessage('homestead_name')}
+                </div>
+
                 <div className="field">
                     <span className="p-float-label p-input-icon-right">
                         <i className="ti ti-user" />
@@ -78,14 +124,14 @@ const Register = () => {
                             )}
                         />
                         <label
-                            htmlFor="email"
+                            htmlFor="name"
                             className={classNames({
-                                'p-error': !!errors.email,
+                                'p-error': !!errors.name,
                             })}>
                             Name
                         </label>
                     </span>
-                    {getFormErrorMessage('email')}
+                    {getFormErrorMessage('name')}
                 </div>
 
                 <div className="field">

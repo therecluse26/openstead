@@ -17,6 +17,8 @@ const FilterableDataTable = ({
     setLazyParamsCallack,
     selectionMode,
     createPermission = null,
+    initialSortColumn = null,
+    idColumn = null,
 }) => {
     const isMounted = useRef(false)
     const [selected, setSelected] = useState([])
@@ -28,7 +30,7 @@ const FilterableDataTable = ({
         first: 0,
         rows: perPage,
         page: 0,
-        sortField: null,
+        sortField: initialSortColumn ?? null,
         sortOrder: null,
         filters: filters,
     })
@@ -183,7 +185,7 @@ const FilterableDataTable = ({
                 value={inventory}
                 lazy
                 filterDisplay="row"
-                dataKey="id"
+                dataKey={idColumn ?? 'id'}
                 header={header}
                 paginator
                 paginatorTemplate={paginatorTemplate}

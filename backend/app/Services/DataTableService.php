@@ -30,6 +30,7 @@ class DataTableService
 
 		$sortOrder = $params->sortOrder ?? 1;
 		$sortField = self::getFieldName($params->sortField);
+
 		$query = self::buildOrderBy($model, $sortField, $sortOrder);
 
 		$filters = (array)$params->filters;
@@ -39,7 +40,19 @@ class DataTableService
 			$filters[$filterName] = $filterValue;
 		}
 
+
 		$query = self::buildFilters($query, (object)$filters);
+
+		if(isset($params->tenantPivotId)){
+			$query->join('tenant_users', 'users.id', '=', 'tenant_users.user_id')->where('tenant_users.tenant_id', $params->tenantPivotId);
+		}
+		
+		if(isset($params->tenantId)){
+			$filters['tenant_id'] = (object)[
+				'value' => $params->tenantId,
+				'matchMode' => 'equals'
+			];
+		}
 
 		return $query->paginate($rows, ['*'], 'page', $page + 1);
 	}
@@ -77,6 +90,14 @@ class DataTableService
 	public static function buildFilters(Builder|Model|Repository|QueryBuilder $query, object $filters)
 	{
 		foreach ($filters as $key => $filter) {
+
+			if($key === 'pivotFilters')
+			{
+				foreach ($filter as $pivotFilterName => $pivotFilterValue) {
+					$query->wherePivot($pivotFilterName, $pivotFilterValue->value);
+				}
+			}
+
 			if (empty($filter->value)) {
 				continue;
 			}
@@ -88,6 +109,8 @@ class DataTableService
 			} else {
 				$query->where($key, $formattedFilter['method'], $formattedFilter['value']);
 			}
+
+
 		}
 		
 		return $query;
@@ -118,7 +141,7 @@ class DataTableService
 
 		// Checks for relation via dot notation. Currently only handles 1 relation deep.
 		$fieldParts = explode('.', $fieldName);
-		return count($fieldParts) > 1 ? ['relation' => $fieldParts[0], 'field' => $fieldParts[1]] : ['relation' => null, 'field' => $fieldName];
+		return count($fieldParts) > 1 ? ['relation' => $fieldParts[0], 'field' => $fieldName] : ['relation' => null, 'field' => $fieldName];
 	}
 
 	/**

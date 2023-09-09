@@ -11,7 +11,9 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     const { data: user, error, mutate } = useSWR('/api/user', () =>
         axios
             .get('/api/user')
-            .then(res => res.data)
+            .then(res => {
+                return res.data
+            })
             .catch(error => {
                 if (error.response.status !== 409) throw error
                 router.push('/verify-email')
@@ -22,7 +24,17 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
         await csrf()
         axios
             .post('/register', props)
-            .then(() => mutate())
+            .then(data => {
+                const tenantId = data?.data?.tenant_id
+
+                if (!tenantId) {
+                    throw new Error('User is not associated with a tenant')
+                }
+
+                localStorage.setItem('tenantId', tenantId)
+
+                return mutate()
+            })
             .catch(error => {
                 if (error.response === undefined) {
                     alert(error)
@@ -30,12 +42,17 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
                 }
 
                 if (error.response.status !== 422) throw error
-                for (let err in error.response.data.errors) {
-                    setError(err, err[0])
+
+                for (let [key, err] of Object.entries(
+                    error.response.data.errors,
+                )) {
+                    setError(key, { type: 'string', message: err[0] })
                 }
             })
             .finally(() => {
-                if (callback) callback()
+                if (callback) {
+                    callback()
+                }
             })
     }
 
@@ -52,11 +69,24 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
 
                 localStorage.setItem('tenantId', tenantId)
 
-                mutate()
+                return mutate()
             })
             .catch(error => {
+                if (!error.response.data.errors) {
+                    alert(error)
+                    return
+                }
+
                 if (error.response === undefined) {
                     alert(error)
+                    return
+                }
+
+                if (error.response.status === 401) {
+                    setError('email', {
+                        type: 'string',
+                        message: 'Invalid credentials',
+                    })
                     return
                 }
 
@@ -67,7 +97,9 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
                 }
             })
             .finally(() => {
-                if (callback) callback()
+                if (callback) {
+                    callback()
+                }
             })
     }
 
@@ -123,7 +155,11 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
         if (!error) {
             await axios
                 .post('/logout')
-                .then(() => mutate())
+                .then(() => {
+                    localStorage.removeItem('tenantId')
+
+                    return mutate()
+                })
                 .catch(error => {
                     if (error.response === undefined) {
                         alert(error)
@@ -136,14 +172,19 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     }
 
     useEffect(() => {
-        if (middleware === 'guest' && redirectIfAuthenticated && user)
+        if (middleware === 'guest' && redirectIfAuthenticated && user) {
             router.push(redirectIfAuthenticated)
+        }
         if (
             window.location.pathname === '/verify-email' &&
             user?.email_verified_at
-        )
+        ) {
             router.push(redirectIfAuthenticated)
-        if (middleware === 'auth' && error) logout()
+        }
+
+        if (middleware === 'auth' && error) {
+            logout()
+        }
     }, [user, error])
 
     return {

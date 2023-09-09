@@ -10,4 +10,11 @@ use Stancl\Tenancy\Database\Concerns\HasDomains;
 class Tenant extends BaseTenant implements TenantWithDatabase
 {
     use HasDatabase, HasDomains;
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'tenant_users')
+            ->using(TenantUser::class)
+            ->withPivot(['roles', 'permissions']);
+    }
 }

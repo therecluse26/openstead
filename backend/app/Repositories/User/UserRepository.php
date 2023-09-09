@@ -3,6 +3,8 @@ namespace App\Repositories\User;
 
 use App\Models\User;
 use App\Contracts\Repository;
+use App\Models\Tenant;
+use App\Models\TenantUser;
 use App\Traits\AddMedia;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Hash;
@@ -18,23 +20,27 @@ class UserRepository implements Repository
 
     public function index()
     {
-        return User::all();
+        return User::wherePivot('tenant_id', tenant()->id)->get();
     }
 
     public function getById(string $id): User
     {
-        return User::findOrFail($id);
+        return TenantUser::where('user_id', $id)->where('tenant_id', tenant()->id)->firstOrFail()->user;
     }
 
-    public function create(array $attributes): User
+    public function create(array $attributes, string $tenantId = null): User
     {
         $user = User::create([
             'name' => $attributes['name'],
             'email' => $attributes['email'],
             'password' => Hash::make($attributes['password']),
-            'roles' => $attributes['roles'] ?? null,
-            'permissions' => $attributes['permissions'] ?? null,
         ]);
+
+        $tenant = $tenantId ? Tenant::findOrFail($tenantId) : tenant();
+
+        $this->updateRoles($user, $tenant, $attributes['roles'] ?? null);
+
+        $this->updatePermissions($user, $tenant, $attributes['permissions'] ?? null);
 
         if (isset($attributes['images']) && is_array($attributes['images']) && count($attributes['images']) > 0) {
 			$this->addOrReplaceImagesBase64($user, $attributes['images']);
@@ -43,7 +49,22 @@ class UserRepository implements Repository
         return $user;
     }
 
-    public function update(string $id, array $attributes): User
+    private function updateRoles(User $user, Tenant $tenant, $roles = null){
+        if(isset($roles)) {
+            $tenant->users()->updateExistingPivot($user->id, [
+                'roles' => $roles
+            ]);
+        }
+    }
+    private function updatePermissions(User $user, Tenant $tenant, $permissions = null){
+        if(isset($permissions)) {
+            $tenant->users()->updateExistingPivot($user->id, [
+                'permissions' => $permissions
+            ]);
+        }
+    }
+
+    public function update(string $id, array $attributes, string $tenantId = null): User
     {
         $user = $this->getById($id);
         if($user->name !== $attributes['name']) {
@@ -58,16 +79,13 @@ class UserRepository implements Repository
             $user->password = Hash::make($attributes['password']);
         }
 
-        if(isset($attributes['roles'])) {
-            $user->roles = $attributes['roles'];
-        }
+        $tenant = $tenantId ? Tenant::findOrFail($tenantId) : tenant();
+       
+        $this->updateRoles($user, $tenant, $attributes['roles'] ?? null);
 
-        if(isset($attributes['permissions'])) {
-            $user->permissions = $attributes['permissions'];
-        }
+        $this->updatePermissions($user, $tenant, $attributes['permissions'] ?? null);
 
         $user->save();
-
         
         if (isset($attributes['images']) && is_array($attributes['images']) && count($attributes['images']) > 0) {
 			$this->addOrReplaceImagesBase64($user, $attributes['images']);
@@ -100,6 +118,4 @@ class UserRepository implements Repository
     {
         return $this->getModel()->$method(...$arguments);
     }
-
-
 }

@@ -21,17 +21,19 @@ return new class extends Migration {
 			$table->timestamp('email_verified_at')->nullable();
 			$table->string('password');
 			$table->string('avatar_url')->nullable();
+			$table->string('current_tenant_id');
 			$table->rememberToken();
 			$table->timestamps();
 			$table->softDeletes();
 
 			$table->index('name');
 			$table->index('email');			
+			$table->index('current_tenant_id');
 		});
 
 		Schema::create('tenant_users', function (Blueprint $table) {
 			if (DB::getDriverName() === 'mysql') {
-				$table->ulid('id')->primary();
+				$table->id();
 				$table->string('tenant_id');
 				$table->ulid('user_id');
 				$table->json('roles')->default(new Expression('(JSON_ARRAY("viewer"))'));
@@ -48,7 +50,7 @@ return new class extends Migration {
 				return;
 			}
 
-			$table->ulid('id')->primary();
+			$table->id();
 			$table->string('tenant_id');
 			$table->ulid('user_id');
 			$table->json('roles')->default(DB::raw("'[\"viewer\"]'"));
@@ -58,6 +60,7 @@ return new class extends Migration {
 
 			$table->index('tenant_id');
 			$table->index('user_id');
+			$table->index('primary');
 			
 			// Foreign key to tenant
 			$table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
