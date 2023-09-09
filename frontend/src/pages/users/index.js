@@ -34,8 +34,8 @@ const Users = () => {
                 filters={filters}
                 setFilters={setFilters}
                 setLazyParamsCallack={lazyParamsCallback}
-                initialSortColumn={'users.id'}
-                idColumn={'users.id'}>
+                initialSortColumn={'user_id'}
+                idColumn={'user_id'}>
                 <Column
                     field="name"
                     header="Name"

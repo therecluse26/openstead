@@ -133,7 +133,7 @@ class User extends Authenticatable implements DataTablePaginatable, HasMedia, Ad
     public function getRolesAttribute(): Collection
     {
         return $this->tenants->filter(function($tenant){
-            return $tenant->id === $this->currentTenant?->id;
+            return $tenant->id === $this->tenant?->id;
         })->map(function($tenant){
             return $tenant->pivot->roles;
         })->flatten();
@@ -142,7 +142,7 @@ class User extends Authenticatable implements DataTablePaginatable, HasMedia, Ad
     public function getPermissionsAttribute(): Collection
     {
         return $this->tenants->filter(function($tenant){
-            return $tenant->id === $this->currentTenant?->id;
+            return $tenant->id === $this->tenant?->id;
         })->map(function($tenant){
             return $tenant->pivot->permissions;
         })->flatten();

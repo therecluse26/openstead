@@ -20,7 +20,9 @@ class UserRepository implements Repository
 
     public function index()
     {
-        return User::wherePivot('tenant_id', tenant()->id)->get();
+        return TenantUser::where('tenant_id', tenant()->id)->get()->map(function($tenantUser) {
+            return $tenantUser->user;
+        });
     }
 
     public function getById(string $id): User

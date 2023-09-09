@@ -36,8 +36,8 @@ const ProjectForm = ({ mode = 'create' }) => {
 
     useEffect(() => {
         getUsers()
-            .then(r => {
-                setAvailableUsers(r.data)
+            .then(userData => {
+                setAvailableUsers(userData)
             })
             .catch(e => {
                 showToast(
