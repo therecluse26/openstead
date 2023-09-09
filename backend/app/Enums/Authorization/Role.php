@@ -48,7 +48,6 @@ enum Role: string
                 ...self::InventoryCollaborator->permissions(),
                 ...self::NoteCollaborator->permissions(),
                 ...self::ServiceCollaborator->permissions(),
-                ...self::UserCollaborator->permissions(),
             ],
             // Manager inherits all permissions from Collaborator role
             self::Manager => [

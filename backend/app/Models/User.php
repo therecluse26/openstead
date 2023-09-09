@@ -125,11 +125,9 @@ class User extends Authenticatable implements DataTablePaginatable, HasMedia, Ad
 		return collect();
 	}
 
-
     /**
      * Authorization methods
      */
-
     public function getRolesAttribute(): Collection
     {
         return $this->tenants->filter(function($tenant){
@@ -155,7 +153,7 @@ class User extends Authenticatable implements DataTablePaginatable, HasMedia, Ad
             return $role->permissions();
         })->flatten() ?? [];
 
-        return $permissions->merge($this->permissions->flatten());
+        return $permissions->merge($this->permissions->flatten())->unique();
     }
 
     public function getDisplayPermissionsAttribute(): Collection
@@ -176,5 +174,4 @@ class User extends Authenticatable implements DataTablePaginatable, HasMedia, Ad
     {
         return $this->allPermissions->contains($permission);
     }
-    
 }

@@ -58,6 +58,7 @@ class UserRepository implements Repository
             ]);
         }
     }
+
     private function updatePermissions(User $user, Tenant $tenant, $permissions = null){
         if(isset($permissions)) {
             $tenant->users()->updateExistingPivot($user->id, [
