@@ -9,6 +9,7 @@ const TextInput = ({
     rules,
     label,
     defaultValue,
+    disabled = false,
     hidden = false,
 }) => {
     return (
@@ -27,6 +28,7 @@ const TextInput = ({
                         })}
                         onChange={onChange}
                         hidden={hidden}
+                        disabled={disabled}
                     />
                 )}
             />
