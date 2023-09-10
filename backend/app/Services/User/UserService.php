@@ -31,6 +31,14 @@ class UserService {
 
 		$params->tenantPivotId = tenant()->id;
 
+		$params->joins = [
+			'tenant_users' => function(&$query, $params) {
+				$query->join('tenant_users', 'users.id', '=', 'tenant_users.user_id')
+				->select('tenant_users.id as tenant_user_id', 'users.name', 'users.email', 'users.avatar_url', 'users.id')
+				->where('tenant_users.tenant_id', $params->tenantPivotId);
+			}
+		];
+
 		return DataTableService::buildAndExecuteQuery(
 			new UserRepository(),
 			$params

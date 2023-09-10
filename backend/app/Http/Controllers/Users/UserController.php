@@ -80,8 +80,8 @@ class UserController extends Controller
 
     public function paginated(ListUserRequest $request, UserService $service): JsonResponse
 	{
-		return response()->json
-            (PaginatedUserResource::make(
+		return response()->json(
+            PaginatedUserResource::make(
                 $service::buildPaginatedTableData(User::class, $request),
             ),
         200);

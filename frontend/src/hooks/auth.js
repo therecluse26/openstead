@@ -72,12 +72,20 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
                 return mutate()
             })
             .catch(error => {
-                if (!error.response.data.errors) {
+                if (error.response === undefined) {
                     alert(error)
                     return
                 }
 
-                if (error.response === undefined) {
+                if (error.response.data.error) {
+                    setError('email', {
+                        type: 'string',
+                        message: error.response.data.error,
+                    })
+                    return
+                }
+
+                if (!error.response.data.errors) {
                     alert(error)
                     return
                 }

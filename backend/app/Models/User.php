@@ -20,6 +20,7 @@ use App\Models\Projects\Project;
 use App\Models\Projects\ProjectUser;
 use App\Resources\Users\Detail\UserWithPermissions;
 use App\Resources\Users\List\UserListResource;
+use App\Scopes\UserTenantScope;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 use Laravel\Sanctum\HasApiTokens;
@@ -65,6 +66,11 @@ class User extends Authenticatable implements DataTablePaginatable, HasMedia, Ad
         'email_verified_at' => 'datetime',
     ];
 
+    // protected static function booted(): void
+    // {
+    //     static::addGlobalScope(new UserTenantScope);
+    // }
+
     public function tenants(): BelongsToMany
     {
         return $this->belongsToMany(Tenant::class, 'tenant_users', 'user_id', 'tenant_id')
@@ -75,7 +81,6 @@ class User extends Authenticatable implements DataTablePaginatable, HasMedia, Ad
     public function getTenantAttribute(): Tenant
     {
         $tenant = $this->currentTenant;
-
         if(!$tenant){
             $tenant = $this->tenants->first();
             $this->current_tenant_id = $tenant->id;

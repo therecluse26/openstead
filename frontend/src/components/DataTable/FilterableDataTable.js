@@ -24,7 +24,7 @@ const FilterableDataTable = ({
     const [selected, setSelected] = useState([])
     const [perPage, setPerPage] = useState(10)
     const [loading, setLoading] = useState(false)
-    const [inventory, setInventory] = useState([])
+    const [data, setData] = useState([])
     const [totalRecords, setTotalRecords] = useState(0)
     const [lazyParams, setLazyParams] = useState({
         first: 0,
@@ -57,7 +57,7 @@ const FilterableDataTable = ({
         service
             .getList({ lazyEvent: JSON.stringify(lazyParams) })
             .then(data => {
-                setInventory(data.data)
+                setData(data.data)
                 setTotalRecords(data.total)
                 setPerPage(data.per_page)
             })
@@ -182,7 +182,7 @@ const FilterableDataTable = ({
     return (
         <Card>
             <DataTable
-                value={inventory}
+                value={data}
                 lazy
                 filterDisplay="row"
                 dataKey={idColumn ?? 'id'}

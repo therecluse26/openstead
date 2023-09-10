@@ -12,8 +12,10 @@ use App\Models\Note;
 use App\Models\Projects\Project;
 use App\Models\Projects\ProjectItem;
 use App\Models\Service;
+use App\Models\Tenant;
 use App\Models\User;
 use App\Models\Variety;
+use App\Services\Tenancy\TenantService;
 use Exception;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
@@ -30,9 +32,19 @@ class TestDataSeeder extends Seeder
 	{
 		Artisan::call('media-library:clear --force');
 
-		User::factory()
+		$tenantService = new TenantService();
+
+		$users = User::factory()
 			->count(10)
 			->create();
+
+		$userIds = $users->map(function($user){
+			return $user->id;
+		})->toArray();
+		
+		// dd($userIds);
+
+		$tenantService->addUsersToTenant(Tenant::first(), $userIds);
 
 		Location::factory()
 			->count(1)
@@ -44,9 +56,11 @@ class TestDataSeeder extends Seeder
 
 		for ($i = 0; $i < 50; $i++) {
 
-			User::factory()
+			$user = User::factory()
 				->count(1)
 				->create();
+
+			$tenantService->addUsersToTenant(Tenant::first(), [$user->first()->id]);
 
 			Seed::factory()
 				->hasNotes(random_int(0, 3))

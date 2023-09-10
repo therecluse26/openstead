@@ -40,11 +40,26 @@ class DataTableService
 			$filters[$filterName] = $filterValue;
 		}
 
-
 		$query = self::buildFilters($query, (object)$filters);
-
-		if(isset($params->tenantPivotId)){
-			$query->join('tenant_users', 'users.id', '=', 'tenant_users.user_id')->where('tenant_users.tenant_id', $params->tenantPivotId);
+	
+		/**
+		 * Expects an array of functions that will be called with the query and params
+		 * 
+		 * Note: the function must pass the query by reference in order to modify the outer query
+		 * 
+		 * Example:
+		 * $params->joins = [
+		 * 	'tenant_users' => function(&$query, $params) {
+		 * 		$query->join('tenant_users', 'users.id', '=', 'tenant_users.user_id')
+		 * 		->select('tenant_users.id as tenant_user_id', 'users.name', 'users.email', 'users.id')
+		 * 		->where('tenant_users.tenant_id', $params->tenantPivotId);
+		 * 	}
+		 * ];
+		 */
+		if(isset($params->joins) && count($params->joins) > 0 ){
+			foreach($params->joins as $joinFunction){
+				$joinFunction($query, $params);
+			}
 		}
 		
 		if(isset($params->tenantId)){

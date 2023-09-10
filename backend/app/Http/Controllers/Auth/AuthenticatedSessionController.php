@@ -23,8 +23,17 @@ class AuthenticatedSessionController extends Controller
 
         $user = $request->user();
 
+        if(!$user->tenants || $user->tenants->count() === 0){
+
+            $request->session()->invalidate();
+
+            return response()->json([
+                'error' => "User is not a member of any Homestead"
+            ], 500);
+        }
+
         return response()->json([
-            'tenant_id' => $user->tenants?->first()?->id,
+            'tenant_id' => $user->tenants->first()?->id,
         ]);
     }
 

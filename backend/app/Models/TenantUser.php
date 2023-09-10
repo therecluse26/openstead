@@ -24,6 +24,8 @@ class TenantUser extends Pivot
         'permissions' => PermissionCollection::class,
     ];
 
+    protected $hidden = ['id'];
+
     public function tenant()
     {
         return $this->belongsTo(Tenant::class);
