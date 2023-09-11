@@ -46,6 +46,14 @@ enum Permission: string
     case UserUpdate = 'user:update';
     case UserDelete = 'user:delete';
 
+    // Tenant/Homestead Permissions
+    case TenantList = 'tenant:list';
+    case TenantRead = 'tenant:read';
+    case TenantCreate = 'tenant:create';
+    case TenantUpdate = 'tenant:update';
+    case TenantDelete = 'tenant:delete';
+    case TenantAssignUser = 'tenant:assign-user';
+
     public function label(): string
     {
         return match ($this) {
@@ -79,6 +87,12 @@ enum Permission: string
             self::ServiceCreate => 'Create Services',
             self::ServiceUpdate => 'Update Services',
             self::ServiceDelete => 'Delete Services',
+            self::TenantList => 'List Homesteads',
+            self::TenantRead => 'Read Tenant Details',
+            self::TenantCreate => 'Create Homesteads',
+            self::TenantUpdate => 'Update Homesteads',
+            self::TenantDelete => 'Delete Homesteads',
+            self::TenantAssignUser => 'Assign Users to Homesteads',
             default => $this->value,
         };
     }

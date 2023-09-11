@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Http\Middleware\InitializeTenancyByRequestData;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -10,7 +11,6 @@ use Stancl\JobPipeline\JobPipeline;
 use Stancl\Tenancy\Events;
 use Stancl\Tenancy\Jobs;
 use Stancl\Tenancy\Listeners;
-use Stancl\Tenancy\Middleware;
 
 class TenancyServiceProvider extends ServiceProvider
 {
@@ -133,7 +133,7 @@ class TenancyServiceProvider extends ServiceProvider
             // Even higher priority than the initialization middleware
             // Middleware\PreventAccessFromCentralDomains::class,
 
-            Middleware\InitializeTenancyByRequestData::class,
+            InitializeTenancyByRequestData::class,
             // Middleware\InitializeTenancyByPath::class,
             // Middleware\InitializeTenancyByDomain::class,
             // Middleware\InitializeTenancyBySubdomain::class,

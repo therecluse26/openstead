@@ -2,11 +2,14 @@ import useSWR from 'swr'
 import axios from '@/lib/axios'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { useTenantStore } from '../components/Tenants/TenantStore'
 
 export const csrf = () => axios.get('/sanctum/csrf-cookie')
 
 export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     const router = useRouter()
+
+    const { setCurrentTenantId } = useTenantStore()
 
     const { data: user, error, mutate } = useSWR('/api/user', () =>
         axios
@@ -31,7 +34,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
                     throw new Error('User is not associated with a tenant')
                 }
 
-                localStorage.setItem('tenantId', tenantId)
+                setCurrentTenantId(tenantId)
 
                 return mutate()
             })
@@ -67,13 +70,16 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
                     throw new Error('User is not associated with a tenant')
                 }
 
-                localStorage.setItem('tenantId', tenantId)
+                setCurrentTenantId(tenantId)
 
                 return mutate()
             })
             .catch(error => {
                 if (error.response === undefined) {
-                    alert(error)
+                    setError('email', {
+                        type: 'string',
+                        message: 'An unknown error occurred',
+                    })
                     return
                 }
 
@@ -86,7 +92,10 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
                 }
 
                 if (!error.response.data.errors) {
-                    alert(error)
+                    setError('email', {
+                        type: 'string',
+                        message: 'An unknown error occurred',
+                    })
                     return
                 }
 
@@ -164,7 +173,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
             await axios
                 .post('/logout')
                 .then(() => {
-                    localStorage.removeItem('tenantId')
+                    setCurrentTenantId(null)
 
                     return mutate()
                 })

@@ -5,7 +5,8 @@ import React, {
     useEffect,
     useState,
 } from 'react'
-import { useLocalStorage } from 'primereact/hooks'
+
+import { useSettingStore } from '@/components/Settings/SettingStore'
 
 const ThemeContext: Context<any> = createContext(null)
 
@@ -13,7 +14,9 @@ export default ThemeContext
 
 export const ThemeContextProvider = ({ children, onLoad }) => {
     const [hasMounted, setHasMounted] = useState(false)
-    const [theme, setTheme] = useLocalStorage('arya-blue', 'theme')
+
+    const { theme, setTheme } = useSettingStore()
+
     const themeLink = `/themes/${theme}/theme.css`
 
     useEffect(() => {

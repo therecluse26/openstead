@@ -1,10 +1,6 @@
 import Axios from 'axios'
 
-const getTenantId = () => {
-    return typeof localStorage !== 'undefined'
-        ? localStorage.getItem('tenantId')
-        : null
-}
+import { useTenantStore } from '@/components/Tenants/TenantStore'
 
 // Check if process.env.NEXT_PUBLIC_BACKEND_URL is defined
 const isBackendUrlDefined = process?.env?.NEXT_PUBLIC_BACKEND_URL
@@ -35,7 +31,7 @@ const axios = Axios.create({
 
 axios.interceptors.request.use(
     function (config) {
-        const tenantId = getTenantId()
+        const tenantId = useTenantStore.getState()?.currentTenantId
         if (tenantId) {
             config.headers['X-Tenant'] = tenantId
         }

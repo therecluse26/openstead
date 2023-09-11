@@ -23,6 +23,9 @@ enum Role: string
     case UserViewer = 'user-viewer';
     case UserManager = 'user-manager';
     case UserCollaborator = 'user-collaborator';
+    case TenantViewer = 'tenant-viewer';
+    case TenantManager = 'tenant-manager';
+    case TenantCollaborator = 'tenant-collaborator';
 
     public function permissions(): array
     {

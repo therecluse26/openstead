@@ -115,11 +115,25 @@ export const TopBar = props => {
                         props.mobileTopbarMenuActive,
                 })}>
                 <li>
+                    <Menu
+                        model={themeItems}
+                        popup
+                        ref={themeMenu}
+                        id="popup_menu"
+                    />
+                    <button
+                        className="p-link layout-topbar-dropdown"
+                        onClick={props.onMobileSubTopbarMenuClick}>
+                        <span className="mr-2">Events</span>
+                        <i className="ti ti-caret-down" />
+                    </button>
+                </li>
+                <li>
                     <button
                         className="p-link layout-topbar-button"
                         onClick={props.onMobileSubTopbarMenuClick}>
                         <i className="ti ti-calendar" />
-                        <span>Events</span>
+                        <span className="topbar-hidden-text">Events</span>
                     </button>
                 </li>
                 <li>
@@ -133,7 +147,7 @@ export const TopBar = props => {
                         className="p-link layout-topbar-button"
                         onClick={event => themeMenu.current.toggle(event)}>
                         <i className="ti ti-paint" />
-                        <span>Theme</span>
+                        <span className="topbar-hidden-text">Theme</span>
                     </button>
                 </li>
                 <li>
@@ -149,7 +163,7 @@ export const TopBar = props => {
                         aria-controls="popup_menu"
                         aria-haspopup>
                         <i className="ti ti-user" />
-                        <span>Account</span>
+                        <span className="topbar-hidden-text">Account</span>
                     </button>
                 </li>
             </ul>
