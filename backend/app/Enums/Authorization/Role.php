@@ -3,17 +3,17 @@
 namespace App\Enums\Authorization;
 
 enum Role: string
-{  
+{
     case Viewer = 'viewer';
     case Collaborator = 'collaborator';
-    case Manager = 'manager'; 
+    case Manager = 'manager';
     case Administrator = 'admin';
     case ProjectViewer = 'project-viewer';
     case ProjectManager = 'project-manager';
     case ProjectCollaborator = 'project-collaborator';
     case InventoryViewer = 'inventory-viewer';
     case InventoryManager = 'inventory-manager';
-    case InventoryCollaborator = 'inventory-collaborator'; 
+    case InventoryCollaborator = 'inventory-collaborator';
     case NoteViewer = 'note-viewer';
     case NoteManager = 'note-manager';
     case NoteCollaborator = 'note-collaborator';
@@ -27,6 +27,8 @@ enum Role: string
     case TenantManager = 'tenant-manager';
     case TenantCollaborator = 'tenant-collaborator';
 
+    // MAKE SURE THAT YOU ADD NEW ROLES TO THE LABEL METHOD BELOW
+
     public function permissions(): array
     {
         return array_unique(match ($this) {
@@ -35,7 +37,7 @@ enum Role: string
 
             // Administrator has all permissions
             self::Administrator => Permission::cases(),
-            
+
             // Viewer has read-only permissions
             self::Viewer => [
                 ...self::ProjectViewer->permissions(),
@@ -78,7 +80,7 @@ enum Role: string
                 ...self::UserCollaborator->permissions(),
                 Permission::UserDelete,
             ],
-            
+
             // Project Permissions
             self::ProjectViewer => [
                 ...self::UserViewer->permissions(),
@@ -176,6 +178,9 @@ enum Role: string
             self::UserViewer => 'User Viewer',
             self::UserManager => 'User Manager',
             self::UserCollaborator => 'User Collaborator',
+            self::TenantViewer => 'Tenant Viewer',
+            self::TenantManager => 'Tenant Manager',
+            self::TenantCollaborator => 'Tenant Collaborator',
         };
     }
 

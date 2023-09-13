@@ -31,7 +31,7 @@ const axios = Axios.create({
 
 axios.interceptors.request.use(
     function (config) {
-        const tenantId = useTenantStore.getState()?.currentTenantId
+        const tenantId = useTenantStore.getState()?.currentTenant?.id
         if (tenantId) {
             config.headers['X-Tenant'] = tenantId
         }

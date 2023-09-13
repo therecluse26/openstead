@@ -15,10 +15,9 @@ class BaseDataSeeder extends Seeder
     public function run()
     {
         $service = new TenantService();
-        $tenant = $service->createTenant([
+        $service->createTenant([
             'name' => 'Main',
             'plan' => 'free',
         ]);
-        $service->addDomainToTenant($tenant, 't1.localhost');
     }
 }

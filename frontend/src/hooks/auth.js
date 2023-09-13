@@ -9,7 +9,7 @@ export const csrf = () => axios.get('/sanctum/csrf-cookie')
 export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     const router = useRouter()
 
-    const { setCurrentTenantId } = useTenantStore()
+    const { setCurrentTenant } = useTenantStore()
 
     const { data: user, error, mutate } = useSWR('/api/user', () =>
         axios
@@ -34,7 +34,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
                     throw new Error('User is not associated with a tenant')
                 }
 
-                setCurrentTenantId(tenantId)
+                setCurrentTenant(tenantId)
 
                 return mutate()
             })
@@ -70,7 +70,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
                     throw new Error('User is not associated with a tenant')
                 }
 
-                setCurrentTenantId(tenantId)
+                setCurrentTenant(tenantId)
 
                 return mutate()
             })
@@ -173,7 +173,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
             await axios
                 .post('/logout')
                 .then(() => {
-                    setCurrentTenantId(null)
+                    setCurrentTenant(null)
 
                     return mutate()
                 })

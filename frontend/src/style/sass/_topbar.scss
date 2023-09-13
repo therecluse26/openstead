@@ -10,7 +10,11 @@
     transition: left $transitionDuration;
     display: flex;
     align-items: center;
-    box-shadow: 0px 3px 5px rgba(0,0,0,.02), 0px 0px 2px rgba(0,0,0,.05), 0px 1px 4px rgba(0,0,0,.08);
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, .02), 0px 0px 2px rgba(0, 0, 0, .05), 0px 1px 4px rgba(0, 0, 0, .08);
+
+    i {
+        font-size: 0.5rem;
+    }
 
     .layout-topbar-logo {
         display: flex;
@@ -41,6 +45,13 @@
         transition: background-color $transitionDuration;
         height: 100%;
         padding: 0 1rem;
+        border-radius: 2rem;
+        width: fit-content;
+
+        >img {
+            padding: 0;
+            margin: 0;
+        }
 
         &:hover {
             color: var(--text-color);
@@ -60,7 +71,7 @@
             display: none;
         }
     }
-    
+
     .layout-topbar-button {
         display: inline-flex;
         justify-content: center;
@@ -141,7 +152,7 @@
             position: absolute;
             flex-direction: column;
             background-color: var(--surface-overlay);
-            box-shadow: 0px 3px 5px rgba(0,0,0,.02), 0px 0px 2px rgba(0,0,0,.05), 0px 1px 4px rgba(0,0,0,.08);
+            box-shadow: 0px 3px 5px rgba(0, 0, 0, .02), 0px 0px 2px rgba(0, 0, 0, .05), 0px 1px 4px rgba(0, 0, 0, .08);
             border-radius: 12px;
             padding: 1rem;
             right: 2rem;

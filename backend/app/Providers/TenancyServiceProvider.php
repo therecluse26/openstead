@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Providers;
@@ -51,14 +52,14 @@ class TenancyServiceProvider extends ServiceProvider
             ],
 
             // Domain events
-            Events\CreatingDomain::class => [],
-            Events\DomainCreated::class => [],
-            Events\SavingDomain::class => [],
-            Events\DomainSaved::class => [],
-            Events\UpdatingDomain::class => [],
-            Events\DomainUpdated::class => [],
-            Events\DeletingDomain::class => [],
-            Events\DomainDeleted::class => [],
+            // Events\CreatingDomain::class => [],
+            // Events\DomainCreated::class => [],
+            // Events\SavingDomain::class => [],
+            // Events\DomainSaved::class => [],
+            // Events\UpdatingDomain::class => [],
+            // Events\DomainUpdated::class => [],
+            // Events\DeletingDomain::class => [],
+            // Events\DomainDeleted::class => [],
 
             // Database events
             Events\DatabaseCreated::class => [],

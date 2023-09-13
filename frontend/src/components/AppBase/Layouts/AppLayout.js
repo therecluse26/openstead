@@ -48,11 +48,8 @@ const AppLayout = ({ children }) => {
                 id: authUser?.id,
                 name: authUser?.name,
                 email: authUser?.email,
+                avatar: authUser?.avatar,
                 tenants: authUser?.tenants,
-                currentTenant: {
-                    id: authUser?.currentTenant?.id,
-                    name: authUser?.currentTenant?.name,
-                },
             })
             setPermissions(authUser?.allPermissions)
         }

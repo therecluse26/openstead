@@ -3,20 +3,32 @@
 namespace App\Repositories\Tenancy;
 
 use App\Models\Tenant;
-use Stancl\Tenancy\Database\Models\Domain;
 
-class TenantRepository {
+class TenantRepository
+{
+
+    public function getFirst(): Tenant
+    {
+        return Tenant::firstOrFail();
+    }
+
+    public function getById(string $id): Tenant
+    {
+        return Tenant::findOrFail($id);
+    }
 
     public function createTenant(array $data): Tenant
-     {
+    {
         return Tenant::create([
             'name' => $data['name'],
             'plan' => $data['plan'] ?? 'free',
         ]);
     }
 
-    public function addUsersToTenant(Tenant $tenant, array $users, array $roles = ["viewer"], array|null $permissions = null): array
+    public function addUsersToTenant(string $tenantId, array $users, array $roles = ["viewer"], array|null $permissions = null): array
     {
+        $tenant = $this->getById($tenantId);
+
         $tenantUsers = collect();
 
         foreach ($users as $user) {
@@ -29,12 +41,5 @@ class TenantRepository {
         }
 
         return $tenant->users()->syncWithoutDetaching($tenantUsers);
-    }
-
-    public function addDomainToTenant(Tenant $tenant, string $domain): Domain
-    {
-        return $tenant->domains()->create([
-            'domain' => $domain,
-        ]);
     }
 }

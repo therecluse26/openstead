@@ -81,7 +81,7 @@ class User extends Authenticatable implements DataTablePaginatable, HasMedia, Ad
     public function getTenantAttribute(): Tenant
     {
         $tenant = $this->currentTenant;
-        if(!$tenant){
+        if (!$tenant) {
             $tenant = $this->tenants->first();
             $this->current_tenant_id = $tenant->id;
             $this->saveQuietly();
@@ -99,8 +99,8 @@ class User extends Authenticatable implements DataTablePaginatable, HasMedia, Ad
     public function avatar(): Attribute
     {
         return Attribute::make(
-            get: function() {
-                if(!$this->avatar_url){
+            get: function () {
+                if (!$this->avatar_url) {
                     $this->avatar_url = Gravatar::get($this->email);
                     $this->saveQuietly();
                 }
@@ -116,37 +116,37 @@ class User extends Authenticatable implements DataTablePaginatable, HasMedia, Ad
     }
 
     public function getDetailResource(): JsonResource
-	{
-		return UserWithPermissions::make($this);
-	}
+    {
+        return UserWithPermissions::make($this);
+    }
 
-	public function getListResource(): JsonResource
-	{
-		return UserListResource::make($this);
-	}
+    public function getListResource(): JsonResource
+    {
+        return UserListResource::make($this);
+    }
 
-	public function getFilters(): Collection
-	{
-		return collect();
-	}
+    public function getFilters(): Collection
+    {
+        return collect();
+    }
 
     /**
      * Authorization methods
      */
     public function getRolesAttribute(): Collection
     {
-        return $this->tenants->filter(function($tenant){
+        return $this->tenants->filter(function ($tenant) {
             return $tenant->id === $this->tenant?->id;
-        })->map(function($tenant){
+        })->map(function ($tenant) {
             return $tenant->pivot->roles;
         })->flatten();
     }
 
     public function getPermissionsAttribute(): Collection
     {
-        return $this->tenants->filter(function($tenant){
+        return $this->tenants->filter(function ($tenant) {
             return $tenant->id === $this->tenant?->id;
-        })->map(function($tenant){
+        })->map(function ($tenant) {
             return $tenant->pivot->permissions;
         })->flatten();
     }
@@ -154,7 +154,7 @@ class User extends Authenticatable implements DataTablePaginatable, HasMedia, Ad
     // Get permissions from related TenantUser pivot model, filtered by current tenant
     public function getAllPermissionsAttribute(): Collection
     {
-        $permissions = $this->roles?->map(function($role){
+        $permissions = $this->roles?->map(function ($role) {
             return $role->permissions();
         })->flatten() ?? [];
 
@@ -163,18 +163,18 @@ class User extends Authenticatable implements DataTablePaginatable, HasMedia, Ad
 
     public function getDisplayPermissionsAttribute(): Collection
     {
-        return $this->allPermissions->map(function($permission){
+        return $this->allPermissions->map(function ($permission) {
             return $permission->toDisplay();
         });
     }
 
     public function getDisplayRolesAttribute(): Collection
     {
-        return $this->roles->map(function($role){
+        return $this->roles->map(function ($role) {
             return $role->toDisplay();
         });
     }
-    
+
     public function hasPermissionTo(Permission $permission): bool
     {
         return $this->allPermissions->contains($permission);

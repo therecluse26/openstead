@@ -29,7 +29,7 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
-        
+
         $tenant = $tenantService->createTenant([
             'name' => $request->homestead_name
         ]);
@@ -41,7 +41,7 @@ class RegisteredUserController extends Controller
             'current_tenant_id' => $tenant->id,
         ]);
 
-        $tenantService->addUsersToTenant($tenant, [$user->id], ["admin"]);
+        $tenantService->addUsersToTenant($tenant->id, [$user->id], ["admin"]);
 
         event(new Registered($user));
 

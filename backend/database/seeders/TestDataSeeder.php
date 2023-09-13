@@ -12,9 +12,9 @@ use App\Models\Note;
 use App\Models\Projects\Project;
 use App\Models\Projects\ProjectItem;
 use App\Models\Service;
-use App\Models\Tenant;
 use App\Models\User;
 use App\Models\Variety;
+use App\Repositories\Tenancy\TenantRepository;
 use App\Services\Tenancy\TenantService;
 use Exception;
 use Illuminate\Database\Seeder;
@@ -33,18 +33,19 @@ class TestDataSeeder extends Seeder
 		Artisan::call('media-library:clear --force');
 
 		$tenantService = new TenantService();
+		$tenantRepo = new TenantRepository();
 
 		$users = User::factory()
 			->count(10)
 			->create();
 
-		$userIds = $users->map(function($user){
+		$userIds = $users->map(function ($user) {
 			return $user->id;
 		})->toArray();
-		
+
 		// dd($userIds);
 
-		$tenantService->addUsersToTenant(Tenant::first(), $userIds);
+		$tenantService->addUsersToTenant($tenantRepo->getFirst()->id, $userIds);
 
 		Location::factory()
 			->count(1)
@@ -60,7 +61,8 @@ class TestDataSeeder extends Seeder
 				->count(1)
 				->create();
 
-			$tenantService->addUsersToTenant(Tenant::first(), [$user->first()->id]);
+
+			$tenantService->addUsersToTenant($tenantRepo->getFirst()->id, [$user->first()->id]);
 
 			Seed::factory()
 				->hasNotes(random_int(0, 3))
@@ -91,19 +93,18 @@ class TestDataSeeder extends Seeder
 		Project::factory()
 			->times(10)
 			->make()
-			->each(function($project) {
+			->each(function ($project) {
 				(new Project)->create($project->toArray());
 			});
 
 		ProjectItem::factory()
 			->times(80)
 			->make()
-			->each(function($item) {
+			->each(function ($item) {
 				$item->project_id = Project::inRandomOrder()->first()?->id ?? 1;
 				(new ProjectItem)->create($item->toArray());
-				
+
 				$item->notes()->saveMany(Note::factory()->count(random_int(0, 3))->make());
-		});
-		
+			});
 	}
 }
