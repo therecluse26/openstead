@@ -14,10 +14,11 @@ use App\Traits\HasImages;
 use App\Traits\HasNotes;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class ProjectItem extends Model implements AddsMedia, HasMedia {
 
-    use HasUlids, HasNotes, HasFactory, HasImages, SoftDeletes;
+    use HasUlids, HasNotes, HasFactory, HasImages, SoftDeletes, BelongsToTenant;
     
     protected $table = 'project_items';
 
@@ -25,6 +26,7 @@ class ProjectItem extends Model implements AddsMedia, HasMedia {
 
     protected $fillable = [
         'id',
+        'tenant_id',
         'title',
         'description',
         'project_id',

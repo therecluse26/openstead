@@ -14,15 +14,15 @@ return new class extends Migration {
 	 */
 	public function up()
 	{
-		Schema::table('users', function (Blueprint $table) {
-			if (DB::getDriverName() === 'mysql') {
-				$table->json('roles')->after('password')->default(new Expression('(JSON_ARRAY("viewer"))'));
-				$table->json('permissions')->nullable()->after('roles');
-				return;
-			}
-            $table->json('roles')->after('password')->default(DB::raw("'[\"viewer\"]'"));
-			$table->json('permissions')->nullable()->after('roles');
-		});
+		// Schema::table('users', function (Blueprint $table) {
+		// 	if (DB::getDriverName() === 'mysql') {
+		// 		$table->json('roles')->after('password')->default(new Expression('(JSON_ARRAY("viewer"))'));
+		// 		$table->json('permissions')->nullable()->after('roles');
+		// 		return;
+		// 	}
+        //     $table->json('roles')->after('password')->default(DB::raw("'[\"viewer\"]'"));
+		// 	$table->json('permissions')->nullable()->after('roles');
+		// });
 	}
 
 	/**
@@ -32,16 +32,16 @@ return new class extends Migration {
 	 */
 	public function down()
 	{
-		Schema::table('users', function (Blueprint $table) {
-			if(Schema::hasColumn('users', 'roles'))
-			{
-				$table->dropColumn('roles');
-			}
+		// Schema::table('users', function (Blueprint $table) {
+		// 	if(Schema::hasColumn('users', 'roles'))
+		// 	{
+		// 		$table->dropColumn('roles');
+		// 	}
 			
-			if(Schema::hasColumn('users', 'permissions'))
-			{
-				$table->dropColumn('permissions');
-			}
-		});	
+		// 	if(Schema::hasColumn('users', 'permissions'))
+		// 	{
+		// 		$table->dropColumn('permissions');
+		// 	}
+		// });	
 	}
 };

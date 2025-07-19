@@ -1,16 +1,27 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import ResponsiveNavLink from '@/components/ResponsiveNavLink'
 import classNames from 'classnames'
 import { useAuth } from '@/hooks/auth'
 import { Menu } from 'primereact/menu'
 import { useThemeContext } from '@/context/ThemeContext'
+import { useAuthorizationStore } from '../../Authorization/AuthorizationStore'
+import { useTenantStore } from '../../Tenants/TenantStore'
+import {
+    IconBuildingCottage,
+    IconChevronDown,
+    IconPaint,
+    IconUser,
+} from '@tabler/icons'
 
 export const TopBar = props => {
     const { logout } = useAuth()
     const accountMenu = useRef(null)
     const themeMenu = useRef(null)
-
+    const tenantMenu = useRef(null)
     const theme = useThemeContext()
+
+    const { user } = useAuthorizationStore()
+    const { currentTenant, setCurrentTenant } = useTenantStore()
 
     const accountItems = [
         {
@@ -90,6 +101,16 @@ export const TopBar = props => {
             },
         },
     ]
+
+    const tenantItems = user?.tenants.map(tenant => {
+        return {
+            label: tenant.name,
+            command: () => {
+                setCurrentTenant(tenant.id)
+            },
+        }
+    })
+
     return (
         <div className="layout-topbar">
             <ResponsiveNavLink color="primary-600" href="/">
@@ -110,18 +131,13 @@ export const TopBar = props => {
                 <i className="ti ti-dots-vertical" />
             </button>
             <ul
-                className={classNames('layout-topbar-menu lg:flex origin-top', {
-                    'layout-topbar-menu-mobile-active':
-                        props.mobileTopbarMenuActive,
-                })}>
-                <li>
-                    <button
-                        className="p-link layout-topbar-button"
-                        onClick={props.onMobileSubTopbarMenuClick}>
-                        <i className="ti ti-calendar" />
-                        <span>Events</span>
-                    </button>
-                </li>
+                className={classNames(
+                    'layout-topbar-menu gap-2 lg:flex origin-top',
+                    {
+                        'layout-topbar-menu-mobile-active':
+                            props.mobileTopbarMenuActive,
+                    },
+                )}>
                 <li>
                     <Menu
                         model={themeItems}
@@ -129,12 +145,29 @@ export const TopBar = props => {
                         ref={themeMenu}
                         id="popup_menu"
                     />
-                    <button
+                    <span
                         className="p-link layout-topbar-button"
                         onClick={event => themeMenu.current.toggle(event)}>
-                        <i className="ti ti-paint" />
-                        <span>Theme</span>
-                    </button>
+                        <IconPaint size={18} />
+                        <span className="topbar-hidden-text">Theme</span>
+                    </span>
+                </li>
+                <li>
+                    <Menu
+                        model={tenantItems}
+                        popup
+                        ref={tenantMenu}
+                        id="popup_menu"
+                    />
+                    <span
+                        className="p-link layout-topbar-dropdown"
+                        onClick={event => tenantMenu.current.toggle(event)}>
+                        <IconBuildingCottage size={18} />
+                        <span className="spacer-h-1" />
+                        <span>{currentTenant?.name}</span>
+                        <span className="spacer-h-1" />
+                        <IconChevronDown size={18} />
+                    </span>
                 </li>
                 <li>
                     <Menu
@@ -143,14 +176,15 @@ export const TopBar = props => {
                         ref={accountMenu}
                         id="popup_menu"
                     />
-                    <button
-                        className="p-link layout-topbar-button"
-                        onClick={event => accountMenu.current.toggle(event)}
-                        aria-controls="popup_menu"
-                        aria-haspopup>
-                        <i className="ti ti-user" />
-                        <span>Account</span>
-                    </button>
+                    <span
+                        className="p-link layout-topbar-dropdown"
+                        onClick={event => accountMenu.current.toggle(event)}>
+                        <IconUser size={18} />
+                        <span className="spacer-h-1" />
+                        <span>{user.name}</span>
+                        <span className="spacer-h-1" />
+                        <IconChevronDown size={18} />
+                    </span>
                 </li>
             </ul>
         </div>

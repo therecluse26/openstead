@@ -13,7 +13,7 @@ class AuthenticatedSessionController extends Controller
      * Handle an incoming authentication request.
      *
      * @param  \App\Http\Requests\Auth\LoginRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(LoginRequest $request)
     {
@@ -21,7 +21,20 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return response()->noContent();
+        $user = $request->user();
+
+        if (!$user->tenants || $user->tenants->count() === 0) {
+
+            $request->session()->invalidate();
+
+            return response()->json([
+                'error' => "User is not a member of any homestead"
+            ], 500);
+        }
+
+        return response()->json([
+            'tenant_id' => $user->tenant->id,
+        ]);
     }
 
     /**

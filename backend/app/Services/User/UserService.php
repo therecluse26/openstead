@@ -27,9 +27,21 @@ class UserService {
 			throw new InvalidArgumentException('Given model must implement ' . DataTablePaginatable::class);
 		}
 
+		$params = json_decode($request->get('lazyEvent'), false, 512, JSON_THROW_ON_ERROR);
+
+		$params->tenantPivotId = tenant()->id;
+
+		$params->joins = [
+			'tenant_users' => function(&$query, $params) {
+				$query->join('tenant_users', 'users.id', '=', 'tenant_users.user_id')
+				->select('tenant_users.id as tenant_user_id', 'users.name', 'users.email', 'users.avatar_url', 'users.id')
+				->where('tenant_users.tenant_id', $params->tenantPivotId);
+			}
+		];
+
 		return DataTableService::buildAndExecuteQuery(
-			new UserRepository(new $model()),
-			json_decode($request->get('lazyEvent'), false, 512, JSON_THROW_ON_ERROR)
+			new UserRepository(),
+			$params
 		);
 	}
 

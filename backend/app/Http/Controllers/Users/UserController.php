@@ -1,10 +1,12 @@
 <?php
+
 namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\ListUserRequest;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
+use App\Http\Requests\User\UpdateUserTenantRequest;
 use App\Models\User;
 use App\Resources\Users\List\UserListResource;
 use App\Repositories\User\UserRepository;
@@ -32,9 +34,10 @@ class UserController extends Controller
     {
         return response()->json(
             UserWithPermissions::make(
-            $this->repository()->getAuthenticatedUser()
-            ), 
-        200);
+                $this->repository()->getAuthenticatedUser()
+            ),
+            200
+        );
     }
 
     public function index(): JsonResponse
@@ -42,8 +45,9 @@ class UserController extends Controller
         return response()->json(
             UserListResource::collection(
                 $this->repository()->index()
-            ), 
-        200);
+            ),
+            200
+        );
     }
 
     public function show(string $id): JsonResponse
@@ -51,8 +55,9 @@ class UserController extends Controller
         return response()->json(
             UserDetailResource::make(
                 $this->repository()->getById($id)
-            ), 
-        200);
+            ),
+            200
+        );
     }
 
     public function store(StoreUserRequest $request): JsonResponse
@@ -60,17 +65,29 @@ class UserController extends Controller
         return response()->json(
             UserWithPermissions::make(
                 $this->repository()->create($request->all())
-            ), 
-        201);
+            ),
+            201
+        );
     }
 
     public function update(UpdateUserRequest $request, string $id): JsonResponse
     {
         return response()->json(
-            UserWithPermissions::make( 
+            UserWithPermissions::make(
                 $this->repository()->update($id, $request->all())
-            ), 
-        200);
+            ),
+            200
+        );
+    }
+
+    public function updateCurrentTenant(UpdateUserTenantRequest $request)
+    {
+        return response()->json(
+            UserWithPermissions::make(
+                $this->repository()->updateCurrentTenant($request->user, $request->tenant)
+            ),
+            200
+        );
     }
 
     public function destroy(string $id): JsonResponse
@@ -79,11 +96,12 @@ class UserController extends Controller
     }
 
     public function paginated(ListUserRequest $request, UserService $service): JsonResponse
-	{
-		return response()->json
-            (PaginatedUserResource::make(
+    {
+        return response()->json(
+            PaginatedUserResource::make(
                 $service::buildPaginatedTableData(User::class, $request),
             ),
-        200);
-	}
+            200
+        );
+    }
 }

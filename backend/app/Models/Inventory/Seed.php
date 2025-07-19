@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 use Spatie\MediaLibrary\HasMedia;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class Seed extends Model implements DataTablePaginatable, Inventoriable, VarietyContract, FrontendFilterable, HasMedia, AddsMedia, Notable
 {
@@ -34,10 +35,12 @@ class Seed extends Model implements DataTablePaginatable, Inventoriable, Variety
 	use HasVariety;
 	use HasNotes;
 	use HasImages;
+	use BelongsToTenant;
 
 	protected $table = 'seeds';
 
 	protected $fillable = [
+		'tenant_id',
 		'variety_id',
 		'quantity',
 		'life_cycle',

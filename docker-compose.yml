@@ -30,7 +30,7 @@ services:
   mysql:
     image: mysql:8.0.34
     volumes:
-      - openstead-mysql:/var/lib/mysqlmysql
+      - openstead-mysql:/var/lib/mysql
     environment:
       - MYSQL_DATABASE=openstead
       - MYSQL_USER=openstead

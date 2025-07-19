@@ -13,7 +13,7 @@ import MultiselectInput from '@/components/HookFormInputs/MultiselectInput'
 import PasswordInput from '../../components/HookFormInputs/PasswordInput'
 import { IconEdit, IconX } from '@tabler/icons'
 
-const UserForm = ({ mode = 'create' }) => {
+const UserForm = ({ mode = 'create', isSelf = false }) => {
     const { query, isReady } = useRouter()
     const router = useRouter()
     const isMounted = useRef(false)
@@ -170,6 +170,7 @@ const UserForm = ({ mode = 'create' }) => {
                                     rules={{
                                         required: 'Name is required.',
                                     }}
+                                    disabled={mode === 'edit'}
                                 />
                                 {getFormErrorMessage('name')}
                             </div>
@@ -181,10 +182,11 @@ const UserForm = ({ mode = 'create' }) => {
                                     rules={{
                                         required: 'Email is required.',
                                     }}
+                                    disabled={mode === 'edit'}
                                 />
                                 {getFormErrorMessage('email')}
                             </div>
-                            {mode === 'edit' && !editingPassword && (
+                            {isSelf && mode === 'edit' && !editingPassword && (
                                 <div className="field">
                                     <Button
                                         className="p-button-link"
@@ -198,7 +200,7 @@ const UserForm = ({ mode = 'create' }) => {
                                     </Button>
                                 </div>
                             )}
-                            {editingPassword && (
+                            {isSelf && editingPassword && (
                                 <>
                                     <div className="field -mb-4">
                                         <Button

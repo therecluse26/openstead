@@ -17,18 +17,20 @@ const FilterableDataTable = ({
     setLazyParamsCallack,
     selectionMode,
     createPermission = null,
+    initialSortColumn = null,
+    idColumn = null,
 }) => {
     const isMounted = useRef(false)
     const [selected, setSelected] = useState([])
     const [perPage, setPerPage] = useState(10)
     const [loading, setLoading] = useState(false)
-    const [inventory, setInventory] = useState([])
+    const [data, setData] = useState([])
     const [totalRecords, setTotalRecords] = useState(0)
     const [lazyParams, setLazyParams] = useState({
         first: 0,
         rows: perPage,
         page: 0,
-        sortField: null,
+        sortField: initialSortColumn ?? null,
         sortOrder: null,
         filters: filters,
     })
@@ -55,7 +57,7 @@ const FilterableDataTable = ({
         service
             .getList({ lazyEvent: JSON.stringify(lazyParams) })
             .then(data => {
-                setInventory(data.data)
+                setData(data.data)
                 setTotalRecords(data.total)
                 setPerPage(data.per_page)
             })
@@ -180,10 +182,10 @@ const FilterableDataTable = ({
     return (
         <Card>
             <DataTable
-                value={inventory}
+                value={data}
                 lazy
                 filterDisplay="row"
-                dataKey="id"
+                dataKey={idColumn ?? 'id'}
                 header={header}
                 paginator
                 paginatorTemplate={paginatorTemplate}

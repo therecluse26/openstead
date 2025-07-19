@@ -14,6 +14,13 @@ class UserWithPermissions extends JsonResource
             'avatar' => $this->avatar,
             'roles' => $this->roles,
             'allPermissions' => $this->allPermissions,
+            'currentTenant' => $this->currentTenant,
+            'tenants' => $this->tenants->map(function ($tenant) {
+                return [
+                    'id' => $tenant->id,
+                    'name' => $tenant->name,
+                ];
+            })
         ];
     }
 }

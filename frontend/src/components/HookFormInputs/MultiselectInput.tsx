@@ -14,24 +14,30 @@ type MultiSelectProps = {
     rules: any
     label: string
     placeholder?: string
-    options?: Array<any>
+    value?: Array<any> // Selected values
+    options?: Array<any> // Available options
     optionsEndpoint?: string
     optionValue?: string
     optionLabel?: string
     dataLabelKey?: string
     dataValueKey?: string
-    value?: Array<any>
     itemTemplate?: MultiSelectItemTemplateType
     filter?: boolean
     display: MultiSelectDisplayType
     onChange?: (event: any) => void
 }
 
-const PicklistInput = (props: MultiSelectProps) => {
+const MultiselectInput = (props: MultiSelectProps) => {
     const [selectOptions, setSelectOptions] = useState(props.options)
     const display = props.display ?? 'chip'
     const optLabel = props.optionLabel ?? 'label'
     const optValue = props.optionValue ?? 'value'
+
+    useEffect(() => {
+        if (props.options) {
+            setSelectOptions(props.options)
+        }
+    }, [props.options])
 
     useEffect(() => {
         if (props.optionsEndpoint) {
@@ -75,4 +81,4 @@ const PicklistInput = (props: MultiSelectProps) => {
     )
 }
 
-export default PicklistInput
+export default MultiselectInput

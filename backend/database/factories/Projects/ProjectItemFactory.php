@@ -4,6 +4,7 @@ namespace Database\Factories\Projects;
 
 use App\Models\Inventory\Equipment;
 use App\Models\Projects\ProjectItemStatus;
+use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -22,6 +23,7 @@ class ProjectItemFactory extends Factory
         $status = ProjectItemStatus::inRandomOrder()->first();
 		return [
             'id' => strtolower(Str::ulid()),
+			'tenant_id' => Tenant::first()->id,
 			'title' => fake()->words(fake()->numberBetween(2, 15), true),
 			'description' => fake()->paragraph(2),
 			'project_item_status_id' => (string)$status->id,

@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 use Spatie\MediaLibrary\HasMedia;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class Livestock extends Model implements DataTablePaginatable, Inventoriable, VarietyContract, FrontendFilterable, HasMedia, AddsMedia, Serviceable, Notable
 {
@@ -38,10 +39,12 @@ class Livestock extends Model implements DataTablePaginatable, Inventoriable, Va
 	use HasVariety;
 	use HasNotes;
 	use HasImages;
+	use BelongsToTenant;
 
 	protected $table = 'livestock';
 
 	protected $fillable = [
+		'tenant_id',
 		'name',
 		'description',
 		'variety_id',

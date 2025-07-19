@@ -2,10 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
-use App\Casts\PermissionCollection;
-use App\Casts\RoleCollection;
 use App\Contracts\AddsMedia;
 use App\Contracts\DataTablePaginatable;
 use App\Contracts\FrontendFilterable;
@@ -28,6 +24,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Traits\HasImages;
 use App\Traits\HasNotes;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Spatie\MediaLibrary\HasMedia;
 
 class User extends Authenticatable implements DataTablePaginatable, HasMedia, AddsMedia, Notable, FrontendFilterable
@@ -44,8 +41,7 @@ class User extends Authenticatable implements DataTablePaginatable, HasMedia, Ad
         'email',
         'password',
         'avatar_url',
-        'roles',
-        'permissions'
+        'current_tenant_id'
     ];
 
     /**
@@ -65,15 +61,43 @@ class User extends Authenticatable implements DataTablePaginatable, HasMedia, Ad
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'roles' => RoleCollection::class,
-        'permissions' => PermissionCollection::class,
     ];
+
+    // protected static function booted(): void
+    // {
+    //     static::addGlobalScope(new UserTenantScope);
+    // }
+
+    public function tenants(): BelongsToMany
+    {
+        return $this->belongsToMany(Tenant::class, 'tenant_users', 'user_id', 'tenant_id')
+            ->using(TenantUser::class)
+            ->withPivot(['tenant_id', 'roles', 'permissions']);
+    }
+
+    public function getTenantAttribute(): Tenant
+    {
+        $tenant = $this->currentTenant;
+        if (!$tenant) {
+            $tenant = $this->tenants->first();
+            $this->current_tenant_id = $tenant->id;
+            $this->saveQuietly();
+        }
+
+        return $tenant;
+    }
+
+    public function currentTenant(): HasOneThrough
+    {
+        return $this->hasOneThrough(Tenant::class, TenantUser::class, 'user_id', 'id', 'id', 'tenant_id')
+            ->where('tenant_id', $this->current_tenant_id);
+    }
 
     public function avatar(): Attribute
     {
         return Attribute::make(
-            get: function() {
-                if(!$this->avatar_url){
+            get: function () {
+                if (!$this->avatar_url) {
                     $this->avatar_url = Gravatar::get($this->email);
                     $this->saveQuietly();
                 }
@@ -88,49 +112,68 @@ class User extends Authenticatable implements DataTablePaginatable, HasMedia, Ad
             ->using(ProjectUser::class);
     }
 
+    public function getDetailResource(): JsonResource
+    {
+        return UserWithPermissions::make($this);
+    }
+
+    public function getListResource(): JsonResource
+    {
+        return UserListResource::make($this);
+    }
+
+    public function getFilters(): Collection
+    {
+        return collect();
+    }
+
+    /**
+     * Authorization methods
+     */
+    public function getRolesAttribute(): Collection
+    {
+        return $this->tenants->filter(function ($tenant) {
+            return $tenant->id === $this->tenant?->id;
+        })->map(function ($tenant) {
+            return $tenant->pivot->roles;
+        })->flatten();
+    }
+
+    public function getPermissionsAttribute(): Collection
+    {
+        return $this->tenants->filter(function ($tenant) {
+            return $tenant->id === $this->tenant?->id;
+        })->map(function ($tenant) {
+            return $tenant->pivot->permissions;
+        })->flatten();
+    }
+
+    // Get permissions from related TenantUser pivot model, filtered by current tenant
     public function getAllPermissionsAttribute(): Collection
     {
-        $permissions = $this->roles?->map(function($role){
+        $permissions = $this->roles?->map(function ($role) {
             return $role->permissions();
         })->flatten() ?? [];
 
-        return $permissions->merge($this->permissions->flatten());
+        return $permissions->merge($this->permissions->flatten())->unique();
     }
 
     public function getDisplayPermissionsAttribute(): Collection
     {
-        return $this->allPermissions->map(function($permission){
+        return $this->allPermissions->map(function ($permission) {
             return $permission->toDisplay();
         });
     }
 
     public function getDisplayRolesAttribute(): Collection
     {
-        return $this->roles->map(function($role){
+        return $this->roles->map(function ($role) {
             return $role->toDisplay();
         });
     }
-    
-    
+
     public function hasPermissionTo(Permission $permission): bool
     {
         return $this->allPermissions->contains($permission);
     }
-    
-
-    public function getDetailResource(): JsonResource
-	{
-		return UserWithPermissions::make($this);
-	}
-
-	public function getListResource(): JsonResource
-	{
-		return UserListResource::make($this);
-	}
-
-	public function getFilters(): Collection
-	{
-		return collect();
-	}
-
 }

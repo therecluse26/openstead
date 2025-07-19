@@ -14,14 +14,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-	// Replace this with a deeper health check
-	return ['status' => 'OK'];
+	// Health check
+	return response()->json([
+		'status' => 'ok',
+	]);
 });
-
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 Route::fallback(function () {
-    return response()->json([
+	return response()->json([
 		'message' => "Invalid route"
 	], 404);
 });

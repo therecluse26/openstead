@@ -7,9 +7,10 @@ import { CSSTransition } from 'react-transition-group'
 import { TopBar } from '@/components/AppBase/Layouts/TopBar'
 import SidebarMenu from '@/SidebarMenu'
 import { ScrollTop } from 'primereact/scrolltop'
-import { useLocalStorage } from 'primereact/hooks'
 import { useAuthorizationStore } from '@/components/Authorization/AuthorizationStore'
 import AppSkeleton from '../AppSkeleton'
+
+import { useSettingStore } from '@/components/Settings/SettingStore'
 
 const AppLayout = ({ children }) => {
     const { user: authUser } = useAuth({ middleware: 'auth' })
@@ -20,10 +21,8 @@ const AppLayout = ({ children }) => {
     const [layoutMode] = useState('static')
     const [layoutColorMode] = useState('dark')
     const [overlayMenuActive, setOverlayMenuActive] = useState(false)
-    const [sidebarMenuActive, setSidebarMenuActive] = useLocalStorage(
-        true,
-        'sidebarMenuActive',
-    )
+
+    const { sidebarMenuActive, setSidebarMenuActive } = useSettingStore()
 
     const [mobileMenuActive, setMobileMenuActive] = useState(false)
     const [mobileTopbarMenuActive, setMobileTopbarMenuActive] = useState(false)
@@ -43,23 +42,14 @@ const AppLayout = ({ children }) => {
     let mobileTopbarMenuClick = false
 
     useEffect(() => {
-        setSidebarMenuActive(
-            JSON.parse(localStorage.getItem('sidebarMenuActive')),
-        )
-    }, [])
-
-    useEffect(() => {
-        // storing input name
-        localStorage.setItem('sidebarMenuActive', String(sidebarMenuActive))
-    }, [sidebarMenuActive])
-
-    useEffect(() => {
         // Set authorizationStore based on user data
         if (authUser) {
             setUser({
                 id: authUser?.id,
                 name: authUser?.name,
                 email: authUser?.email,
+                avatar: authUser?.avatar,
+                tenants: authUser?.tenants,
             })
             setPermissions(authUser?.allPermissions)
         }
@@ -72,7 +62,7 @@ const AppLayout = ({ children }) => {
     const onToggleMenuClick = event => {
         menuClick = true
         if (isDesktop()) {
-            setSidebarMenuActive(prevState => !prevState)
+            setSidebarMenuActive(!sidebarMenuActive)
         } else {
             setMobileMenuActive(prevState => !prevState)
         }

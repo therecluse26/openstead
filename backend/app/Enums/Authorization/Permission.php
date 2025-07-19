@@ -4,47 +4,55 @@ namespace App\Enums\Authorization;
 
 enum Permission: string
 {
-    // Inventory Permissions
+        // Inventory Permissions
     case InventoryList = 'inventory:list';
     case InventoryRead = 'inventory:read';
     case InventoryCreate = 'inventory:create';
     case InventoryUpdate = 'inventory:update';
     case InventoryDelete = 'inventory:delete';
 
-    // Note Permissions
+        // Note Permissions
     case NoteList = 'note:list';
     case NoteRead = 'note:read';
     case NoteCreate = 'note:create';
     case NoteUpdate = 'note:update';
     case NoteDelete = 'note:delete';
 
-    // Service Permissions
+        // Service Permissions
     case ServiceList = 'service:list';
     case ServiceRead = 'service:read';
     case ServiceCreate = 'service:create';
     case ServiceUpdate = 'service:update';
     case ServiceDelete = 'service:delete';
-    
-    // Project Permissions
+
+        // Project Permissions
     case ProjectList = 'project:list';
     case ProjectRead = 'project:read';
     case ProjectCreate = 'project:create';
     case ProjectUpdate = 'project:update';
     case ProjectDelete = 'project:delete';
 
-    // Project Item Permissions
+        // Project Item Permissions
     case ProjectItemList = 'project-item:list';
     case ProjectItemRead = 'project-item:read';
     case ProjectItemCreate = 'project-item:create';
     case ProjectItemUpdate = 'project-item:update';
     case ProjectItemDelete = 'project-item:delete';
-    
-    // User Permissions
+
+        // User Permissions
     case UserList = 'user:list';
     case UserRead = 'user:read';
     case UserCreate = 'user:create';
     case UserUpdate = 'user:update';
     case UserDelete = 'user:delete';
+
+        // Tenant/Homestead Permissions
+    case TenantList = 'tenant:list';
+    case TenantRead = 'tenant:read';
+    case TenantCreate = 'tenant:create';
+    case TenantUpdate = 'tenant:update';
+    case TenantDelete = 'tenant:delete';
+    case TenantAssignUser = 'tenant:assign-user';
 
     public function label(): string
     {
@@ -79,6 +87,12 @@ enum Permission: string
             self::ServiceCreate => 'Create Services',
             self::ServiceUpdate => 'Update Services',
             self::ServiceDelete => 'Delete Services',
+            self::TenantList => 'List Homesteads',
+            self::TenantRead => 'Read Tenant Details',
+            self::TenantCreate => 'Create Homesteads',
+            self::TenantUpdate => 'Update Homesteads',
+            self::TenantDelete => 'Delete Homesteads',
+            self::TenantAssignUser => 'Assign Users to Homesteads',
             default => $this->value,
         };
     }

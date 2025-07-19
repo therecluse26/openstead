@@ -1,8 +1,12 @@
 <?php
+
 namespace App\Repositories\User;
 
 use App\Models\User;
 use App\Contracts\Repository;
+use App\Models\Tenant;
+use App\Models\TenantUser;
+use App\Repositories\Tenancy\TenantRepository;
 use App\Traits\AddMedia;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Hash;
@@ -18,60 +22,103 @@ class UserRepository implements Repository
 
     public function index()
     {
-        return User::all();
+        return TenantUser::where('tenant_id', tenant()->id)->get()->map(function ($tenantUser) {
+            return $tenantUser->user;
+        });
     }
 
     public function getById(string $id): User
     {
-        return User::findOrFail($id);
+        return TenantUser::where('user_id', $id)->where('tenant_id', tenant()->id)->firstOrFail()->user;
     }
 
-    public function create(array $attributes): User
+    public function checkUserTenantMembership(string $userId, string $tenantId): bool
     {
+        return TenantUser::where('user_id', $userId)->where('tenant_id', $tenantId)->exists();
+    }
+
+    public function create(array $attributes, string $tenantId = null): User
+    {
+        $tenantRepo = new TenantRepository();
+
         $user = User::create([
             'name' => $attributes['name'],
             'email' => $attributes['email'],
             'password' => Hash::make($attributes['password']),
-            'roles' => $attributes['roles'] ?? null,
-            'permissions' => $attributes['permissions'] ?? null,
         ]);
 
+        $tenant = $tenantId ? $tenantRepo->getById($tenantId) : tenant();
+
+        $this->updateRoles($user, $tenant, $attributes['roles'] ?? null);
+
+        $this->updatePermissions($user, $tenant, $attributes['permissions'] ?? null);
+
         if (isset($attributes['images']) && is_array($attributes['images']) && count($attributes['images']) > 0) {
-			$this->addOrReplaceImagesBase64($user, $attributes['images']);
-		}
+            $this->addOrReplaceImagesBase64($user, $attributes['images']);
+        }
 
         return $user;
     }
 
-    public function update(string $id, array $attributes): User
+    public function updateCurrentTenant(string $id, string $tenantId): User
     {
+        $tenantRepo = new TenantRepository();
+
         $user = $this->getById($id);
-        if($user->name !== $attributes['name']) {
+        $tenant = $tenantRepo->getById($tenantId);
+
+        $user->current_tenant_id = $tenant->id;
+        $user->save();
+
+        return $user;
+    }
+
+    private function updateRoles(User $user, Tenant $tenant, $roles = null)
+    {
+        if (isset($roles)) {
+            $tenant->users()->updateExistingPivot($user->id, [
+                'roles' => $roles
+            ]);
+        }
+    }
+
+    private function updatePermissions(User $user, Tenant $tenant, $permissions = null)
+    {
+        if (isset($permissions)) {
+            $tenant->users()->updateExistingPivot($user->id, [
+                'permissions' => $permissions
+            ]);
+        }
+    }
+
+    public function update(string $id, array $attributes, string $tenantId = null): User
+    {
+        $tenantRepo = new TenantRepository();
+
+        $user = $this->getById($id);
+        if ($user->name !== $attributes['name']) {
             $user->name = $attributes['name'];
         }
 
-        if($user->email !== $attributes['email']) {
+        if ($user->email !== $attributes['email']) {
             $user->email = $attributes['email'];
         }
 
-        if(isset($attributes['password'])) {
+        if (isset($attributes['password'])) {
             $user->password = Hash::make($attributes['password']);
         }
 
-        if(isset($attributes['roles'])) {
-            $user->roles = $attributes['roles'];
-        }
+        $tenant = $tenantId ? $tenantRepo->getById($tenantId) : tenant();
 
-        if(isset($attributes['permissions'])) {
-            $user->permissions = $attributes['permissions'];
-        }
+        $this->updateRoles($user, $tenant, $attributes['roles'] ?? null);
+
+        $this->updatePermissions($user, $tenant, $attributes['permissions'] ?? null);
 
         $user->save();
 
-        
         if (isset($attributes['images']) && is_array($attributes['images']) && count($attributes['images']) > 0) {
-			$this->addOrReplaceImagesBase64($user, $attributes['images']);
-		}
+            $this->addOrReplaceImagesBase64($user, $attributes['images']);
+        }
 
         return $user;
     }
@@ -100,6 +147,4 @@ class UserRepository implements Repository
     {
         return $this->getModel()->$method(...$arguments);
     }
-
-
 }

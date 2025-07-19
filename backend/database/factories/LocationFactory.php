@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Location;
+use App\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,6 +18,7 @@ class LocationFactory extends Factory
     public function definition()
     {
         return [
+            'tenant_id' => Tenant::first()->id,
 			'name' => fake()->words(3, true),
 	        'description' => fake()->paragraph(2),
 	        'address1' => fake()->streetAddress(),

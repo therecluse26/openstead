@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 use Spatie\MediaLibrary\HasMedia;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class Equipment extends Model implements DataTablePaginatable, Inventoriable, FrontendFilterable, HasMedia, AddsMedia, Serviceable, Notable
 {
@@ -32,12 +33,14 @@ class Equipment extends Model implements DataTablePaginatable, Inventoriable, Fr
 	use HasServiceLogs;
 	use HasNotes;
 	use HasImages;
+	use BelongsToTenant;
 
 	protected $table = 'equipment';
 
 	protected $primaryKey = 'id';
 
 	protected $fillable = [
+		'tenant_id',
 		'name',
 		'type',
 		'condition',

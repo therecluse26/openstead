@@ -7,6 +7,7 @@ use App\Enums\PlantLifeCycle;
 use App\Enums\PlantLightRequirement;
 use App\Enums\PlantType;
 use App\Models\Inventory\Equipment;
+use App\Models\Tenant;
 use App\Models\Variety;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -23,6 +24,7 @@ class SeedFactory extends Factory
 	public function definition()
 	{
 		return [
+			'tenant_id' => Tenant::first()->id,
 			'variety_id' => Variety::where('group', 'plant')->whereIn('group_type', PlantType::cases())->inRandomOrder()->first(),
 			'quantity' => fake()->numberBetween(0, 10),
 			'life_cycle' => fake()->randomElement(PlantLifeCycle::cases()),

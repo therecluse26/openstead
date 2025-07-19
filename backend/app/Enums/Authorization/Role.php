@@ -3,17 +3,17 @@
 namespace App\Enums\Authorization;
 
 enum Role: string
-{  
+{
     case Viewer = 'viewer';
     case Collaborator = 'collaborator';
-    case Manager = 'manager'; 
+    case Manager = 'manager';
     case Administrator = 'admin';
     case ProjectViewer = 'project-viewer';
     case ProjectManager = 'project-manager';
     case ProjectCollaborator = 'project-collaborator';
     case InventoryViewer = 'inventory-viewer';
     case InventoryManager = 'inventory-manager';
-    case InventoryCollaborator = 'inventory-collaborator'; 
+    case InventoryCollaborator = 'inventory-collaborator';
     case NoteViewer = 'note-viewer';
     case NoteManager = 'note-manager';
     case NoteCollaborator = 'note-collaborator';
@@ -23,6 +23,37 @@ enum Role: string
     case UserViewer = 'user-viewer';
     case UserManager = 'user-manager';
     case UserCollaborator = 'user-collaborator';
+    case TenantViewer = 'tenant-viewer';
+    case TenantManager = 'tenant-manager';
+    case TenantCollaborator = 'tenant-collaborator';
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::Viewer => 'Viewer',
+            self::Collaborator => 'Collaborator',
+            self::Manager => 'Manager',
+            self::Administrator => 'Administrator',
+            self::ProjectViewer => 'Project Viewer',
+            self::ProjectManager => 'Project Manager',
+            self::ProjectCollaborator => 'Project Collaborator',
+            self::InventoryViewer => 'Inventory Viewer',
+            self::InventoryManager => 'Inventory Manager',
+            self::InventoryCollaborator => 'Inventory Collaborator',
+            self::NoteViewer => 'Note Viewer',
+            self::NoteManager => 'Note Manager',
+            self::NoteCollaborator => 'Note Collaborator',
+            self::ServiceViewer => 'Service Viewer',
+            self::ServiceManager => 'Service Manager',
+            self::ServiceCollaborator => 'Service Collaborator',
+            self::UserViewer => 'User Viewer',
+            self::UserManager => 'User Manager',
+            self::UserCollaborator => 'User Collaborator',
+            self::TenantViewer => 'Tenant Viewer',
+            self::TenantManager => 'Tenant Manager',
+            self::TenantCollaborator => 'Tenant Collaborator',
+        };
+    }
 
     public function permissions(): array
     {
@@ -32,7 +63,7 @@ enum Role: string
 
             // Administrator has all permissions
             self::Administrator => Permission::cases(),
-            
+
             // Viewer has read-only permissions
             self::Viewer => [
                 ...self::ProjectViewer->permissions(),
@@ -48,7 +79,6 @@ enum Role: string
                 ...self::InventoryCollaborator->permissions(),
                 ...self::NoteCollaborator->permissions(),
                 ...self::ServiceCollaborator->permissions(),
-                ...self::UserCollaborator->permissions(),
             ],
             // Manager inherits all permissions from Collaborator role
             self::Manager => [
@@ -76,7 +106,7 @@ enum Role: string
                 ...self::UserCollaborator->permissions(),
                 Permission::UserDelete,
             ],
-            
+
             // Project Permissions
             self::ProjectViewer => [
                 ...self::UserViewer->permissions(),
@@ -151,32 +181,6 @@ enum Role: string
             ],
         }, SORT_REGULAR);
     }
-
-    public function label(): string
-    {
-        return match ($this) {
-            self::Viewer => 'Viewer',
-            self::Collaborator => 'Collaborator',
-            self::Manager => 'Manager',
-            self::Administrator => 'Administrator',
-            self::ProjectViewer => 'Project Viewer',
-            self::ProjectManager => 'Project Manager',
-            self::ProjectCollaborator => 'Project Collaborator',
-            self::InventoryViewer => 'Inventory Viewer',
-            self::InventoryManager => 'Inventory Manager',
-            self::InventoryCollaborator => 'Inventory Collaborator',
-            self::NoteViewer => 'Note Viewer',
-            self::NoteManager => 'Note Manager',
-            self::NoteCollaborator => 'Note Collaborator',
-            self::ServiceViewer => 'Service Viewer',
-            self::ServiceManager => 'Service Manager',
-            self::ServiceCollaborator => 'Service Collaborator',
-            self::UserViewer => 'User Viewer',
-            self::UserManager => 'User Manager',
-            self::UserCollaborator => 'User Collaborator',
-        };
-    }
-
 
     public function toDisplay(): array
     {

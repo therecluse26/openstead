@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('media', function (Blueprint $table) {
             $table->ulid('id')->primary();
-
+			$table->string('tenant_id')->index();
             $table->ulidMorphs('model');
             $table->uuid('uuid')->nullable()->unique();
             $table->string('collection_name');
@@ -30,6 +30,8 @@ return new class extends Migration
 
             $table->index('model_type');
             $table->index('model_id');
+
+            $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
         });
     }
 };
