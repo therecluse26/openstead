@@ -27,7 +27,33 @@ enum Role: string
     case TenantManager = 'tenant-manager';
     case TenantCollaborator = 'tenant-collaborator';
 
-    // MAKE SURE THAT YOU ADD NEW ROLES TO THE LABEL METHOD BELOW
+    public function label(): string
+    {
+        return match ($this) {
+            self::Viewer => 'Viewer',
+            self::Collaborator => 'Collaborator',
+            self::Manager => 'Manager',
+            self::Administrator => 'Administrator',
+            self::ProjectViewer => 'Project Viewer',
+            self::ProjectManager => 'Project Manager',
+            self::ProjectCollaborator => 'Project Collaborator',
+            self::InventoryViewer => 'Inventory Viewer',
+            self::InventoryManager => 'Inventory Manager',
+            self::InventoryCollaborator => 'Inventory Collaborator',
+            self::NoteViewer => 'Note Viewer',
+            self::NoteManager => 'Note Manager',
+            self::NoteCollaborator => 'Note Collaborator',
+            self::ServiceViewer => 'Service Viewer',
+            self::ServiceManager => 'Service Manager',
+            self::ServiceCollaborator => 'Service Collaborator',
+            self::UserViewer => 'User Viewer',
+            self::UserManager => 'User Manager',
+            self::UserCollaborator => 'User Collaborator',
+            self::TenantViewer => 'Tenant Viewer',
+            self::TenantManager => 'Tenant Manager',
+            self::TenantCollaborator => 'Tenant Collaborator',
+        };
+    }
 
     public function permissions(): array
     {
@@ -155,35 +181,6 @@ enum Role: string
             ],
         }, SORT_REGULAR);
     }
-
-    public function label(): string
-    {
-        return match ($this) {
-            self::Viewer => 'Viewer',
-            self::Collaborator => 'Collaborator',
-            self::Manager => 'Manager',
-            self::Administrator => 'Administrator',
-            self::ProjectViewer => 'Project Viewer',
-            self::ProjectManager => 'Project Manager',
-            self::ProjectCollaborator => 'Project Collaborator',
-            self::InventoryViewer => 'Inventory Viewer',
-            self::InventoryManager => 'Inventory Manager',
-            self::InventoryCollaborator => 'Inventory Collaborator',
-            self::NoteViewer => 'Note Viewer',
-            self::NoteManager => 'Note Manager',
-            self::NoteCollaborator => 'Note Collaborator',
-            self::ServiceViewer => 'Service Viewer',
-            self::ServiceManager => 'Service Manager',
-            self::ServiceCollaborator => 'Service Collaborator',
-            self::UserViewer => 'User Viewer',
-            self::UserManager => 'User Manager',
-            self::UserCollaborator => 'User Collaborator',
-            self::TenantViewer => 'Tenant Viewer',
-            self::TenantManager => 'Tenant Manager',
-            self::TenantCollaborator => 'Tenant Collaborator',
-        };
-    }
-
 
     public function toDisplay(): array
     {

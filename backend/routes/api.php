@@ -26,10 +26,11 @@ use App\Http\Middleware\InitializeTenancyByRequestData;
 |
 */
 
-Route::get('/health', static function () {
+Route::get('/health', function () {
+	// Health check
 	return response()->json([
-		'message' => 'OK'
-	], 200);
+		'status' => 'ok',
+	]);
 });
 
 Route::middleware(['auth:sanctum'])->get('/user', [UserController::class, 'getAuthenticatedUser']);
@@ -39,7 +40,6 @@ Route::middleware([
 	InitializeTenancyByRequestData::class,
 ])->group(static function () {
 
-	Route::post('/user/tenant', [UserController::class, 'updateCurrentTenant'])->name('user.update_tenant');
 
 	Route::get('/images/{imageId}', [ImageController::class, 'showImage'])->name('image.show');
 
@@ -47,6 +47,8 @@ Route::middleware([
 	Route::get('/authorization/permissions', [AuthorizationController::class, 'allPermissions'])->middleware('user-can:user:update');
 
 	Route::middleware(['auth:sanctum'])->group(function () {
+
+		Route::post('/user/tenant', [UserController::class, 'updateCurrentTenant'])->name('user.update_tenant');
 
 		Route::put('/editable-field/{modelName}/{modelId}', [EditableFieldController::class, 'update']);
 		Route::post('/images/base64', [ImageController::class, 'uploadBase64']);

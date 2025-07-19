@@ -43,8 +43,6 @@ class TestDataSeeder extends Seeder
 			return $user->id;
 		})->toArray();
 
-		// dd($userIds);
-
 		$tenantService->addUsersToTenant($tenantRepo->getFirst()->id, $userIds);
 
 		Location::factory()

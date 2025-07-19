@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Query\Expression;
 
-return new class extends Migration {
+return new class extends Migration
+{
 	/**
 	 * Run the migrations.
 	 *
@@ -27,7 +28,7 @@ return new class extends Migration {
 			$table->softDeletes();
 
 			$table->index('name');
-			$table->index('email');			
+			$table->index('email');
 			$table->index('current_tenant_id');
 		});
 
@@ -43,7 +44,7 @@ return new class extends Migration {
 
 				$table->index('tenant_id');
 				$table->index('user_id');
-				
+
 				// Foreign key to tenant
 				$table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
 				$table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
@@ -61,11 +62,10 @@ return new class extends Migration {
 			$table->index('tenant_id');
 			$table->index('user_id');
 			$table->index('primary');
-			
+
 			// Foreign key to tenant
 			$table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
 			$table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-	
 		});
 	}
 
@@ -76,7 +76,7 @@ return new class extends Migration {
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('users');
 		Schema::dropIfExists('tenant_users');
+		Schema::dropIfExists('users');
 	}
 };

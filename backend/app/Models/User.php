@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
 use App\Contracts\AddsMedia;
 use App\Contracts\DataTablePaginatable;
 use App\Contracts\FrontendFilterable;
@@ -20,7 +18,6 @@ use App\Models\Projects\Project;
 use App\Models\Projects\ProjectUser;
 use App\Resources\Users\Detail\UserWithPermissions;
 use App\Resources\Users\List\UserListResource;
-use App\Scopes\UserTenantScope;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 use Laravel\Sanctum\HasApiTokens;

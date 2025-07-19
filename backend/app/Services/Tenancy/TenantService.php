@@ -5,7 +5,6 @@ namespace App\Services\Tenancy;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Repositories\Tenancy\TenantRepository;
-use Stancl\Tenancy\Database\Models\Domain;
 
 class TenantService
 {

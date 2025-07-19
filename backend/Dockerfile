@@ -42,7 +42,7 @@ RUN apk add wget \
   supervisor \
   zip \
   libzip-dev \
-  php8-zip \
+  php-zip \
   nfs-utils \
   nginx
 

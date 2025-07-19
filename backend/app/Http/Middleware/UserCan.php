@@ -10,40 +10,37 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UserCan
 {
-
     private User $authUser;
-    
+
     // Memoize the authenticated user
     private function authUser(): ?User
     {
-        if(!isset($this->authUser)) {
+        if (!isset($this->authUser)) {
             $this->authUser = auth()->user();
         }
         return $this->authUser;
     }
 
-	/**
-	 * Handle an incoming request.
-	 *
-	 * @param Request $request
-	 * @param Closure $next
-	 * @param string $permission
-	 * @return Response
-	 */
-	public function handle(Request $request, Closure $next, string $permission): Response
-	{
-
+    /**
+     * Handle an incoming request.
+     *
+     * @param Request $request
+     * @param Closure $next
+     * @param string $permission
+     * @return Response
+     */
+    public function handle(Request $request, Closure $next, string $permission): Response
+    {
         $matchedPermission = Permission::from($permission);
 
-        if(is_null($matchedPermission)) {
+        if (is_null($matchedPermission)) {
             return response()->json(['message' => 'Invalid permission'], 400);
         }
 
-		if (!$this->authUser()?->hasPermissionTo($matchedPermission)) {
-			return response()->json(['message' => 'Access denied'], 403);
-		}
+        if (!$this->authUser()?->hasPermissionTo($matchedPermission)) {
+            return response()->json(['message' => 'Access denied'], 403);
+        }
 
-		return $next($request);
-	}
-
+        return $next($request);
+    }
 }
