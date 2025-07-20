@@ -1,0 +1,397 @@
+import React, { useEffect, useRef, useState } from 'react'
+import { useForm, SubmitHandler } from 'react-hook-form'
+import { Card } from 'primereact/card'
+import { Button } from 'primereact/button'
+import { FileUploadHandlerEvent } from 'primereact/fileupload'
+import { useRouter } from 'next/router'
+import CalendarInput from '@/components/HookFormInputs/CalendarInput'
+import { FileUpload } from 'primereact/fileupload'
+import { convertUploadedFilesToBase64 } from '@/utils/file-utils'
+import { csrf } from '@/hooks/auth'
+import SubtypeSelect from '@/components/HookFormInputs/SubtypeSelect'
+import NumberInput from '@/components/HookFormInputs/NumberInput'
+import SeedService from '@/services/Inventory/SeedService'
+import SelectInput from '@/components/HookFormInputs/SelectInput'
+import TextInput from '@/components/HookFormInputs/TextInput'
+import { useToast } from '../../context/ToastContext'
+import { Seed } from '@/types/Inventory'
+
+interface SeedFormData {
+    variety_id: string | null
+    type: string | null
+    quantity: number
+    days_to_germination: number | null
+    days_to_maturity: number | null
+    planting_depth: number | null
+    plant_spacing: number | null
+    light_requirement: string | null
+    life_cycle: string | null
+    zone_lower: string | null
+    zone_upper: string | null
+    acquired_at: Date | null
+    url: string
+}
+
+interface SeedFormProps {
+    mode?: 'create' | 'edit'
+}
+
+const SeedForm: React.FC<SeedFormProps> = ({ mode = 'create' }) => {
+    const isMounted = useRef<boolean>(false)
+    const router = useRouter()
+    const [images, setImages] = useState<string[]>([])
+    const [initialType, setInitialType] = useState<string | null>(null)
+    const { showToast } = useToast()
+    const { query, isReady } = useRouter()
+    const { id } = query as { id?: string }
+    const defaultValues: SeedFormData = {
+        variety_id: null,
+        type: null,
+        quantity: 1,
+        days_to_germination: null,
+        days_to_maturity: null,
+        planting_depth: null,
+        plant_spacing: null,
+        light_requirement: null,
+        life_cycle: null,
+        zone_lower: null,
+        zone_upper: null,
+        acquired_at: null,
+        url: '',
+    }
+    const {
+        control,
+        formState: { errors },
+        handleSubmit,
+        setValue,
+        resetField,
+        watch,
+    } = useForm<SeedFormData>({ defaultValues })
+
+    const deleteItem = async (): Promise<void> => {
+        await SeedService.deleteItem(id)
+    }
+
+    const confirmDelete = (): void => {
+        if (confirm('Are you sure you want to delete this item?')) {
+            deleteItem()
+            router.push('/inventory/seeds')
+        }
+    }
+
+    const type = watch('type')
+
+    useEffect(() => {
+        if (!isReady || !id) {
+            return
+        }
+        isMounted.current = true
+        getEditData(id)
+    }, [id])
+
+    useEffect(() => {
+        if (type !== initialType) {
+            resetField('parents')
+            resetField('children')
+        }
+    }, [type])
+
+    const getFormErrorMessage = (name: keyof SeedFormData) => {
+        return (
+            errors[name] && (
+                <small className="p-error">{errors[name].message}</small>
+            )
+        )
+    }
+
+    const getEditData = (id: string) => {
+        return SeedService.getItem(id)
+            .then((data: Seed) => {
+                setValue('variety_id', data?.variety?.id)
+                setValue('type', data?.variety?.group_type?.key)
+                setValue('quantity', data?.quantity)
+                setValue('acquired_at', new Date(data?.acquired_at))
+                setValue('life_cycle', data?.life_cycle?.key)
+                setValue('light_requirement', data?.light_requirement?.key)
+                setValue('zone_lower', data?.zone_lower?.key)
+                setValue('zone_upper', data?.zone_upper?.key)
+                setValue('days_to_germination', data?.days_to_germination)
+                setValue('days_to_maturity', data?.days_to_maturity)
+                setValue('planting_depth', data?.planting_depth)
+                setValue('plant_spacing', data?.plant_spacing)
+                setValue('url', data?.url)
+
+                setInitialType(data?.variety?.group_type?.key)
+            })
+
+            .catch((e: any) => {
+                alert(e)
+            })
+    }
+
+    const onSubmit: SubmitHandler<SeedFormData> = async data => {
+        await csrf()
+        SeedService.createOrUpdate(id, data, images)
+            .then(r => {
+                router.push('/inventory/seeds/' + r.data?.id)
+            })
+            .catch((error: any) => {
+                showToast(
+                    error?.response?.data?.message ?? 'Unknown error',
+                    'error',
+                )
+            })
+    }
+
+    const onUploadImage = async (data: FileUploadHandlerEvent) => {
+        setImages([])
+        setImages(await convertUploadedFilesToBase64(data.files))
+    }
+
+    const onRemoveImage = (): void => {
+        setImages([])
+    }
+
+    return (
+        <>
+            <div className={'justify-content-center align-content-center grid'}>
+                <div className={'col-10'}>
+                    <h3 className={'text-center'}>
+                        {mode === 'create' ? (
+                            'Add New Seed(s)'
+                        ) : (
+                            <div className={'flex justify-content-between'}>
+                                <div />
+                                <div>Edit Seed(s)</div>
+                                <Button
+                                    className={
+                                        'p-button-danger align-right text-right'
+                                    }
+                                    onClick={confirmDelete}>
+                                    <span>
+                                        <i className={'ti ti-trash'} />
+                                        {' Delete'}
+                                    </span>
+                                </Button>
+                            </div>
+                        )}
+                    </h3>
+                </div>
+            </div>
+            <form onSubmit={handleSubmit(onSubmit)} className="p-fluid">
+                <Card className={'min-h-full'}>
+                    <div
+                        className={
+                            'justify-content-center align-content-center grid'
+                        }>
+                        <div className={'col-10 md:col-6'}>
+                            <SubtypeSelect
+                                valueAddRequest={SeedService.addVariety}
+                                label={'Variety'}
+                                supertype={'seed'}
+                                control={control}
+                                setValue={setValue}
+                                errors={errors}
+                                supertypeValueUrl={`/api/inventory/seeds/types`}
+                                fieldId={'variety_id'}
+                                watch={watch}
+                                id={id}
+                                className={'mt-2'}
+                                optionLabel="label"
+                                optionValue="key"
+                                dataLabelKey="label"
+                                dataValueKey="key"
+                            />
+
+                            <div className="field">
+                                <NumberInput
+                                    control={control}
+                                    name={'quantity'}
+                                    label={'Quantity'}
+                                    min={1}
+                                    max={10000}
+                                    rules={{
+                                        required: 'Quantity is required.',
+                                    }}
+                                />
+                                {getFormErrorMessage('quantity')}
+                            </div>
+
+                            <div className="field">
+                                <SelectInput
+                                    optionsEndpoint={
+                                        '/api/inventory/seeds/light-requirements'
+                                    }
+                                    control={control}
+                                    name={'light_requirement'}
+                                    label={'Light Requirement'}
+                                    optionValue={'key'}
+                                    dataValueKey={'key'}
+                                    optionLabel={'label'}
+                                    dataLabelKey={'label'}
+                                />
+                                {getFormErrorMessage('light_requirement')}
+                            </div>
+
+                            <div className="field">
+                                <NumberInput
+                                    control={control}
+                                    name={'days_to_germination'}
+                                    label={'Days to Germination'}
+                                    min={0}
+                                    max={10000}
+                                />
+                                {getFormErrorMessage('days_to_germination')}
+                            </div>
+
+                            <div className="field">
+                                <NumberInput
+                                    control={control}
+                                    name={'days_to_maturity'}
+                                    label={'Days to Maturity'}
+                                    min={0}
+                                    max={10000}
+                                />
+                                {getFormErrorMessage('days_to_maturity')}
+                            </div>
+
+                            <div className="field">
+                                <NumberInput
+                                    control={control}
+                                    name={'planting_depth'}
+                                    label={'Planting Depth (in)'}
+                                    min={0.01}
+                                    max={10000}
+                                    step={0.01}
+                                />
+                                {getFormErrorMessage('planting_depth')}
+                            </div>
+
+                            <div className="field">
+                                <NumberInput
+                                    control={control}
+                                    name={'plant_spacing'}
+                                    label={'Plant Spacing (in)'}
+                                    min={0.25}
+                                    max={10000}
+                                    step={0.01}
+                                />
+                                {getFormErrorMessage('plant_spacing')}
+                            </div>
+                        </div>
+                        <div className={'col-10 md:col-6'}>
+                            <div className="field mt-2">
+                                <SelectInput
+                                    optionsEndpoint={
+                                        '/api/inventory/seeds/life-cycles'
+                                    }
+                                    control={control}
+                                    name={'life_cycle'}
+                                    label={'Life Cycle'}
+                                    optionValue={'key'}
+                                    dataValueKey={'key'}
+                                    optionLabel={'label'}
+                                    dataLabelKey={'label'}
+                                />
+                                {getFormErrorMessage('life_cycle')}
+                            </div>
+
+                            <div className="field">
+                                <SelectInput
+                                    optionsEndpoint={
+                                        '/api/inventory/seeds/hardiness-zones'
+                                    }
+                                    control={control}
+                                    name={'zone_lower'}
+                                    label={'Grow Zone (Minimum)'}
+                                    optionValue={'key'}
+                                    dataValueKey={'key'}
+                                    optionLabel={'label'}
+                                    dataLabelKey={'label'}
+                                />
+                                {getFormErrorMessage('zone_lower')}
+                            </div>
+
+                            <div className="field">
+                                <SelectInput
+                                    optionsEndpoint={
+                                        '/api/inventory/seeds/hardiness-zones'
+                                    }
+                                    control={control}
+                                    name={'zone_upper'}
+                                    label={'Grow Zone (Maximum)'}
+                                    optionValue={'key'}
+                                    dataValueKey={'key'}
+                                    optionLabel={'label'}
+                                    dataLabelKey={'label'}
+                                />
+                                {getFormErrorMessage('zone_upper')}
+                            </div>
+
+                            <div className="field">
+                                <CalendarInput
+                                    control={control}
+                                    name={'acquired_at'}
+                                    label={'Date Acquired'}
+                                />
+                                {getFormErrorMessage('acquired_at')}
+                            </div>
+
+                            <div className="field">
+                                <TextInput
+                                    control={control}
+                                    name={'url'}
+                                    label={'Purchase URL'}
+                                    rules={{
+                                        pattern: {
+                                            value:
+                                                '/((([A-Za-z]{3,9}:(?://)?)(?:[-;:&=+$,w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=+$,w]+@)[A-Za-z0-9.-]+)((?:/[+~%/.w-_]*)???(?:[-+=&;%@.w_]*)#?(?:[w]*))?)/',
+                                            message: 'Invalid URL',
+                                        },
+                                    }}
+                                />
+                                {getFormErrorMessage('url')}
+                            </div>
+
+                            <div className="field">
+                                <FileUpload
+                                    name="images[]"
+                                    customUpload={true}
+                                    auto={true}
+                                    uploadHandler={onUploadImage}
+                                    accept={'image/*'}
+                                    multiple={false}
+                                    maxFileSize={1000000}
+                                    chooseLabel={'Add Image'}
+                                    onRemove={onRemoveImage}
+                                    emptyTemplate={
+                                        <p className="m-0">
+                                            {mode === 'edit'
+                                                ? 'Drag and drop image here to replace existing image.'
+                                                : 'Drag and drop image to here to upload.'}
+                                        </p>
+                                    }
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </Card>
+
+                <br />
+
+                <div
+                    className={
+                        'justify-content-center align-content-center grid'
+                    }>
+                    <div className={'col-10'}>
+                        <Button type="submit" label="Save" className="mt-2" />
+                    </div>
+                </div>
+            </form>
+
+            <br />
+        </>
+    )
+}
+
+export default React.memo(SeedForm)

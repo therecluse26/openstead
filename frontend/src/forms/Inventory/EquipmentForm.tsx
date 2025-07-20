@@ -1,0 +1,277 @@
+import React, { useEffect, useRef, useState } from 'react'
+import { useForm, SubmitHandler } from 'react-hook-form'
+import { Card } from 'primereact/card'
+import { Button } from 'primereact/button'
+import { FileUploadHandlerEvent } from 'primereact/fileupload'
+import TextInput from '@/components/HookFormInputs/TextInput'
+import SelectInput from '@/components/HookFormInputs/SelectInput'
+import { useRouter } from 'next/router'
+import NumberInput from '@/components/HookFormInputs/NumberInput'
+import CalendarInput from '@/components/HookFormInputs/CalendarInput'
+import { FileUpload } from 'primereact/fileupload'
+import { convertUploadedFilesToBase64 } from '@/utils/file-utils'
+import { csrf } from '@/hooks/auth'
+import EquipmentService from '@/services/Inventory/EquipmentService'
+import { useToast } from '@/context/ToastContext'
+import RatingInput from '@/components/HookFormInputs/RatingInput'
+import TextAreaInput from '@/components/HookFormInputs/TextAreaInput'
+import { Equipment } from '@/types/Inventory'
+
+interface EquipmentFormData {
+    name: string
+    type: string
+    condition: number | null
+    quantity: number
+    rating: number | null
+    description: string
+    acquired_at: Date | null
+    url: string
+}
+
+interface EquipmentFormProps {
+    mode?: 'create' | 'edit'
+}
+
+const EquipmentForm: React.FC<EquipmentFormProps> = ({ mode = 'create' }) => {
+    const isMounted = useRef<boolean>(false)
+    const router = useRouter()
+    const [images, setImages] = useState<string[]>([])
+    const { showToast } = useToast()
+    const { query, isReady } = useRouter()
+    const { id } = query as { id?: string }
+    const defaultValues: EquipmentFormData = {
+        name: '',
+        type: '',
+        condition: null,
+        quantity: 1,
+        rating: null,
+        description: '',
+        acquired_at: null,
+        url: '',
+    }
+    const {
+        control,
+        formState: { errors },
+        handleSubmit,
+        setValue,
+        watch,
+    } = useForm<EquipmentFormData>({ defaultValues })
+
+    const quantity = watch('quantity')
+
+    useEffect(() => {
+        if (!isReady || !id) {
+            return
+        }
+        isMounted.current = true
+        getEditData(id)
+    }, [id])
+
+    const getFormErrorMessage = (name: keyof EquipmentFormData) => {
+        return (
+            errors[name] && (
+                <small className="p-error">{errors[name].message}</small>
+            )
+        )
+    }
+
+    const getEditData = (id: string) => {
+        EquipmentService.getItem(id)
+            .then((data: Equipment) => {
+                setValue('name', data?.name)
+                setValue('type', data?.type?.key)
+                setValue('condition', data?.condition)
+                setValue('rating', data?.rating)
+                setValue('description', data?.description)
+                setValue('quantity', data?.quantity)
+                setValue('acquired_at', new Date(data?.acquired_at))
+                setValue('url', data?.url)
+            })
+            .catch((e: any) => {
+                alert(e)
+            })
+    }
+
+    const onSubmit: SubmitHandler<EquipmentFormData> = async data => {
+        await csrf()
+        EquipmentService.createOrUpdate(id, data, images)
+            .then(r => {
+                router.push('/inventory/equipment/' + r.data?.id)
+            })
+            .catch((error: any) => {
+                showToast(
+                    error?.response?.data?.message ?? 'Unknown error',
+                    'error',
+                )
+            })
+    }
+
+    const onUploadImage = async (data: FileUploadHandlerEvent) => {
+        setImages([])
+        setImages(await convertUploadedFilesToBase64(data.files))
+    }
+
+    const onRemoveImage = (): void => {
+        setImages([])
+    }
+
+    return (
+        <>
+            <div className={'justify-content-center align-content-center grid'}>
+                <div className={'col-10'}>
+                    <h3 className={'text-center'}>
+                        {mode === 'create'
+                            ? 'Add New Equipment'
+                            : 'Edit Equipment'}
+                    </h3>
+                </div>
+            </div>
+            <form onSubmit={handleSubmit(onSubmit)} className="p-fluid">
+                <div
+                    className={
+                        'justify-content-center align-content-center grid'
+                    }>
+                    <div className={'col-10 md:col-5'}>
+                        <Card className={'min-h-full'}>
+                            <div className="field">
+                                <TextInput
+                                    control={control}
+                                    name={'name'}
+                                    label={'Name'}
+                                    rules={{
+                                        required: 'Name is required.',
+                                    }}
+                                />
+                                {getFormErrorMessage('name')}
+                            </div>
+
+                            <div className="field">
+                                <SelectInput
+                                    optionsEndpoint={
+                                        '/api/inventory/equipment/types'
+                                    }
+                                    control={control}
+                                    optionValue={'key'}
+                                    dataValueKey={'key'}
+                                    optionLabel={'label'}
+                                    dataLabelKey={'label'}
+                                    name={'type'}
+                                    label={'Type'}
+                                    rules={{
+                                        required: 'Type is required.',
+                                    }}
+                                />
+                                {getFormErrorMessage('type')}
+                            </div>
+
+                            <div className="field">
+                                <NumberInput
+                                    control={control}
+                                    name={'quantity'}
+                                    label={'Quantity'}
+                                    max={10000}
+                                    rules={{
+                                        required: 'Quantity is required.',
+                                    }}
+                                />
+                                {getFormErrorMessage('quantity')}
+                            </div>
+                            {quantity === 1 && (
+                                <div className="field">
+                                    <SelectInput
+                                        options={[
+                                            { label: 'Excellent', value: 5 },
+                                            { label: 'Good', value: 4 },
+                                            { label: 'Fair', value: 3 },
+                                            { label: 'Poor', value: 2 },
+                                            { label: 'Broken', value: 1 },
+                                        ]}
+                                        control={control}
+                                        name={'condition'}
+                                        label={'Condition'}
+                                    />
+                                    {getFormErrorMessage('condition')}
+                                </div>
+                            )}
+
+                            <div className="field">
+                                <TextAreaInput
+                                    control={control}
+                                    name={'description'}
+                                    label={'Description'}
+                                    rules={{
+                                        required: 'Description is required.',
+                                    }}
+                                />
+                                {getFormErrorMessage('description')}
+                            </div>
+                        </Card>
+                    </div>
+                    <div className={'col-10 md:col-5'}>
+                        <Card className={'min-h-full'}>
+                            <div className="field">
+                                <TextInput
+                                    control={control}
+                                    name={'url'}
+                                    label={'Purchase URL'}
+                                    rules={{
+                                        pattern: {
+                                            value:
+                                                '/((([A-Za-z]{3,9}:(?://)?)(?:[-;:&=+$,w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=+$,w]+@)[A-Za-z0-9.-]+)((?:/[+~%/.w-_]*)???(?:[-+=&;%@.w_]*)#?(?:[w]*))?)/',
+                                            message: 'Invalid URL',
+                                        },
+                                    }}
+                                />
+                                {getFormErrorMessage('url')}
+                            </div>
+
+                            <div className="field">
+                                <RatingInput
+                                    control={control}
+                                    name={'rating'}
+                                    label={'Rating'}
+                                />
+                            </div>
+
+                            <div className="field">
+                                <CalendarInput
+                                    control={control}
+                                    name={'acquired_at'}
+                                    label={'Date Acquired'}
+                                />
+                                {getFormErrorMessage('acquired_at')}
+                            </div>
+
+                            <div className="field">
+                                <FileUpload
+                                    name="images[]"
+                                    customUpload={true}
+                                    auto={true}
+                                    uploadHandler={onUploadImage}
+                                    accept={'image/*'}
+                                    multiple={false}
+                                    maxFileSize={1000000}
+                                    chooseLabel={'Add Image'}
+                                    onRemove={onRemoveImage}
+                                    emptyTemplate={
+                                        <p className="m-0">
+                                            {mode === 'edit'
+                                                ? 'Drag and drop image here to replace existing image.'
+                                                : 'Drag and drop image to here to upload.'}
+                                        </p>
+                                    }
+                                />
+                            </div>
+                        </Card>
+                    </div>
+
+                    <div className={'col-10'}>
+                        <Button type="submit" label="Save" className="mt-2" />
+                    </div>
+                </div>
+            </form>
+        </>
+    )
+}
+
+export default React.memo(EquipmentForm)

@@ -8,16 +8,24 @@ export const updateField = async (
     flexibleValue: { value: any } | Array<{ value: any }> | string,
     sanitize: boolean = false,
 ) => {
+    let processedValue: any = null
+
     if (!flexibleValue) {
-        flexibleValue = null
+        processedValue = null
     } else if (Array.isArray(flexibleValue)) {
-        flexibleValue = flexibleValue[0].value
+        processedValue = flexibleValue[0].value
     } else if (typeof flexibleValue === 'object') {
-        flexibleValue = flexibleValue.value
+        processedValue = flexibleValue.value
+    } else {
+        processedValue = flexibleValue
     }
+
     return await axios
         .put(`/api/editable-field/${model}/${modelId}`, {
-            value: sanitize ? sanitizeHtml(flexibleValue) : flexibleValue,
+            value:
+                sanitize && typeof processedValue === 'string'
+                    ? sanitizeHtml(processedValue)
+                    : processedValue,
             field_name: field,
         })
         .then(res => res.data)
