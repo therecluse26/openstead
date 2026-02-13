@@ -1,4 +1,4 @@
-#!/usr/bin/env /bin/bash
+#!/usr/bin/env bash
 
 # Modified fork of Laravel sail for Alpine-based projects
 # Replaces app bash commands with Ash - Alpine Linux Shell
